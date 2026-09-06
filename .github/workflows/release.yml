@@ -148,12 +148,14 @@ jobs:
         with:
           name: kursi-release-apk
           path: cmp-android/build/outputs/apk/gms/release/*.apk
+          retention-days: 2
 
       - name: Upload release AAB artifact
         uses: actions/upload-artifact@v4
         with:
           name: kursi-release-aab
           path: cmp-android/build/outputs/bundle/gmsRelease/
+          retention-days: 2
 
       - name: Deploy to Play Store (${{ inputs.android_rung }})
         if: env.PLAY_STORE_KEY_FILE_PATH != ''

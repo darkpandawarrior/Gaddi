@@ -57,7 +57,7 @@ jobs:
         with:
           name: kursi-web-${{ github.sha }}
           path: cmp-web/build/dist/wasmJs/productionExecutable/
-          retention-days: 7
+          retention-days: 2
 
   deploy-pages:
     name: Deploy to GitHub Pages
@@ -97,6 +97,7 @@ jobs:
       - uses: actions/upload-pages-artifact@v5
         with:
           path: cmp-web/build/dist/wasmJs/productionExecutable/
+          retention-days: 2
 
       - id: deployment
         uses: actions/deploy-pages@v5

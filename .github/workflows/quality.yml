@@ -64,6 +64,7 @@ jobs:
         with:
           name: detekt-report
           path: '**/build/reports/detekt/'
+          retention-days: 2
 
       - name: Upload test results
         if: always()
@@ -71,3 +72,4 @@ jobs:
         with:
           name: test-results
           path: '**/build/reports/tests/'
+          retention-days: 2

@@ -117,3 +117,4 @@ jobs:
         with:
           name: kursi-screenshots
           path: docs/screenshots/
+          retention-days: 2
