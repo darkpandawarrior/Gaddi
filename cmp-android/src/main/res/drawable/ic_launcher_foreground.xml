@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    KURSI adaptive icon foreground — the "chair-R" glyph.
+    GADDI adaptive icon foreground — "the nameplate" mark.
 
-    The R letterform reads as a chair in side profile:
-      • Left vertical stroke  = chair back (full height — the back leg)
-      • Top curve (bowl)      = chair-back rail
-      • Horizontal at mid     = the seat
-      • Diagonal stroke       = front chair leg (SHORTER than the back — the wobble)
-      • Brass coin            = propping up the short leg (power held up by money)
+    An enamel station nameplate, chamfered, printed slightly wrong:
+      • Chamfered frame  = the License Raj nameplate, corners cut at one unit
+      • Seat + leg       = the gaddi (seat) inscribed on the plate
+      • Brass coin       = the coin on the plate, structural rather than decorative
+      • Ghost frame       = the same outline repeated one module right at half
+                            weight — the two-colour misregistration a cheap
+                            print run leaves behind
 
     Colors:
-      • Glyph:  cream  #F4ECD8  (document cream from the License Raj Deco palette)
-      • Coin:   brass  #C99A3B  (aged brass accent)
+      • Structure + ghost: gold  #E8C874  (Antique Gold)
+      • Coin:               brass #C99A3B (Aged Brass)
     Background is defined separately in ic_launcher_background.xml.
 
-    Safe zone: 72×72 dp centered in 108×108 dp adaptive icon canvas.
+    Drawn on the family's 48-unit grid, centred in the 66dp safe zone of the
+    108x108 canvas (translate 21,21 / scale 1.375 = 66/48). See
+    docs/brand/BRAND.md and the shared brand system doc for the grammar.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
@@ -22,37 +25,54 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Chair back post + back leg (full height, left vertical) -->
-    <path
-        android:fillColor="@android:color/transparent"
-        android:strokeColor="#F4ECD8"
-        android:strokeWidth="9"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round"
-        android:pathData="M 33,20 L 33,90" />
+    <group
+        android:translateX="21"
+        android:translateY="21"
+        android:scaleX="1.375"
+        android:scaleY="1.375">
 
-    <!-- Chair-back rail + bowl (R's bump, curves right and returns to seat level) -->
-    <path
-        android:fillColor="@android:color/transparent"
-        android:strokeColor="#F4ECD8"
-        android:strokeWidth="9"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round"
-        android:pathData="M 33,20 L 63,20 Q 81,20 81,37 Q 81,54 65,55 L 33,55" />
+        <!-- Nameplate frame, chamfered corners (structure weight) -->
+        <path
+            android:fillColor="@android:color/transparent"
+            android:strokeColor="#E8C874"
+            android:strokeWidth="4"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M12,14 L36,14 L40,18 L40,30 L36,34 L12,34 L8,30 L8,18 Z" />
 
-    <!-- Front leg — diagonal, shorter than the back (the wobble).
-         Back leg ends at y=90; front ends at y=80 — 10dp gap = unstable throne. -->
-    <path
-        android:fillColor="@android:color/transparent"
-        android:strokeColor="#F4ECD8"
-        android:strokeWidth="9"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round"
-        android:pathData="M 66,55 L 76,80" />
+        <!-- Seat, inscribed on the plate -->
+        <path
+            android:fillColor="@android:color/transparent"
+            android:strokeColor="#E8C874"
+            android:strokeWidth="4"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M16,26 L28,26" />
 
-    <!-- Brass coin propping the short leg (the visual gag: power held up by money) -->
-    <path
-        android:fillColor="#C99A3B"
-        android:pathData="M 82,83 m -6,0 a 6,6 0 1,0 12,0 a 6,6 0 1,0 -12,0" />
+        <!-- Leg -->
+        <path
+            android:fillColor="@android:color/transparent"
+            android:strokeColor="#E8C874"
+            android:strokeWidth="4"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M24,26 L24,30" />
+
+        <!-- Ghost: the frame repeated one module right, at trace weight —
+             the misprint the brand doc opens with, made structural -->
+        <path
+            android:fillColor="@android:color/transparent"
+            android:strokeColor="#E8C874"
+            android:strokeWidth="2"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M16,14 L40,14 L44,18 L44,30 L40,34 L16,34 L12,30 L12,18 Z" />
+
+        <!-- Brass coin, on the plate -->
+        <path
+            android:fillColor="#C99A3B"
+            android:pathData="M32,27 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+
+    </group>
 
 </vector>

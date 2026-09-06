@@ -1,71 +1,18 @@
-<svg viewBox="0 0 1200 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="kursiBannerTitle kursiBannerDesc">
-  <title id="kursiBannerTitle">Gaddi — Gaddi ke liye kuch bhi karega (he'll do anything for the chair)</title>
-  <desc id="kursiBannerDesc">A License Raj Deco brass-and-parchment wordmark with a stamped khokha coin, in the style of a 1970s government-issue document.</desc>
-
-  <defs>
-    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1A1A2E"/>
-      <stop offset="100%" stop-color="#0F0F1A"/>
-    </linearGradient>
-
-    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#C99A3B"/>
-      <stop offset="50%" stop-color="#E8C874"/>
-      <stop offset="100%" stop-color="#C99A3B"/>
-    </linearGradient>
-
-    <radialGradient id="coinGrad" cx="35%" cy="32%" r="75%">
-      <stop offset="0%" stop-color="#E8C874"/>
-      <stop offset="55%" stop-color="#C99A3B"/>
-      <stop offset="100%" stop-color="#7A5A22"/>
-    </radialGradient>
-
-    <filter id="coinGlow" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="5" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
-
-  <!-- Background -->
-  <rect width="1200" height="280" fill="url(#bgGrad)"/>
-
-  <!-- License Raj Deco frame -->
-  <rect x="10" y="10" width="1180" height="260" fill="none" stroke="#C99A3B" stroke-width="2" opacity="0.55"/>
-  <rect x="18" y="18" width="1164" height="244" fill="none" stroke="#C99A3B" stroke-width="1" opacity="0.3"/>
-  <g stroke="#C99A3B" stroke-width="2" opacity="0.75" fill="none">
-    <path d="M10,44 L10,10 L44,10"/>
-    <path d="M1156,10 L1190,10 L1190,44"/>
-    <path d="M1190,236 L1190,270 L1156,270"/>
-    <path d="M44,270 L10,270 L10,236"/>
-  </g>
-
-  <!-- Wordmark -->
-  <text x="60" y="172" font-family="Georgia, 'Palatino Linotype', 'Book Antiqua', serif" font-weight="700" font-size="128" letter-spacing="4" fill="url(#goldGrad)">Gaddi</text>
-
-  <!-- shine sweeping across the wordmark -->
-  <rect id="kursi-shine" x="60" y="40" width="70" height="150" fill="#F4ECD8" opacity="0.18" transform="skewX(-18)"/>
-
-  <!-- Tagline -->
-  <text x="64" y="208" font-family="Georgia, 'Palatino Linotype', serif" font-size="21" fill="#F4ECD8" opacity="0.9">
-    Gaddi ke liye kuch bhi karega.
-  </text>
-  <text x="64" y="234" font-family="Georgia, 'Palatino Linotype', serif" font-size="15" font-style="italic" fill="#E08A1E" opacity="0.75">
-    He'll do anything for the chair.
-  </text>
-
-  <!-- Khokha coin motif -->
-  <g id="kursi-coin" transform="translate(1080,140)">
-    <circle r="50" fill="url(#coinGrad)" stroke="#7A5A22" stroke-width="3" filter="url(#coinGlow)"/>
-    <g stroke="#1A1A2E" stroke-width="2" opacity="0.45" fill="none">
-      <circle r="37"/>
-      <line x1="-28" y1="0" x2="28" y2="0"/>
-      <line x1="0" y1="-28" x2="0" y2="28"/>
-      <line x1="-20" y1="-20" x2="20" y2="20"/>
-      <line x1="-20" y1="20" x2="20" y2="-20"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320">
+  <rect x="0" y="0" width="1280" height="320" fill="#1A1A2E"/>
+  <g transform="translate(80,80) scale(3.3333)">
+    <g fill="none" stroke="#E8C874" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="12,14 36,14 40,18 40,30 36,34 12,34 8,30 8,18" stroke-width="4"/>
+      <line x1="16" y1="26" x2="28" y2="26" stroke-width="4"/>
+      <line x1="24" y1="26" x2="24" y2="30" stroke-width="4"/>
+      <polygon points="16,14 40,14 44,18 44,30 40,34 16,34 12,30 12,18" stroke-width="2"/>
     </g>
-    <text x="0" y="11" font-family="Georgia, serif" font-size="30" font-weight="700" fill="#1A1A2E" text-anchor="middle">₹</text>
+    <circle cx="32" cy="27" r="3" fill="#C99A3B"/>
   </g>
+  <text x="280" y="160" dominant-baseline="central" text-anchor="start"
+        font-family="'Space Grotesk', sans-serif" font-weight="600"
+        font-size="113" letter-spacing="-1.13" fill="#F4ECD8">Gaddi</text>
+  <text x="280" y="213" dominant-baseline="hanging" text-anchor="start"
+        font-family="'JetBrains Mono', monospace" font-size="38.4"
+        letter-spacing="0.16em" fill="#C99A3B">THE SEAT OF POWER</text>
 </svg>

@@ -39,16 +39,19 @@ Role colors are Okabe-Ito (CVD-safe). They never change — every seat, every ga
 
 ---
 
-## Icon — the chair-R
+## Icon — the nameplate
 
-The **R** in KURSI reads as a chair in side profile:
-- Left vertical stroke = chair back / back leg (goes full height)
-- Top curve = chair-back rail (the R bowl)
-- Horizontal = the seat
-- Diagonal stroke = front leg, shorter than the back (the wobble — unstable throne)
-- Brass coin tucked under the short leg (power held up by money)
+The mark is an enamel station nameplate, chamfered, printed slightly wrong —
+the two-colour misregistration the identity direction opens with, made
+structural rather than decorative:
+- Chamfered frame = the nameplate itself, corners cut at one grid unit
+- Seat + leg = the gaddi (seat) inscribed on the plate
+- Ghost frame = the same outline repeated one module to the right at half the
+  stroke weight — the misprint, drawn rather than implied
+- Brass coin, mounted on the plate
 
-App icon: cream glyph on deep teak. See `cmp-android/src/main/res/drawable/ic_launcher_foreground.xml`.
+App icon: gold frame and brass coin on deep teak. See
+`cmp-android/src/main/res/drawable/ic_launcher_foreground.xml`.
 
 ---
 
