@@ -1,6 +1,6 @@
-# Kursi — Visual Identity
+# Gaddi — Visual Identity
 
-Kursi looks like a satirical political poster pasted on a city wall. Bold, slightly wrong, printed with two-color misregistration on cheap paper. The vibe is a roadside nukkad drama where everyone is performing virtue while picking a pocket.
+Gaddi looks like a satirical political poster pasted on a city wall. Bold, slightly wrong, printed with two-color misregistration on cheap paper. The vibe is a roadside nukkad drama where everyone is performing virtue while picking a pocket.
 
 The identity direction is called **License Raj Deco** — the aesthetic of 1950s–70s Indian government documents: ration cards, share certificates, enamel station signs, parliament building art-deco. The joke is that the game interface is itself a pompous government artifact. Share certificates for liars. Enamel nameplates for crooks.
 
@@ -56,7 +56,7 @@ App icon: cream glyph on deep teak. See `cmp-android/src/main/res/drawable/ic_la
 
 Hinglish-default with easy code-switching. Knowing and deadpan — the game winks at you. Zero cruelty toward people; maximum cruelty toward the game situation.
 
-**Primary tagline:** "Kursi ke liye kuch bhi karega." *(He'll do anything for the chair.)*
+**Primary tagline:** "Gaddi ke liye kuch bhi karega." *(He'll do anything for the chair.)*
 
 **Loading screen lines:**
 - "Sab mile hue hain."

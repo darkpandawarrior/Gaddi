@@ -1,4 +1,4 @@
-# Uptodown submission — Kursi
+# Uptodown submission — Gaddi
 
 ## Verdict: worth doing
 
@@ -10,7 +10,7 @@ and Uptodown runs an identity-verification step on registering developers, which
 trust-scoring puts it at 100/100 with no malware/phishing blacklist hits (source:
 [mywot.com/scorecard/uptodown.com](https://www.mywot.com/scorecard/uptodown.com)). That is the
 opposite of the reputational risk that ruled out APKPure for this app family — see the channel
-verdict summary for the comparison. Kursi's whole pitch is "genuinely FOSS-clean, nothing hidden,"
+verdict summary for the comparison. Gaddi's whole pitch is "genuinely FOSS-clean, nothing hidden,"
 and Uptodown doesn't undercut that story the way a moderate-risk mirror site would.
 
 ## Not done yet (owner-only, needs a real Uptodown account)
@@ -20,7 +20,7 @@ and Uptodown doesn't undercut that story the way a moderate-risk mirror site wou
   a different aspect ratio, used for other stores). Uptodown's spec is "recommended, not mandatory,"
   so this is skippable for a first submission.
 - Whether a privacy policy URL is mandatory on Uptodown's form — not confirmed from outside the
-  console (see caveats at the bottom). Kursi is offline-only with no accounts and no server for the
+  console (see caveats at the bottom). Gaddi is offline-only with no accounts and no server for the
   core game, so there is nothing to disclose either way; have an answer ready in case the form asks.
 
 ## Account setup (do this yourself)
@@ -35,12 +35,12 @@ and Uptodown doesn't undercut that story the way a moderate-risk mirror site wou
    Release build, so it can be recognized as the same app if you ever claim/merge listings).
 3. Upload the signed APK. Use the exact release asset, not a glob — the release also carries
    `-gms-release-unsigned` and `-noGms-release-unsigned` builds that are NOT signed:
-   `https://github.com/darkpandawarrior/Kursi/releases/download/v2026.08.35.1.234/Kursi-v2026.08.35.1.234.apk`
+   `https://github.com/darkpandawarrior/Gaddi/releases/download/v2026.08.35.1.234/Kursi-v2026.08.35.1.234.apk`
    (signing cert SHA-256: `e3cd9ed25baaa6db5501621a2a7399edc0878022f9b64b5d95446db0348dd19c` — verify
    with `apksigner verify --print-certs` before uploading, per the app-distribution skill's rule of
    verifying the certificate, not just the presence of one).
 4. Icon: Uptodown wants a square PNG, ≥256×256, and rounds the corners itself, so upload a full
-   square, not a pre-rounded one. Kursi ships an adaptive icon (no static PNG in source) — export it
+   square, not a pre-rounded one. Gaddi ships an adaptive icon (no static PNG in source) — export it
    with Android Studio's Image Asset tool, or unzip the signed APK above and take
    `res/mipmap-xxxhdpi-v4/ic_launcher.png`.
 5. Screenshots: vertical/portrait preferred per Uptodown's guidance. Reuse the existing set, already
@@ -54,17 +54,17 @@ and Uptodown doesn't undercut that story the way a moderate-risk mirror site wou
 
 **Title**
 ```
-Kursi: Bluffing Card Game
+Gaddi: Bluffing Card Game
 ```
 
 **Short description**
 ```
-Kursi ke liye kuch bhi karega. Lie. Bribe. Survive. Repeat.
+Gaddi ke liye kuch bhi karega. Lie. Bribe. Survive. Repeat.
 ```
 
 **Full description** (trim if the form enforces a shorter limit than this — not confirmed)
 ```
-Kursi ke liye kuch bhi karega.
+Gaddi ke liye kuch bhi karega.
 
 Bluffing card game set in a satirical India corporate-political underworld. Claim any role on your turn, whether you hold it or not. If someone calls your bluff and they're right, you lose influence. If they're wrong, they do. Last player standing wins the Gaddi.
 
@@ -92,7 +92,7 @@ Everything else: interactive tutorial (Pehli Hazri), career stats and bot H2H re
 
 The visual identity is License Raj Deco: a 1950s to 1970s government-issue document aesthetic. Ration cards for liars. Enamel nameplates for crooks. Everything is on theme.
 
-Kursi is written in Kotlin Multiplatform and Compose Multiplatform, one codebase across Android, iOS, desktop, and web, with a Ktor server backing the online modes. This build is the noGms flavor: no Google Play Services, no Firebase, no proprietary blobs. Source is GPL-3.0-or-later, at https://github.com/darkpandawarrior/Kursi.
+Gaddi is written in Kotlin Multiplatform and Compose Multiplatform, one codebase across Android, iOS, desktop, and web, with a Ktor server backing the online modes. This build is the noGms flavor: no Google Play Services, no Firebase, no proprietary blobs. Source is GPL-3.0-or-later, at https://github.com/darkpandawarrior/Gaddi.
 
 Sab mile hue hain. Trust no claim. Especially your own.
 

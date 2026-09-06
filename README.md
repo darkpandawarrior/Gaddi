@@ -1,16 +1,16 @@
 <div align="center">
 
-<img src="docs/assets/banner.gif" alt="Kursi, Kursi ke liye kuch bhi karega (he'll do anything for the chair)" width="900" />
+<img src="docs/assets/banner.gif" alt="Gaddi, Gaddi ke liye kuch bhi karega (he'll do anything for the chair)" width="900" />
 
-### Kursi ke liye kuch bhi karega, he'll do anything for the chair.
+### Gaddi ke liye kuch bhi karega, he'll do anything for the chair.
 
 A bluffing card game set in a satirical India corporate-political underworld, 2 to 10 players, five
 roles hidden face-down, everyone lying about what they hold. Built in Kotlin Multiplatform with
 Compose Multiplatform: one codebase, four targets. Coup's deterministic bluffing core, plus a bot
 social layer (DARBAR) and an ISMCTS-powered coach on top.
 
-[![CI](https://github.com/darkpandawarrior/Kursi/actions/workflows/ci.yml/badge.svg)](https://github.com/darkpandawarrior/Kursi/actions/workflows/ci.yml)
-[![Quality](https://github.com/darkpandawarrior/Kursi/actions/workflows/quality.yml/badge.svg)](https://github.com/darkpandawarrior/Kursi/actions/workflows/quality.yml)
+[![CI](https://github.com/darkpandawarrior/Gaddi/actions/workflows/ci.yml/badge.svg)](https://github.com/darkpandawarrior/Gaddi/actions/workflows/ci.yml)
+[![Quality](https://github.com/darkpandawarrior/Gaddi/actions/workflows/quality.yml/badge.svg)](https://github.com/darkpandawarrior/Gaddi/actions/workflows/quality.yml)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.4.20--RC-7F52FF?logo=kotlin&logoColor=white)
 ![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.12.0--rc01-4285F4?logo=jetpackcompose&logoColor=white)
 ![Platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Desktop%20%7C%20Web-3DDC84)
@@ -18,7 +18,7 @@ social layer (DARBAR) and an ISMCTS-powered coach on top.
 [![Assets: CC BY-SA 4.0](https://img.shields.io/badge/assets-CC%20BY--SA%204.0-lightgrey)](ASSETS-LICENSE)
 ![Players](https://img.shields.io/badge/players-2--10-C99A3B)
 
-**[Why](#why-kursi)** · **[Highlights](#highlights)** · **[Screenshots](#screenshots)** · **[Features](#features-at-a-glance)** · **[Architecture](#architecture)** · **[Tech stack](#tech)** · **[Getting started](#getting-started)** · **[Roadmap](#roadmap)**
+**[Why](#why-gaddi)** · **[Highlights](#highlights)** · **[Screenshots](#screenshots)** · **[Features](#features-at-a-glance)** · **[Architecture](#architecture)** · **[Tech stack](#tech)** · **[Getting started](#getting-started)** · **[Roadmap](#roadmap)**
 
 Sibling repos: [`kmp-toolkit`](https://github.com/darkpandawarrior/kmp-toolkit) (vendored `mvi-core`/`feedback`/`common`/`bots-policy`/`network`/`ai`/`llm-chat`) · [`kmp-build-logic`](https://github.com/darkpandawarrior/kmp-build-logic) (shared Gradle convention plugins) · Portfolio: [cv-siddharth.vercel.app](https://cv-siddharth.vercel.app/)
 
@@ -29,7 +29,7 @@ Sibling repos: [`kmp-toolkit`](https://github.com/darkpandawarrior/kmp-toolkit) 
 <details>
 <summary><b>Table of contents</b></summary>
 
-- [Why Kursi](#why-kursi)
+- [Why Gaddi](#why-gaddi)
 - [Highlights](#highlights)
 - [Screenshots](#screenshots)
 - [The three-layer table, FOCUS / GUIDED / ANALYST](#the-three-layer-table--focus--guided--analyst)
@@ -67,9 +67,9 @@ Sibling repos: [`kmp-toolkit`](https://github.com/darkpandawarrior/kmp-toolkit) 
 > for `mvi-core`/`feedback`/`common`/`bots-policy`/`network`/`ai`/`llm-chat`. *Module list from
 > `settings.gradle.kts`.*
 
-## Why Kursi
+## Why Gaddi
 
-Coup (Indie Boards and Cards, 2012) is a tight bluffing game with almost no social layer, five roles, a handful of actions, and the table goes quiet between claims. Kursi keeps that deterministic core intact and builds a satirical India corporate-political skin plus a social layer (DARBAR) on top of it: bots that remember, gossip, form pacts and hold grudges, and an ISMCTS-powered coach that reads the table the way the bots do.
+Coup (Indie Boards and Cards, 2012) is a tight bluffing game with almost no social layer, five roles, a handful of actions, and the table goes quiet between claims. Gaddi keeps that deterministic core intact and builds a satirical India corporate-political skin plus a social layer (DARBAR) on top of it: bots that remember, gossip, form pacts and hold grudges, and an ISMCTS-powered coach that reads the table the way the bots do.
 
 The first build of that idea shipped every screen as one dense instrument panel, right for a rules-lawyer, overwhelming for a first-timer. The overhaul in this README's screenshots is the fix: the same engine, the same DARBAR layer, now revealed at **three densities** instead of one, wrapped in a from-scratch **AAA visual language** and narrated in-character by an **AI Munshi** instead of static log lines. Nothing about the deterministic core changed, the presentation layer got rebuilt around how a new player actually learns the table.
 
@@ -477,7 +477,7 @@ Every completed match is stored as `(seed, intentLog)`. The replay reconstructs 
 
 **Quick-match**: matchmake against whoever is waiting.
 
-**LAN discovery**: Bonjour/mDNS browse shows all Kursi games on the local network. No manual IP entry.
+**LAN discovery**: Bonjour/mDNS browse shows all Gaddi games on the local network. No manual IP entry.
 
 The authoritative server is **Ktor/Netty**. All game state lives server-side. Clients receive only their redacted `PlayerView`, the server never sends information a player shouldn't have. A disconnected player auto-passes on their turn until they reconnect.
 
@@ -565,7 +565,7 @@ never a crash; callers gate every call on the player's own sound-enabled prefere
 ## Architecture
 
 ```
-Kursi/
+Gaddi/
 ├── engine/           # (GameState, Intent) → GameState — zero deps, RNG in state
 ├── ai/               # ISMCTS + 10 personas + social model + cloud/on-device LLM layer
 ├── server/           # Ktor/Netty authoritative server
@@ -680,8 +680,8 @@ Two things worth reading the source for, not the callouts above, not generic KMP
 ## Getting started
 
 ```bash
-git clone https://github.com/darkpandawarrior/Kursi.git
-cd Kursi
+git clone https://github.com/darkpandawarrior/Gaddi.git
+cd Gaddi
 
 # Fastest path to the full game
 ./gradlew :cmp-desktop:run
@@ -745,7 +745,7 @@ All gated on repo secrets and no-ops until configured, see each workflow's heade
 Not automatable, no CI job:
 - **Uptodown**: no public submission API; manual web-form upload.
 - **TapTap**: no public submission API; manual upload/contact-support via the developer console
-  (gaming-only anyway, but Kursi qualifies).
+  (gaming-only anyway, but Gaddi qualifies).
 - **[Obtainium](https://github.com/ImranR98/Obtainium)**: not a store; it tracks the GitHub
   Releases `release.yml` already publishes, no separate config needed.
 

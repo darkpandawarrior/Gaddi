@@ -1,4 +1,4 @@
-# IzzyOnDroid submission — Kursi
+# IzzyOnDroid submission — Gaddi
 
 Ready to paste into a new issue at **https://codeberg.org/IzzyOnDroid/repodata/issues/new**
 using the **"App Inclusion Request"** template (`.forgejo/issue_template/app-inclusion-request.yaml`,
@@ -6,7 +6,7 @@ verified live on the `main` branch 2026-08-26). That page renders the fields bel
 this file gives the answer for each field in the same order, so paste per-field into the form
 rather than pasting this whole file as one issue body.
 
-Issue title: `[AppRequest] Kursi: Bluffing Card Game`
+Issue title: `[AppRequest] Gaddi: Bluffing Card Game`
 
 Labels the template auto-applies: `app-request`, `needs/apk-scan` — no action needed, Forgejo sets
 these from the template.
@@ -29,7 +29,7 @@ these from the template.
 ## App meta-data
 
 **Link to the source code**
-`https://github.com/darkpandawarrior/Kursi` — verified public 2026-08-26
+`https://github.com/darkpandawarrior/Gaddi` — verified public 2026-08-26
 (`"private": false, "visibility": "public"` via the GitHub API).
 
 **Link to app in another app store**
@@ -53,7 +53,7 @@ call bluffs, survive to hold the Gaddi. Fully offline, 10 AI opponents, zero ads
 
 **Description**
 ```
-Kursi ke liye kuch bhi karega.
+Gaddi ke liye kuch bhi karega.
 
 Bluffing card game set in a satirical India corporate-political underworld. Claim any role on
 your turn, whether you hold it or not. If someone calls your bluff and they're right, you lose
@@ -84,8 +84,8 @@ All characters and events are fictional. Satire only.
 
 **Build instructions**
 ```
-git clone https://github.com/darkpandawarrior/Kursi.git
-cd Kursi
+git clone https://github.com/darkpandawarrior/Gaddi.git
+cd Gaddi
 ./gradlew :cmp-android:assembleNoGmsRelease -Pfdroid
 ```
 Output: `cmp-android/build/outputs/apk/noGms/release/cmp-android-noGms-release-unsigned.apk`.
@@ -136,7 +136,7 @@ retention-window concern.
 SHA-256 `e3cd9ed25baaa6db5501621a2a7399edc0878022f9b64b5d95446db0348dd19c`. Latest tag:
 `v2026.08.35.1.234`, GitHub Release asset name `Kursi-v2026.08.35.1.234.apk`
 (SHA-256 sidecar: `Kursi-v2026.08.35.1.234.apk.sha256`), release URL:
-`https://github.com/darkpandawarrior/Kursi/releases/tag/v2026.08.35.1.234`. Tags follow
+`https://github.com/darkpandawarrior/Gaddi/releases/tag/v2026.08.35.1.234`. Tags follow
 `v<YYYY>.<0M>.<0W>.<MILESTONE>.<commitCount>` — for automated update tracking on your end, a
 `UpdateCheckMode: Tags ^v[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]+\.[0-9]+$` /
 `AutoUpdateMode: Version` pairing (same as this project's own F-Droid metadata) should pick up

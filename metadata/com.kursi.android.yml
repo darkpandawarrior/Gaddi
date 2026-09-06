@@ -1,4 +1,4 @@
-# F-Droid build metadata for Kursi (noGms flavor).
+# F-Droid build metadata for Gaddi (noGms flavor).
 # Companion to fastlane/metadata/android/en-US/ (marketing copy) and NOTICE (attribution).
 # Keep License: in lockstep with the repo's LICENSE file, checked by
 # scripts/check-license-consistency.sh, or the F-Droid build breaks.
@@ -8,11 +8,11 @@ Categories:
 License: GPL-3.0-or-later
 AuthorName: Siddharth Pandalai
 
-SourceCode: https://github.com/darkpandawarrior/Kursi
-IssueTracker: https://github.com/darkpandawarrior/Kursi/issues
+SourceCode: https://github.com/darkpandawarrior/Gaddi
+IssueTracker: https://github.com/darkpandawarrior/Gaddi/issues
 
 RepoType: git
-Repo: https://github.com/darkpandawarrior/Kursi
+Repo: https://github.com/darkpandawarrior/Gaddi
 
 # noGms release APK is unsigned unless ANDROID_KEYSTORE_* secrets are configured; the tag-triggered
 # github-release.yml build is what actually lands on every `v*` push, and it names the noGms
@@ -38,7 +38,7 @@ AllowedAPKSigningKeys: e3cd9ed25baaa6db5501621a2a7399edc0878022f9b64b5d95446db03
 # signed artifact instead of trusting the build alone. Asset name comes straight from
 # .github/workflows/publish-fdroid.yml's `gh release upload`: "Kursi-${tag}.apk" where ${tag} is
 # the pushed tag verbatim (the tag already carries the leading "v").
-Binaries: https://github.com/darkpandawarrior/Kursi/releases/download/%v/Kursi-%v.apk
+Binaries: https://github.com/darkpandawarrior/Gaddi/releases/download/%v/Kursi-%v.apk
 
 # Tags follow the fingerprint versioning scheme (docs/RELEASE.md / gradle/versioning.gradle.kts):
 # v<YYYY>.<0M>.<0W>.<MILESTONE>.<commitCount>, e.g. v2026.07.30.1.190. AutoUpdateMode: Version

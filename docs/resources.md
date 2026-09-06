@@ -1,11 +1,11 @@
-# Kursi — External Resources & Assets (license-vetted)
+# Gaddi — External Resources & Assets (license-vetted)
 
 Curated free resources to absorb into the launch overhaul. **Shipping rule:** only **CC0** and permissive
 (**MIT / Apache-2.0 / OFL**) assets or code enter the shipped game. **CC-BY** requires an entry in the in-app
 **Credits** screen. **GPL / copyleft art or code is quarantined** — never bundled into this proprietary game.
 Every "absorb" below carries a license-verification step before any code/asset is copied in.
 
-Kursi renders 100% on Canvas/vector, so the high-value absorbs are **shader code, juice technique, fonts, and
+Gaddi renders 100% on Canvas/vector, so the high-value absorbs are **shader code, juice technique, fonts, and
 audio** — not sprite packs.
 
 ## Graphics / shaders — Workstream C (§7)
@@ -37,7 +37,7 @@ Latin display trio (Rozha One / Marcellus / DM Mono) already bundled. For Devana
 
 ## Audio — Workstream C (§7.3), the juice layer's sound
 
-Kursi is silent today; beats (stamp-slam / coin / card-deal) need SFX. **CC0 only** (per-clip verify):
+Gaddi is silent today; beats (stamp-slam / coin / card-deal) need SFX. **CC0 only** (per-clip verify):
 - [Freesound](https://opengameart.org/content/cc0-sound-effects) (filter CC0) — 500k+ sounds.
 - [Kenney audio](https://kenney.itch.io/kenney-game-assets) — UI/impact SFX, CC0.
 - [Pixabay SFX](https://pixabay.com/sound-effects/search/cc0/) — commercial-use, no attribution.
@@ -57,7 +57,7 @@ Seed icons / textures / placeholder audio only:
 
 ## Design tooling (free, code-first — no paid Figma)
 
-Figma Dev Mode is paid-only; the free Starter plan can't unlock it. Kursi's design source of truth is **code**
+Figma Dev Mode is paid-only; the free Starter plan can't unlock it. Gaddi's design source of truth is **code**
 (`core/designsystem`), so:
 - **Design system** → built directly in `core/designsystem` (the real thing).
 - **Mockups / screens** → the existing `:cmp-desktop:renderScreens` harness + Compose `@Preview`.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Kursi</string>
+    <string name="app_name">Gaddi</string>
     <string name="shortcut_quick_play_short">Quick Play</string>
     <string name="shortcut_quick_play_long">Quick Play vs AI</string>
 </resources>

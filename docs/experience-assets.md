@@ -1,4 +1,4 @@
-# Kursi — Experience Assets & Absorption Plan
+# Gaddi — Experience Assets & Absorption Plan
 
 Flesh out the full sensory experience (sound, music, fonts, haptics, particles) by absorbing vetted
 external assets, mapped to game beats. **Shipping rule (same as [resources.md](resources.md)):** CC0 /

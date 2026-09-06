@@ -1,4 +1,4 @@
-# Kursi — submission for the OFFICIAL fdroiddata repo (metadata/com.kursi.android.yml at
+# Gaddi — submission for the OFFICIAL fdroiddata repo (metadata/com.kursi.android.yml at
 # gitlab.com/fdroid/fdroiddata), NOT for the self-hosted repo. The self-hosted equivalent lives at
 # ../com.kursi.android.yml and targets darkpandawarrior's own F-Droid index; that file is untouched.
 #
@@ -12,17 +12,17 @@ License: GPL-3.0-or-later
 AuthorName: Siddharth Pandalai
 AuthorEmail: siddharthpandalai990@gmail.com
 
-SourceCode: https://github.com/darkpandawarrior/Kursi
-IssueTracker: https://github.com/darkpandawarrior/Kursi/issues
+SourceCode: https://github.com/darkpandawarrior/Gaddi
+IssueTracker: https://github.com/darkpandawarrior/Gaddi/issues
 
 RepoType: git
-Repo: https://github.com/darkpandawarrior/Kursi
+Repo: https://github.com/darkpandawarrior/Gaddi
 
 # No Name / Summary / Description here on purpose. The current Build Metadata Reference marks all
 # three "Don't use this. The localized metadata in the app's source code should be used instead."
 # (https://f-droid.org/en/docs/Build_Metadata_Reference/, fetched 2026-08-26). F-Droid's importer
 # reads fastlane/metadata/android/en-US/{title,short_description,full_description}.txt straight out
-# of this repo, and Kursi already ships all three, already written for this exact build:
+# of this repo, and Gaddi already ships all three, already written for this exact build:
 # full_description.txt says outright "This build (from F-Droid) is the noGms flavor: no Google Play
 # Services, no Firebase, no proprietary blobs. ... opponents here use the built-in rule-based play."
 # (short_description.txt is 59 bytes, full_description.txt is 2,655 bytes — both under the docs'

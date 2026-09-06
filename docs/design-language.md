@@ -1,4 +1,4 @@
-# Kursi Design Language — "Sarkari Noir" (apply to EVERY screen)
+# Gaddi Design Language — "Sarkari Noir" (apply to EVERY screen)
 
 The AAA standard proven on the in-game FOCUS board. Every screen and flow must read as the same lit,
 crafted world. **Reference artifacts:** the rebuilt game board (`feature/game`), and the approved mockup

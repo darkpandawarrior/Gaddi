@@ -1,4 +1,4 @@
-# Kursi → official fdroiddata: submission notes
+# Gaddi → official fdroiddata: submission notes
 
 This directory holds a draft `com.kursi.android.yml` for the **official** F-Droid catalogue
 (`gitlab.com/fdroid/fdroiddata`) — the repo browsable/searchable inside the F-Droid client itself,
@@ -59,7 +59,7 @@ their build farm will do.
 
 Source build was chosen: a `Builds:` block with `subdir`, `gradle`, `gradleprops`, `output`.
 F-Droid's inclusion policy states the complete build process should use a 100% FLOSS toolchain and
-strongly prefers building from source over accepting prebuilt binaries — Kursi's noGms flavor
+strongly prefers building from source over accepting prebuilt binaries — Gaddi's noGms flavor
 qualifies now that it's dependency-clean (per this session's verified state: GMS/ML Kit/Firebase
 class references and the AICore permission are gone; the only native lib is AndroidX's own
 `libandroidx.graphics.path.so`).
@@ -80,7 +80,7 @@ of the commit being built, not from `Date()`.
 
 ## 3. Build server requirements (partially confirmed — flag one real gap)
 
-- **Repo is public**: yes, confirmed (`github.com/darkpandawarrior/Kursi`).
+- **Repo is public**: yes, confirmed (`github.com/darkpandawarrior/Gaddi`).
 - **Tag exists**: yes — `v2026.08.35.1.234`, commit `00784a2c937cc080d3b684a02ff319a3d4f091aa`
   (`git rev-parse`, checked directly against this working tree, not assumed).
 - **Submodules resolve without secrets**: `external/kmp-toolkit` and `external/kmp-build-logic` are

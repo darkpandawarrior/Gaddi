@@ -61,9 +61,9 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
 
-            packageName = "Kursi"
+            packageName = "Gaddi"
             packageVersion = kursiMarketingVersion
-            description = "Bluffing card game — Kursi ke liye kuch bhi karega."
+            description = "Bluffing card game — Gaddi ke liye kuch bhi karega."
             copyright = "© 2025 Siddharth Pandalai"
             vendor = "darkpandawarrior"
 
@@ -86,7 +86,7 @@ compose.desktop {
                 iconsDir.resolve("kursi.ico").takeIf { it.exists() }?.let { iconFile.set(it) }
                 packageVersion = kursiMarketingVersion
                 msiPackageVersion = kursiMarketingVersion
-                menuGroup = "Kursi"
+                menuGroup = "Gaddi"
                 upgradeUuid = "2E5F3A1C-9B4D-4E7A-8C0F-1D2B3E4A5F6C"
             }
             linux {

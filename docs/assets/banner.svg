@@ -1,5 +1,5 @@
 <svg viewBox="0 0 1200 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="kursiBannerTitle kursiBannerDesc">
-  <title id="kursiBannerTitle">Kursi — Kursi ke liye kuch bhi karega (he'll do anything for the chair)</title>
+  <title id="kursiBannerTitle">Gaddi — Gaddi ke liye kuch bhi karega (he'll do anything for the chair)</title>
   <desc id="kursiBannerDesc">A License Raj Deco brass-and-parchment wordmark with a stamped khokha coin, in the style of a 1970s government-issue document.</desc>
 
   <defs>
@@ -43,14 +43,14 @@
   </g>
 
   <!-- Wordmark -->
-  <text x="60" y="172" font-family="Georgia, 'Palatino Linotype', 'Book Antiqua', serif" font-weight="700" font-size="128" letter-spacing="4" fill="url(#goldGrad)">Kursi</text>
+  <text x="60" y="172" font-family="Georgia, 'Palatino Linotype', 'Book Antiqua', serif" font-weight="700" font-size="128" letter-spacing="4" fill="url(#goldGrad)">Gaddi</text>
 
   <!-- shine sweeping across the wordmark -->
   <rect id="kursi-shine" x="60" y="40" width="70" height="150" fill="#F4ECD8" opacity="0.18" transform="skewX(-18)"/>
 
   <!-- Tagline -->
   <text x="64" y="208" font-family="Georgia, 'Palatino Linotype', serif" font-size="21" fill="#F4ECD8" opacity="0.9">
-    Kursi ke liye kuch bhi karega.
+    Gaddi ke liye kuch bhi karega.
   </text>
   <text x="64" y="234" font-family="Georgia, 'Palatino Linotype', serif" font-size="15" font-style="italic" fill="#E08A1E" opacity="0.75">
     He'll do anything for the chair.
