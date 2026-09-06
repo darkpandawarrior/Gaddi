@@ -57,3 +57,4 @@ jobs:
         with:
           name: kursi-debug-apk
           path: cmp-android/build/outputs/apk/gms/debug/*.apk
+          retention-days: 2
