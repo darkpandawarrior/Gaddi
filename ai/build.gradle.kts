@@ -24,6 +24,11 @@ kotlin {
             // :ai) stayed here — neither needs ktor directly anymore, so the ktor-client-* deps this
             // module used to declare for the (now-moved) provider impls are gone too.
             implementation("com.siddharth.kmp:llm-chat:1.0.0")
+            // AiResult<String>/AiFailure — every AiProvider.complete()/completeStream() override in
+            // this module (TemplatedAiProvider, IsmctsOnlyProvider, OnDeviceAiProvider.*) returns or
+            // emits these types directly, so :llm-chat's own (implementation-only) dependency on
+            // :result doesn't reach this module's compile classpath transitively; needs its own line.
+            implementation("com.siddharth.kmp:result:1.0.0")
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.core)
         }

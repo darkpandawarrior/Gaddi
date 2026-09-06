@@ -4,9 +4,13 @@ import com.siddharth.kmp.ai.CompositeOnDeviceLlm
 import com.siddharth.kmp.ai.FoundationModelsOnDeviceLlm
 import com.siddharth.kmp.ai.MediaPipeOnDeviceLlm
 import com.siddharth.kmp.ai.OnDeviceLlm
+import com.siddharth.kmp.llmchat.AiChunk
 import com.siddharth.kmp.llmchat.AiConfig
 import com.siddharth.kmp.llmchat.AiMessage
 import com.siddharth.kmp.llmchat.AiProvider
+import com.siddharth.kmp.result.AiResult
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 /**
  * iOS on-device LLM tier (consolidation #7): routes through toolkit `:ai`'s Foundation Models →
@@ -25,5 +29,10 @@ actual class OnDeviceAiProvider actual constructor() : AiProvider {
     override suspend fun complete(
         messages: List<AiMessage>,
         config: AiConfig,
-    ): String = llm.generate(messages.toOnDevicePrompt()) ?: ""
+    ): AiResult<String> = llm.generate(messages.toOnDevicePrompt())
+
+    override fun completeStream(
+        messages: List<AiMessage>,
+        config: AiConfig,
+    ): Flow<AiChunk> = llm.generateStream(messages.toOnDevicePrompt()).map { AiChunk.Token(it) }
 }

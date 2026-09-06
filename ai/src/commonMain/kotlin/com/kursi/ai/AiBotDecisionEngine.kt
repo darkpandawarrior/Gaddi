@@ -10,6 +10,7 @@ import com.kursi.engine.redact
 import com.siddharth.kmp.botspolicy.SearchBudget
 import com.siddharth.kmp.llmchat.AiMessage
 import com.siddharth.kmp.llmchat.AiProvider
+import com.siddharth.kmp.result.getOrNull
 import kotlinx.coroutines.withTimeoutOrNull
 
 private val QUICK_BUDGET = SearchBudget(maxMillis = 200L, maxIterations = 800, rolloutHorizon = 8)
@@ -46,7 +47,7 @@ class AiBotDecisionEngine(
                                 AiMessage(AiMessage.Role.USER, context),
                             ),
                     )
-                }.getOrNull()
+                }.getOrNull()?.getOrNull()
             }
 
         return resolveIntent(llmResponse?.trim(), ranked, legal, botId) ?: fallback
