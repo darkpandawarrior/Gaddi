@@ -10,12 +10,12 @@ import com.siddharth.kmp.llmchat.AiProvider
 // UnavailableOnDeviceLlm-equivalent to toolkit :ai, then wire this the same way as
 // OnDeviceAiProvider.jvm.kt.
 actual class OnDeviceAiProvider actual constructor() : AiProvider {
-    override val id = "on_device"
-    override val displayName = "On-device AI"
+    actual override val id = "on_device"
+    actual override val displayName = "On-device AI"
 
-    override suspend fun isAvailable() = false
+    actual override suspend fun isAvailable() = false
 
-    override suspend fun complete(
+    actual override suspend fun complete(
         messages: List<AiMessage>,
         config: AiConfig,
     ) = ""
