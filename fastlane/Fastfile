@@ -119,7 +119,7 @@ platform :ios do
       scheme: "iosApp",
       export_method: "app-store",
       output_directory: "outputs/ios",
-      output_name: "Kursi-#{current_version_name}.ipa"
+      output_name: "Gaddi-#{current_version_name}.ipa"
     )
   end
 
