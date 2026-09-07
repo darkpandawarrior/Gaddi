@@ -29,7 +29,7 @@ or don't care that it has none, and sign it fresh.
 
 ## Install steps
 
-1. Download the `Kursi-<version>-ios-unsigned.ipa` asset from the
+1. Download the `Gaddi-<version>-ios-unsigned.ipa` asset from the
    [latest release](https://github.com/darkpandawarrior/Gaddi/releases/latest).
 2. Pick one:
    - **SideStore** (no computer needed after first setup): <https://sidestore.io>. First install

@@ -21,11 +21,18 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kursi.ai.provider.createSecureKeyStore
 import com.kursi.core.prefs.AppPrefs
 import com.kursi.core.prefs.TurnSpeed
 import com.kursi.designsystem.*
 import com.kursi.feature.game.Difficulty
 import com.kursi.shared.strings.LocalKursiStrings
+import com.siddharth.kmp.ai.NoModelManager
+import com.siddharth.kmp.ai.UnavailableOnDeviceLlm
+import com.siddharth.kmp.designsystem.ai.AiConsentStore
+import com.siddharth.kmp.designsystem.ai.AiSettingsSection
+import com.siddharth.kmp.designsystem.ai.AiSettingsState
+import com.siddharth.kmp.llmchat.ProviderId
 import kursi.core.designsystem.generated.resources.Res
 import kursi.core.designsystem.generated.resources.a11y_player_count_radio
 import kursi.core.designsystem.generated.resources.settings_edit_profile_label
@@ -68,6 +75,39 @@ fun SettingsScreen(
     var turnSpeed by remember { mutableStateOf(prefs.turnSpeed) }
     var autoPass by remember { mutableStateOf(prefs.autoPass) }
     var autoForced by remember { mutableStateOf(prefs.autoPlayForced) }
+
+    // ── MUNSHI (AI narration BYOK) ──────────────────────────────────────────
+    val aiScope = rememberCoroutineScope()
+    val secureKeyStore = remember { createSecureKeyStore() }
+    val aiSettingsState =
+        remember {
+            AiSettingsState(
+                // ponytail: on-device model download management (a real per-platform ModelManager +
+                // manifest) is a separate feature this lane doesn't add — on-device narration already
+                // works automatically without this screen (OnDeviceAiProvider, picked up with zero
+                // setup). This card stays BYOK-focused: NoModelManager/UnavailableOnDeviceLlm report
+                // "nothing downloadable / not available" everywhere honestly, rather than faking a
+                // real capability check. Upgrade path: a com.kursi.ai.provider on-device accessor +
+                // a Gemma manifest entry, once model-download UI is actually scoped.
+                modelManager = NoModelManager,
+                manifest = emptyList(),
+                onDeviceLlm = UnavailableOnDeviceLlm,
+                getKey = secureKeyStore::getKey,
+                setKey = secureKeyStore::setKey,
+                scope = aiScope,
+                consentStore =
+                    object : AiConsentStore {
+                        override fun consentGiven(): Boolean = prefs.aiConsentGiven
+
+                        override fun setConsent(consent: Boolean) {
+                            prefs.aiConsentGiven = consent
+                        }
+                    },
+            ).also { state ->
+                ProviderId.entries.firstOrNull { it.name == prefs.aiSelectedProviderName }?.let(state::selectProvider)
+            }
+        }
+    val aiUiState by aiSettingsState.uiState.collectAsState()
 
     Column(modifier = modifier.fillMaxSize().litGround()) {
         EngravedNavHeader(
@@ -292,6 +332,28 @@ fun SettingsScreen(
                     EngravedHeader(eyebrow = s.settingsLearningSection)
                     SettingsLinkRow(label = s.settingsReplayPrimerLabel, sublabel = s.settingsReplayPrimerSub, onClick = onReplayPrimer)
                     SettingsLinkRow(label = s.settingsRulesLabel, sublabel = s.settingsRulesSub, onClick = onGazette, showDivider = false)
+                }
+
+                // ── MUNSHI (AI narration BYOK) ──────────────────────────────────────
+                // ponytail: hardcoded English label, no LocalKursiStrings entry — the toolkit
+                // AiSettingsSection card below is itself all hardcoded English (no bilingual support
+                // yet), so a localized eyebrow here would be a language mismatch with its own body.
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    EngravedHeader(eyebrow = "AI NARRATION")
+                    AiSettingsSection(
+                        uiState = aiUiState,
+                        onConsentChange = aiSettingsState::setAiConsent,
+                        onStartDownload = aiSettingsState::startDownload,
+                        onPauseDownload = aiSettingsState::pauseDownload,
+                        onDeleteModel = aiSettingsState::deleteModel,
+                        onSelectProvider = { id ->
+                            aiSettingsState.selectProvider(id)
+                            prefs.aiSelectedProviderName = id.name
+                        },
+                        onProviderKeyChange = aiSettingsState::setProviderKey,
+                        onClearProviderKey = aiSettingsState::clearProviderKey,
+                        onTestProviderKey = aiSettingsState::testKey,
+                    )
                 }
 
                 // ── BAARE MEIN (About) ─────────────────────────────────────────────

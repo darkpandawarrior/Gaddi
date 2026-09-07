@@ -80,15 +80,16 @@ includeBuild("external/kmp-toolkit") {
         substitute(module("com.siddharth.kmp:ai")).using(project(":ai"))
         // Consolidation #10: Kursi's cloud-LLM chat client (AiProvider + Anthropic/OpenAI/Gemini +
         // chain builder) now lives in toolkit :llm-chat. Kursi's own :ai module consumes it; only
-        // IsmctsOnlyProvider (implements AiProvider) and OnDeviceAiProvider.* (consumes toolkit :ai)
-        // stayed behind as Kursi-specific.
+        // OnDeviceAiProvider.* (consumes toolkit :ai) stayed behind as Kursi-specific (the other
+        // Kursi-specific AiProvider, IsmctsOnlyProvider, was dead code and was deleted).
         substitute(module("com.siddharth.kmp:llm-chat")).using(project(":llm-chat"))
         // AiResult<T>/AiFailure — :llm-chat's own dependency on this is `implementation`, so it
         // doesn't reach a consumer's classpath transitively; any module (like Kursi's own :ai)
         // whose AiProvider implementations expose these types on their public complete()/
         // completeStream() overrides needs this substitution too.
         substitute(module("com.siddharth.kmp:result")).using(project(":result"))
-        // feature:game's ChatEmbellisherTest drives LlmChatEmbellisher with FakeOnDeviceLlm.
+        // AiBotDecisionEngineTest (:ai's commonTest) scripts a fake on-device backend through this
+        // instead of a hand-rolled local fake, same double the toolkit's own tests use.
         substitute(module("com.siddharth.kmp:ai-testing")).using(project(":ai-testing"))
         // Adaptive substrate for core:designsystem — see that module's build.gradle.kts.
         substitute(module("com.siddharth.kmp:designsystem")).using(project(":designsystem"))

@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.asStateFlow
  *  - reducedMotion (Boolean) — accessibility motion switch
  *  - defaultDifficulty (String) — "Easy" | "Medium" | "Hard" | "Expert"
  *  - defaultPlayerCount (Int) — 2..10
+ *  - aiConsentGiven (Boolean) — Munshi narrator on-device/cloud model call permission
+ *  - aiSelectedProviderName (String) — last-picked cloud provider (a ProviderId name)
  *
  * Usage:
  *   val prefs = AppPrefs()     // uses platform default Settings backend
@@ -180,6 +182,14 @@ class AppPrefs(
 
         /** Lifetime count of gauntlet bouts the player has WON (clears + re-wins on already-cleared rungs). */
         private const val KEY_GAUNTLET_WINS = "gauntlet_wins"
+
+        // ── AI narration (Munshi BYOK) ────────────────────────────────────────────
+
+        /** Whether the player has allowed the Munshi narrator to call an on-device or cloud model. */
+        private const val KEY_AI_CONSENT = "ai_consent_given"
+
+        /** Which cloud provider (a `ProviderId` name) the settings screen's picker last selected. */
+        private const val KEY_AI_SELECTED_PROVIDER = "ai_selected_provider"
     }
 
     // ── hasSeenPrimer ─────────────────────────────────────────────────────────
@@ -348,6 +358,33 @@ class AppPrefs(
         set(v) {
             settings.putBoolean(KEY_AUTO_FORCED, v)
             _autoPlayForcedFlow.value = v
+        }
+
+    // ── AI narration (Munshi BYOK) ────────────────────────────────────────────
+
+    /**
+     * Whether the player has allowed the Munshi narrator to call an on-device or cloud model at
+     * all — the settings screen's toolkit `AiSettingsSection` "Enable AI features" switch. Default
+     * true preserves the pre-existing zero-setup on-device narration for a player who never opens
+     * Settings; the switch only lets someone turn it OFF. False forces
+     * [com.kursi.ai.createMunshiNarrator] down to the templated floor (no on-device or cloud call).
+     */
+    var aiConsentGiven: Boolean
+        get() = settings.getBoolean(KEY_AI_CONSENT, defaultValue = true)
+        set(v) {
+            settings.putBoolean(KEY_AI_CONSENT, v)
+        }
+
+    /**
+     * The cloud provider (by `com.siddharth.kmp.llmchat.ProviderId` name) the settings screen's
+     * picker last selected — this module stays enum/toolkit-type-free, same as [defaultDifficulty].
+     * Only reorders the provider chain's priority; any saved key is still tried regardless. Default
+     * "OFFLINE_FALLBACK" (no reorder).
+     */
+    var aiSelectedProviderName: String
+        get() = settings.getString(KEY_AI_SELECTED_PROVIDER, defaultValue = "OFFLINE_FALLBACK")
+        set(v) {
+            settings.putString(KEY_AI_SELECTED_PROVIDER, v)
         }
 
     // ── Observable wrappers (optional, for Settings with callbacks) ───────────
