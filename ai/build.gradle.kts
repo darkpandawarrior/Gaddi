@@ -20,14 +20,15 @@ kotlin {
             api("com.siddharth.kmp:bots-policy:1.0.0")
             // Consolidation #10: AiProvider/AiMessage/AiConfig/AiProviderConfig/buildProviderChain +
             // the real Anthropic/OpenAI/Gemini Ktor clients moved to toolkit :llm-chat. Only
-            // IsmctsOnlyProvider (implements AiProvider) and OnDeviceAiProvider.* (consumes toolkit
-            // :ai) stayed here — neither needs ktor directly anymore, so the ktor-client-* deps this
-            // module used to declare for the (now-moved) provider impls are gone too.
+            // OnDeviceAiProvider.* (consumes toolkit :ai) stayed here — it doesn't need ktor
+            // directly, so the ktor-client-* deps this module used to declare for the (now-moved)
+            // provider impls are gone too.
             implementation("com.siddharth.kmp:llm-chat:1.0.0")
             // AiResult<String>/AiFailure — every AiProvider.complete()/completeStream() override in
-            // this module (TemplatedAiProvider, IsmctsOnlyProvider, OnDeviceAiProvider.*) returns or
-            // emits these types directly, so :llm-chat's own (implementation-only) dependency on
-            // :result doesn't reach this module's compile classpath transitively; needs its own line.
+            // this module (TemplatedAiProvider, OnDeviceAiProvider.*) returns or emits these types
+            // directly, so :llm-chat's own (implementation-only) dependency on :result doesn't reach
+            // this module's compile classpath transitively; needs its own line. Also used directly
+            // by AiBotDecisionEngine's PromptGuard call.
             implementation("com.siddharth.kmp:result:1.0.0")
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.core)
@@ -84,6 +85,9 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
+            // FakeOnDeviceLlm for AiBotDecisionEngineTest — a scriptable OnDeviceLlm double, no real
+            // model/device needed to pin the availability-check and fallback behavior.
+            implementation("com.siddharth.kmp:ai-testing:1.0.0")
         }
     }
 }

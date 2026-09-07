@@ -62,7 +62,9 @@ object GameContextSerializer {
 
     private fun describePhase(view: PlayerView): String = view.phase.toString()
 
-    private fun intentLabel(intent: Intent): String =
+    /** Internal (not private): [com.kursi.ai.AiBotDecisionEngineTest] needs the exact string an LLM
+     *  reply is matched against to script a "valid response" case without duplicating this mapping. */
+    internal fun intentLabel(intent: Intent): String =
         when (intent) {
             is Intent.DeclareAction ->
                 when (val a = intent.action) {
