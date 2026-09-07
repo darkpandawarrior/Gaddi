@@ -54,6 +54,8 @@ jobs:
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
+        # An artifact is a convenience; the account's 500 MB artifact quota must not fail the gate.
+        continue-on-error: true
         with:
           name: kursi-web-${{ github.sha }}
           path: cmp-web/build/dist/wasmJs/productionExecutable/
