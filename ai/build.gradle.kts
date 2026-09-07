@@ -76,11 +76,10 @@ kotlin {
             implementation("com.siddharth.kmp:ai:1.0.0")
         }
         wasmJsMain.dependencies {
-            // ponytail: toolkit :ai has NO wasmJs target (jvm/iosArm64/iosSimulatorArm64/android only)
-            // — can't consume it here. OnDeviceAiProvider.wasmJs stays a local stub. Upgrade path: add
-            // a wasmJs target to toolkit :ai (UnavailableOnDeviceLlm-equivalent) if that ever changes.
-            // (:llm-chat DOES have a wasmJs target now — consolidation #10 — so this source set picks
-            // it up fine via the commonMain dependency above; only the on-device arm stays stubbed.)
+            // Consolidation #7 catches up: toolkit :ai now ships a wasmJs target too (its own
+            // UnavailableOnDeviceLlm actual — no on-device model in a browser, same floor as jvm).
+            // OnDeviceAiProvider.wasmJs routes through it instead of a hand-rolled local stub.
+            implementation("com.siddharth.kmp:ai:1.0.0")
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

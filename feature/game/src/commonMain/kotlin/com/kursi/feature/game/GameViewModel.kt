@@ -111,6 +111,13 @@ class GameViewModel(
     private val densityLayerFlow: StateFlow<DensityLayer>? = null,
     /** Persist a density-layer change (e.g. graduation / settings). Null = in-memory only. */
     private val onDensityLayerChange: ((DensityLayer) -> Unit)? = null,
+    /**
+     * MUNSHI (Track 3, spec §8.1) — the AI narrator's provider-matrix selection, built once. Defaults
+     * to [MunshiNarrator]'s own zero-arg config (on-device only, no BYOK) for tests / render harness;
+     * the app wires a real one via [com.kursi.ai.createMunshiNarrator] using whichever cloud-provider
+     * key the settings screen has saved, so the narrator's BYOK cloud tier is actually reachable.
+     */
+    private val munshi: MunshiNarrator = MunshiNarrator(),
 ) {
     private val _state = MutableStateFlow<GameUiState?>(null)
     val state: StateFlow<GameUiState?> = _state.asStateFlow()
@@ -181,9 +188,6 @@ class GameViewModel(
      * new human decision and on new game, so stale advice never lands on a fresh decision point.
      */
     private var adviceJob: Job? = null
-
-    /** MUNSHI (Track 3, spec §8.1) — the AI narrator's provider-matrix selection, built once. */
-    private val munshi = MunshiNarrator()
 
     /**
      * The in-flight Munshi narration job for the beat most recently published via [emitState].
