@@ -51,7 +51,7 @@ jobs:
           echo "prev=$prev" >> "$GITHUB_OUTPUT"
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v5.7.0
+        uses: actions/setup-java@v6.0.0
         with: { java-version: '17', distribution: 'temurin' }
 
       - name: Setup Gradle
@@ -122,7 +122,7 @@ jobs:
         run: echo "present=$([ -d iosApp ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
       - name: Set up JDK 17
         if: steps.has_ios.outputs.present == 'true'
-        uses: actions/setup-java@v5.7.0
+        uses: actions/setup-java@v6.0.0
         with: { java-version: '17', distribution: 'temurin' }
       - name: Setup Gradle
         if: steps.has_ios.outputs.present == 'true'
