@@ -88,6 +88,8 @@ includeBuild("external/kmp-toolkit") {
         // whose AiProvider implementations expose these types on their public complete()/
         // completeStream() overrides needs this substitution too.
         substitute(module("com.siddharth.kmp:result")).using(project(":result"))
+        // feature:game's ChatEmbellisherTest drives LlmChatEmbellisher with FakeOnDeviceLlm.
+        substitute(module("com.siddharth.kmp:ai-testing")).using(project(":ai-testing"))
         // Adaptive substrate for core:designsystem — see that module's build.gradle.kts.
         substitute(module("com.siddharth.kmp:designsystem")).using(project(":designsystem"))
     }
