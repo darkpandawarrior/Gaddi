@@ -61,11 +61,11 @@ Sibling repos: [`kmp-toolkit`](https://github.com/darkpandawarrior/kmp-toolkit) 
 
 </details>
 
-> **At a glance**, **13-module** Kotlin Multiplatform architecture (`engine` · `ai` ·
+> **At a glance**, **14-module** Kotlin Multiplatform architecture (`engine` · `ai` ·
 > `shared-protocol` · `core:designsystem`/`network`/`prefs` · `feature:game` · 4 app shells ·
-> `server`), 10 bot personas, 4 concurrent DARBAR story arcs, one vendored `kmp-toolkit` submodule
-> for `mvi-core`/`feedback`/`common`/`bots-policy`/`network`/`ai`/`llm-chat`. *Module list from
-> `settings.gradle.kts`.*
+> `server` · `cli`), 10 bot personas, 4 concurrent DARBAR story arcs, one vendored `kmp-toolkit`
+> submodule for `mvi-core`/`feedback`/`common`/`bots-policy`/`network`/`ai`/`llm-chat`. *Module list
+> from `settings.gradle.kts`.*
 
 ## Why Gaddi
 
@@ -73,15 +73,15 @@ Coup (Indie Boards and Cards, 2012) is a tight bluffing game with almost no soci
 
 The first build of that idea shipped every screen as one dense instrument panel, right for a rules-lawyer, overwhelming for a first-timer. The overhaul in this README's screenshots is the fix: the same engine, the same DARBAR layer, now revealed at **three densities** instead of one, wrapped in a from-scratch **AAA visual language** and narrated in-character by an **AI Munshi** instead of static log lines. Nothing about the deterministic core changed, the presentation layer got rebuilt around how a new player actually learns the table.
 
-It's also the KMP proving ground for reusable pieces that live in a separate repo: `mvi-core`, `feedback` and several other shared modules (`common`, `bots-policy`, `network`, the on-device-AI layer, `llm-chat`) are versioned once in [`kmp-toolkit`](https://github.com/darkpandawarrior/kmp-toolkit) and consumed here via `includeBuild` + dependency substitution, not copy-pasted, the same toolkit and the same [`kmp-build-logic`](https://github.com/darkpandawarrior/kmp-build-logic) convention plugins that back [Mileway](https://github.com/darkpandawarrior/Mileway) and [PaymentsLab](https://github.com/darkpandawarrior/PaymentsLab), the sibling projects under the same [portfolio](https://cv-siddharth.vercel.app/). See [Technical deep dive](#technical-deep-dive) for exactly how.
+It's also the KMP proving ground for reusable pieces that live in a separate repo: `mvi-core`, `feedback` and several other shared modules (`common`, `bots-policy`, `network`, the on-device-AI layer, `llm-chat`) are versioned once in [`kmp-toolkit`](https://github.com/darkpandawarrior/kmp-toolkit) and consumed here via `includeBuild` + dependency substitution, not copy-pasted, the same toolkit and the same [`kmp-build-logic`](https://github.com/darkpandawarrior/kmp-build-logic) convention plugins that back [Doori](https://github.com/darkpandawarrior/Doori) and [PaymentsLab-KMP](https://github.com/darkpandawarrior/PaymentsLab-KMP), the sibling projects under the same [portfolio](https://cv-siddharth.vercel.app/). See [Technical deep dive](#technical-deep-dive) for exactly how.
 
 What's real vs. mocked, honestly:
 - **Engine, AI (ISMCTS), DARBAR, career/replay, offline modes**: fully implemented, covered by `commonTest` (`ScalingGoldenTest`, `MatchResumeTest`, `NarrativeResumeTest`).
 - **The FOCUS/GUIDED/ANALYST density layers, the Sarkari Noir visual system, beat-gate pacing**: fully implemented across every screen, covered by `feature:game` / `core:designsystem` unit tests and the render-fixture gate below.
-- **The Munshi AI narrator**: a real seam (`MunshiNarrator`, provider matrix: on-device → BYOK cloud → templated floor); the templated tier is always live, on-device/cloud upgrade it in place when a provider is available.
+- **The Munshi AI narrator**: a real seam (`MunshiNarrator`, provider matrix: on-device → BYOK cloud → templated floor) that streams its narration token by token with mid-generation cancellation on the toolkit seam, proven against a fake provider (`narrate_cancellingTheCollector_stopsTheGenerationItself`); the templated tier is always live, on-device/cloud upgrade it in place when a provider is available.
 - **The AGSL/Skia shader material layer**: real `RuntimeShader`/`RuntimeEffect` per-platform actuals with a procedural (non-shader) fallback where the platform doesn't support runtime shaders.
 - **Online play (Ktor/Netty server, LAN discovery, reconnect)**: real server code and protocol, not a mock; gameplay-tested locally. Production deploy (`server-deploy.yml` → Fly.io) is wired but not yet running continuously.
-- **Cloud AI providers (Anthropic/OpenAI/Gemini)**: real `AiProvider` implementations, BYOK. On-device Gemini Nano / Apple FoundationModels are the no-network fallback path.
+- **Cloud AI providers (Anthropic/OpenAI/Gemini)**: real `AiProvider` implementations, BYOK, wired through an in-app Settings-screen key editor (consent toggle + per-provider key storage/tester). On-device: Android's chain (ML Kit GenAI → Gemini Nano on AICore devices, falling back to MediaPipe/Gemma) is real code exercised only against unit-test fakes, not yet run on physical AICore hardware; the iOS bridge (Apple FoundationModels/MediaPipe) is still a stub pending a Swift bridge, always reporting unavailable.
 - **Store distribution pipelines** (Play, F-Droid, Amazon, Huawei, Samsung, Aptoide), real workflows, gated on repo secrets that aren't populated yet; no build has shipped to a store.
 
 Inspired by Coup (Indie Boards and Cards, 2012). Theme, characters, code, visuals, all wholly original.
@@ -347,15 +347,17 @@ Coach can be toggled off in Settings. When off, the table is silent, no odds, no
 
 ## The Munshi, AI narrator
 
-DARBAR's chat feed and the coach's odds are structured data. The **Munshi** (`ai/src/commonMain/kotlin/com/kursi/ai/MunshiNarrator.kt`) turns that plus the recent public event log into one grounded, in-character sentence, the same headline `BeatHeadline` shows at FOCUS/GUIDED density, upgraded in place when a better source is available.
+DARBAR's chat feed and the coach's odds are structured data. The **Munshi** (`ai/src/commonMain/kotlin/com/kursi/ai/MunshiNarrator.kt`) turns that plus the recent public event log into one grounded, in-character sentence, streamed in token by token as the model writes it, the same headline `BeatHeadline` shows at FOCUS/GUIDED density, upgraded in place when a better source is available. `BeatHeadline` renders a typed `BeatLine` (`Templated` vs `Ai(text, streaming)`) rather than silently swapping in AI text, dipping to 0.85 opacity while a line is still streaming so a player can tell the Munshi is actually mid-sentence.
 
 **Provider matrix (spec §8.5), tried in order:**
 
-1. **On-device**: auto-detected, zero setup for the player (Gemini Nano on Android, Apple FoundationModels on iOS 26).
-2. **BYOK cloud**: any provider (Anthropic/OpenAI/Gemini) the player has explicitly opted into with their own key; a null key simply never enters the chain (`buildProviderChain`), so it's inert by default, not a hidden network call.
-3. **Templated floor**: the copy already used everywhere else in the game (`KursiVoice.recap`). The Munshi reports this tier back to its caller as `null` rather than synthetic text, so the templated line at the call site is always the truthful fallback, never a stand-in the narrator pretends to have written.
+1. **On-device**: auto-detected, zero setup for the player (Gemini Nano on Android, Apple FoundationModels on iOS 26 — see the on-device honesty note below).
+2. **BYOK cloud**: any provider (Anthropic/OpenAI/Gemini) the player has explicitly opted into with their own key, entered in a Settings-screen key editor (consent toggle + per-provider key storage/tester); a null key simply never enters the chain (`buildProviderChain`), so it's inert by default, not a hidden network call.
+3. **Templated floor**: the copy already used everywhere else in the game (`KursiVoice.recap`). The Munshi reports this tier back to its caller as an empty flow rather than synthetic text, so the templated line at the call site is always the truthful fallback, never a stand-in the narrator pretends to have written.
 
-**Latency and guardrails:** a plain suspend call with its own internal timeout, it never blocks a beat, since the templated line has already rendered synchronously by the time the Munshi is invoked; a non-null result only ever upgrades that line after the fact. It never sees hidden cards (inputs are already redacted/public-only), never mutates `GameState`, never gates a legal action, and is never persisted into the replay record, display-only, always regenerable.
+**Streaming and cancellation (spec §8.6):** `narrate()` returns `Flow<String>`, each emission the accumulated line so far, riding `AiProvider.completeStream`. Cancelling the collector — a fresh beat starting — tears down the in-flight generation itself, not just the wait for it, locked in by `narrate_cancellingTheCollector_stopsTheGenerationItself` (proven against a fake provider; not yet exercised against a real on-device or cloud backend). It never blocks a beat, since the templated line has already rendered synchronously by the time the Munshi is collected; it never sees hidden cards (inputs are already redacted/public-only), never mutates `GameState`, never gates a legal action, and is never persisted into the replay record, display-only, always regenerable.
+
+**On-device honesty:** Android's chain (ML Kit GenAI Prompt → Gemini Nano on AICore devices, falling back to MediaPipe/Gemma) is real, wired code, but it's only ever been run against unit-test fakes so far, not on a physical AICore-capable device. The iOS bridge (Apple FoundationModels / MediaPipe) is still a stub pending a Swift bridge, always reporting itself unavailable, so iOS always narrates from the BYOK cloud tier or the templated floor today.
 
 ---
 
@@ -663,7 +665,7 @@ Things worth calling out:
 
 **Design system is the enforcement layer.** Every surface routes through `BrassParchmentSurface`, `decoPopoverPaper`, `WaxSeal`, `drawRoleGlyph`. The **License Raj Deco** brand identity, 1950s-70s government-issue document aesthetic, teak `#1A1A2E` / brass `#C99A3B` / cream `#F4ECD8`, is structurally enforced, not left to per-screen taste. **Sarkari Noir** (`docs/design-language.md`) is the AAA execution standard applied on top of those same tokens in this pass, no bordered boxes, shadow+material depth, stamp buttons, across every screen, not just the game board.
 
-**AI layer is provider-agnostic.** The `AiProvider` interface abstracts Anthropic, OpenAI, and Gemini cloud calls, on-device Gemini Nano (Android), and Apple FoundationModels (iOS 26). ISMCTS is the offline fallback. BYOK (bring your own key) stored in EncryptedSharedPreferences / Keychain.
+**AI layer is provider-agnostic.** The `AiProvider` interface abstracts Anthropic, OpenAI, and Gemini cloud calls, on-device Gemini Nano (Android), and Apple FoundationModels (iOS 26, still a stub pending a Swift bridge). ISMCTS is the offline fallback. Every provider streams via `completeStream`, and `MunshiNarrator` rides that for token-by-token narration with real mid-generation cancellation. BYOK (bring your own key) stored per-platform (`SecureKeyStore`, EncryptedSharedPreferences / Keychain), configured through the Settings screen.
 
 ---
 
@@ -761,12 +763,18 @@ Not automatable, no CI job:
 - [x] Career, ELO, daily challenge, byte-for-byte replay scrubber
 - [x] 7 Vishesh (optional) rule variants
 - [x] `mvi-core`/`feedback` extracted into the shared `kmp-toolkit` monorepo
+- [x] Gaddi rebrand (from Kursi) across icons, banner and display surface
+- [x] Munshi narration streams token by token with mid-generation cancellation (#115)
+- [x] Munshi BYOK Settings-screen key editor: consent toggle + per-provider key storage/tester (#117)
+- [x] `AiBotDecisionEngine` gated on provider availability and its prompt wrapped in `PromptGuard`, with regression tests pinning the ISMCTS fallback (#118)
 
 **Exploring**
 - [ ] First tagged release / GitHub Release (`VERSION` is `1.0.0`, `BUILD_NUMBER` is `0`, nothing cut yet)
 - [ ] Populate store-distribution secrets and run a real Play/F-Droid rollout
 - [ ] Keep `server-deploy.yml` (Fly.io) running continuously instead of on-demand
 - [ ] Online standings board parity with local ELO once the server sees sustained traffic
+- [ ] Wire `AiBotDecisionEngine` into a live "voiced" persona bot-difficulty tier (it's gated and tested per above, but no `PersonaAssigner`/`MatchActor` caller constructs it yet — its own PR #118 scoped that wiring out, since the self-play fuzzer's `Policy` contract is a synchronous `fun interface` and `decide()` is `suspend`)
+- [ ] On-device on-hardware verification: Gemini Nano (Android/AICore) and the iOS FoundationModels/MediaPipe bridge are both proven only against unit-test fakes so far, never a physical device
 
 ---
 
@@ -803,7 +811,7 @@ Full list: `git log --oneline`.
 
 ## Docs
 
-- [Game rules PDF](docs/Kursi_Game_Rules-v2.pdf)
+- [Game rules PDF](docs/Gaddi_Game_Rules-v2.pdf)
 - [Visual identity guide](docs/brand/BRAND.md)
 
 ---
@@ -812,13 +820,13 @@ Full list: `git log --oneline`.
 
 | Layer | Technology |
 |---|---|
-| Language | Kotlin Multiplatform 2.4.20-Beta1 |
-| UI | Compose Multiplatform 1.12.0-beta02 |
-| Build | Gradle 9.7.0-milestone-2 · AGP 9.4.0-alpha04 |
-| Networking | Ktor 3.5.1 (client + server/Netty) |
+| Language | Kotlin Multiplatform 2.4.20-RC |
+| UI | Compose Multiplatform 1.12.0-rc01 |
+| Build | Gradle 9.7.0 · AGP 9.5.0-alpha02 |
+| Networking | Ktor 3.5.2 (client + server/Netty) |
 | Persistence | multiplatform-settings 1.3.0 |
 | Serialization | kotlinx.serialization 1.11.0 |
-| Static analysis | detekt 2.0.0-alpha.5 (baseline-gated) · ktlint 14.2.0 |
+| Static analysis | detekt 2.0.0-alpha.6 (baseline-gated) · ktlint 14.2.0 |
 | Distribution | Fastlane · GitHub Actions (`ci.yml`, `quality.yml` + 9 store-deploy workflows) |
 
 ---
@@ -845,6 +853,6 @@ All characters and events are fictional. Satire only.
 
 <div align="center">
 
-Sibling repos: [`kmp-toolkit`](https://github.com/darkpandawarrior/kmp-toolkit) · [`kmp-build-logic`](https://github.com/darkpandawarrior/kmp-build-logic) · [Mileway](https://github.com/darkpandawarrior/Mileway) · [PaymentsLab](https://github.com/darkpandawarrior/PaymentsLab) · Portfolio: [cv-siddharth.vercel.app](https://cv-siddharth.vercel.app/)
+Sibling repos: [`kmp-toolkit`](https://github.com/darkpandawarrior/kmp-toolkit) · [`kmp-build-logic`](https://github.com/darkpandawarrior/kmp-build-logic) · [Doori](https://github.com/darkpandawarrior/Doori) · [PaymentsLab-KMP](https://github.com/darkpandawarrior/PaymentsLab-KMP) · Portfolio: [cv-siddharth.vercel.app](https://cv-siddharth.vercel.app/)
 
 </div>
