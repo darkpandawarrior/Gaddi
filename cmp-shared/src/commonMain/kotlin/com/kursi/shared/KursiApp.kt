@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.kursi.ai.createMunshiNarrator
 import com.kursi.core.network.fetchStandings
 import com.kursi.core.prefs.AppPrefs
 import com.kursi.core.prefs.DecisionTally
@@ -554,6 +555,10 @@ fun KursiApp() {
                                 GameViewModel(
                                     coachEnabledFlow = prefs.coachEnabledFlow,
                                     onCoachEnabledChange = { v -> prefs.coachEnabled = v },
+                                    // BYOK: reads whichever cloud-provider key Settings has saved into
+                                    // SecureKeyStore, so the narrator's cloud tier is actually reachable
+                                    // (see com.kursi.ai.createMunshiNarrator's own kdoc).
+                                    munshi = createMunshiNarrator(prefs.aiConsentGiven, prefs.aiSelectedProviderName),
                                     densityLayerFlow =
                                         prefs.densityLayerFlow
                                             .map { DensityLayer.fromName(it) }
