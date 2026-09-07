@@ -3,6 +3,7 @@ package com.kursi.ai.provider
 import com.siddharth.kmp.llmchat.AiConfig
 import com.siddharth.kmp.llmchat.AiMessage
 import com.siddharth.kmp.llmchat.AiProvider
+import com.siddharth.kmp.result.AiResult
 
 /**
  * An `expect class` has to declare the members it inherits rather than leaving them to the actuals —
@@ -17,7 +18,7 @@ expect class OnDeviceAiProvider() : AiProvider {
     override suspend fun complete(
         messages: List<AiMessage>,
         config: AiConfig,
-    ): String
+    ): AiResult<String>
 
     override suspend fun isAvailable(): Boolean
 }
