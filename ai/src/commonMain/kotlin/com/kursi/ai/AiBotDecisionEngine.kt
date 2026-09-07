@@ -10,6 +10,7 @@ import com.kursi.engine.redact
 import com.siddharth.kmp.botspolicy.SearchBudget
 import com.siddharth.kmp.llmchat.AiMessage
 import com.siddharth.kmp.llmchat.AiProvider
+import com.siddharth.kmp.result.PromptGuard
 import com.siddharth.kmp.result.getOrNull
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -34,8 +35,17 @@ class AiBotDecisionEngine(
         val ranked = advisor.advise(state, botId, legal)
         val fallback = ranked.firstOrNull { it.recommended }?.intent ?: legal.first()
 
+        // Availability check: a provider that reports itself unavailable never gets called — no
+        // 5s timeout wait for a model that was never going to answer, straight to the ISMCTS floor.
+        if (!provider.isAvailable()) return fallback
+
         val context = GameContextSerializer.serialize(view, ranked)
         val systemPrompt = PersonaPrompts.systemPrompt(persona, arc)
+        // The serialized game state is otherwise-untrusted free text from the model's point of view
+        // (opponent seat labels are engine-controlled today, but this is the one seam a future
+        // player-nameable field would reach without another engineer having to remember to add the
+        // guard) — same PromptGuard every other AiProvider seam applies to its USER message.
+        val guardedContext = PromptGuard.wrap(context).text
 
         val llmResponse =
             withTimeoutOrNull(5_000L) {
@@ -44,7 +54,7 @@ class AiBotDecisionEngine(
                         messages =
                             listOf(
                                 AiMessage(AiMessage.Role.SYSTEM, systemPrompt),
-                                AiMessage(AiMessage.Role.USER, context),
+                                AiMessage(AiMessage.Role.USER, guardedContext),
                             ),
                     )
                 }.getOrNull()?.getOrNull()
