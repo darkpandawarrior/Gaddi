@@ -62,7 +62,7 @@ jobs:
           set -uo pipefail
           mkdir -p build dist
           if xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -configuration Release \
-              -sdk iphoneos -archivePath build/Kursi.xcarchive archive \
+              -sdk iphoneos -archivePath build/Gaddi.xcarchive archive \
               CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
               2>&1 | tee build/xcodebuild-archive.log; then
             echo "archived=true" >> "$GITHUB_OUTPUT"
@@ -76,7 +76,7 @@ jobs:
         if: steps.has_ios.outputs.present == 'true' && steps.archive.outputs.archived == 'true'
         run: |
           set -uo pipefail
-          app="$(find build/Kursi.xcarchive/Products/Applications -maxdepth 1 -name '*.app' | head -1)"
+          app="$(find build/Gaddi.xcarchive/Products/Applications -maxdepth 1 -name '*.app' | head -1)"
           if [ -z "$app" ]; then
             echo "::error::Archive succeeded but produced no .app under Products/Applications."
             exit 1
@@ -84,7 +84,7 @@ jobs:
           tag="${GITHUB_REF_NAME}"
           mkdir -p dist/Payload
           cp -R "$app" dist/Payload/
-          ( cd dist && zip -qr "Kursi-${tag}-ios-unsigned.ipa" Payload )
+          ( cd dist && zip -qr "Gaddi-${tag}-ios-unsigned.ipa" Payload )
           rm -rf dist/Payload
           ls -la dist/
 
