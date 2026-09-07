@@ -1,5 +1,6 @@
 package com.kursi.feature.game.narrative
 
+import com.kursi.ai.persona.PersonaRoster
 import com.kursi.ai.persona.PersonalityProfile
 import com.kursi.ai.social.CharacterFlaw
 import com.kursi.ai.social.FlawModel
@@ -11,6 +12,7 @@ import com.kursi.engine.LossReason
 import com.kursi.engine.PlayerView
 import com.kursi.engine.Rng
 import com.kursi.engine.Rules
+import com.kursi.feature.game.Language
 
 /** Static per-seat identity the director needs: name, persona id/profile, human-or-bot. */
 data class SeatInfo(
@@ -49,6 +51,9 @@ class SocialDirector(
     private val voice: ChatVoice = ChatVoice(),
     private val humanSeat: Int = 0,
     private val onGrudge: (Int, Int, Int) -> Unit = { _, _, _ -> },
+    private val language: Language = Language.HINGLISH,
+    /** Optional (online, opted-in) restyling — see [ChatEmbellisher]'s HARD CONTRACT. */
+    private val embellisher: ChatEmbellisher = NoopEmbellisher,
 ) {
     private val info: Map<Int, SeatInfo> = seats.associateBy { it.seat }
     private val opening: SocialState =
@@ -89,6 +94,35 @@ class SocialDirector(
 
     /** True when [seat] is the seat the table currently most wants gone (the live conspiracy target). */
     fun isConspiracyTarget(seat: Int): Boolean = social.threatOf(seat) >= 0.6f && social.threat.maxByOrNull { it.value }?.key == seat
+
+    /**
+     * Restyles the already-emitted message [id] through [embellisher], replacing its template body
+     * in place on success. Never called from the deterministic [emit] path itself (that stays
+     * synchronous so the template line always renders first, per [ChatEmbellisher]'s HARD
+     * CONTRACT) — a caller with its own [kotlinx.coroutines.CoroutineScope] (the ViewModel layer)
+     * fires this separately, well after the beat, so a slow or offline provider never blocks one.
+     * A no-op if [id] fell out of the feed window ([MAX_FEED]), its speaker has no known persona,
+     * or [embellisher] declines (null/blank — the template line stands, unchanged).
+     */
+    suspend fun embellish(id: Long) {
+        val message = chat.firstOrNull { it.id == id } ?: return
+        val persona = info[message.senderSeat]?.personaId?.let { pid -> PersonaRoster.ALL.firstOrNull { it.id == pid } } ?: return
+        val request =
+            EmbellishRequest(
+                personaId = persona.id,
+                personaName = persona.name,
+                personaTitle = persona.title,
+                archetype = persona.archetype,
+                baseLine = message.body,
+                tone = message.tone,
+                arc = message.arc,
+                targetName = message.targetSeat?.let { info[it]?.name },
+                language = language,
+            )
+        val restyled = embellisher.embellish(request)?.takeIf { it.isNotBlank() } ?: return
+        val idx = chat.indexOfFirst { it.id == id }
+        if (idx >= 0) chat[idx] = chat[idx].copy(body = restyled)
+    }
 
     // ── lifecycle ────────────────────────────────────────────────────────────────
 
@@ -497,6 +531,7 @@ class SocialDirector(
 
     // ── small helpers ──────────────────────────────────────────────────────────────
 
+    /** @return the new message's [ChatMessage.id], so a caller can later [embellish] it. */
     private fun emit(
         sender: Int,
         body: String,
@@ -506,9 +541,11 @@ class SocialDirector(
         turn: Int = 0,
         arc: ArcId? = null,
         fromPlayer: Boolean = false,
-    ) {
-        chat.add(ChatMessage(nextId++, sender, target, body, tone, kind, arc, turn, fromPlayer || sender == humanSeat))
+    ): Long {
+        val id = nextId++
+        chat.add(ChatMessage(id, sender, target, body, tone, kind, arc, turn, fromPlayer || sender == humanSeat))
         while (chat.size > MAX_FEED) chat.removeAt(0)
+        return id
     }
 
     private fun chance(pct: Int): Boolean {
