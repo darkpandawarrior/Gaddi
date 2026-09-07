@@ -45,6 +45,28 @@ fun headlineFor(
 }
 
 /**
+ * MUNSHI SOURCE (spec §8.1, §8.6) — which line [BeatHeadline] is showing right now, and, for the
+ * AI tier, whether the line may still grow. Callers must not silently collapse this to a bare
+ * `String` — the whole point (spec §8.1's "a player can tell whether the AI actually spoke") is
+ * that the templated floor and a Munshi line, streaming or settled, are three different states,
+ * not one interchangeable string.
+ */
+sealed interface BeatLine {
+    val text: String
+
+    /** The deterministic, always-available [headlineFor] line — no AI tier upgraded it. */
+    data class Templated(
+        override val text: String,
+    ) : BeatLine
+
+    /** A Munshi line. [streaming] is true while more tokens may still land for this same beat. */
+    data class Ai(
+        override val text: String,
+        val streaming: Boolean,
+    ) : BeatLine
+}
+
+/**
  * The line the headline actually shows (spec §8.1, §8.6): [GameUiState.narrationText] when the
  * Munshi has produced one for THIS beat, otherwise the templated [headlineFor] line. Pure — kept
  * separate from [BeatHeadline] so the upgrade-in-place rule is unit-testable without Compose.
@@ -53,7 +75,14 @@ fun displayHeadlineFor(
     events: List<GameEvent>,
     state: GameUiState,
     voice: KursiVoice,
-): String = state.narrationText?.trim()?.takeIf { it.isNotBlank() } ?: headlineFor(events, state, voice)
+): BeatLine {
+    val narration = state.narrationText?.trim()?.takeIf { it.isNotBlank() }
+    return if (narration != null) {
+        BeatLine.Ai(narration, streaming = state.narrationStreaming)
+    } else {
+        BeatLine.Templated(headlineFor(events, state, voice))
+    }
+}
 
 /**
  * AAA FOCUS rebuild: an ITALIC ENGRAVED caption — no bar, no fill, no border. Reads as text
@@ -69,10 +98,13 @@ internal fun BeatHeadline(
 ) {
     val voice = LocalKursiVoice.current
     val line = displayHeadlineFor(state.recentEvents, state, voice)
+    // A player "can tell whether the AI actually spoke" (spec §8.1): a subtle dip in-progress,
+    // full weight once the AI line settles — same weight as the templated line always had.
+    val alpha = if (line is BeatLine.Ai && line.streaming) 0.85f else 1f
     Text(
-        text = line,
+        text = line.text,
         style = KursiType.body.marcellus().copy(fontStyle = FontStyle.Italic, fontSize = 15.sp, lineHeight = 20.sp),
-        color = BrandTokens.GoldAntique,
+        color = BrandTokens.GoldAntique.copy(alpha = alpha),
         textAlign = TextAlign.Center,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
@@ -82,7 +114,7 @@ internal fun BeatHeadline(
                 .padding(horizontal = 12.dp)
                 .semantics(mergeDescendants = true) {
                     liveRegion = LiveRegionMode.Polite
-                    contentDescription = line
+                    contentDescription = if (line is BeatLine.Ai) "Munshi: ${line.text}" else line.text
                 },
     )
 }

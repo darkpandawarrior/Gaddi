@@ -83,6 +83,11 @@ includeBuild("external/kmp-toolkit") {
         // IsmctsOnlyProvider (implements AiProvider) and OnDeviceAiProvider.* (consumes toolkit :ai)
         // stayed behind as Kursi-specific.
         substitute(module("com.siddharth.kmp:llm-chat")).using(project(":llm-chat"))
+        // AiResult<T>/AiFailure — :llm-chat's own dependency on this is `implementation`, so it
+        // doesn't reach a consumer's classpath transitively; any module (like Kursi's own :ai)
+        // whose AiProvider implementations expose these types on their public complete()/
+        // completeStream() overrides needs this substitution too.
+        substitute(module("com.siddharth.kmp:result")).using(project(":result"))
         // Adaptive substrate for core:designsystem — see that module's build.gradle.kts.
         substitute(module("com.siddharth.kmp:designsystem")).using(project(":designsystem"))
     }

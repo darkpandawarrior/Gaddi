@@ -5,6 +5,7 @@ import com.kursi.engine.PlayerView
 import com.siddharth.kmp.llmchat.AiConfig
 import com.siddharth.kmp.llmchat.AiMessage
 import com.siddharth.kmp.llmchat.AiProvider
+import com.siddharth.kmp.result.getOrNull
 
 enum class ChatTrigger {
     GAME_START,
@@ -41,7 +42,7 @@ object DarbarChatGenerator {
                         ),
                     config = chatConfig,
                 )
-            }.getOrElse { "" }.trim()
+            }.getOrNull()?.getOrNull().orEmpty().trim()
 
         return result.ifBlank { fallbackLine(persona, trigger) }
     }

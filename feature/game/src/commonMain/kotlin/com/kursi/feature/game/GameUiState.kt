@@ -129,6 +129,13 @@ data class GameUiState(
      * record (a fresh replay simply shows the templated line, or regenerates its own narration).
      */
     val narrationText: String? = null,
+    /**
+     * MUNSHI STREAMING (spec §8.1, §8.6) — true while [narrationText] may still grow for THIS beat
+     * (tokens are still arriving from the provider), false once the line has settled (the provider
+     * finished, or [narrationText] is null because nothing ever upgraded the templated floor).
+     * Display-only, same non-authoritative status as [narrationText] itself — see its own kdoc.
+     */
+    val narrationStreaming: Boolean = false,
 ) {
     /**
      * DENSITY GATE (spec §3) — whether coach guidance (recommended-move stars, REAL/BLUFF badges,

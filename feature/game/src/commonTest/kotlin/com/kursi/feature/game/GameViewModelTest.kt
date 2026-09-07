@@ -95,16 +95,19 @@ class GameViewModelTest {
      * available (the JVM test environment — [com.kursi.ai.provider.OnDeviceAiProvider]'s jvm actual
      * always reports unavailable, and [GameViewModel] never supplies a cloud key by default), the
      * provider matrix selection always lands on the templated floor, which never sets
-     * [GameUiState.narrationText]. Locks in "AI off/unavailable = byte-identical to today".
+     * [GameUiState.narrationText] (and never flips [GameUiState.narrationStreaming]). Locks in
+     * "AI off/unavailable = byte-identical to today".
      */
     @Test
     fun narrationText_staysNull_whenNoAiProviderIsAvailable() {
         val vm = GameViewModel()
         vm.onAction(GameAction.NewGame(playerCount = 2, difficulty = Difficulty.Easy, seed = 1L))
         assertEquals(null, vm.state.value?.narrationText)
+        assertEquals(false, vm.state.value?.narrationStreaming)
 
         val legal = requireNotNull(vm.state.value).legalIntents.first()
         vm.onAction(GameAction.Submit(legal))
         assertEquals(null, vm.state.value?.narrationText)
+        assertEquals(false, vm.state.value?.narrationStreaming)
     }
 }

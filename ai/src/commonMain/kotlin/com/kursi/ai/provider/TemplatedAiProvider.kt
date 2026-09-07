@@ -3,6 +3,8 @@ package com.kursi.ai.provider
 import com.siddharth.kmp.llmchat.AiConfig
 import com.siddharth.kmp.llmchat.AiMessage
 import com.siddharth.kmp.llmchat.AiProvider
+import com.siddharth.kmp.result.AiResult
+import com.siddharth.kmp.result.Result
 
 /**
  * PROVIDER MATRIX TIER 3 (spec §8.5) — the always-available floor every selection chain falls back
@@ -22,5 +24,5 @@ object TemplatedAiProvider : AiProvider {
     override suspend fun complete(
         messages: List<AiMessage>,
         config: AiConfig,
-    ) = ""
+    ): AiResult<String> = Result.Success("")
 }

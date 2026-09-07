@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -777,17 +778,29 @@ class GameViewModel(
      * toggle, unread badge, advice landing, ...) also `.copy()` — is exactly "still the same beat".
      *
      * DISPLAY-ONLY (spec §8.6): the result only ever lands in the ephemeral
-     * [GameUiState.narrationText] field — never `humanIntentLog`, never `GameState`, never a legal-
-     * action gate, and never the replay record.
+     * [GameUiState.narrationText]/[GameUiState.narrationStreaming] fields — never `humanIntentLog`,
+     * never `GameState`, never a legal-action gate, and never the replay record.
+     *
+     * STREAMING + CANCELLATION: [MunshiNarrator.narrate] is a [kotlinx.coroutines.flow.Flow] that
+     * emits the line as it grows; `narrationJob?.cancel()` above cancels the collecting coroutine,
+     * which (per [MunshiNarrator.narrate]'s own kdoc) tears down the in-flight generation too — not
+     * just this ViewModel's wait for it.
      */
     private fun requestNarration(ui: GameUiState) {
         narrationJob?.cancel()
         narrationJob =
             coroutineScope.launch {
-                val line = munshi.narrate(ui.view, ui.recentEvents) ?: return@launch
+                munshi.narrate(ui.view, ui.recentEvents).collect { line ->
+                    val shown = _state.value
+                    if (shown != null && shown.recentEvents === ui.recentEvents) {
+                        _state.value = shown.copy(narrationText = line, narrationStreaming = true)
+                    }
+                }
+                // The flow above ran to natural completion (a cancelled job never reaches here) —
+                // this beat's line, if any landed, is settled: no more tokens will arrive for it.
                 val shown = _state.value
                 if (shown != null && shown.recentEvents === ui.recentEvents) {
-                    _state.value = shown.copy(narrationText = line)
+                    _state.value = shown.copy(narrationStreaming = false)
                 }
             }
     }

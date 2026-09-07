@@ -9,9 +9,13 @@ import com.siddharth.kmp.ai.MediaPipeModelManager
 import com.siddharth.kmp.ai.MediaPipeOnDeviceLlm
 import com.siddharth.kmp.ai.MlKitGenAiOnDeviceLlm
 import com.siddharth.kmp.ai.OnDeviceLlm
+import com.siddharth.kmp.llmchat.AiChunk
 import com.siddharth.kmp.llmchat.AiConfig
 import com.siddharth.kmp.llmchat.AiMessage
 import com.siddharth.kmp.llmchat.AiProvider
+import com.siddharth.kmp.result.AiResult
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 // ponytail: process-wide Application Context capture via a no-op ContentProvider — the standard
 // Android idiom (WorkManager/Firebase/Coil) for library code that needs a Context but must keep a
@@ -81,5 +85,13 @@ actual class OnDeviceAiProvider actual constructor() : AiProvider {
     actual override suspend fun complete(
         messages: List<AiMessage>,
         config: AiConfig,
-    ): String = llm.generate(messages.toOnDevicePrompt()) ?: ""
+    ): AiResult<String> = llm.generate(messages.toOnDevicePrompt())
+
+    // Real per-token streaming (not the AiProvider default's one-chunk replay of complete()) —
+    // ML Kit GenAI / MediaPipe's generateStream is Flow-native and cancellable mid-generation
+    // (see CompositeOnDeviceLlm's own kdoc), so cancelling the collector reaches the model call.
+    override fun completeStream(
+        messages: List<AiMessage>,
+        config: AiConfig,
+    ): Flow<AiChunk> = llm.generateStream(messages.toOnDevicePrompt()).map { AiChunk.Token(it) }
 }
