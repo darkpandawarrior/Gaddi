@@ -61,6 +61,8 @@ jobs:
       - name: Upload detekt report
         if: always()
         uses: actions/upload-artifact@v4
+        # An artifact is a convenience; the account's 500 MB artifact quota must not fail the gate.
+        continue-on-error: true
         with:
           name: detekt-report
           path: '**/build/reports/detekt/'
@@ -69,6 +71,8 @@ jobs:
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
+        # An artifact is a convenience; the account's 500 MB artifact quota must not fail the gate.
+        continue-on-error: true
         with:
           name: test-results
           path: '**/build/reports/tests/'
