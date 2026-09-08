@@ -163,8 +163,11 @@ class GameSession(
      * it is not the human's turn (or the game is over) — there is nothing to coach.
      *
      * Heavy (ISMCTS): call OFF the main thread / off the paced bot loop.
+     *
+     * `suspend`: cancelling the caller (the human moves on to a fresh decision) stops the
+     * search mid-flight instead of only between whole calls — see [MoveAdvisor.advise].
      */
-    fun adviseHuman(): List<MoveAdvice> {
+    suspend fun adviseHuman(): List<MoveAdvice> {
         if (state.phase is Phase.GameOver) return emptyList()
         val seat = activeHumanSeat() ?: return emptyList()
         val legal = legalIntents(state, seat)
@@ -207,8 +210,10 @@ class GameSession(
      * M5 ASSISTANT (best-move + auto-mode). Returns the single best [Intent] for the human seat that
      * must act now, or null when it is not a human's turn / the game is over. Heavy (ISMCTS) when more
      * than one move is legal — call OFF the main thread, exactly like [adviseHuman].
+     *
+     * `suspend`: see [adviseHuman] — cancelling the caller stops the search mid-flight.
      */
-    fun bestHumanMove(): Intent? {
+    suspend fun bestHumanMove(): Intent? {
         if (state.phase is Phase.GameOver) return null
         val seat = activeHumanSeat() ?: return null
         val legal = legalIntents(state, seat)
@@ -222,8 +227,10 @@ class GameSession(
     /**
      * M5 AUTO-PASS / AUTO-FORCED. Classifies the human seat's current decision so the ViewModel can
      * decide whether to auto-resolve it. Returns null when it is not a human's turn.
+     *
+     * `suspend`: the FORCED_COUP branch calls [MoveAdvisor.bestMove] — see [adviseHuman].
      */
-    fun autoDecision(): AutoDecision? {
+    suspend fun autoDecision(): AutoDecision? {
         if (state.phase is Phase.GameOver) return null
         val seat = activeHumanSeat() ?: return null
         val legal = legalIntents(state, seat)

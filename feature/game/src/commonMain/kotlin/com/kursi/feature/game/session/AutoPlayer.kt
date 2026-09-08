@@ -76,10 +76,10 @@ class AutoPlayer(
                 // Let the player watch the table settle before the demo "thinks" and acts.
                 delay((ROUTINE_STEP_MS * speed()).toLong().coerceIn(MIN_SPECTATE_DELAY_MS, MAX_SPECTATE_DELAY_MS))
                 val best = currentSession.bestHumanMove() ?: return@launch
-                // bestHumanMove() is a synchronous, non-suspending ISMCTS search - a cancel() issued
-                // while it was running has no effect until it returns. Check explicitly here so a
-                // superseded job (cancelled by a newer maybeAutoSpectate call) aborts instead of racing
-                // the fresh job to submitIntent against the same mutable GameSession.state.
+                // bestHumanMove() is now a cancellable suspend search, so a cancel() from a newer
+                // maybeAutoSpectate call already stops it mid-flight in the common case. This check
+                // stays as a belt-and-braces guard for the case where bestMove() returned without ever
+                // hitting a suspension point (e.g. a single legal move) so cancellation never fired.
                 coroutineContext.ensureActive()
                 // Re-check on the shown state: still this session, still the human's turn, still legal.
                 val s = shown() ?: return@launch

@@ -75,7 +75,7 @@
     <ID>MagicNumber:StoryArc.kt:StoryArcs$0.6f</ID>
     <ID>MatchingDeclarationName:GameMoments.kt:SeatIdResolver</ID>
     <ID>ReturnCount:GameScreen.kt:fun deriveGamePhase: GamePhase</ID>
-    <ID>ReturnCount:GameSession.kt:GameSession$fun autoDecision: AutoDecision?</ID>
+    <ID>ReturnCount:GameSession.kt:GameSession$suspend fun autoDecision: AutoDecision?</ID>
     <ID>ReturnCount:GameViewModel.kt:GameViewModel$private fun submitIntent</ID>
     <ID>ReturnCount:ReplayAnnotation.kt:ReplayAnnotation.Companion$private fun beliefRead: Pair&lt;String, String&gt;</ID>
     <ID>ReturnCount:SocialDirector.kt:SocialDirector$fun nudgeBotIntent: Intent</ID>

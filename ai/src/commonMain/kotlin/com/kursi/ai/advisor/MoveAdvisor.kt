@@ -3,6 +3,7 @@ package com.kursi.ai.advisor
 import com.kursi.ai.*
 import com.kursi.engine.*
 import com.siddharth.kmp.botspolicy.SearchBudget
+import kotlinx.coroutines.CancellationException
 
 /**
  * MoveAdvisor — pure, UI-free "AI brain" shared by the decision-coach, best-move highlight,
@@ -52,8 +53,10 @@ class MoveAdvisor(
     /**
      * Returns the single best [Intent] for [humanId] at this game state.
      * Intended for auto-mode: plays immediately without showing the ranked list.
+     *
+     * `suspend`: see [advise] — cancelling the caller stops the search mid-flight.
      */
-    fun bestMove(
+    suspend fun bestMove(
         state: GameState,
         humanId: PlayerId,
         legal: List<Intent>,
@@ -69,8 +72,13 @@ class MoveAdvisor(
      *
      * Works for both the action phase (DeclareAction intents) and the reaction phase
      * (Challenge / Block / Pass intents).
+     *
+     * `suspend`: the search underneath ([IsmctsSearch.evaluate]) polls for cancellation between
+     * iterations, so a caller that cancels its coroutine when the human moves on (a new decision
+     * arrives, the screen leaves composition) frees the CPU immediately instead of after the
+     * whole ~200-400ms search completes.
      */
-    fun advise(
+    suspend fun advise(
         state: GameState,
         humanId: PlayerId,
         legal: List<Intent>,
@@ -105,15 +113,23 @@ class MoveAdvisor(
     /**
      * Calls [IsmctsSearch.evaluate] and returns the move values plus the advanced rng.
      * Isolated here so the rng advancement is always paired with the search call.
+     *
+     * Catches [Exception], never [kotlinx.coroutines.CancellationException]: a bare `catch
+     * (Throwable)` here would swallow the human-moved-on cancellation this whole lane exists to
+     * deliver, silently finishing the search anyway (and returning a stale fallback advice the
+     * ViewModel would then have to discard). Cancellation must propagate; a real search failure
+     * still degrades to the uniform-0.5 fallback exactly as before.
      */
-    private fun runEvaluate(
+    private suspend fun runEvaluate(
         view: PlayerView,
         legal: List<Intent>,
     ): Pair<List<MoveValue>, Rng> {
         val values =
             try {
                 search.evaluate(view, legal, memory, rng, adviceBudget)
-            } catch (t: Throwable) {
+            } catch (e: CancellationException) {
+                throw e
+            } catch (ignored: Exception) {
                 // Fallback: uniform 0.5 for all moves
                 legal.map { MoveValue(it, 0.5, 1.0 / legal.size) }
             }

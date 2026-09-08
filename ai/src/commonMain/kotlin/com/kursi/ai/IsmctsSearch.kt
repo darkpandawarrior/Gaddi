@@ -71,7 +71,11 @@ class IsmctsSearch(
         rng: Rng,
     ): Intent {
         if (legal.size == 1) return legal.single()
-        val root = runSearch(view, legal, memory, rng)
+        // ponytail: bot decisions go through the non-suspend Policy interface (ExpertPolicy/
+        // GrandmasterPolicy), so this stays synchronous — runBlocking below reproduces the old
+        // uncancellable behavior exactly. Only the human decision-coach path (evaluate) needs
+        // mid-search cancellation; see runSearchSuspend.
+        val root = runBlocking { runSearchSuspend(view, legal, memory, rng) }
 
         if (root.children.isEmpty() || root.children.values.all { it.visits == 0 }) {
             return legal.first()
@@ -94,8 +98,12 @@ class IsmctsSearch(
      *
      * Returns one [MoveValue] per element of [legal], in the same order, with normalised
      * win-probability and visit share. Never throws; falls back to uniform 0.5 on error.
+     *
+     * `suspend`: cancelling the calling coroutine (the human moves on before the ~200-400ms
+     * search finishes) stops the search at the next iteration boundary instead of burning the
+     * whole budget — see [runSearchSuspend] / [Ismcts.search].
      */
-    fun evaluate(
+    suspend fun evaluate(
         view: PlayerView,
         legal: List<Intent>,
         memory: BotMemory,
@@ -105,7 +113,7 @@ class IsmctsSearch(
         if (legal.isEmpty()) return emptyList()
         if (legal.size == 1) return listOf(MoveValue(legal.single(), winProb = 0.5, visitShare = 1.0))
 
-        val root = runSearch(view, legal, memory, rng, overrideBudget = adviceBudget)
+        val root = runSearchSuspend(view, legal, memory, rng, overrideBudget = adviceBudget)
 
         val totalVisits =
             root.children.values
@@ -126,8 +134,13 @@ class IsmctsSearch(
         }
     }
 
-    /** Runs ISMCTS (via the generic [Ismcts] shell) and returns the root node with all children populated. */
-    private fun runSearch(
+    /**
+     * Runs ISMCTS (via the generic [Ismcts] shell) and returns the root node with all children
+     * populated. `suspend`: delegates straight to [Ismcts.search], so cancelling the calling
+     * coroutine stops the loop at the next iteration boundary (see [Ismcts.search]'s own kdoc)
+     * instead of only between whole calls, as [chooseIntent]'s `runBlocking` wrapper still does.
+     */
+    private suspend fun runSearchSuspend(
         view: PlayerView,
         legal: List<Intent>,
         memory: BotMemory,
@@ -157,32 +170,23 @@ class IsmctsSearch(
                 budget = overrideBudget,
             )
 
-        // ponytail: toolkit's Ismcts.search became `suspend` (cancellable mid-search) in the pinned
-        // AI-stack commit, unrelated to this lane's own item. runSearch/chooseIntent/evaluate stay
-        // synchronous — runBlocking here reproduces exactly what every caller already got from the
-        // old non-suspend search (the calling thread blocks for the full budgeted duration, no
-        // external cancellation) — zero behavior change for the whole bot-decision call graph.
-        // Upgrade path: thread `suspend` through IsmctsSearch/Policy/MoveAdvisor if real mid-search
-        // cancellation from the game loop is ever needed — its own lane, not a narrator-streaming one.
-        return runBlocking {
-            engine.search(
-                determinize = {
-                    try {
-                        val (detState, r1) = determinizer.sample(view, memory, r)
-                        r = r1
-                        detState
-                    } catch (e: Exception) {
-                        val (_, r2) = r.nextLong()
-                        r = r2
-                        throw e
-                    }
-                },
-                legal = legal,
-                viewer = view.viewer,
-                rolloutHorizon = horizon,
-                elapsedMillis = { timeMark.elapsedNow().inWholeMilliseconds },
-            )
-        }
+        return engine.search(
+            determinize = {
+                try {
+                    val (detState, r1) = determinizer.sample(view, memory, r)
+                    r = r1
+                    detState
+                } catch (e: Exception) {
+                    val (_, r2) = r.nextLong()
+                    r = r2
+                    throw e
+                }
+            },
+            legal = legal,
+            viewer = view.viewer,
+            rolloutHorizon = horizon,
+            elapsedMillis = { timeMark.elapsedNow().inWholeMilliseconds },
+        )
     }
 
     private fun staticEval(

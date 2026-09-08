@@ -55,8 +55,13 @@ data class ReplayAnnotation(
          * [advisor] is a FAIR, internally-redacting [MoveAdvisor] reused across the replay (so the read
          * is deterministic and never peeks). [personas] names seats for the voiced read. Returns null
          * only when the move is ungradeable (no advice / chosen not legal here).
+         *
+         * `suspend`: [MoveAdvisor.advise] is now cancellable mid-search. Review annotation has no
+         * "the player moved on" moment to cancel on (it runs once, to a fixed [REVIEW_ADVICE_BUDGET]
+         * uncapped-time budget, while building a whole replay) — [ReplaySession.build] calls this via
+         * `runBlocking`, unchanged behavior from before this was suspend.
          */
-        fun compute(
+        suspend fun compute(
             advisor: MoveAdvisor,
             state: GameState,
             seat: PlayerId,
