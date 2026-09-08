@@ -9,6 +9,7 @@ import com.kursi.engine.PlayerId
 import com.kursi.engine.legalIntents
 import com.kursi.feature.game.GameUiState
 import com.kursi.feature.game.OpponentPersona
+import kotlinx.coroutines.runBlocking
 
 /**
  * ReplaySession — deterministic step-by-step review of a FINISHED match (M6c §2).
@@ -182,14 +183,21 @@ class ReplaySession private constructor(
                     val seat = ui.activeSeat?.let { PlayerId(it) } ?: youSeat
                     val annotation =
                         if (seat == youSeat) {
-                            ReplayAnnotation.compute(
-                                advisor = advisor,
-                                state = fullState,
-                                seat = seat,
-                                legal = legalIntents(fullState, seat),
-                                chosen = intent,
-                                personas = personas,
-                            )
+                            // ponytail: compute() is suspend (MoveAdvisor.advise is now cancellable
+                            // mid-search for the live coach). Replay build has no "player moved on"
+                            // moment to cancel on — it runs once per recorded decision to a fixed,
+                            // uncapped-time REVIEW_ADVICE_BUDGET — so runBlocking here is zero
+                            // behavior change from when compute() was a plain function.
+                            runBlocking {
+                                ReplayAnnotation.compute(
+                                    advisor = advisor,
+                                    state = fullState,
+                                    seat = seat,
+                                    legal = legalIntents(fullState, seat),
+                                    chosen = intent,
+                                    personas = personas,
+                                )
+                            }
                         } else {
                             null
                         }

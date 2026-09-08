@@ -10,6 +10,7 @@ import com.kursi.engine.PlayerId
 import com.kursi.engine.initialState
 import com.kursi.engine.legalIntents
 import com.kursi.feature.game.session.GameSession
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -36,17 +37,18 @@ class AutoModeTest {
 
     /** When it is not a human's turn (or the game is over) there is nothing to auto-resolve. */
     @Test
-    fun autoDecision_nullWhenNotHumanTurn() {
-        // Drive a single-human game to completion with a bot driver, then assert no auto-decision.
-        val s = session(playerCount = 2, seed = 9L)
-        val driver = EasyPolicy(3L)
-        var ui = s.start()
-        var guard = 0
-        while (!ui.isGameOver && guard++ < 5_000) {
-            ui = s.submitHuman(driver.decide(ui.view, ui.legalIntents))
+    fun autoDecision_nullWhenNotHumanTurn() =
+        runTest {
+            // Drive a single-human game to completion with a bot driver, then assert no auto-decision.
+            val s = session(playerCount = 2, seed = 9L)
+            val driver = EasyPolicy(3L)
+            var ui = s.start()
+            var guard = 0
+            while (!ui.isGameOver && guard++ < 5_000) {
+                ui = s.submitHuman(driver.decide(ui.view, ui.legalIntents))
+            }
+            assertNull(s.autoDecision(), "no auto-decision once the game is over")
         }
-        assertNull(s.autoDecision(), "no auto-decision once the game is over")
-    }
 
     /**
      * Forced Coup: a state where the human holds >= the forced-Coup threshold must classify as
@@ -103,28 +105,29 @@ class AutoModeTest {
      * session classifies it as SINGLE_LEGAL (the player has no meaningful choice).
      */
     @Test
-    fun autoDecision_singleLoseInfluence_isSingleLegal() {
-        var matched = false
-        for (seed in longArrayOf(200L, 7L, 42L, 123L, 55L, 99L, 321L, 777L, 1234L, 4242L)) {
-            val s = session(playerCount = 4, seed = seed)
-            val driver = EasyPolicy(seed xor 17L)
-            var ui = s.start()
-            var guard = 0
-            while (!ui.isGameOver && guard++ < 5_000) {
-                if (ui.legalIntents.size == 1 &&
-                    ui.legalIntents.single() is Intent.ChooseInfluenceToLose
-                ) {
-                    val decision = s.autoDecision()
-                    assertTrue(decision != null, "single legal move must classify")
-                    assertEquals(GameSession.AutoKind.SINGLE_LEGAL, decision!!.kind)
-                    assertEquals(ui.legalIntents.single(), decision.intent)
-                    matched = true
-                    break
+    fun autoDecision_singleLoseInfluence_isSingleLegal() =
+        runTest {
+            var matched = false
+            for (seed in longArrayOf(200L, 7L, 42L, 123L, 55L, 99L, 321L, 777L, 1234L, 4242L)) {
+                val s = session(playerCount = 4, seed = seed)
+                val driver = EasyPolicy(seed xor 17L)
+                var ui = s.start()
+                var guard = 0
+                while (!ui.isGameOver && guard++ < 5_000) {
+                    if (ui.legalIntents.size == 1 &&
+                        ui.legalIntents.single() is Intent.ChooseInfluenceToLose
+                    ) {
+                        val decision = s.autoDecision()
+                        assertTrue(decision != null, "single legal move must classify")
+                        assertEquals(GameSession.AutoKind.SINGLE_LEGAL, decision!!.kind)
+                        assertEquals(ui.legalIntents.single(), decision.intent)
+                        matched = true
+                        break
+                    }
+                    ui = s.submitHuman(driver.decide(ui.view, ui.legalIntents))
                 }
-                ui = s.submitHuman(driver.decide(ui.view, ui.legalIntents))
+                if (matched) break
             }
-            if (matched) break
+            assertTrue(matched, "expected a single-card lose-influence in the searched seeds")
         }
-        assertTrue(matched, "expected a single-card lose-influence in the searched seeds")
-    }
 }

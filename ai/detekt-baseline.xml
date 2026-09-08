@@ -67,11 +67,9 @@
     <ID>ReturnCount:PersonaPolicy.kt:PersonaPolicy$private fun maybeRetarget: Intent</ID>
     <ID>SwallowedException:ExpertPolicy.kt:ExpertPolicy$t: Throwable</ID>
     <ID>SwallowedException:GrandmasterPolicy.kt:GrandmasterPolicy$t: Throwable</ID>
-    <ID>SwallowedException:MoveAdvisor.kt:MoveAdvisor$t: Throwable</ID>
     <ID>TooGenericExceptionCaught:ExpertPolicy.kt:ExpertPolicy$t: Throwable</ID>
     <ID>TooGenericExceptionCaught:GrandmasterPolicy.kt:GrandmasterPolicy$t: Throwable</ID>
     <ID>TooGenericExceptionCaught:IsmctsSearch.kt:IsmctsSearch$e: Exception</ID>
-    <ID>TooGenericExceptionCaught:MoveAdvisor.kt:MoveAdvisor$t: Throwable</ID>
     <ID>UnusedParameter:AiBotDecisionEngine.kt:AiBotDecisionEngine$botId: PlayerId</ID>
     <ID>UnusedParameter:BeliefModel.kt:BeliefModel$opponentId: PlayerId</ID>
     <ID>UnusedParameter:MoveAdvisor.kt:MoveAdvisor$humanId: PlayerId</ID>
