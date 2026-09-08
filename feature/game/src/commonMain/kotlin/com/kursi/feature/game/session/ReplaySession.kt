@@ -2,6 +2,7 @@ package com.kursi.feature.game.session
 
 import com.kursi.ai.Policy
 import com.kursi.ai.advisor.MoveAdvisor
+import com.kursi.ai.runSearchBlocking
 import com.kursi.engine.GameConfig
 import com.kursi.engine.GameState
 import com.kursi.engine.Intent
@@ -9,7 +10,6 @@ import com.kursi.engine.PlayerId
 import com.kursi.engine.legalIntents
 import com.kursi.feature.game.GameUiState
 import com.kursi.feature.game.OpponentPersona
-import kotlinx.coroutines.runBlocking
 
 /**
  * ReplaySession — deterministic step-by-step review of a FINISHED match (M6c §2).
@@ -186,9 +186,11 @@ class ReplaySession private constructor(
                             // ponytail: compute() is suspend (MoveAdvisor.advise is now cancellable
                             // mid-search for the live coach). Replay build has no "player moved on"
                             // moment to cancel on — it runs once per recorded decision to a fixed,
-                            // uncapped-time REVIEW_ADVICE_BUDGET — so runBlocking here is zero
-                            // behavior change from when compute() was a plain function.
-                            runBlocking {
+                            // uncapped-time REVIEW_ADVICE_BUDGET. runSearchBlocking (not
+                            // kotlinx.coroutines.runBlocking, unavailable on wasmJs) drives it
+                            // synchronously — zero behavior change from when compute() was a plain
+                            // function, see its kdoc for why this search body never truly suspends.
+                            runSearchBlocking {
                                 ReplayAnnotation.compute(
                                     advisor = advisor,
                                     state = fullState,

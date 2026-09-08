@@ -4,8 +4,29 @@ import com.kursi.engine.*
 import com.siddharth.kmp.botspolicy.Ismcts
 import com.siddharth.kmp.botspolicy.SearchBudget
 import com.siddharth.kmp.botspolicy.SearchNode
-import kotlinx.coroutines.runBlocking
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.coroutines.startCoroutine
 import kotlin.time.TimeSource
+
+/**
+ * Drives a suspend [block] to completion without a per-platform `runBlocking` (unavailable on
+ * wasmJs). Every ISMCTS search path in this module ([runSearchSuspend], and transitively
+ * [IsmctsSearch.evaluate] / [com.kursi.ai.advisor.MoveAdvisor.advise]) only ever "suspends" through
+ * [kotlinx.coroutines.ensureActive] checks, which are no-ops with no
+ * [kotlin.coroutines.CoroutineContext.Key] `Job` in scope — the body never genuinely awaits
+ * anything, so starting it with an empty context always completes it synchronously in the
+ * completion callback below. Public so callers outside `:ai` that also need a synchronous, non-
+ * cancellable read of a search (e.g. replay annotation building) can reuse the same driver instead
+ * of a per-platform `runBlocking`.
+ * // ponytail: a body that ever truly suspends will hit the `error(...)` below instead of hanging;
+ * // acceptable ceiling since every current caller's search body is deterministic CPU work, not I/O.
+ */
+fun <T> runSearchBlocking(block: suspend () -> T): T {
+    var outcome: Result<T>? = null
+    block.startCoroutine(Continuation(EmptyCoroutineContext) { outcome = it })
+    return outcome?.getOrThrow() ?: error("search did not complete synchronously")
+}
 
 /**
  * Advice budget: smaller than the bot game budget; targets ~200-400 ms on a human's turn.
@@ -72,10 +93,10 @@ class IsmctsSearch(
     ): Intent {
         if (legal.size == 1) return legal.single()
         // ponytail: bot decisions go through the non-suspend Policy interface (ExpertPolicy/
-        // GrandmasterPolicy), so this stays synchronous — runBlocking below reproduces the old
-        // uncancellable behavior exactly. Only the human decision-coach path (evaluate) needs
+        // GrandmasterPolicy), so this stays synchronous — runSearchBlocking below reproduces the
+        // old uncancellable behavior exactly. Only the human decision-coach path (evaluate) needs
         // mid-search cancellation; see runSearchSuspend.
-        val root = runBlocking { runSearchSuspend(view, legal, memory, rng) }
+        val root = runSearchBlocking { runSearchSuspend(view, legal, memory, rng) }
 
         if (root.children.isEmpty() || root.children.values.all { it.visits == 0 }) {
             return legal.first()
