@@ -2,7 +2,7 @@ name: Screenshots
 
 # Self-maintaining render-harness baselines.
 #
-# The Kursi render harness (`:cmp-desktop:renderScreens`) runs the Compose desktop JVM
+# The Gaddi render harness (`:cmp-desktop:renderScreens`) runs the Compose desktop JVM
 # target headlessly and writes PNGs to cmp-desktop/build/shots/. CI runs on Linux (deterministic
 # renderer) and copies the output to docs/screenshots/, then proposes any changed/new shots
 # back via a bot-branch PR — so baselines are always in sync with code and never drift from

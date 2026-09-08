@@ -1,7 +1,7 @@
 name: Deploy to Indus Appstore
 
 # Publishes the release AAB to Indus Appstore via PhonePe's Indus-Flows action, matching the
-# pattern used by PaymentsLab/Mileway. Gated on INDUS_API_KEY: this repo's signing secrets are
+# pattern used by PaymentsLab-KMP/Doori. Gated on INDUS_API_KEY: this repo's signing secrets are
 # placeholders until configured (see keystore.properties.template), so this job no-ops until set.
 
 on:
