@@ -70,10 +70,10 @@ jobs:
           ./gradlew $cmd
           mkdir -p dist
           tag="${GITHUB_REF_NAME}"
-          # Attach APKs under meaningful names: Kursi-<tag>-<flavor>-<buildType>[-unsigned].apk
+          # Attach APKs under meaningful names: Gaddi-<tag>-<flavor>-<buildType>[-unsigned].apk
           while IFS= read -r apk; do
             variant="$(basename "$apk" .apk)"; variant="${variant#cmp-android-}"
-            name="Kursi-${tag}-${variant}"
+            name="Gaddi-${tag}-${variant}"
             if [[ "$variant" == *release* ]] && ! unzip -l "$apk" | grep -q 'META-INF/.*\.RSA\|META-INF/.*\.DSA\|META-INF/.*\.EC'; then
               name="${name}-unsigned"
             fi

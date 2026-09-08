@@ -4,7 +4,7 @@
   <CurrentIssues>
     <ID>CyclomaticComplexMethod:BluffOdds.kt:BluffOdds$fun estimate: Confidence</ID>
     <ID>CyclomaticComplexMethod:Determinizer.kt:Determinizer$fun sample: Pair&lt;GameState, Rng&gt;</ID>
-    <ID>CyclomaticComplexMethod:GameContextSerializer.kt:GameContextSerializer$private fun intentLabel: String</ID>
+    <ID>CyclomaticComplexMethod:GameContextSerializer.kt:GameContextSerializer$internal fun intentLabel: String</ID>
     <ID>CyclomaticComplexMethod:HardPolicy.kt:HardPolicy$private fun decideReaction: Intent</ID>
     <ID>CyclomaticComplexMethod:HardPolicy.kt:HardPolicy$private fun decideTurn: Intent</ID>
     <ID>CyclomaticComplexMethod:MediumPolicy.kt:MediumPolicy$private fun decideTurn: Intent</ID>

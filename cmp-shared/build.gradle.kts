@@ -42,6 +42,12 @@ kotlin {
             // capturable()/rememberCaptureController + ImageBitmap.toPngBytes(), for sharing the
             // Faisla certificate as an image rather than as plain text.
             implementation("com.siddharth.kmp:designsystem:1.0.0")
+            // AiSettingsSection (from :designsystem above) takes ModelManager/OnDeviceLlm (:ai) and
+            // ProviderId/SecureKeyStore (:llm-chat) types directly in its own signature — :designsystem
+            // depends on both as `implementation`, which hides them from OUR compile classpath, so
+            // SettingsScreen needs its own direct line for the same two coordinates to reference them.
+            implementation("com.siddharth.kmp:ai:1.0.0")
+            implementation("com.siddharth.kmp:llm-chat:1.0.0")
             implementation(project(":core:prefs"))
             implementation(project(":core:network"))
             implementation(project(":engine"))

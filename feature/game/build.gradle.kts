@@ -60,10 +60,17 @@ kotlin {
             implementation("com.siddharth.kmp:mvi-core:1.0.0")
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
+            // LlmChatEmbellisher (narrative/ChatEmbellisher.kt) takes AiProvider/AiMessage/AiConfig
+            // directly — :ai's own dependency on these is `implementation`, so it doesn't reach this
+            // module's compile classpath transitively; same reason cmp-shared needs its own line for
+            // AiSettingsSection (see that module's build.gradle.kts).
+            implementation("com.siddharth.kmp:llm-chat:1.0.0")
+            implementation("com.siddharth.kmp:result:1.0.0")
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
+            implementation("com.siddharth.kmp:ai-testing:1.0.0")
         }
     }
 }
