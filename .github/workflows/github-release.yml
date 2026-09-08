@@ -1,5 +1,5 @@
 # github-release.yml — tag-triggered GitHub Release (changelog + debug/release APK artifacts).
-# Adapted from the versioned-release skill's proven template (Mileway).
+# Adapted from the versioned-release skill's proven template (Doori).
 #
 # Distinct from release.yml (manual store-deploy orchestration via fastlane) and desktop-release.yml
 # (triggered by `release: published`, which this workflow's `gh release create` fires). This one

@@ -1,4 +1,4 @@
-# Kursi iOS code signing via Fastlane Match.
+# Gaddi iOS code signing via Fastlane Match.
 # Store certificates in a private Git repo; provide MATCH_GIT_URL + MATCH_PASSWORD as CI secrets.
 #
 # Setup (once):
