@@ -1,25 +1,12 @@
 {
-  "width": 1280,
-  "fps": 30,
+  "width": 1200,
+  "fps": 24,
   "duration": 5.0,
-  "colors": 256,
+  "colors": 220,
   "dither": "none",
   "clip_to_base_alpha": true,
-  "max_size_mb": 0.8,
-  "reveals": [
-    {
-      "id": "gaddi-wordmark",
-      "axis": "x",
-      "start": 0.3,
-      "end": 1.0,
-      "exit": {"start": 3.5, "end": 4.6}
-    }
-  ],
   "layers": [
-    {
-      "id": "gaddi-icon",
-      "enter": {"start": 0.3, "end": 1.0, "from": [0, -20]},
-      "exit": {"start": 3.5, "end": 4.6, "to": [0, -20]}
-    }
+    {"id": "kursi-shine", "enter": {"start": 0.4, "end": 1.6, "from": [-260, 0]}, "exit": {"start": 1.7, "end": 2.3, "to": [260, 0]}},
+    {"id": "kursi-coin", "enter": {"start": 0.5, "end": 1.1, "from": [0, -18]}, "exit": {"start": 4.0, "end": 4.8, "to": [0, 0]}}
   ]
 }
