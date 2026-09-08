@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320">
   <rect x="0" y="0" width="1280" height="320" fill="#1A1A2E"/>
-  <g transform="translate(80,80) scale(3.3333)">
+  <g id="gaddi-icon" transform="translate(80,80) scale(3.3333)">
     <g fill="none" stroke="#E8C874" stroke-linecap="round" stroke-linejoin="round">
       <polygon points="12,14 36,14 40,18 40,30 36,34 12,34 8,30 8,18" stroke-width="4"/>
       <line x1="16" y1="26" x2="28" y2="26" stroke-width="4"/>
@@ -9,7 +9,7 @@
     </g>
     <circle cx="32" cy="27" r="3" fill="#C99A3B"/>
   </g>
-  <text x="280" y="160" dominant-baseline="central" text-anchor="start"
+  <text id="gaddi-wordmark" x="280" y="160" dominant-baseline="central" text-anchor="start"
         font-family="'Space Grotesk', sans-serif" font-weight="600"
         font-size="113" letter-spacing="-1.13" fill="#F4ECD8">Gaddi</text>
   <text x="280" y="213" dominant-baseline="hanging" text-anchor="start"
