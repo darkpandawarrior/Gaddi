@@ -113,13 +113,14 @@ fun main() {
         "4p_focus_phone",
         width = 400,
         height = 880,
+        density = 3f,
     )
     println("  wrote 4p_focus_phone.png")
 
     // 4p_coach_action_phone — reuse the ANALYST coach-action fixture already built in buildFixtures()
     // rather than re-running its seed search, just at phone dimensions.
     shots.firstOrNull { it.first == "4p_coach_action" }?.let { (_, state, lp) ->
-        renderToPng(state, outDir, "4p_coach_action_phone", lp, width = 400, height = 880)
+        renderToPng(state, outDir, "4p_coach_action_phone", lp, width = 400, height = 880, density = 3f)
         println("  wrote 4p_coach_action_phone.png")
     }
 
@@ -211,7 +212,7 @@ fun main() {
     println("  wrote home.png")
 
     // Phone-portrait — portfolio device-wall capture (see 4p_focus_phone above for the pattern).
-    renderComposableAnimated(outDir, "home_phone", width = 400, height = 880) {
+    renderComposableAnimated(outDir, "home_phone", width = 400, height = 880, density = 3f) {
         HomeScreen(onNewGame = {}, onGazette = {}, onSettings = {}, onOnlineTap = {}, launchIndex = 3)
     }
     println("  wrote home_phone.png")
@@ -254,7 +255,7 @@ fun main() {
     }
     println("  wrote gazette_roles.png")
 
-    renderComposableAnimated(outDir, "gazette_roles_phone", width = 400, height = 880) {
+    renderComposableAnimated(outDir, "gazette_roles_phone", width = 400, height = 880, density = 3f) {
         com.kursi.feature.game
             .NiyamGazette(onDismiss = {}, onReplayPrimer = {}, initialTab = 0)
     }
@@ -270,7 +271,7 @@ fun main() {
     }
     println("  wrote setup.png")
 
-    renderComposable(outDir, "setup_phone", width = 400, height = 880) {
+    renderComposable(outDir, "setup_phone", width = 400, height = 880, density = 3f) {
         SetupScreen(
             onBack = {},
             onNext = { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
@@ -387,7 +388,7 @@ fun main() {
         renderToPng(narrativeState, outDir, "darbar_table", null, initialDarbarOpen = true)
         println("  wrote darbar_table.png")
 
-        renderToPng(narrativeState, outDir, "darbar_table_phone", null, initialDarbarOpen = true, width = 400, height = 880)
+        renderToPng(narrativeState, outDir, "darbar_table_phone", null, initialDarbarOpen = true, width = 400, height = 880, density = 3f)
         println("  wrote darbar_table_phone.png")
     }
 
@@ -419,7 +420,7 @@ fun main() {
     }
     println("  wrote tutorial_coup.png")
 
-    renderComposable(outDir, "tutorial_coup_phone", width = 400, height = 880) {
+    renderComposable(outDir, "tutorial_coup_phone", width = 400, height = 880, density = 3f) {
         TutorialScreen(onDone = {}, initialStep = 8)
     }
     println("  wrote tutorial_coup_phone.png")
@@ -454,7 +455,7 @@ fun main() {
     }
     println("  wrote results.png")
 
-    renderComposable(outDir, "results_phone", width = 400, height = 880) {
+    renderComposable(outDir, "results_phone", width = 400, height = 880, density = 3f) {
         ResultsScreen(
             summary = sampleMatchSummary(),
             onRematch = {},
@@ -475,7 +476,7 @@ fun main() {
     }
     println("  wrote settings.png")
 
-    renderComposable(outDir, "settings_phone", width = 400, height = 880) {
+    renderComposable(outDir, "settings_phone", width = 400, height = 880, density = 3f) {
         SettingsScreen(
             prefs = AppPrefs(),
             onBack = {},
@@ -539,7 +540,7 @@ fun main() {
     }
     println("  wrote career.png")
 
-    renderComposable(outDir, "career_phone", width = 400, height = 880) {
+    renderComposable(outDir, "career_phone", width = 400, height = 880, density = 3f) {
         CareerScreen(
             ledger =
                 StatsLedger(
@@ -1071,10 +1072,15 @@ private fun renderComposable(
     name: String,
     width: Int = 1440,
     height: Int = 900,
+    density: Float = 1f,
     content: @Composable () -> Unit,
 ) {
     val scene =
-        ImageComposeScene(width = width, height = height, density = Density(1f)) {
+        ImageComposeScene(
+            width = (width * density).toInt(),
+            height = (height * density).toInt(),
+            density = Density(density),
+        ) {
             KursiTheme { content() }
         }
     val data = scene.render().encodeToData() ?: error("encode null for $name")
@@ -1101,10 +1107,15 @@ private fun renderComposableAnimated(
     name: String,
     width: Int = 1440,
     height: Int = 900,
+    density: Float = 1f,
     content: @Composable () -> Unit,
 ) {
     val scene =
-        ImageComposeScene(width = width, height = height, density = Density(1f)) {
+        ImageComposeScene(
+            width = (width * density).toInt(),
+            height = (height * density).toInt(),
+            density = Density(density),
+        ) {
             KursiTheme { content() }
         }
     val frameNs = 16_000_000L // 16 ms per frame
@@ -1132,12 +1143,13 @@ private fun renderToPng(
     width: Int = 1440,
     height: Int = 900,
     initialDarbarOpen: Boolean = false,
+    density: Float = 1f,
 ) {
     val scene =
         ImageComposeScene(
-            width = width,
-            height = height,
-            density = Density(1f),
+            width = (width * density).toInt(),
+            height = (height * density).toInt(),
+            density = Density(density),
         ) {
             KursiTheme {
                 // Suppress the first-run "Your Certificates" SwearingInPrimer coachmark so the
