@@ -13,6 +13,7 @@ import com.siddharth.kmp.llmchat.AiMessage
 import com.siddharth.kmp.llmchat.AiProvider
 import com.siddharth.kmp.result.AiFailure
 import com.siddharth.kmp.result.AiResult
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -46,9 +47,14 @@ class AiBotDecisionEngineTest {
     private val legal = legalIntents(state, botId)
     private val persona = PersonaRoster.ALL.first()
 
-    /** Same construction [AiBotDecisionEngine] uses internally, so a test can compute the expected floor
-     *  and a non-floor alternative without re-implementing the search. */
-    private val ranked = MoveAdvisor(seed, TEST_BUDGET).advise(state, botId, legal)
+    /**
+     * Same construction [AiBotDecisionEngine] uses internally, so a test can compute the expected floor
+     * and a non-floor alternative without re-implementing the search. `advise()` is suspend
+     * (cancellable mid-search for the live coach); this fixture computes the expected floor once at
+     * class-init time with no cancellation moment, so `runBlocking` here is zero behavior change from
+     * when `advise()` was a plain function.
+     */
+    private val ranked = runBlocking { MoveAdvisor(seed, TEST_BUDGET).advise(state, botId, legal) }
     private val expectedFallback = ranked.first { it.recommended }.intent
 
     private class FakeProvider(
