@@ -15,6 +15,9 @@ import platform.GameKit.GKAchievement
 import platform.GameKit.GKLeaderboard
 import platform.GameKit.GKLocalPlayer
 import platform.GameKit.GKSavedGame
+import platform.GameKit.fetchSavedGamesWithCompletionHandler
+import platform.GameKit.saveGameData
+import platform.GameKit.setAuthenticateHandler
 import platform.UIKit.UIViewController
 import platform.posix.memcpy
 import kotlin.coroutines.resume
@@ -103,7 +106,8 @@ class GameCenterServices(
         GamePlayer(
             id = local.gamePlayerID,
             // displayName is what Apple says to render (alias is the raw handle, and deprecated).
-            displayName = local.displayName,
+            // GKPlayer redeclares displayName nonnull, but K/N keeps GKBasePlayer's nullable type.
+            displayName = local.displayName.orEmpty(),
         ).also { _currentPlayer.value = it }
 
     override suspend fun submitScore(
