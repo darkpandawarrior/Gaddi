@@ -4,6 +4,7 @@ import com.kursi.core.network.ConnectionState
 import com.kursi.core.network.OnlineKursiClient
 import com.kursi.core.network.RoomApi
 import com.kursi.core.network.RoomResult
+import com.kursi.gameservices.RoomCode
 import com.siddharth.kmp.network.LanDiscoverer
 import com.siddharth.kmp.network.LanHost
 import kotlinx.coroutines.CoroutineScope
@@ -112,7 +113,12 @@ class OnlineHubController(
         code: String,
         playerCount: Int = 0,
     ) {
-        val trimmed = code.trim().uppercase()
+        // Boundary parse. The same room reaches us as the server's bare "ABC234", as the dashed
+        // "ABC-234" that iOS 26's GKGameActivity party code insists on, or as either of those
+        // retyped by hand with a stray space. RoomCode collapses all of them to the one form
+        // RoomRegistry.findRoom() looks up — nothing dashed ever reaches the wire, and the server
+        // keeps minting exactly what it always minted.
+        val trimmed = RoomCode.fromPartyCode(code)
         if (trimmed.isEmpty()) {
             fail("Enter a room code")
             return
@@ -297,6 +303,13 @@ data class LobbyState(
     /** The room code — shared for a private host, the matched code for quick-match. */
     val code: String,
     val kind: LobbyKind,
+    /**
+     * The same room code in the two-equal-halves dashed form `GKGameActivity` requires
+     * (`ABC-234`), or null if it cannot be split evenly. Derived, never sent: [code] is what goes
+     * on the wire and what a player reads aloud.
+     */
+    val partyCode: String? get() = RoomCode.toPartyCode(code)
+
     /** The requested seat count (0 when joining by code / LAN, where the host decided it). */
     val seatCount: Int,
     /** The live connection lifecycle from the underlying client. */
