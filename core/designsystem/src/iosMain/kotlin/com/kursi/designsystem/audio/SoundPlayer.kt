@@ -7,6 +7,7 @@ import kotlinx.cinterop.usePinned
 import platform.AVFAudio.AVAudioPlayer
 import platform.AVFAudio.AVAudioSession
 import platform.AVFAudio.AVAudioSessionCategoryAmbient
+import platform.AVFAudio.setActive
 import platform.Foundation.NSData
 import platform.Foundation.create
 
