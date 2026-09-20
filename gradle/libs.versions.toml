@@ -9,7 +9,7 @@ kotlinx-serialization = "1.12.0-RC"
 activity-compose = "1.14.0-alpha02"
 core-ktx = "1.19.0"
 lifecycle = "2.12.0-alpha03"
-ktor = "3.5.2"
+ktor = "3.6.0"
 logback = "1.6.3"
 # NOT on the compose-multiplatform train: org.jetbrains.compose.material:material-icons-extended
 # was frozen at 1.7.3 and has no 1.13.0-alpha01 artifact. Pointing it at compose-multiplatform
