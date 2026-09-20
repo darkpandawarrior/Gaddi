@@ -42,6 +42,10 @@ actual class SoundPlayer actual constructor() {
 
     private val soundIds = mutableMapOf<KursiSound, Int>()
 
+    /** False until [KursiSoundAndroid.install] has run (or if SoundPool would not build). */
+    actual val isAvailable: Boolean
+        get() = pool != null && KursiSoundAndroid.appContext != null
+
     actual suspend fun play(sound: KursiSound) {
         val pool = pool ?: return
         val ctx = KursiSoundAndroid.appContext ?: return

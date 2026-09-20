@@ -22,6 +22,10 @@ actual class SoundPlayer actual constructor() {
     @Volatile
     private var released = false
 
+    /** False on a headless/no-mixer box, where every play() degrades to silence. */
+    actual val isAvailable: Boolean =
+        runCatching { AudioSystem.getMixerInfo().isNotEmpty() }.getOrDefault(false)
+
     actual suspend fun play(sound: KursiSound) {
         if (released) return
         runCatching {
