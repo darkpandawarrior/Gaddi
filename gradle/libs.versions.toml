@@ -20,6 +20,7 @@ navigation-compose = "2.10.0-beta01"
 firebase-bom = "34.19.0"
 play-review = "2.0.2"
 play-app-update = "2.1.0"
+play-games = "21.0.0"
 junit = "4.13.2"
 
 [libraries]
@@ -76,6 +77,11 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 # Play Store in-app UX
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "play-review" }
 play-app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "play-app-update" }
+# Play Games Services v2 — identity/leaderboards/achievements/snapshots ONLY. Gaddi keeps its
+# own authoritative Ktor WebSocket transport, so no real-time-multiplayer API is used.
+play-services-games = { module = "com.google.android.gms:play-services-games-v2", version.ref = "play-games" }
+# Task<T>.await() — the GMS Task API is callback-only.
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines" }
 junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]

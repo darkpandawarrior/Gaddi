@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Play Games Services project id, read by PlayGamesSdk.initialize() via the APP_ID meta-data.
+
+  The leading   is load-bearing: a bare numeric string resource is parsed as an integer and
+  the Play Games SDK then reads garbage. The escape forces it to stay a string.
+
+  The value is the __PROVISION_PLAY_GAMES_PROJECT_ID__ sentinel until someone runs
+  provisioning/provision.sh apply. While it is unreplaced, GameServicesFactory refuses to call
+  initialize() at all (it would throw), and every game-services surface reports NOT_CONFIGURED.
+-->
+<resources>
+    <string name="game_services_app_id" translatable="false"> __PROVISION_PLAY_GAMES_PROJECT_ID__</string>
+</resources>

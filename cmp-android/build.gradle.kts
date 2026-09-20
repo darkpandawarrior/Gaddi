@@ -212,6 +212,7 @@ dependencies {
     )
     implementation("com.siddharth.kmp:feedback:1.0.0")
     implementation(project(":core:prefs"))
+    implementation(project(":game-services"))
 
     implementation(libs.activity.compose)
     implementation(libs.core.ktx)
@@ -224,4 +225,8 @@ dependencies {
     add("gmsImplementation", libs.firebase.messaging)
     add("gmsImplementation", libs.play.review.ktx)
     add("gmsImplementation", libs.play.app.update.ktx)
+    // Play Games Services lives in the gms flavor only: noGms/F-Droid ships
+    // GameServicesFactory.create() = null rather than link a non-free Google SDK.
+    add("gmsImplementation", libs.play.services.games)
+    add("gmsImplementation", libs.kotlinx.coroutines.play.services)
 }
