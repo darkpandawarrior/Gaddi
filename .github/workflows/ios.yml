@@ -37,7 +37,7 @@ jobs:
     env:
       GRADLE_OPTS: "-Dorg.gradle.daemon=false"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # versionCode derives from `git rev-list --count HEAD`. A shallow clone
           # reports 1, which silently produced versionCode 2 on every published APK.
@@ -45,7 +45,7 @@ jobs:
           submodules: recursive
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v6.0.0
+        uses: actions/setup-java@v6.0.1
         with:
           java-version: '25'
           distribution: 'temurin'
@@ -58,7 +58,7 @@ jobs:
 
       # Kotlin/Native toolchain (~1 GB) — cache keyed on version catalog
       - name: Cache Kotlin/Native toolchain
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.konan
           key: ${{ runner.os }}-konan-v1-${{ hashFiles('gradle/libs.versions.toml') }}

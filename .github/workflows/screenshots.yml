@@ -32,7 +32,7 @@ jobs:
     env:
       GRADLE_OPTS: "-Dorg.gradle.daemon=false"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # versionCode derives from `git rev-list --count HEAD`. A shallow clone
           # reports 1, which silently produced versionCode 2 on every published APK.
@@ -40,7 +40,7 @@ jobs:
           submodules: recursive
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v6.0.0
+        uses: actions/setup-java@v6.0.1
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -113,7 +113,7 @@ jobs:
       # PR: upload for human review
       - name: Upload screenshots (PR review)
         if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         # An artifact is a convenience; the account's 500 MB artifact quota must not fail the gate.
         continue-on-error: true
         with:
