@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  Privacy manifest for the Gaddi iOS app bundle. Required for App Store submission.
+	  Every entry below was established by grepping the code that actually links into
+	  KursiKit.framework; nothing is declared speculatively, because over-declaring is a
+	  false statement to Apple and under-declaring gets the submission rejected.
+
+	  Deliberately NOT declared, with the reason:
+	    NSPrivacyAccessedAPICategoryFileTimestamp  — no creationDate/modificationDate/stat
+	      call in the iOS graph. The only NSFileManager use is createFileAtPath (share sheet)
+	      and fileExistsAtPath, neither of which is a required-reason API.
+	    NSPrivacyAccessedAPICategoryDiskSpace      — no volumeAvailableCapacity / statfs call.
+	    NSPrivacyAccessedAPICategoryActiveKeyboards — app declares no keyboard inspection.
+	-->
+	<key>NSPrivacyTracking</key>
+	<false/>
+	<key>NSPrivacyTrackingDomains</key>
+	<array/>
+	<!--
+	  Nothing is collected. The online-play WebSocket protocol (shared-protocol/wire/Envelopes.kt)
+	  carries only matchId, roomCode, seat index and game intents — no name, email, user id or
+	  device id. The optional cloud-LLM narrator sends redacted game state under the user's OWN
+	  API key; the app has no free-text input field and no analytics or crash SDK on iOS
+	  (Firebase Messaging is gms-flavour Android only).
+	-->
+	<key>NSPrivacyCollectedDataTypes</key>
+	<array/>
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<dict>
+			<!-- core/prefs AppPrefs + ApiKeyStore use multiplatform-settings-no-arg, whose iOS
+			     actual is NSUserDefaults.standardUserDefaults. App's own settings only. -->
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>CA92.1</string>
+			</array>
+		</dict>
+		<dict>
+			<!-- ai/IsmctsSearch.kt uses kotlin.time.TimeSource.Monotonic to bound the bot's
+			     search budget — measuring elapsed time between events inside the app, which is
+			     exactly what 35F9.1 covers. Declared because Kotlin/Native's Darwin monotonic
+			     clock may lower to mach_absolute_time(). -->
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategorySystemBootTime</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>35F9.1</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
