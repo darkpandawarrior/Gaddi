@@ -303,13 +303,6 @@ data class LobbyState(
     /** The room code — shared for a private host, the matched code for quick-match. */
     val code: String,
     val kind: LobbyKind,
-    /**
-     * The same room code in the two-equal-halves dashed form `GKGameActivity` requires
-     * (`ABC-234`), or null if it cannot be split evenly. Derived, never sent: [code] is what goes
-     * on the wire and what a player reads aloud.
-     */
-    val partyCode: String? get() = RoomCode.toPartyCode(code)
-
     /** The requested seat count (0 when joining by code / LAN, where the host decided it). */
     val seatCount: Int,
     /** The live connection lifecycle from the underlying client. */
@@ -319,6 +312,13 @@ data class LobbyState(
     /** Best-effort count of players the server has confirmed in the room so far. */
     val joinedSeats: Int = 0,
 ) {
+    /**
+     * The same room code in the two-equal-halves dashed form `GKGameActivity` requires
+     * (`ABC-234`), or null if it cannot be split evenly. Derived, never sent: [code] is what goes
+     * on the wire and what a player reads aloud.
+     */
+    val partyCode: String? get() = RoomCode.toPartyCode(code)
+
     /** A short status the waiting room renders ("Connecting…", "Waiting for players…", "Lost"). */
     val isConnecting: Boolean get() = connection is ConnectionState.Connecting || connection is ConnectionState.Idle
     val isWaiting: Boolean get() = connection is ConnectionState.Connected
