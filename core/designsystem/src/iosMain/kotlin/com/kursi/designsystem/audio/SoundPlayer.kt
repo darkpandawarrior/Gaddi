@@ -12,11 +12,11 @@ import platform.Foundation.create
 // SoundPlayer.ios.kt — IOS actual. AVAudioPlayer fed from an in-memory NSData built from the
 // bundled composeResources bytes.
 //
-// Core Audio (the codec AVAudioPlayer relies on) has no built-in Ogg Vorbis decoder, so
-// AVAudioPlayer(data:fileTypeHint:) returns nil for the bundled .ogg clips on real iOS — this
-// currently degrades gracefully to a silent no-op via the runCatching below, same shape as the
-// jvm actual's missing-SPI case. Compile-verified only here (:core:designsystem klib compile);
-// on-device/simulator audio verification is a separate step. See docs/experience-assets.md §3.
+// Core Audio has no built-in Ogg Vorbis decoder, so AVAudioPlayer(data:fileTypeHint:) returned
+// nil for every clip and this whole actual was a silent no-op on device. Fixed at the asset
+// layer instead of here: the bundled clips are now PCM WAV, which Core Audio decodes natively.
+// The hint below is the WAVE UTI. Compile-verified only here (:core:designsystem klib compile);
+// on-device/simulator audio verification is still a separate step. See docs/experience-assets.md §3.
 // ═══════════════════════════════════════════════════════════════════════════════
 
 @OptIn(ExperimentalForeignApi::class)
@@ -28,7 +28,7 @@ actual class SoundPlayer actual constructor() {
             val player =
                 players.getOrPut(sound) {
                     val bytes = loadKursiSoundBytes(sound) ?: return@runCatching
-                    AVAudioPlayer(data = bytes.toNSData(), fileTypeHint = "ogg", error = null)
+                    AVAudioPlayer(data = bytes.toNSData(), fileTypeHint = "com.microsoft.waveform-audio", error = null)
                         .also { it.prepareToPlay() }
                 }
             player.currentTime = 0.0

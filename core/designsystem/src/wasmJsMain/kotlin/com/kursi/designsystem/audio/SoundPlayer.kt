@@ -9,8 +9,9 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 // `data:` URL and played through the DOM `Audio` element — simpler and more portable across
 // browsers than driving raw Web Audio AudioContext.decodeAudioData buffers for one-shot SFX.
 //
-// Ogg Vorbis playback support varies by browser engine (broad on Chromium/Firefox, absent on
-// WebKit/Safari), so this degrades gracefully via runCatching where unsupported. Best-effort:
+// The clips are PCM WAV, which every browser engine decodes — the previous Ogg Vorbis assets
+// played on Chromium/Firefox but were silent on WebKit/Safari. runCatching stays as the guard for
+// autoplay-policy rejections, which are a user-gesture issue and not a codec one. Best-effort:
 // compile-verified only here — needs an in-browser audio check across target browsers.
 // See docs/experience-assets.md §3.
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -24,7 +25,7 @@ actual class SoundPlayer actual constructor() {
             val url =
                 dataUrls.getOrPut(sound) {
                     val bytes = loadKursiSoundBytes(sound) ?: return@runCatching
-                    "data:audio/ogg;base64,${Base64.encode(bytes)}"
+                    "data:audio/wav;base64,${Base64.encode(bytes)}"
                 }
             Audio(url).play()
         }

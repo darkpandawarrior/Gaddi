@@ -8,12 +8,12 @@ import javax.sound.sampled.LineEvent
 // SoundPlayer.jvm.kt — DESKTOP actual. javax.sound.sampled Clip playback from the bundled
 // composeResources bytes.
 //
-// The vanilla JDK ships no Ogg Vorbis decoder — AudioSystem.getAudioInputStream() throws
-// UnsupportedAudioFileException for the bundled .ogg clips absent a codec SPI on the classpath
-// (none is added here: no new dependency, per the audio-layer guardrails). Desktop therefore
-// currently degrades gracefully to a silent no-op via the runCatching below; the pipeline itself
-// is complete and correct — dropping in a WAV/PCM clip (or an SPI jar) makes this target audible
-// with no code change. See docs/experience-assets.md §3.
+// The vanilla JDK ships no Ogg Vorbis decoder, so AudioSystem.getAudioInputStream() threw
+// UnsupportedAudioFileException on the old .ogg clips and desktop was a silent no-op. This file
+// predicted its own fix — "dropping in a WAV/PCM clip makes this target audible with no code
+// change" — and that is exactly what happened: the bundled clips are PCM WAV now, which
+// javax.sound reads natively, and no SPI jar or new dependency was added. runCatching stays as
+// the guard for a headless/no-mixer environment. See docs/experience-assets.md §3.
 // ═══════════════════════════════════════════════════════════════════════════════
 
 actual class SoundPlayer actual constructor() {
