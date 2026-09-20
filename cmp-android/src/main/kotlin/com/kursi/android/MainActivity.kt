@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
 import com.kursi.core.prefs.AppPrefs
+import com.kursi.designsystem.audio.KursiSoundAndroid
 import com.kursi.shared.KursiApp
 import com.siddharth.kmp.feedback.FeedbackAndroid
 import com.siddharth.kmp.feedback.NotificationChannelManager
@@ -21,6 +22,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FeedbackAndroid.install(applicationContext)
+        KursiSoundAndroid.install(applicationContext)
         NotificationChannelManager.createChannels(this, KursiNotificationChannels.specs)
         updateNotificationPermissionState()
         scheduleInAppReview()
