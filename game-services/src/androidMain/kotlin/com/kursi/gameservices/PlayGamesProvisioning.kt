@@ -34,14 +34,12 @@ object PlayGamesProvisioning {
     fun isSentinel(value: String): Boolean = value.startsWith(SENTINEL_MARKER)
 
     /** The OAuth client id that matters for this build. Debug and release are bound to different SHA-1s. */
-    fun oauthClientId(debuggable: Boolean): String =
-        if (debuggable) OAUTH_CLIENT_ID_DEBUG else OAUTH_CLIENT_ID_RELEASE
+    fun oauthClientId(debuggable: Boolean): String = if (debuggable) OAUTH_CLIENT_ID_DEBUG else OAUTH_CLIENT_ID_RELEASE
 
     /**
      * Configured iff the project id AND the OAuth client id for THIS build type have both been
      * provisioned. Checking only the project id would let a release build sail past a missing
      * release client id and fail at sign-in, on users' devices, with no local repro.
      */
-    fun isConfigured(debuggable: Boolean): Boolean =
-        !isSentinel(PROJECT_ID) && !isSentinel(oauthClientId(debuggable))
+    fun isConfigured(debuggable: Boolean): Boolean = !isSentinel(PROJECT_ID) && !isSentinel(oauthClientId(debuggable))
 }

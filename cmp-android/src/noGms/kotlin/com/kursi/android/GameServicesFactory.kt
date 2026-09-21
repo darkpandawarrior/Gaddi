@@ -12,5 +12,9 @@ import com.kursi.gameservices.GameServices
  * a fact the caller has to handle. Same reasoning as the module having no jvm/wasm factory.
  */
 object GameServicesFactory {
+    // Both detekt findings here are the intended design, not defects: returning a constant IS the
+    // point (there is no game-services surface in this flavor), and `activity` is kept so the
+    // signature stays identical to the gms factory, which lets the call site be flavor-agnostic.
+    @Suppress("FunctionOnlyReturningConstant", "UnusedParameter")
     fun create(activity: ComponentActivity): GameServices? = null
 }

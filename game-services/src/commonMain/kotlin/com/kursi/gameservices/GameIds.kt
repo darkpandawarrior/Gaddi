@@ -47,7 +47,9 @@ enum class Achievement(
  * A cloud save slot. [platformName] is the snapshot/save-game file name on both platforms; keep it
  * filesystem-safe — Play Games rejects names outside `[a-zA-Z0-9-._~]` and 100 chars.
  */
-enum class SavedGameSlot(val platformName: String) {
+enum class SavedGameSlot(
+    val platformName: String,
+) {
     /** The career ledger + daily standing + gauntlet progress, i.e. everything in `AppPrefs`. */
     CAREER("gaddi.career"),
 }

@@ -33,10 +33,14 @@ data class GamePlayer(
 )
 
 sealed interface AuthResult {
-    data class Success(val player: GamePlayer) : AuthResult
+    data class Success(
+        val player: GamePlayer,
+    ) : AuthResult
 
     /** Carries WHY, so the caller can tell "sign in" from "hide this" from "you forgot to provision". */
-    data class Unavailable(val reason: GameServicesAvailability) : AuthResult
+    data class Unavailable(
+        val reason: GameServicesAvailability,
+    ) : AuthResult
 }
 
 /**
@@ -78,7 +82,10 @@ interface GameServices {
     suspend fun authenticate(): AuthResult
 
     /** Post [score] to [board]. False when unavailable or the platform rejected the post. */
-    suspend fun submitScore(board: Leaderboard, score: Long): Boolean
+    suspend fun submitScore(
+        board: Leaderboard,
+        score: Long,
+    ): Boolean
 
     /** Unlock a one-shot achievement. */
     suspend fun unlock(achievement: Achievement): Boolean
@@ -91,10 +98,16 @@ interface GameServices {
      * re-collection of the same StateFlow. Reaching [Achievement.totalSteps] unlocks it. Calling
      * this on a one-shot achievement unlocks it outright.
      */
-    suspend fun setProgress(achievement: Achievement, steps: Int): Boolean
+    suspend fun setProgress(
+        achievement: Achievement,
+        steps: Int,
+    ): Boolean
 
     /** Write a cloud snapshot under [slot]. */
-    suspend fun saveSnapshot(slot: SavedGameSlot, bytes: ByteArray): Boolean
+    suspend fun saveSnapshot(
+        slot: SavedGameSlot,
+        bytes: ByteArray,
+    ): Boolean
 
     /** Read a cloud snapshot, or null when absent/unavailable. */
     suspend fun loadSnapshot(slot: SavedGameSlot): ByteArray?

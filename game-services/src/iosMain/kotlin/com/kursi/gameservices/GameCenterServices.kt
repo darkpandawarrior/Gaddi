@@ -85,18 +85,25 @@ class GameCenterServices(
                 local.setAuthenticateHandler { viewController: UIViewController?, _: NSError? ->
                     when {
                         viewController != null ->
-                            host.presentationViewController()
+                            host
+                                .presentationViewController()
                                 ?.presentViewController(viewController, animated = true, completion = null)
                                 // No window to present from: GameKit would otherwise hang forever
                                 // with no error. Fail loudly instead.
                                 ?: run {
-                                    if (!resumed) { resumed = true; cont.resume(false) }
+                                    if (!resumed) {
+                                        resumed = true
+                                        cont.resume(false)
+                                    }
                                 }
 
                         else -> {
                             val authed = local.isAuthenticated()
                             _currentPlayer.value = if (authed) capture() else null
-                            if (!resumed) { resumed = true; cont.resume(authed) }
+                            if (!resumed) {
+                                resumed = true
+                                cont.resume(authed)
+                            }
                         }
                     }
                 }
@@ -179,7 +186,8 @@ class GameCenterServices(
                     // — the career ledger is monotonic, so the latest write is a superset.
                     // ponytail: newest-wins; swap for a real merge if a non-monotonic slot appears.
                     cont.resume(
-                        games.orEmpty()
+                        games
+                            .orEmpty()
                             .filterIsInstance<GKSavedGame>()
                             .filter { it.name == slot.platformName }
                             .maxByOrNull { it.modificationDate?.timeIntervalSince1970 ?: 0.0 },

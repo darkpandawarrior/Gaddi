@@ -34,8 +34,7 @@ object RoomCode {
     private const val SEPARATOR = '-'
 
     /** True iff [code] is exactly what the server mints: right length, right alphabet, already uppercase. */
-    fun isServerCode(code: String): Boolean =
-        code.length == SERVER_LENGTH && code.all { it in ALPHABET }
+    fun isServerCode(code: String): Boolean = code.length == SERVER_LENGTH && code.all { it in ALPHABET }
 
     /**
      * `"ABC123"` → `"ABC-123"`. Null when the code cannot be split into two equal halves, which
@@ -59,6 +58,5 @@ object RoomCode {
      * reports an unknown room, and rejecting a typo here would only duplicate that message with
      * less information.
      */
-    fun fromPartyCode(partyCode: String): String =
-        partyCode.uppercase().filter { it in ALPHABET }
+    fun fromPartyCode(partyCode: String): String = partyCode.uppercase().filter { it in ALPHABET }
 }

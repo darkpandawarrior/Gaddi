@@ -50,13 +50,22 @@ private object UnconfiguredGameServices : GameServices {
 
     override suspend fun authenticate() = AuthResult.Unavailable(GameServicesAvailability.NOT_CONFIGURED)
 
-    override suspend fun submitScore(board: Leaderboard, score: Long) = false
+    override suspend fun submitScore(
+        board: Leaderboard,
+        score: Long,
+    ) = false
 
     override suspend fun unlock(achievement: Achievement) = false
 
-    override suspend fun setProgress(achievement: Achievement, steps: Int) = false
+    override suspend fun setProgress(
+        achievement: Achievement,
+        steps: Int,
+    ) = false
 
-    override suspend fun saveSnapshot(slot: SavedGameSlot, bytes: ByteArray) = false
+    override suspend fun saveSnapshot(
+        slot: SavedGameSlot,
+        bytes: ByteArray,
+    ) = false
 
     override suspend fun loadSnapshot(slot: SavedGameSlot): ByteArray? = null
 }
