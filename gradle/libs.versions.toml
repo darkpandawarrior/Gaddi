@@ -20,7 +20,7 @@ navigation-compose = "2.10.0-beta01"
 firebase-bom = "34.19.0"
 play-review = "2.0.2"
 play-app-update = "2.1.0"
-play-games = "21.0.0"
+play-games = "22.1.0"
 junit = "4.13.2"
 
 [libraries]
