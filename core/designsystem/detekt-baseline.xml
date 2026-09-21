@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>CyclomaticComplexMethod:Components.kt:@Composable fun OpponentPlate</ID>
+    <ID>CyclomaticComplexMethod:Components.kt:@Composable fun RoleCard</ID>
+    <ID>LongMethod:Components.kt:private fun DrawScope.drawGuilloche</ID>
+  </CurrentIssues>
+</SmellBaseline>

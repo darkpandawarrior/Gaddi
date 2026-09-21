@@ -314,9 +314,12 @@ class GameSession(
         advanceUntilHumanOrEnd()
         drainChat(chatLog, atMove = 0)
         for (intent in humanIntents) {
-            if (state.phase is Phase.GameOver) break
-            val seat = activeHumanSeat() ?: break
-            if (intent !in legalIntents(state, seat)) break
+            // One exit, three reasons to take it: the replayed game ended early, no human seat is
+            // waiting, or the logged intent is not legal in the state we have rebuilt. All three
+            // mean the same thing — the log and this replay have diverged, so stop here.
+            val seat = activeHumanSeat()
+            val replayable = state.phase !is Phase.GameOver && seat != null && intent in legalIntents(state, seat)
+            if (!replayable) break
             humanIntentLog.add(intent)
             state = applyAndRecord(intent).first
             advanceUntilHumanOrEnd()

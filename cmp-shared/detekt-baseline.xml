@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>CyclomaticComplexMethod:KursiApp.kt:@Composable fun KursiApp</ID>
+    <ID>CyclomaticComplexMethod:SetupScreen.kt:@Composable fun SetupScreen</ID>
+  </CurrentIssues>
+</SmellBaseline>

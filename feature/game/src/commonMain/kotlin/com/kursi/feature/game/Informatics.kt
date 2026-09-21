@@ -342,7 +342,6 @@ fun WhisperChit(
                 anchor = anchorBounds,
                 container = containerSize,
                 content = content,
-                onDismiss = onDismiss,
                 modifier = modifier,
             )
         } else {
@@ -376,7 +375,6 @@ private fun AnchoredChit(
     anchor: androidx.compose.ui.geometry.Rect,
     container: androidx.compose.ui.unit.IntSize,
     content: ChitContent,
-    onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current

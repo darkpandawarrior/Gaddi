@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>CyclomaticComplexMethod:ActionDocks.kt:@Composable internal fun CompactActionChip</ID>
+    <ID>CyclomaticComplexMethod:ActionDocks.kt:@OptIn(ExperimentalLayoutApi::class) @Composable internal fun PickActionDock</ID>
+    <ID>CyclomaticComplexMethod:GameLog.kt:@Composable internal fun CollapsibleLogDrawer</ID>
+    <ID>CyclomaticComplexMethod:GameLog.kt:@Composable internal fun GameLogEntry</ID>
+    <ID>CyclomaticComplexMethod:GameScreen.kt:@Composable fun GameScreen</ID>
+    <ID>CyclomaticComplexMethod:OpponentArc.kt:@Composable internal fun OpponentChipItem</ID>
+    <ID>CyclomaticComplexMethod:StatusSpine.kt:internal fun deriveSpineTextAndTone: Pair&lt;String, SpineTone&gt;</ID>
+    <ID>LargeClass:KursiVoice.kt:KursiVoice</ID>
+    <ID>LongMethod:GameMoments.kt:internal fun mapEventToMoment: KursiMoment?</ID>
+    <ID>LongMethod:GameViewModel.kt:GameViewModel$private fun startGame</ID>
+    <ID>LongMethod:KursiVoice.kt:KursiVoice$private fun englishPersonaBark: String</ID>
+    <ID>LongMethod:KursiVoice.kt:KursiVoice$private fun hinglishPersonaBark: String</ID>
+    <ID>LongMethod:StoryArc.kt:StoryArcs$fun begin: ArcStep</ID>
+    <ID>ReturnCount:ReplayAnnotation.kt:ReplayAnnotation.Companion$private fun beliefRead: Pair&lt;String, String&gt;</ID>
+    <ID>ReturnCount:SocialDirector.kt:SocialDirector$fun nudgeBotIntent: Intent</ID>
+    <ID>TooManyFunctions:GameSession.kt:GameSession</ID>
+    <ID>TooManyFunctions:KursiVoice.kt:KursiVoice</ID>
+    <ID>TooManyFunctions:SocialDirector.kt:SocialDirector</ID>
+  </CurrentIssues>
+</SmellBaseline>

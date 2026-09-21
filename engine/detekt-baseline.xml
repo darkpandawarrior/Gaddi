@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>CyclomaticComplexMethod:Engine.kt:fun legalActions: Set&lt;Action&gt;</ID>
+    <ID>TooManyFunctions:Engine.kt:EngineStep</ID>
+  </CurrentIssues>
+</SmellBaseline>
