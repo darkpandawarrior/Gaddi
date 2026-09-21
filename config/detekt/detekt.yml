@@ -162,11 +162,6 @@ exceptions:
     active: true                  # A swallowed exception is the defect you get paged for;
                                   # either log it, wrap it, or name the variable `_`/`ignored`
                                   # so the intent is on the page.
-  ThrowsCount:
-    excludes: *notOurs
-    max: 3
-    excludeGuardClauses: true     # `require`/`check` at the top of a function are precondition
-                                  # declarations, not control flow.
   TooGenericExceptionThrown:
     excludes: *notOurs
     active: true
@@ -279,6 +274,13 @@ style:
   ForbiddenComment:
     active: false                 # TODO(ios)/TODO(wasm) markers track real unimplemented
                                   # platform actuals in a KMP tree; they are a map, not rot.
+  ThrowsCount:
+    excludes: *notOurs
+    max: 3
+    excludeGuardClauses: true     # `require`/`check` at the top of a function are precondition
+                                  # declarations, not control flow.
+                                  # NOTE: ThrowsCount is in the `style` ruleset in detekt 2.0, not
+                                  # `exceptions`. config.validation rejects the wrong parent.
   ReturnCount:
     excludes: *notOurs
     max: 4
