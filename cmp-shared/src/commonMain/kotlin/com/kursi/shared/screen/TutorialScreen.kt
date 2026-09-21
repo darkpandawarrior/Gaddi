@@ -274,7 +274,12 @@ fun TutorialOfferDialog(
             ) {
                 Text("✦", style = KursiType.title.copy(fontSize = 20.sp), color = BrandTokens.TeakDark)
             }
-            Text(s.tutorialOfferTitle, style = KursiType.title_md.copy(fontSize = 18.sp), color = BrandTokens.CreamInk, textAlign = TextAlign.Center)
+            Text(
+                s.tutorialOfferTitle,
+                style = KursiType.title_md.copy(fontSize = 18.sp),
+                color = BrandTokens.CreamInk,
+                textAlign = TextAlign.Center,
+            )
             Text(
                 s.tutorialOfferBody,
                 style = KursiType.body.copy(fontSize = 13.sp),
@@ -347,7 +352,11 @@ private fun TutorialHeader(
                                 .border(0.7.dp, BrandTokens.StampRed.copy(alpha = 0.4f), RoundedCornerShape(3.dp))
                                 .padding(horizontal = 6.dp, vertical = 2.dp),
                     ) {
-                        Text(badge, style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.6.sp), color = BrandTokens.StampRed.copy(alpha = 0.8f))
+                        Text(
+                            badge,
+                            style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.6.sp),
+                            color = BrandTokens.StampRed.copy(alpha = 0.8f),
+                        )
                     }
                     Text("$stepLabel ${step + 1}/$total", style = KursiType.caption.copy(fontSize = 9.sp), color = KursiNeutrals.TextMuted)
                 }
@@ -478,7 +487,11 @@ private fun CoachChit(
                                 .padding(horizontal = 8.dp),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text(text = backLabel, style = KursiType.label.copy(fontSize = 11.sp), color = BrandTokens.BrassDark.copy(alpha = 0.8f))
+                        Text(
+                            text = backLabel,
+                            style = KursiType.label.copy(fontSize = 11.sp),
+                            color = BrandTokens.BrassDark.copy(alpha = 0.8f),
+                        )
                     }
                 } else {
                     Spacer(Modifier.width(1.dp))
@@ -496,7 +509,11 @@ private fun CoachChit(
                                 contentDescription = primaryLabel
                             }.padding(horizontal = 18.dp, vertical = 9.dp),
                 ) {
-                    Text(primaryLabel, style = KursiType.label.copy(fontSize = 12.sp, fontWeight = FontWeight.Bold), color = BrandTokens.TeakDark)
+                    Text(
+                        primaryLabel,
+                        style = KursiType.label.copy(fontSize = 12.sp, fontWeight = FontWeight.Bold),
+                        color = BrandTokens.TeakDark,
+                    )
                 }
             }
         }
@@ -733,8 +750,11 @@ private fun HandCard(
                     Modifier
                         .size(34.dp)
                         .clip(CircleShape)
-                        .background(Brush.radialGradient(listOf(BrandTokens.BrassAged.copy(alpha = 0.4f), BrandTokens.BrassDark.copy(alpha = 0.6f))))
-                        .border(1.dp, BrandTokens.BrassDark, CircleShape),
+                        .background(
+                            Brush.radialGradient(
+                                listOf(BrandTokens.BrassAged.copy(alpha = 0.4f), BrandTokens.BrassDark.copy(alpha = 0.6f)),
+                            ),
+                        ).border(1.dp, BrandTokens.BrassDark, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
                 Text("✦", style = KursiType.title.copy(fontSize = 16.sp), color = BrandTokens.GoldAntique.copy(alpha = 0.7f))
@@ -805,8 +825,9 @@ private fun ActionDock(
                             Modifier
                         },
                     ).clip(RoundedCornerShape(10.dp))
-                    .background(if (pulse) BrandTokens.GoldAntique.copy(alpha = 0.20f + glow * 0.18f) else BrandTokens.TeakDark.copy(alpha = 0.55f))
-                    .border(
+                    .background(
+                        if (pulse) BrandTokens.GoldAntique.copy(alpha = 0.20f + glow * 0.18f) else BrandTokens.TeakDark.copy(alpha = 0.55f),
+                    ).border(
                         if (pulse) 2.dp else 1.dp,
                         if (pulse) BrandTokens.GoldAntique.copy(alpha = 0.7f + glow * 0.3f) else BrandTokens.BrassDark.copy(alpha = 0.5f),
                         RoundedCornerShape(10.dp),
@@ -839,7 +860,17 @@ private fun ActionDock(
                         .alpha(0.55f)
                         .padding(horizontal = 14.dp, vertical = 12.dp),
             ) {
-                Text(if (it == 0) dehaadiLabel else fdiLabel, style = KursiType.name.copy(fontSize = 12.sp), color = KursiNeutrals.TextSecondary)
+                Text(
+                    if (it ==
+                        0
+                    ) {
+                        dehaadiLabel
+                    } else {
+                        fdiLabel
+                    },
+                    style = KursiType.name.copy(fontSize = 12.sp),
+                    color = KursiNeutrals.TextSecondary,
+                )
             }
         }
     }
@@ -868,7 +899,13 @@ private fun MechanicTable(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                RivalPlate(name = "Babu Filewala", monogram = "BF", hue = KursiRoleHues.Babu, active = false, modifier = Modifier.weight(1f))
+                RivalPlate(
+                    name = "Babu Filewala",
+                    monogram = "BF",
+                    hue = KursiRoleHues.Babu,
+                    active = false,
+                    modifier = Modifier.weight(1f),
+                )
                 RivalPlate(
                     name = "Netaji Vachan",
                     monogram = "NV",

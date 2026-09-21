@@ -12,7 +12,12 @@ import com.siddharth.kmp.result.AiResult
  * same pattern as [OnDeviceAiProvider.jvm.kt]. A real answer in the browser now comes from the
  * BYOK cloud tier in [com.kursi.ai.MunshiNarrator]'s own provider chain instead: see
  * [com.kursi.ai.createMunshiNarrator] for how a saved cloud-provider key reaches it.
+ *
+ * ktlint:standard:function-naming — a constructor-like factory. Kotlin's own convention
+ * allows PascalCase here; ktlint only recognises the pattern when the function name equals
+ * its return TYPE name, which it cannot be when the factory returns an interface.
  */
+@Suppress("ktlint:standard:function-naming")
 actual fun OnDeviceAiProvider(): AiProvider = WasmOnDeviceAiProvider()
 
 private class WasmOnDeviceAiProvider : AiProvider {

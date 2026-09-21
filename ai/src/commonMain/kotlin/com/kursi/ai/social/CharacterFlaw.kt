@@ -73,5 +73,6 @@ object FlawModel {
     }
 
     /** The single most-exploitable flaw — the one a manipulator should aim for first. */
-    fun dominantFlaw(profile: PersonalityProfile): CharacterFlaw = CharacterFlaw.entries.maxByOrNull { susceptibility(profile, it) } ?: CharacterFlaw.IMPULSE
+    fun dominantFlaw(profile: PersonalityProfile): CharacterFlaw =
+        CharacterFlaw.entries.maxByOrNull { susceptibility(profile, it) } ?: CharacterFlaw.IMPULSE
 }

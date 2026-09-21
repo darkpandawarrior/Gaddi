@@ -14,11 +14,21 @@ data class RngState(
 
 private const val GOLDEN: Long = -0x61c8864680b583ebL // 0x9E3779B97F4A7C15
 
+// SplitMix64's finalizer constants, verbatim from the reference implementation. They are not
+// tunable: change one and the generator stops being SplitMix64, every recorded seed replays a
+// different game, and the engine's determinism tests fail. Named so the numbers stop reading as
+// arbitrary and start reading as a citation.
+private const val MixMultiplier1: Long = -0x40a7b892e31b1a47L // 0xBF58476D1CE4E5B9
+private const val MixMultiplier2: Long = -0x6b2fb644ecceee15L // 0x94D049BB133111EB
+private const val MixShift1 = 30
+private const val MixShift2 = 27
+private const val MixShift3 = 31
+
 private fun mix(z0: Long): Long {
     var z = z0
-    z = (z xor (z ushr 30)) * -0x40a7b892e31b1a47L // 0xBF58476D1CE4E5B9
-    z = (z xor (z ushr 27)) * -0x6b2fb644ecceee15L // 0x94D049BB133111EB
-    return z xor (z ushr 31)
+    z = (z xor (z ushr MixShift1)) * MixMultiplier1
+    z = (z xor (z ushr MixShift2)) * MixMultiplier2
+    return z xor (z ushr MixShift3)
 }
 
 data class Rng(

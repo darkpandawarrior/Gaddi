@@ -6,6 +6,19 @@ import com.siddharth.kmp.botspolicy.SearchBudget
 import kotlinx.coroutines.CancellationException
 
 /**
+ * P(bluff) for each of BluffOdds' 1..5 confidence pips — the midpoint of that pip's bucket
+ * (pip 1 means pBluff < 0.20, pip 2 means 0.20..0.38, and so on). Indexed by `pips - 1`.
+ * A table, not five `when` arms, because the shape (monotonic, bucket midpoints) is the contract.
+ */
+private val BluffProbabilityByPip = listOf(0.10, 0.29, 0.46, 0.63, 0.86)
+
+/** Odds are shown to the player as whole percentages. */
+private const val PercentScale = 100
+
+/** At or above this the advisor calls a challenge "favourable" rather than "a long shot". */
+private const val FavourablePct = 50
+
+/**
  * MoveAdvisor — pure, UI-free "AI brain" shared by the decision-coach, best-move highlight,
  * AI assistant, and auto-mode.
  *
@@ -242,13 +255,7 @@ class MoveAdvisor(
             // More precisely, reconstruct from BluffOdds thresholds:
             // pips=1 → pBluff<0.20, pips=2 → 0.20-0.38, etc.
             // We return the midpoint of each bucket.
-            return when (confidence.pips) {
-                1 -> 0.10
-                2 -> 0.29
-                3 -> 0.46
-                4 -> 0.63
-                else -> 0.86
-            }
+            return BluffProbabilityByPip.getOrElse(confidence.pips - 1) { BluffProbabilityByPip.last() }
         }
 
         // For bluff action or bluff block: rough P(safe — not caught)
@@ -334,8 +341,8 @@ class MoveAdvisor(
         // Challenge: odds-first rationale
         if (intent is Intent.Challenge) {
             return if (successOdds != null) {
-                val pct = (successOdds * 100).toInt()
-                if (pct >= 50) {
+                val pct = (successOdds * PercentScale).toInt()
+                if (pct >= FavourablePct) {
                     "~$pct% chance they're bluffing — challenge is favourable."
                 } else {
                     "~$pct% chance they're bluffing — challenge is a long shot."

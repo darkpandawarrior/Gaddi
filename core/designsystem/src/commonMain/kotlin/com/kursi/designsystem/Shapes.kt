@@ -21,7 +21,11 @@ import androidx.compose.ui.unit.dp
 /**
  * Returns a squircle [Shape] with continuous-curvature corners at [radius].
  * Currently implemented as [RoundedCornerShape] (cross-target fallback per spec §8).
+ *
+ * ktlint:standard:function-naming — a constructor-like Shape factory; PascalCase matches
+ * RoundedCornerShape/CircleShape, which is what every call site reads it next to.
  */
+@Suppress("ktlint:standard:function-naming")
 fun Squircle(radius: Dp): Shape = RoundedCornerShape(radius)
 
 // ─────────────────────────── KursiRadii token object ───────────────────────────

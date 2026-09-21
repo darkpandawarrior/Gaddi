@@ -296,7 +296,11 @@ object StoryArcs {
                 )
             ArcId.STING ->
                 ArcStep(
-                    ops = listOf(SocialOp.Agitate(state.target ?: 0, CharacterFlaw.EGO, 0.4f), SocialOp.Agitate(state.target ?: 0, CharacterFlaw.GREED, 0.4f)),
+                    ops =
+                        listOf(
+                            SocialOp.Agitate(state.target ?: 0, CharacterFlaw.EGO, 0.4f),
+                            SocialOp.Agitate(state.target ?: 0, CharacterFlaw.GREED, 0.4f),
+                        ),
                     beats =
                         listOf(
                             ArcBeat(0, "sting.dare", MessageTone.SLY, state.arc, state.target, fromPlayer = true),

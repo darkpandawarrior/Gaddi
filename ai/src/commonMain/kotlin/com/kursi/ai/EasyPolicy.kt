@@ -25,6 +25,14 @@ class EasyPolicy(
     SimPolicy {
     private var rng = Rng(seed)
 
+    private companion object {
+        /** Percentage dice rolls (rng.nextInt(100)). Easy's whole "good but beatable" band. */
+        const val TopTierPickPct = 60
+        const val RandomChallengeNoisePct = 5
+        const val BluffBlockPct = 15
+        const val RandomExchangeKeepPct = 40
+    }
+
     override fun decide(
         view: PlayerView,
         legal: List<Intent>,
@@ -69,7 +77,7 @@ class EasyPolicy(
         // Easy bot: 60% pick from top-priority tier, 40% pick randomly among all
         val (roll, r1) = rng.nextInt(100)
         rng = r1
-        if (roll < 60) {
+        if (roll < TopTierPickPct) {
             for (tier in listOf(coup, assassinate, steal, tax, investigate, foreignAid, income)) {
                 if (tier.isNotEmpty()) return preferWeakTarget(tier, view)
             }
@@ -128,13 +136,13 @@ class EasyPolicy(
         // ~5% random challenge noise.
         val (roll1, r1) = rng.nextInt(100)
         rng = r1
-        if (hasChallenge && roll1 < 5) return legal.first { it is Intent.Challenge }
+        if (hasChallenge && roll1 < RandomChallengeNoisePct) return legal.first { it is Intent.Challenge }
 
         // ~15% bluff-block when we're the target and can block.
         if (hasBlock) {
             val (roll2, r2) = rng.nextInt(100)
             rng = r2
-            if (roll2 < 15) {
+            if (roll2 < BluffBlockPct) {
                 val block = legal.filterIsInstance<Intent.Block>()
                 if (block.isNotEmpty()) return randomFrom(block)
             }
@@ -153,7 +161,7 @@ class EasyPolicy(
         // role-optimal keep (resolved via myCards + Exchange.drawn). Good-but-beatable.
         val (roll, r1) = rng.nextInt(100)
         rng = r1
-        if (roll < 40) return randomFrom(legal)
+        if (roll < RandomExchangeKeepPct) return randomFrom(legal)
         return CardChoice.bestExchange(view, legal) ?: legal.first()
     }
 

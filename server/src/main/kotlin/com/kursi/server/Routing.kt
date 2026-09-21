@@ -73,7 +73,6 @@ fun Application.configureRouting(registry: RoomRegistry) {
     }
 }
 
-
 /** What a successful `/play` handshake yields: the match actor, the room code and the seat taken. */
 private data class JoinedRoom(
     val actor: MatchActor,

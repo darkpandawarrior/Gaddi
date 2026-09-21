@@ -258,7 +258,11 @@ internal fun EngravedTurnHeader(
         ) {
             Text(
                 text = text.uppercase(),
-                style = KursiType.numeral_sm.dmMono().copy(letterSpacing = 2.5.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold),
+                style =
+                    KursiType.numeral_sm.dmMono().copy(
+                        letterSpacing = 2.5.sp,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                    ),
                 color = accent,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

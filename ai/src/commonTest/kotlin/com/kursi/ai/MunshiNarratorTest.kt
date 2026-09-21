@@ -159,10 +159,11 @@ class MunshiNarratorTest {
      * loop's counter: if cancellation only cancelled the collector, this fake (an unbounded-looking
      * `for` loop with a `delay` a real backend's generate-loop would have too) would keep running
      * to completion in the background and `emitted` would still reach 5.
+     *
+     * advanceTimeBy/advanceUntilIdle on TestScope are still @ExperimentalCoroutinesApi in
+     * kotlinx-coroutines 1.10.x. Opting in at the one test that drives the virtual clock keeps
+     * the marker visible instead of blanket-suppressing it for the whole file.
      */
-    // advanceTimeBy/advanceUntilIdle on TestScope are still @ExperimentalCoroutinesApi in
-    // kotlinx-coroutines 1.10.x. Opting in at the one test that drives the virtual clock keeps
-    // the marker visible instead of blanket-suppressing it for the whole file.
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun narrate_cancellingTheCollector_stopsTheGenerationItself() =

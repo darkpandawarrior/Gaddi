@@ -38,6 +38,23 @@ class MediumPolicy(
     SimPolicy {
     private var rng = Rng(seed)
 
+    // Percentage dice rolls (rng.nextInt(100)). Each is "how often Medium takes this line when it
+    // is available" — the whole difficulty band lives in these six numbers, so they are named and
+    // grouped instead of being six bare literals scattered through decideTurn/decideReaction.
+    private companion object {
+        const val TaxWhenClaimSurvivablePct = 70
+        const val StealFromRichestPct = 55
+        const val AssassinateStrongestPct = 45
+        const val ForeignAidWhenNetaScarcePct = 65
+        const val TaxFallbackPct = 60
+
+        /** Challenge threshold tau ~= 0.35, expressed on the 0..99 pHonest scale. */
+        const val ChallengeMaxHonestPct = 34
+
+        /** Role-value floor for "worth forcing a redraw on" — BABU's rank. See roleValue below. */
+        const val ForceRedrawValueFloor = 5
+    }
+
     // Role value ranking (higher = more valuable to keep).
     // PATRAKAAR (Inquisitor) sits high: it carries the Jaanch info-then-disrupt action AND has no
     // own counter, so it is roughly as valuable as BABU — slotted just under it.
@@ -112,7 +129,7 @@ class MediumPolicy(
                 // Use Tax 40% of the time when it's good; add some noise.
                 val (r, r1) = rng.nextInt(100)
                 rng = r1
-                if (r < 70) return taxIntent
+                if (r < TaxWhenClaimSurvivablePct) return taxIntent
             }
         }
 
@@ -131,7 +148,7 @@ class MediumPolicy(
                 if (targetCoins >= 2) {
                     val (r, r1) = rng.nextInt(100)
                     rng = r1
-                    if (r < 55) return richestTarget
+                    if (r < StealFromRichestPct) return richestTarget
                 }
             }
         }
@@ -152,7 +169,7 @@ class MediumPolicy(
             if (strongestTarget != null) {
                 val (r, r1) = rng.nextInt(100)
                 rng = r1
-                if (r < 45) return strongestTarget
+                if (r < AssassinateStrongestPct) return strongestTarget
             }
         }
 
@@ -163,7 +180,7 @@ class MediumPolicy(
             if (netaLeft <= 1) {
                 val (r, r1) = rng.nextInt(100)
                 rng = r1
-                if (r < 65) return faIntent
+                if (r < ForeignAidWhenNetaScarcePct) return faIntent
             }
         }
 
@@ -171,7 +188,7 @@ class MediumPolicy(
         if (taxIntent != null) {
             val (r, r1) = rng.nextInt(100)
             rng = r1
-            if (r < 60) return taxIntent
+            if (r < TaxFallbackPct) return taxIntent
         }
         val incomeIntent = legal.firstOrNull { it is Intent.DeclareAction && it.action == Action.Income }
         if (incomeIntent != null) return incomeIntent
@@ -195,7 +212,10 @@ class MediumPolicy(
                 opponents.sortedWith(compareByDescending<OpponentView> { it.faceDownCount }.thenByDescending { it.coins })
             }
         for (opp in sorted) {
-            val intent = coupsAvail.firstOrNull { i -> (i as Intent.DeclareAction).action.let { a -> a is Action.Coup && a.target == opp.id } }
+            val intent =
+                coupsAvail.firstOrNull { i ->
+                    (i as Intent.DeclareAction).action.let { a -> a is Action.Coup && a.target == opp.id }
+                }
             if (intent != null) return intent
         }
         return coupsAvail.first()
@@ -221,7 +241,7 @@ class MediumPolicy(
                     if (left <= 0) return legal.first { it is Intent.Challenge } // Guaranteed bluff.
                     val pHon = pHonest(view, claimedRole)
                     // Challenge threshold τ ≈ 0.35.
-                    if (pHon in 0..34) return legal.first { it is Intent.Challenge }
+                    if (pHon in 0..ChallengeMaxHonestPct) return legal.first { it is Intent.Challenge }
                 }
                 passIntent
             }
@@ -306,7 +326,7 @@ class MediumPolicy(
         if (peeked == null) return keep ?: legal.first()
         val value = roleValue[peeked.role] ?: 0
         // Force a redraw on the target's high-value cards (value >= BABU); keep otherwise.
-        return if (value >= (roleValue[Role.BABU] ?: 5)) {
+        return if (value >= (roleValue[Role.BABU] ?: ForceRedrawValueFloor)) {
             (forceRedraw ?: keep ?: legal.first())
         } else {
             (keep ?: legal.first())

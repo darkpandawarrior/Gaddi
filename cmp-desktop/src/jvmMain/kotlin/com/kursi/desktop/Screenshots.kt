@@ -361,7 +361,14 @@ fun main() {
                     tone = MessageTone.PANICKED,
                     kind = ChatKind.TABLE,
                 ),
-                ChatMessage(5, senderSeat = 3, targetSeat = 2, body = "Babu pehle. Baaki baad mein.", tone = MessageTone.HOSTILE, kind = ChatKind.TABLE),
+                ChatMessage(
+                    5,
+                    senderSeat = 3,
+                    targetSeat = 2,
+                    body = "Babu pehle. Baaki baad mein.",
+                    tone = MessageTone.HOSTILE,
+                    kind = ChatKind.TABLE,
+                ),
             )
         val suggestions =
             listOf(
@@ -374,7 +381,15 @@ fun main() {
                     "Bhai Teja",
                     "Secret pact — coordinate, then betray",
                 ),
-                ChatSuggestion("afwaah.fuel.2", "Aur hawa do", ChatActionKind.ARC_REPLY, ArcId.AFWAAH, 2, "Babu", "Twist the knife — more heat on Babu"),
+                ChatSuggestion(
+                    "afwaah.fuel.2",
+                    "Aur hawa do",
+                    ChatActionKind.ARC_REPLY,
+                    ArcId.AFWAAH,
+                    2,
+                    "Babu",
+                    "Twist the knife — more heat on Babu",
+                ),
                 ChatSuggestion("talk.taunt.3", "Taunt Jugaadu", ChatActionKind.TAUNT, null, 3, "Jugaadu", "Heat them up"),
             )
         val narrativeState =

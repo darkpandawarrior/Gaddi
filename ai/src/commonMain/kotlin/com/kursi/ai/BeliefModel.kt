@@ -113,10 +113,10 @@ class BotMemory {
                 val belief = beliefs.getOrPut(event.player) { OpponentBelief() }
                 if (event.hadRole) {
                     // Survived challenge = near-proof; card shuffled back to deck — strong evidence
-                    belief.roleEvidence[event.role] = (belief.roleEvidence[event.role] ?: 0.0) + 2.5
+                    belief.roleEvidence[event.role] = (belief.roleEvidence[event.role] ?: 0.0) + SurvivedChallengeEvidence
                 } else {
                     // Bluff exposed — strong negative evidence for claimed role
-                    belief.roleEvidence[event.role] = (belief.roleEvidence[event.role] ?: 0.0) - 4.0
+                    belief.roleEvidence[event.role] = (belief.roleEvidence[event.role] ?: 0.0) + ExposedBluffEvidence
                     // Confirmed bluff — bump the bluff counter; bluffRate is recomputed from counters below.
                     beliefs[event.player] = belief.copy(bluffCount = belief.bluffCount + 1)
                 }
@@ -130,7 +130,7 @@ class BotMemory {
             is GameEvent.InfluenceLost -> {
                 // Card permanently revealed — strong negative evidence for that role
                 val belief = beliefs.getOrPut(event.player) { OpponentBelief() }
-                belief.roleEvidence[event.role] = (belief.roleEvidence[event.role] ?: 0.0) - 5.0
+                belief.roleEvidence[event.role] = (belief.roleEvidence[event.role] ?: 0.0) + InfluenceLostEvidence
             }
             else -> {}
         }
@@ -162,7 +162,7 @@ class BotMemory {
             b.copy(
                 style =
                     StyleEstimate(
-                        bluffRate = bluffRate.coerceIn(0.0, 0.8),
+                        bluffRate = bluffRate.coerceIn(0.0, MaxInferredBluffRate),
                         aggression = aggression.coerceIn(0.0, 1.0),
                         challengeRate = challengeRate.coerceIn(0.0, 1.0),
                     ),
@@ -183,6 +183,23 @@ class BotMemory {
             else -> false
         }
 }
+
+/**
+ * Log-evidence deltas applied to a role's posterior when the table learns something about it.
+ * Ordered by how conclusive the observation is: an exposed bluff is worse news for the claimed role
+ * than a survived challenge is good news, and a permanently revealed card is the strongest signal
+ * of all because the card is gone rather than shuffled back.
+ */
+private const val SurvivedChallengeEvidence = 2.5
+private const val ExposedBluffEvidence = -4.0
+private const val InfluenceLostEvidence = -5.0
+
+/**
+ * Ceiling on the inferred bluff rate. Capped below 1.0 on purpose: even an opponent caught bluffing
+ * every single time so far should not be modelled as a certain bluffer, or the search stops
+ * considering that their next claim might be true.
+ */
+private const val MaxInferredBluffRate = 0.8
 
 /**
  * Computes posterior over roles for a given opponent using a Bayesian update

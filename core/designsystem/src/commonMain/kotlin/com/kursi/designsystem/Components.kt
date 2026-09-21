@@ -350,10 +350,25 @@ private fun DrawScope.drawChairEmblem(color: Color = BrandTokens.GoldAntique) {
     drawCircle(color.copy(alpha = alpha), r * 0.28f, Offset(cx, cy * 0.86f), style = Stroke(1.2.dp.toPx()))
     // Seat legs — two downward lines
     val legWidth = r * 0.22f
-    drawLine(color.copy(alpha = alpha), Offset(cx - legWidth, cy * 0.96f), Offset(cx - legWidth, cy + r * 0.35f), strokeWidth = 1.5.dp.toPx())
-    drawLine(color.copy(alpha = alpha), Offset(cx + legWidth, cy * 0.96f), Offset(cx + legWidth, cy + r * 0.35f), strokeWidth = 1.5.dp.toPx())
+    drawLine(
+        color.copy(alpha = alpha),
+        Offset(cx - legWidth, cy * 0.96f),
+        Offset(cx - legWidth, cy + r * 0.35f),
+        strokeWidth = 1.5.dp.toPx(),
+    )
+    drawLine(
+        color.copy(alpha = alpha),
+        Offset(cx + legWidth, cy * 0.96f),
+        Offset(cx + legWidth, cy + r * 0.35f),
+        strokeWidth = 1.5.dp.toPx(),
+    )
     // Seat beam
-    drawLine(color.copy(alpha = alpha), Offset(cx - legWidth * 1.3f, cy + r * 0.22f), Offset(cx + legWidth * 1.3f, cy + r * 0.22f), strokeWidth = 1.2.dp.toPx())
+    drawLine(
+        color.copy(alpha = alpha),
+        Offset(cx - legWidth * 1.3f, cy + r * 0.22f),
+        Offset(cx + legWidth * 1.3f, cy + r * 0.22f),
+        strokeWidth = 1.2.dp.toPx(),
+    )
 }
 
 // ─────────────────────────── Brass specular animated sweep ───────────────────
@@ -1570,7 +1585,11 @@ fun KursiActionButton(
             roleAccent != null -> Brush.horizontalGradient(listOf(roleAccent, BrandTokens.BrassAged.copy(alpha = 0.7f)))
             else ->
                 Brush.horizontalGradient(
-                    listOf(BrandTokens.GoldAntique.copy(alpha = 0.9f), BrandTokens.BrassAged.copy(alpha = 0.7f), BrandTokens.BrassDark.copy(alpha = 0.5f)),
+                    listOf(
+                        BrandTokens.GoldAntique.copy(alpha = 0.9f),
+                        BrandTokens.BrassAged.copy(alpha = 0.7f),
+                        BrandTokens.BrassDark.copy(alpha = 0.5f),
+                    ),
                 )
         }
     val contentAlpha = if (enabled) 1f else 0.40f

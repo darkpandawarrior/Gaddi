@@ -246,7 +246,12 @@ fun GameScreen(
                 ) {
                     Text(
                         text = voice.spectatorBanner,
-                        style = KursiType.caption.copy(fontSize = 10.sp, letterSpacing = 1.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
+                        style =
+                            KursiType.caption.copy(
+                                fontSize = 10.sp,
+                                letterSpacing = 1.sp,
+                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                            ),
                         color = KursiNeutrals.Cream,
                     )
                 }
@@ -875,7 +880,12 @@ internal fun PhoneLayout(
                     StatusSpineBar(state = state, gamePhase = gamePhase, modifier = Modifier.fillMaxWidth())
                     RecapRail(state = state, gamePhase = gamePhase, modifier = Modifier.fillMaxWidth())
                 } else {
-                    EngravedTurnHeader(state = state, gamePhase = gamePhase, onOpenGazette = onOpenGazette, modifier = Modifier.fillMaxWidth())
+                    EngravedTurnHeader(
+                        state = state,
+                        gamePhase = gamePhase,
+                        onOpenGazette = onOpenGazette,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
                 }
 
                 // ── MIDDLE: opponents + felt + hand (fills remaining space) ──────────

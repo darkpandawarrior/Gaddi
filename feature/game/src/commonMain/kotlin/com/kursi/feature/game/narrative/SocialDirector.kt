@@ -224,7 +224,15 @@ class SocialDirector(
             ChatActionKind.ARC_REPLY, ChatActionKind.DEFLECT, ChatActionKind.ALLY_PING -> replyArc(input, turn)
             ChatActionKind.TAUNT -> {
                 val t = input.targetSeat ?: return
-                emit(humanSeat, voice.arcBeat("afwaah.plant", "Aap", info[t]?.name), MessageTone.HOSTILE, ChatKind.TABLE, t, turn, fromPlayer = true)
+                emit(
+                    humanSeat,
+                    voice.arcBeat("afwaah.plant", "Aap", info[t]?.name),
+                    MessageTone.HOSTILE,
+                    ChatKind.TABLE,
+                    t,
+                    turn,
+                    fromPlayer = true,
+                )
                 social = social.withThreat(t, 0.2f).withStance(t, humanSeat) { it.adjust(suspicion = 0.15f) }
             }
             ChatActionKind.PLACATE -> {
@@ -287,7 +295,13 @@ class SocialDirector(
                     beat.fromPlayer || beat.speakerSeat == humanSeat -> voice.arcBeat(beat.beatKey, speakerName, targetName)
                     else -> {
                         val pid = info[beat.speakerSeat]?.personaId
-                        if (pid != null) voice.botArcBeat(beat.beatKey, pid, targetName) else voice.arcBeat(beat.beatKey, speakerName, targetName)
+                        if (pid !=
+                            null
+                        ) {
+                            voice.botArcBeat(beat.beatKey, pid, targetName)
+                        } else {
+                            voice.arcBeat(beat.beatKey, speakerName, targetName)
+                        }
                     }
                 }
             val kind = if (beat.speakerSeat < 0) ChatKind.SYSTEM else ChatKind.ARC
@@ -304,7 +318,10 @@ class SocialDirector(
             is SocialOp.Threat -> social = social.withThreat(op.seat, op.delta)
             is SocialOp.Suspicion ->
                 if (op.observer == SocialOp.ALL) {
-                    info.keys.filter { it != op.target }.forEach { o -> social = social.withStance(o, op.target) { it.adjust(suspicion = op.delta) } }
+                    info.keys.filter { it != op.target }.forEach { o ->
+                        social =
+                            social.withStance(o, op.target) { it.adjust(suspicion = op.delta) }
+                    }
                     social = social.withThreat(op.target, op.delta * 0.5f)
                 } else {
                     social = social.withStance(op.observer, op.target) { it.adjust(suspicion = op.delta) }
@@ -430,7 +447,14 @@ class SocialDirector(
         if (tgt == humanSeat) {
             // Bots openly rally against the player.
             val rallier = info.values.firstOrNull { !it.isHuman && it.personaId != null && chance(35) } ?: return
-            emit(rallier.seat, voice.pileOn(rallier.personaId!!, info[humanSeat]?.name ?: "khiladi"), MessageTone.HOSTILE, ChatKind.TABLE, humanSeat, turn)
+            emit(
+                rallier.seat,
+                voice.pileOn(rallier.personaId!!, info[humanSeat]?.name ?: "khiladi"),
+                MessageTone.HOSTILE,
+                ChatKind.TABLE,
+                humanSeat,
+                turn,
+            )
         } else {
             val ti = info[tgt] ?: return
             if (!ti.isHuman && ti.personaId != null && chance(35)) {
@@ -508,7 +532,17 @@ class SocialDirector(
             }
         val tableTalk =
             leader(view, opps)?.let {
-                listOf(ChatSuggestion("talk.taunt.${it.seat}", "Taunt ${it.name}", ChatActionKind.TAUNT, null, it.seat, it.name, "Heat them up"))
+                listOf(
+                    ChatSuggestion(
+                        "talk.taunt.${it.seat}",
+                        "Taunt ${it.name}",
+                        ChatActionKind.TAUNT,
+                        null,
+                        it.seat,
+                        it.name,
+                        "Heat them up",
+                    ),
+                )
             } ?: emptyList()
         pendingSuggestions = (activeReplies + starters + tableTalk).distinctBy { it.id }.take(6)
     }
@@ -581,7 +615,12 @@ class SocialDirector(
     private fun livingOpponents(): List<SeatRef> = info.values.filter { !it.isHuman }.map { SeatRef(it.seat, it.name) }
 
     private fun livingOpponentsFrom(view: PlayerView): List<SeatRef> =
-        view.players.filter { !it.eliminated && it.id.raw != humanSeat }.map { SeatRef(it.id.raw, info[it.id.raw]?.name ?: "Seat ${it.id.raw}") }
+        view.players.filter { !it.eliminated && it.id.raw != humanSeat }.map {
+            SeatRef(
+                it.id.raw,
+                info[it.id.raw]?.name ?: "Seat ${it.id.raw}",
+            )
+        }
 
     private fun leader(
         view: PlayerView,

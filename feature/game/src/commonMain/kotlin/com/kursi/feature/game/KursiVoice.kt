@@ -91,13 +91,19 @@ class KursiVoice(
     // ── Role blurb ────────────────────────────────────────────────────────
     fun roleBlurb(role: Role): String =
         when (role) {
-            Role.NETA -> "Runs Ghotala (+3) — the budget is a buffet and he brought a big plate. Also blocks FDI, because foreign aid is his to misplace."
+            Role.NETA ->
+                "Runs Ghotala (+3) — the budget is a buffet and he brought a big plate. Also blocks FDI, because foreign aid is " +
+                    "his to misplace."
             Role.BHAI -> "Runs Supari (pay 3) — sends a rival's card to permanent retirement. No paperwork. No witnesses. No problem."
-            Role.BABU -> "Runs Vasooli (steal 2) — extracts a processing fee from anyone, anytime. Also blocks Vasooli, because only he knows the right desk."
+            Role.BABU ->
+                "Runs Vasooli (steal 2) — extracts a processing fee from anyone, anytime. Also blocks Vasooli, because only he " +
+                    "knows the right desk."
             Role.JUGAADU ->
                 "Runs Setting (exchange) — swaps his cards with the deck till the hand looks good. " +
                     "Also blocks Vasooli, because you can't steal from a man with no fixed address."
-            Role.VAKIL -> "Blocks Supari — files a stay order on your assassination. Doesn't earn coins; earns time, which is more expensive."
+            Role.VAKIL ->
+                "Blocks Supari — files a stay order on your assassination. Doesn't earn coins; earns time, which is more " +
+                    "expensive."
             Role.PATRAKAAR ->
                 "Runs Jaanch — peeks at a rival's hidden card, then can spike it back into the deck for a fresh draw. " +
                     "No coins, no kills; just an exposé and a headache. Can't be blocked — you can't gag the press, only buy it."
@@ -850,7 +856,9 @@ class KursiVoice(
         other: String?,
     ): String =
         when (event) {
-            is GameEvent.ActionDeclared -> "$actor ne ${actionDesi(event.action)} ka elaan kiya. Table chup ho gaya — koi maanega, koi taadega."
+            is GameEvent.ActionDeclared -> "$actor ne ${actionDesi(
+                event.action,
+            )} ka elaan kiya. Table chup ho gaya — koi maanega, koi taadega."
             is GameEvent.ActionResolved -> "$actor ka kaam ho gaya. File band, paisa hazam, sab khush (ya majboor)."
             is GameEvent.ActionNegated -> "$actor ka move table ne kha liya. Stamp laga, par approval nahi mili."
             is GameEvent.Challenged -> "${other ?: "Kisi"} ne $actor ko ghoor ke kaha — 'Saboot dikhao.' Ab patte khulenge."
@@ -865,8 +873,12 @@ class KursiVoice(
             is GameEvent.PlayerEliminated -> "$actor ka aakhri card bhi gaya. Kursi se hamesha ke liye door. RIP."
             is GameEvent.CoinsTransferred -> "$actor ki jeb se ${other ?: "kisi"} ki jeb mein — 'processing fee' kehte hain ise."
             is GameEvent.Exchanged -> "$actor ne deck se setting ki. Naye patte, wahi purana khel."
-            is GameEvent.Investigated -> "$actor ne ${other ?: "kisi"} ka ek patta chupke se dekh liya — sting operation. Note kar liya gaya."
-            is GameEvent.InvestigateRedraw -> "Exposé chhapa — ${other ?: "us"} ka patta deck mein wapas, naya uthana pada. Reputation reset."
+            is GameEvent.Investigated ->
+                "$actor ne ${other ?: "kisi"} ka ek patta chupke se dekh liya — sting operation. Note kar liya " +
+                    "gaya."
+            is GameEvent.InvestigateRedraw ->
+                "Exposé chhapa — ${other ?: "us"} ka patta deck mein wapas, naya uthana pada. Reputation " +
+                    "reset."
             is GameEvent.GameEnded -> "$actor ne kursi pakad li. Baaki sab tamashbeen, opinion ke saath."
             else -> "$actor ne kuch kiya. Roznamcha mein darj, samajh se pare."
         }
@@ -895,7 +907,9 @@ class KursiVoice(
             is GameEvent.CoinsTransferred -> "Out of $actor's pocket, into ${other ?: "someone"}'s — they call it a 'processing fee'."
             is GameEvent.Exchanged -> "$actor cut a deal with the deck. New cards, same old game."
             is GameEvent.Investigated -> "$actor quietly peeked at one of ${other ?: "someone"}'s cards — a sting operation. Duly noted."
-            is GameEvent.InvestigateRedraw -> "The exposé ran — ${other ?: "their"} card went back into the deck and they had to draw afresh. Reputation reset."
+            is GameEvent.InvestigateRedraw ->
+                "The exposé ran — ${other ?: "their"} card went back into the deck and they had to draw " +
+                    "afresh. Reputation reset."
             is GameEvent.GameEnded -> "$actor seized the chair. Everyone else is now an audience with opinions."
             else -> "$actor did something. Logged in the Roznamcha, beyond comprehension."
         }

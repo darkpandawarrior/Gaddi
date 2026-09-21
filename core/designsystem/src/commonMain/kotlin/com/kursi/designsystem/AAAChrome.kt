@@ -237,14 +237,16 @@ fun StampButton(
             bg = Brush.verticalGradient(listOf(Color.Transparent, Color.Transparent))
             textColor = KursiNeutrals.TextSecondary
             subColor = KursiNeutrals.TextMuted
-            borderBrush = Brush.horizontalGradient(listOf(BrandTokens.BrassDark.copy(alpha = 0.5f), BrandTokens.BrassDark.copy(alpha = 0.5f)))
+            borderBrush =
+                Brush.horizontalGradient(listOf(BrandTokens.BrassDark.copy(alpha = 0.5f), BrandTokens.BrassDark.copy(alpha = 0.5f)))
             borderWidth = KursiDimens.stroke_hairline
         }
         else -> {
             bg = Brush.verticalGradient(listOf(BrandTokens.TeakMid, BrandTokens.TeakDark))
             textColor = KursiNeutrals.TextPrimary
             subColor = KursiNeutrals.TextSecondary
-            borderBrush = Brush.horizontalGradient(listOf(BrandTokens.GoldAntique.copy(alpha = 0.55f), BrandTokens.BrassDark.copy(alpha = 0.55f)))
+            borderBrush =
+                Brush.horizontalGradient(listOf(BrandTokens.GoldAntique.copy(alpha = 0.55f), BrandTokens.BrassDark.copy(alpha = 0.55f)))
             borderWidth = KursiDimens.stroke_ring_idle
         }
     }

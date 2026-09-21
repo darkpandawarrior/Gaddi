@@ -22,7 +22,8 @@ import kursi.core.designsystem.generated.resources.Res
  * Reads [sound]'s bundled clip bytes from composeResources (files/audio/), or null if missing /
  * unreadable. Shared by every platform actual so resource-path resolution lives in one place.
  */
-internal suspend fun loadKursiSoundBytes(sound: KursiSound): ByteArray? = runCatching { Res.readBytes("files/audio/${sound.fileName}") }.getOrNull()
+internal suspend fun loadKursiSoundBytes(sound: KursiSound): ByteArray? =
+    runCatching { Res.readBytes("files/audio/${sound.fileName}") }.getOrNull()
 
 /**
  * Plays the bundled CC0 SFX clips from the finalized manifest ([KursiSound]).

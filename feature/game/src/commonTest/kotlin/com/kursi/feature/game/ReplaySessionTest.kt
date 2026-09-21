@@ -23,7 +23,11 @@ class ReplaySessionTest {
     private val players = 4
 
     /** Deterministic bots keyed off the seed — identical recipe used for the original run and replay. */
-    private fun botsFor(): Map<PlayerId, Policy> = (1 until players).associate { seat -> PlayerId(seat) to EasyPolicy(seed * 31L + seat) as Policy }
+    private fun botsFor(): Map<PlayerId, Policy> =
+        (1 until players).associate { seat ->
+            PlayerId(seat) to
+                EasyPolicy(seed * 31L + seat) as Policy
+        }
 
     private fun makeSession(): com.kursi.feature.game.session.GameSession =
         com.kursi.feature.game.session.GameSession(
@@ -34,7 +38,9 @@ class ReplaySessionTest {
         )
 
     /** Drive a session to game-over with a deterministic "human", capturing the FULL state sequence. */
-    private fun driveCapturingStates(session: com.kursi.feature.game.session.GameSession): Pair<List<GameState>, List<com.kursi.engine.Intent>> {
+    private fun driveCapturingStates(
+        session: com.kursi.feature.game.session.GameSession,
+    ): Pair<List<GameState>, List<com.kursi.engine.Intent>> {
         val humanPolicy = EasyPolicy(99L)
         val states = ArrayList<GameState>()
         var ui = session.start()

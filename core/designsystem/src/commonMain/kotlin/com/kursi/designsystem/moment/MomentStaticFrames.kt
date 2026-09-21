@@ -63,14 +63,34 @@ internal fun MomentStaticFrame(
         is KursiMoment.Steal -> StealFrame(anchors, moment)
         is KursiMoment.Assassinate -> StampFrame(anchors.seat(moment.target), "SUPARI", moment.roleHue, caption = "−3 · target hit")
         is KursiMoment.Exchange -> StampFrame(anchors.seat(moment.actorSeat), "SETTING", moment.roleHue, caption = "cards swapped")
-        is KursiMoment.Coup -> CrestFrame(anchors.seat(moment.target), word = "KHELA", caption = "−7 · chair toppled", tint = BrandTokens.GoldAntique)
+        is KursiMoment.Coup ->
+            CrestFrame(
+                anchors.seat(moment.target),
+                word = "KHELA",
+                caption = "−7 · chair toppled",
+                tint = BrandTokens.GoldAntique,
+            )
         is KursiMoment.Block -> StampFrame(anchors.seat(moment.actorSeat), "ROKA!", moment.roleHue, caption = "action blocked")
         is KursiMoment.Challenge -> ChallengeFrame(anchors, moment)
         is KursiMoment.Reveal -> VerdictFrame(anchors.seat(moment.claimant), moment)
-        is KursiMoment.InfluenceLoss -> StampFrame(anchors.seat(moment.actorSeat), "EXPOSED", BrandTokens.StampRed, caption = "card lost", rotationDeg = -12f)
+        is KursiMoment.InfluenceLoss ->
+            StampFrame(
+                anchors.seat(moment.actorSeat),
+                "EXPOSED",
+                BrandTokens.StampRed,
+                caption = "card lost",
+                rotationDeg = -12f,
+            )
         is KursiMoment.Elimination -> TippedChairFrame(anchors.seat(moment.actorSeat))
         is KursiMoment.TurnHandoff -> HandoffFrame(anchors, moment)
-        is KursiMoment.Win -> CrestFrame(centerOf(anchors), word = "KURSI", caption = "Kursi aapki!", tint = BrandTokens.GoldAntique, big = true)
+        is KursiMoment.Win ->
+            CrestFrame(
+                centerOf(anchors),
+                word = "KURSI",
+                caption = "Kursi aapki!",
+                tint = BrandTokens.GoldAntique,
+                big = true,
+            )
     }
 }
 

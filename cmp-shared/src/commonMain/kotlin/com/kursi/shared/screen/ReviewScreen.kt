@@ -582,6 +582,10 @@ private fun RecentMatchRow(
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        Text(s.reviewCta, style = KursiType.label_micro.copy(fontSize = 8.sp, letterSpacing = 1.sp), color = BrandTokens.GoldAntique.copy(alpha = 0.7f))
+        Text(
+            s.reviewCta,
+            style = KursiType.label_micro.copy(fontSize = 8.sp, letterSpacing = 1.sp),
+            color = BrandTokens.GoldAntique.copy(alpha = 0.7f),
+        )
     }
 }

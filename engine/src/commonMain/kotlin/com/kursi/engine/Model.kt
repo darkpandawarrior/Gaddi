@@ -147,7 +147,7 @@ data class GameConfig(
     val incomeAmount: Int = 1,
     val exchangeDrawCount: Int = 2,
     val forcedCoupThreshold: Int = 10,
-    val coinSupply: Int = 50 + 10 * seatCount,
+    val coinSupply: Int = GameConfig.COIN_SUPPLY_BASE + GameConfig.COIN_SUPPLY_PER_SEAT * seatCount,
     /**
      * TEAMS variant (ADDITIVE + flag-gated). `null` = free-for-all (the default, classic behavior — the
      * win condition is "last player standing"). When non-null, this maps EVERY seat index (0 until
@@ -225,7 +225,8 @@ data class GameConfig(
         }
 
     /** Assassinate cost in effect on [turnNumber]. Rises under MEHENGAI (Inflation). */
-    fun effectiveAssassinateCost(turnNumber: Int): Int = if (inflationEnabled) assassinateCost + (turnNumber / inflationInterval) else assassinateCost
+    fun effectiveAssassinateCost(turnNumber: Int): Int =
+        if (inflationEnabled) assassinateCost + (turnNumber / inflationInterval) else assassinateCost
 
     /** Team id of [seat], or null in free-for-all. Caller-checked against [isTeamGame] for team logic. */
     fun teamOfSeat(seat: Int): Int? = teams?.get(seat)
@@ -237,8 +238,10 @@ data class GameConfig(
     val bufferFloor: Int get() = maxOf(3, (seatCount + 2) / 3)
 
     init {
-        require(seatCount in 2..10) { "MVP supports 2..10 players, was $seatCount" }
-        require(copiesPerRole in 3..MAX_COPIES_PER_ROLE) { "copiesPerRole must be 3..$MAX_COPIES_PER_ROLE, was $copiesPerRole" }
+        require(seatCount in MIN_SEATS..MAX_SEATS) { "MVP supports $MIN_SEATS..$MAX_SEATS players, was $seatCount" }
+        require(copiesPerRole in MIN_COPIES_PER_ROLE..MAX_COPIES_PER_ROLE) {
+            "copiesPerRole must be $MIN_COPIES_PER_ROLE..$MAX_COPIES_PER_ROLE, was $copiesPerRole"
+        }
         require(activeRoles.isNotEmpty() && activeRoles.toSet().size == activeRoles.size) { "activeRoles must be distinct non-empty" }
         // DRAFT variant relaxes the "all five base roles" rule: any DISTINCT subset of >= MIN_ACTIVE_ROLES
         // roles is a legal deck (a claim for an absent role is simply a guaranteed bluff). The no-starvation
@@ -260,6 +263,19 @@ data class GameConfig(
         /** Big tables cap copies so they are not "challenge-dead" (too many of each role alive → challenges -EV). §2(a). */
         const val MAX_COPIES_PER_ROLE = 5
 
+        /** Table-size bounds. `canonical` covers the small band, `bigTable` the large one. */
+        const val MIN_SEATS = 2
+        const val MAX_SEATS = 10
+        const val MAX_CANONICAL_SEATS = 6
+        const val MIN_BIG_TABLE_SEATS = 7
+
+        /** A deck needs at least this many copies of each role to be playable at all. */
+        const val MIN_COPIES_PER_ROLE = 3
+
+        /** Treasury: a flat float plus a per-seat allowance, so coins never starve a big table. */
+        const val COIN_SUPPLY_BASE = 50
+        const val COIN_SUPPLY_PER_SEAT = 10
+
         /** The 6th role (PATRAKAAR) ENTERS the deck at this seat count. §1/§2: add a role rather than push copies past 5. */
         const val PATRAKAAR_MIN_PLAYERS = 9
 
@@ -279,7 +295,7 @@ data class GameConfig(
             val copies = (n * 2 + RESERVE_HINT + (r.size - 1)) / r.size
             return GameConfig(
                 seatCount = n,
-                copiesPerRole = copies.coerceIn(3, MAX_COPIES_PER_ROLE),
+                copiesPerRole = copies.coerceIn(MIN_COPIES_PER_ROLE, MAX_COPIES_PER_ROLE),
                 activeRoles = r,
             )
         }
@@ -295,7 +311,7 @@ data class GameConfig(
             val copies = (n * 2 + RESERVE_HINT + (roles.size - 1)) / roles.size // ceil((2N+hint)/roles)
             return GameConfig(
                 seatCount = n,
-                copiesPerRole = copies.coerceIn(3, MAX_COPIES_PER_ROLE),
+                copiesPerRole = copies.coerceIn(MIN_COPIES_PER_ROLE, MAX_COPIES_PER_ROLE),
                 activeRoles = roles,
             )
         }
@@ -304,12 +320,12 @@ data class GameConfig(
         private const val RESERVE_HINT = 15
 
         fun canonical(n: Int): GameConfig {
-            require(n in 2..6)
+            require(n in MIN_SEATS..MAX_CANONICAL_SEATS)
             return forPlayers(n)
         }
 
         fun bigTable(n: Int): GameConfig {
-            require(n in 7..10)
+            require(n in MIN_BIG_TABLE_SEATS..MAX_SEATS)
             return forPlayers(n)
         }
     }

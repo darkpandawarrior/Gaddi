@@ -212,7 +212,13 @@ fun ProfileSetupScreen(
                                     .size(52.dp)
                                     .then(
                                         if (selected) {
-                                            Modifier.shadow(6.dp, CircleShape, clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
+                                            Modifier.shadow(
+                                                6.dp,
+                                                CircleShape,
+                                                clip = false,
+                                                ambientColor = Color.Black,
+                                                spotColor = BrandTokens.TeakInk,
+                                            )
                                         } else {
                                             Modifier
                                         },
@@ -252,7 +258,13 @@ fun ProfileSetupScreen(
                                     .aspectRatio(1f)
                                     .then(
                                         if (selected) {
-                                            Modifier.shadow(5.dp, CircleShape, clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
+                                            Modifier.shadow(
+                                                5.dp,
+                                                CircleShape,
+                                                clip = false,
+                                                ambientColor = Color.Black,
+                                                spotColor = BrandTokens.TeakInk,
+                                            )
                                         } else {
                                             Modifier
                                         },

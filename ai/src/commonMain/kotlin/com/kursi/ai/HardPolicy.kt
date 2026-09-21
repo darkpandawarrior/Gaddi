@@ -42,6 +42,20 @@ class HardPolicy(
     private var rng = Rng(seed)
 
     // PATRAKAAR (Inquisitor / Jaanch): info-then-disrupt, no own counter — valued just under BABU.
+    private companion object {
+        /** Percentage dice rolls (rng.nextInt(100)) — Hard's difficulty band in four numbers. */
+        const val StealWhenTargetRichPct = 60
+        const val BluffJaanchPct = 25
+        const val ForeignAidWhenNetaScarcePct = 70
+
+        /** A face-down influence card is worth this many coins of threat; coins count for half. */
+        const val InfluenceThreatWeight = 3
+        const val CoinThreatDivisor = 2
+
+        /** Role-value floor for "worth forcing a redraw on" — BABU's rank. See roleValue below. */
+        const val ForceRedrawValueFloor = 5
+    }
+
     private val roleValue: Map<Role, Int> =
         mapOf(
             Role.NETA to 6,
@@ -137,7 +151,7 @@ class HardPolicy(
                 if (targetCoins >= 2) {
                     val (r, r1) = rng.nextInt(100)
                     rng = r1
-                    if (r < 60) return best
+                    if (r < StealWhenTargetRichPct) return best
                 }
             }
         }
@@ -158,7 +172,7 @@ class HardPolicy(
                 if (holdsPatrakaar) return best // truthful Jaanch — uncatchable, pure info+disruption
                 val (r, r1) = rng.nextInt(100)
                 rng = r1
-                if (r < 25) return best // occasional bluff
+                if (r < BluffJaanchPct) return best // occasional bluff
             }
         }
 
@@ -167,7 +181,7 @@ class HardPolicy(
         if (faIntent != null && remaining(view, Role.NETA) <= 1) {
             val (r, r1) = rng.nextInt(100)
             rng = r1
-            if (r < 70) return faIntent
+            if (r < ForeignAidWhenNetaScarcePct) return faIntent
         }
 
         // Tax fallback.
@@ -197,7 +211,7 @@ class HardPolicy(
         return coupsAvail.first()
     }
 
-    private fun threatScore(opp: OpponentView): Int = opp.faceDownCount * 3 + opp.coins / 2
+    private fun threatScore(opp: OpponentView): Int = opp.faceDownCount * InfluenceThreatWeight + opp.coins / CoinThreatDivisor
 
     // ── Reactions ─────────────────────────────────────────────────────────────
 
@@ -330,7 +344,7 @@ class HardPolicy(
         val role = peek.examinedCard?.role ?: return keep ?: legal.first()
         val value = roleValue[role] ?: 0
         // Disrupt the target's strong roles (>= BABU value); leave weak ones alone.
-        return if (value >= (roleValue[Role.BABU] ?: 5)) {
+        return if (value >= (roleValue[Role.BABU] ?: ForceRedrawValueFloor)) {
             (redraw ?: keep ?: legal.first())
         } else {
             (keep ?: legal.first())

@@ -454,7 +454,12 @@ internal fun TeamBadgeChip(
     ) {
         Text(
             text = label,
-            style = KursiType.caption.copy(fontSize = 7.sp, letterSpacing = 0.5.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
+            style =
+                KursiType.caption.copy(
+                    fontSize = 7.sp,
+                    letterSpacing = 0.5.sp,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                ),
             color = hue,
         )
     }

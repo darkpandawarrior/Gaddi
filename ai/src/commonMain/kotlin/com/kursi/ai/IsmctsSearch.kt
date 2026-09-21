@@ -35,6 +35,12 @@ fun <T> runSearchBlocking(block: suspend () -> T): T {
  */
 val ADVICE_BUDGET = SearchBudget(maxMillis = 350L, maxIterations = 3000, rolloutHorizon = 10)
 
+/** Seats the base horizon is quoted for. Above this the horizon scales up; below, it stays flat. */
+private const val BaseHorizonSeatCount = 2
+
+/** Upper bound on the horizon multiplier — a 10p rollout costs more per ply, so it is not linear. */
+private const val MaxHorizonScale = 6
+
 /**
  * Effective rollout horizon for a table of [seatCount] players.
  *
@@ -51,9 +57,18 @@ fun effectiveRolloutHorizon(
     base: Int,
     seatCount: Int,
 ): Int {
-    val scaled = base * seatCount / 2
-    return scaled.coerceIn(base, base * 6)
+    val scaled = base * seatCount / BaseHorizonSeatCount
+    return scaled.coerceIn(base, base * MaxHorizonScale)
 }
+
+/**
+ * Leaf-evaluation weights. They sum to 1.0 and the ordering is the design: material dominates, and
+ * information is a tie-break that must never outvote a clearly winning material line. Retuning
+ * these changes every bot's play at every difficulty, so they are named rather than inline.
+ */
+private const val InfluenceWeight = 0.74
+private const val CoinWeight = 0.18
+private const val InfoWeight = 0.08
 
 /** Per-move value returned by [IsmctsSearch.evaluate]. */
 data class MoveValue(
@@ -160,11 +175,12 @@ class IsmctsSearch(
      * populated. `suspend`: delegates straight to [Ismcts.search], so cancelling the calling
      * coroutine stops the loop at the next iteration boundary (see [Ismcts.search]'s own kdoc)
      * instead of only between whole calls, as [chooseIntent]'s `runBlocking` wrapper still does.
+     *
+     * TooGenericExceptionCaught: the determinize lambda below catches Exception only to keep the
+     * rng stream advancing on a failed sample, then RETHROWS. Narrowing it would silently desync
+     * the deterministic seed for whichever failure type was left out, which is the one property
+     * every replay and strength test in this module depends on.
      */
-    // TooGenericExceptionCaught: the determinize lambda below catches Exception only to keep the
-    // rng stream advancing on a failed sample, then RETHROWS. Narrowing it would silently desync
-    // the deterministic seed for whichever failure type was left out, which is the one property
-    // every replay and strength test in this module depends on.
     @Suppress("TooGenericExceptionCaught")
     private suspend fun runSearchSuspend(
         view: PlayerView,
@@ -280,7 +296,8 @@ class IsmctsSearch(
         // Weights: material still dominates (influence 0.74, coins 0.18), information adds a modest
         // 0.08 — enough to make the bot value forcing reveals / protecting its own cards as a tie-break
         // and soft preference, without letting the heuristic override a clearly winning material line.
-        return (0.74 * infTerm + 0.18 * coinTerm + 0.08 * infoTerm).coerceIn(0.0, 1.0)
+        return (InfluenceWeight * infTerm + CoinWeight * coinTerm + InfoWeight * infoTerm)
+            .coerceIn(0.0, 1.0)
     }
 
     /**

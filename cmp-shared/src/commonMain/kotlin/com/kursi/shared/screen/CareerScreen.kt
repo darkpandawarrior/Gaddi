@@ -147,7 +147,11 @@ private fun CareerEmpty() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Text(stringResource(Res.string.career_empty_title), style = KursiType.display.rozha().copy(fontSize = 20.sp), color = BrandTokens.GoldAntique)
+        Text(
+            stringResource(Res.string.career_empty_title),
+            style = KursiType.display.rozha().copy(fontSize = 20.sp),
+            color = BrandTokens.GoldAntique,
+        )
         Text(
             stringResource(Res.string.career_empty_body),
             style = KursiType.body.copy(fontSize = 12.sp),
@@ -290,13 +294,22 @@ private fun DecisionDossier(dl: DecisionLedger) {
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
-                Text(gradeSub, style = KursiType.body.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic), color = KursiNeutrals.TextSecondary)
+                Text(
+                    gradeSub,
+                    style = KursiType.body.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
+                    color = KursiNeutrals.TextSecondary,
+                )
                 Text(s.dqSampleSub(dl.decisions), style = KursiType.caption.copy(fontSize = 9.sp), color = KursiNeutrals.TextMuted)
             }
         }
         // 2×2 readouts — bare DM Mono numerals on the ground, no boxes.
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(28.dp)) {
-            StatReadout(s.dqAccuracyLabel, "${dl.accuracyPct}%", stringResource(Res.string.a11y_best_move_match_suffix), Modifier.weight(1f))
+            StatReadout(
+                s.dqAccuracyLabel,
+                "${dl.accuracyPct}%",
+                stringResource(Res.string.a11y_best_move_match_suffix),
+                Modifier.weight(1f),
+            )
             StatReadout(
                 s.dqEvLostLabel,
                 "${dl.avgEvLostPct}%",

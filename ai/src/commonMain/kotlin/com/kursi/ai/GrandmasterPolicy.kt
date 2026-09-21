@@ -192,7 +192,10 @@ class GrandmasterPolicy(
 
     // ── Helpers (mirror HardPolicy's deck-odds math) ────────────────────────────
 
-    private fun threatScore(opp: OpponentView): Int = opp.faceDownCount * 3 + opp.coins / 2
+    // A face-down influence card is worth three coins of threat, and coins count half: a seat that
+    // can still absorb two hits is more dangerous than one sitting on a pile of cash it cannot spend
+    // before being eliminated. Mirrors HardPolicy's deck-odds weighting.
+    private fun threatScore(opp: OpponentView): Int = opp.faceDownCount * InfluenceThreatWeight + opp.coins / CoinThreatDivisor
 
     /** Mean inferred challengeRate across opponents we have a confident read on; null if no read. */
     private fun tableChallengeRead(view: PlayerView): Double? {
@@ -227,6 +230,10 @@ class GrandmasterPolicy(
     }
 
     companion object {
+        /** A face-down influence card is worth this many coins of threat; coins count for half. */
+        private const val InfluenceThreatWeight = 3
+        private const val CoinThreatDivisor = 2
+
         /** ~3 tracked claims/actions before we trust a per-opponent style read enough to deviate on it. */
         private const val MIN_CLAIMS_FOR_READ = 3
 

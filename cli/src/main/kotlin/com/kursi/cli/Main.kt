@@ -34,7 +34,7 @@ fun main(args: Array<String>) {
             seed = seed,
             policies = (0 until seats).associate { PlayerId(it) to RandomLegalPolicy(seed + it) },
         )
-    println("one game:  winner seat ${one.winner?.raw ?: "none"}, ${one.turns} turns, ${one.steps} steps")
+    println("one game:  winner seat ${one.winner.raw}, ${one.turns} turns, ${one.steps} steps")
     println()
 
     val stats =

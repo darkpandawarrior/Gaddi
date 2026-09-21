@@ -87,13 +87,30 @@ object PersonaAssigner {
 
     // ── Private helpers ───────────────────────────────────────────────────────
 
+    // Knuth's MMIX linear-congruential constants. Like SplitMix64's in :engine Rng.kt these are a
+    // citation, not a tuning knob: change either and every seed deals a different persona order.
+    private const val LcgMultiplier = 6364136223846793005L
+    private const val LcgIncrement = 1442695040888963407L
+
+    /** Take the high bits of the LCG state — the low bits of an LCG have short periods. */
+    private const val LcgHighBitsShift = 33
+
+    /** ARGB channel layout for [nudgeLightness]. */
+    private const val AlphaShift = 24
+    private const val RedShift = 16
+    private const val GreenShift = 8
+    private const val ChannelMask = 0xFFL
+
+    /** How much to lift each channel when two personas collide on the same seat hue. */
+    private const val LightnessNudge = 0x18L
+
     /** Deterministic Fisher-Yates shuffle using a LCG seeded from [seed]. */
     private fun <T> List<T>.shuffledDeterministic(seed: Long): List<T> {
         val list = toMutableList()
         var s = seed
         for (i in list.indices.reversed()) {
-            s = s * 6364136223846793005L + 1442695040888963407L
-            val j = ((s ushr 33) % (i + 1)).toInt().and(0x7fffffff) % (i + 1)
+            s = s * LcgMultiplier + LcgIncrement
+            val j = ((s ushr LcgHighBitsShift) % (i + 1)).toInt().and(Int.MAX_VALUE) % (i + 1)
             val tmp = list[i]
             list[i] = list[j]
             list[j] = tmp
@@ -106,13 +123,13 @@ object PersonaAssigner {
      * This is purely visual disambiguation when two personas share a seat hue.
      */
     private fun Long.nudgeLightness(): Long {
-        val a = (this shr 24) and 0xFFL
-        val r = ((this shr 16) and 0xFFL) + 0x18L
-        val g = ((this shr 8) and 0xFFL) + 0x18L
-        val b = (this and 0xFFL) + 0x18L
-        return (a shl 24) or
-            (r.coerceAtMost(0xFFL) shl 16) or
-            (g.coerceAtMost(0xFFL) shl 8) or
-            b.coerceAtMost(0xFFL)
+        val a = (this shr AlphaShift) and ChannelMask
+        val r = ((this shr RedShift) and ChannelMask) + LightnessNudge
+        val g = ((this shr GreenShift) and ChannelMask) + LightnessNudge
+        val b = (this and ChannelMask) + LightnessNudge
+        return (a shl AlphaShift) or
+            (r.coerceAtMost(ChannelMask) shl RedShift) or
+            (g.coerceAtMost(ChannelMask) shl GreenShift) or
+            b.coerceAtMost(ChannelMask)
     }
 }

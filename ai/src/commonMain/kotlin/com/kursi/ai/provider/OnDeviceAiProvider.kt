@@ -14,7 +14,12 @@ import com.siddharth.kmp.llmchat.AiProvider
  * used to need — an `expect class` must restate everything it inherits, which is why the previous
  * version carried a note about tracking [AiProvider.complete]'s exact return type by hand.
  * Expect/actual FUNCTIONS are stable, and nothing at a call site changes.
+ *
+ * ktlint:standard:function-naming — a constructor-like factory. Kotlin's own convention
+ * allows PascalCase here; ktlint only recognises the pattern when the function name equals
+ * its return TYPE name, which it cannot be when the factory returns an interface.
  */
+@Suppress("ktlint:standard:function-naming")
 expect fun OnDeviceAiProvider(): AiProvider
 
 /**

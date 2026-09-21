@@ -152,7 +152,11 @@ private fun BrassDivider() {
                 .height(1.dp)
                 .background(
                     Brush.horizontalGradient(
-                        listOf(BrandTokens.BrassDark.copy(alpha = 0.3f), BrandTokens.GoldAntique.copy(alpha = 0.8f), BrandTokens.BrassDark.copy(alpha = 0.3f)),
+                        listOf(
+                            BrandTokens.BrassDark.copy(alpha = 0.3f),
+                            BrandTokens.GoldAntique.copy(alpha = 0.8f),
+                            BrandTokens.BrassDark.copy(alpha = 0.3f),
+                        ),
                     ),
                 ),
     )
@@ -1380,7 +1384,9 @@ fun HintRail(
                 .background(BrandTokens.TeakDark.copy(alpha = 0.92f))
                 .border(
                     KursiDimens.stroke_hairline,
-                    Brush.horizontalGradient(listOf(borderColor.copy(alpha = 0.6f), borderColor.copy(alpha = 0.4f), borderColor.copy(alpha = 0.6f))),
+                    Brush.horizontalGradient(
+                        listOf(borderColor.copy(alpha = 0.6f), borderColor.copy(alpha = 0.4f), borderColor.copy(alpha = 0.6f)),
+                    ),
                     Squircle(KursiRadii.sm),
                 ).padding(horizontal = KursiDimens.space_sm),
         verticalAlignment = Alignment.CenterVertically,
@@ -1785,7 +1791,12 @@ private fun DhandhaTab() {
         items(actions) { (action, name, rules) ->
             HairlineRow(verticalPadding = 10.dp) {
                 Text(name, style = KursiType.label_sm, color = KursiNeutrals.TextPrimary, modifier = Modifier.weight(1.2f))
-                Text(actionCostSummary(action), style = KursiType.label_sm, color = BrandTokens.GoldAntique, modifier = Modifier.weight(0.6f))
+                Text(
+                    actionCostSummary(action),
+                    style = KursiType.label_sm,
+                    color = BrandTokens.GoldAntique,
+                    modifier = Modifier.weight(0.6f),
+                )
                 Text(rules, style = KursiType.label_micro, color = KursiNeutrals.TextSecondary, modifier = Modifier.weight(2f))
             }
         }

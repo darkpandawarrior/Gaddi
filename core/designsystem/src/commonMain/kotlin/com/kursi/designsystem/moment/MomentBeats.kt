@@ -876,7 +876,13 @@ internal fun TurnHandoffBeat(
             ) {
                 Text(
                     text = m.nextName,
-                    style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, color = BrandTokens.GoldAntique, textAlign = TextAlign.Center),
+                    style =
+                        TextStyle(
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = BrandTokens.GoldAntique,
+                            textAlign = TextAlign.Center,
+                        ),
                 )
             }
         }

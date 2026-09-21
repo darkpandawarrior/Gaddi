@@ -176,8 +176,8 @@ class PersonaPolicy(
     private fun pickTarget(opponents: List<OpponentView>): PlayerId? {
         if (opponents.isEmpty()) return null
         return when (p.targetingBias) {
-            TargetingBias.LEADER -> opponents.maxByOrNull { it.faceDownCount * 10 + it.coins }?.id
-            TargetingBias.WEAKEST -> opponents.minByOrNull { it.faceDownCount * 10 + it.coins }?.id
+            TargetingBias.LEADER -> opponents.maxByOrNull { it.standingScore() }?.id
+            TargetingBias.WEAKEST -> opponents.minByOrNull { it.standingScore() }?.id
             TargetingBias.VINDICTIVE -> {
                 val ids = opponents.map { it.id }
                 grudge.topTarget(ids) ?: opponents.minByOrNull { it.faceDownCount }?.id
@@ -355,3 +355,12 @@ class PersonaPolicy(
         t: Float,
     ): Float = min + (max - min) * t.coerceIn(0f, 1f)
 }
+
+/**
+ * How "ahead" a seat looks from across the table: a face-down influence card is worth ten coins,
+ * because cards are what actually keep you in the game and coins only buy one Khela. LEADER and
+ * WEAKEST targeting are the two ends of this same ordering, so it lives in one place.
+ */
+private const val InfluenceCoinEquivalent = 10
+
+private fun OpponentView.standingScore(): Int = faceDownCount * InfluenceCoinEquivalent + coins

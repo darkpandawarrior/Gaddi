@@ -65,7 +65,12 @@ internal class KursiAiContextProvider : ContentProvider() {
  * Android on-device LLM tier (consolidation #7): routes through toolkit `:ai`'s detection-ordered
  * chain — ML Kit GenAI Prompt (Gemini Nano, AICore devices) → MediaPipe LLM Inference (Gemma,
  * downloaded on demand) — instead of a hand-rolled always-unavailable stub.
+ *
+ * ktlint:standard:function-naming — a constructor-like factory. Kotlin's own convention
+ * allows PascalCase here; ktlint only recognises the pattern when the function name equals
+ * its return TYPE name, which it cannot be when the factory returns an interface.
  */
+@Suppress("ktlint:standard:function-naming")
 actual fun OnDeviceAiProvider(): AiProvider = AndroidOnDeviceAiProvider()
 
 private class AndroidOnDeviceAiProvider : AiProvider {
