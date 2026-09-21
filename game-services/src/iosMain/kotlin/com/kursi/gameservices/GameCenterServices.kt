@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import platform.Foundation.NSData
 import platform.Foundation.NSError
 import platform.Foundation.create
+import platform.Foundation.timeIntervalSince1970
 import platform.GameKit.GKAchievement
 import platform.GameKit.GKLeaderboard
 import platform.GameKit.GKLocalPlayer
