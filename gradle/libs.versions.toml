@@ -1,23 +1,26 @@
 [versions]
-agp = "9.5.0-alpha02"
-kotlin = "2.4.20-RC"
+agp = "9.5.0-alpha06"
+kotlin = "2.4.20"
 detekt = "2.0.0-alpha.6"
 ktlint = "14.2.0"
-compose-multiplatform = "1.12.0-rc01"
+compose-multiplatform = "1.13.0-alpha01"
 kotlinx-coroutines = "1.11.0"
-kotlinx-serialization = "1.11.0"
-activity-compose = "1.13.0"
+kotlinx-serialization = "1.12.0-RC"
+activity-compose = "1.14.0-alpha02"
 core-ktx = "1.19.0"
-lifecycle = "2.11.0"
-ktor = "3.5.2"
+lifecycle = "2.12.0-alpha03"
+ktor = "3.6.0"
 logback = "1.6.3"
+# NOT on the compose-multiplatform train: org.jetbrains.compose.material:material-icons-extended
+# was frozen at 1.7.3 and has no 1.13.0-alpha01 artifact. Pointing it at compose-multiplatform
+# would not resolve. Every OTHER compose artifact must use version.ref = "compose-multiplatform".
 material-icons-extended = "1.7.3"
-material3 = "1.12.0-alpha03"
 multiplatform-settings = "1.3.0"
 navigation-compose = "2.10.0-beta01"
 firebase-bom = "34.19.0"
 play-review = "2.0.2"
 play-app-update = "2.1.0"
+play-games = "21.0.0"
 junit = "4.13.2"
 
 [libraries]
@@ -54,7 +57,7 @@ ktor-server-testHost = { module = "io.ktor:ktor-server-test-host", version.ref =
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 # Multiplatform Settings — used by :core:prefs
 material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "material-icons-extended" }
-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
+material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-multiplatform" }
 multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
 multiplatform-settings-no-arg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatform-settings" }
 multiplatform-settings-test = { module = "com.russhwolf:multiplatform-settings-test", version.ref = "multiplatform-settings" }
@@ -74,6 +77,11 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 # Play Store in-app UX
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "play-review" }
 play-app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "play-app-update" }
+# Play Games Services v2 — identity/leaderboards/achievements/snapshots ONLY. Gaddi keeps its
+# own authoritative Ktor WebSocket transport, so no real-time-multiplayer API is used.
+play-services-games = { module = "com.google.android.gms:play-services-games-v2", version.ref = "play-games" }
+# Task<T>.await() — the GMS Task API is callback-only.
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines" }
 junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]

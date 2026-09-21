@@ -27,6 +27,13 @@
             </intent-filter>
         </service>
 
+        <!-- Play Games Services v2. Value is a sentinel until provisioning/provision.sh runs;
+             GameServicesFactory gates PlayGamesSdk.initialize() on that, so an unprovisioned
+             build reports NOT_CONFIGURED instead of crashing on the literal string. -->
+        <meta-data
+            android:name="com.google.android.gms.games.APP_ID"
+            android:value="@string/game_services_app_id" />
+
     </application>
 
 </manifest>

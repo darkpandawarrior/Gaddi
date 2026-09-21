@@ -42,7 +42,7 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # versionCode derives from `git rev-list --count HEAD`. A shallow clone
           # reports 1, which silently produced versionCode 2 on every published APK.
@@ -82,7 +82,7 @@ jobs:
     env:
       GRADLE_OPTS: "-Dorg.gradle.daemon=false"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # versionCode derives from `git rev-list --count HEAD`. A shallow clone
           # reports 1, which silently produced versionCode 2 on every published APK.
@@ -144,7 +144,7 @@ jobs:
           ./gradlew :cmp-android:bundleGmsRelease :cmp-android:assembleGmsRelease
 
       - name: Upload release APK artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         # An artifact is a convenience; the account's 500 MB artifact quota must not fail the gate.
         continue-on-error: true
         with:
@@ -153,7 +153,7 @@ jobs:
           retention-days: 2
 
       - name: Upload release AAB artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         # An artifact is a convenience; the account's 500 MB artifact quota must not fail the gate.
         continue-on-error: true
         with:
@@ -183,7 +183,7 @@ jobs:
     env:
       GRADLE_OPTS: "-Dorg.gradle.daemon=false"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # versionCode derives from `git rev-list --count HEAD`. A shallow clone
           # reports 1, which silently produced versionCode 2 on every published APK.
@@ -201,7 +201,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v6.3.0
 
       - name: Cache Kotlin/Native toolchain
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.konan
           key: ${{ runner.os }}-konan-v1-${{ hashFiles('gradle/libs.versions.toml') }}

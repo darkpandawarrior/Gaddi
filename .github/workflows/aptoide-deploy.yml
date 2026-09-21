@@ -34,7 +34,7 @@ jobs:
             echo "Set the required secrets to enable it: APTOIDE_API_KEY." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # versionCode derives from `git rev-list --count HEAD`. A shallow clone
           # reports 1, which silently produced versionCode 2 on every published APK.

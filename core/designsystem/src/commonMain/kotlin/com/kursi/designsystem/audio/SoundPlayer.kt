@@ -32,6 +32,15 @@ internal suspend fun loadKursiSoundBytes(sound: KursiSound): ByteArray? = runCat
  * [release] frees native resources and is safe to call more than once.
  */
 expect class SoundPlayer() {
+    /**
+     * Whether this platform can actually make noise. False means every [play] is a silent no-op —
+     * a missing Android install() hook, an audio session that would not activate, a headless box
+     * with no mixer. It exists so that "the sound silently does nothing" is an assertable fact
+     * rather than something only a human with a device can notice; the whole 17-clip manifest was
+     * inaudible on two platforms at once precisely because nothing surfaced it.
+     */
+    val isAvailable: Boolean
+
     suspend fun play(sound: KursiSound)
 
     fun release()

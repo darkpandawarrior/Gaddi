@@ -28,7 +28,7 @@ jobs:
     env:
       HAS_SECRET: ${{ secrets.FLY_API_TOKEN != '' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: env.HAS_SECRET == 'true'
 
       - name: Set up flyctl

@@ -88,7 +88,8 @@ overlays.
 
 ## Finalized SFX manifest (CC0 — downloaded + curated, ready to wire)
 
-17 clips selected from the three Kenney CC0 packs, renamed to game-semantic names (208 KB total, OGG).
+17 clips selected from the three Kenney CC0 packs, renamed to game-semantic names
+(1.7 MB total, PCM WAV — transcoded from the original 208 KB of Ogg Vorbis, see below).
 Source packs are **CC0 public domain** (no attribution required; `License.txt` retained). Final pick by
 filename — a listen-and-swap pass is worth doing, but these are sensible defaults.
 
@@ -104,11 +105,41 @@ filename — a listen-and-swap pass is worth doing, but these are sensible defau
 **Wired**: all 17 clips live at `core/designsystem/src/commonMain/composeResources/files/audio/`,
 loaded through the `SoundPlayer` expect/actual (Android `SoundPool`, desktop `javax.sound.sampled`,
 iOS `AVAudioPlayer`, wasm `Audio` element) and fired from a pure `GameEvent -> KursiSound` map in
-`feature/game/GameSound.kt`, gated by the existing `soundEnabled` flag. Desktop/iOS currently
-degrade to a silent no-op for these Ogg Vorbis clips (no bundled decoder on stock javax.sound /
-Core Audio) — the pipeline is correct end to end and lights up if/when a WAV/PCM fallback or codec
-SPI lands. Wasm is compile-verified only; needs an in-browser check. **Still needed:** the ambient
-music loop (Kenney Music Jingles / Pixabay / Freesound CC0) — benefits most from a listen-and-pick
+`feature/game/GameSound.kt`, gated by the existing `soundEnabled` flag.
+
+**Format — why PCM WAV, not Ogg Vorbis.** The clips shipped as Ogg Vorbis and were audible on
+exactly one and a half of the four targets. iOS Core Audio has no Vorbis decoder, so
+`AVAudioPlayer(data:fileTypeHint:)` returned nil and all 17 clips were silent on device. Stock
+`javax.sound.sampled` has no Vorbis SPI, so desktop threw `UnsupportedAudioFileException` and was
+silent too. WebKit/Safari ships no Vorbis decoder either, so wasm was silent on that engine while
+working on Chromium and Firefox. Only Android's `SoundPool` decoded them. PCM needs no decoder on
+any of the four, so the assets were transcoded with ffmpeg (`-c:a pcm_s16le`) at the source sample
+rate and channel count — no resampling, no downmix, so nothing about how the clips sound changed.
+The cost is 208 KB -> 1.7 MB on disk. Before swapping to a compressed codec to win that back,
+check the candidate against iOS **and** Safari **and** stock javax.sound, not just Android.
+Wasm remains compile-verified only; needs an in-browser check.
+
+**The codec was not the only thing keeping it quiet.** Fixing the format made the clips decodable;
+it did not make them audible, and two separate silent no-ops survived that pass because nothing in
+the build or the test suite fails when sound simply does not come out.
+
+- *Android* — `SoundPlayer.android.kt` needs an application `Context` for its cache dir and gets it
+  from `KursiSoundAndroid.install(...)`. Nothing ever called it. `play()` hit
+  `appContext ?: return` every time, so all 17 clips were silent on the one platform that had been
+  decoding them correctly all along. Now installed in `MainActivity.onCreate`, beside the
+  `FeedbackAndroid.install(...)` it was always supposed to mirror.
+- *iOS* — `AVAudioPlayer` produces nothing unless the process `AVAudioSession` is configured and
+  active, and the default category (`soloAmbient`) additionally stops whatever the user was already
+  playing. `SoundPlayer.ios.kt` now sets `AVAudioSessionCategoryAmbient` and activates the session
+  in its initialiser, the same three lines the sibling `FeedbackIos` has always had.
+
+Both are the same failure shape as the codec bug: an entirely reasonable-looking call chain whose
+every link swallows its own failure. So `SoundPlayer` now carries an `isAvailable` flag on the
+expect class — the answer to "would `play()` do anything at all right now" — and
+`SoundPlayerTest.everyClipIsStillRiffWave` asserts the RIFF/WAVE container so that re-encoding to a
+Vorbis-shaped codec fails a test instead of failing a player.
+
+**Still needed:** the ambient music loop (Kenney Music Jingles / Pixabay / Freesound CC0) — benefits most from a listen-and-pick
 and a licence check.
 
 ## The honest download constraint

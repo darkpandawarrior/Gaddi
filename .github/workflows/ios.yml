@@ -37,7 +37,7 @@ jobs:
     env:
       GRADLE_OPTS: "-Dorg.gradle.daemon=false"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # versionCode derives from `git rev-list --count HEAD`. A shallow clone
           # reports 1, which silently produced versionCode 2 on every published APK.
@@ -58,7 +58,7 @@ jobs:
 
       # Kotlin/Native toolchain (~1 GB) — cache keyed on version catalog
       - name: Cache Kotlin/Native toolchain
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.konan
           key: ${{ runner.os }}-konan-v1-${{ hashFiles('gradle/libs.versions.toml') }}
@@ -69,8 +69,7 @@ jobs:
       - name: Grant execute permission
         run: chmod +x ./gradlew
 
-      # Compile the shared KMP modules for both iOS targets without linking:
-      # linking pulls Apple private frameworks that may not be on the runner SDK.
+      # Compile the shared KMP modules for both iOS targets.
       - name: Compile KMP for iOS
         run: |
           ./gradlew \
@@ -78,3 +77,16 @@ jobs:
             :engine:compileKotlinIosSimulatorArm64 \
             :ai:compileKotlinIosSimulatorArm64 \
             :cmp-shared:compileKotlinIosSimulatorArm64
+
+      # Compiling alone never catches a LINK break (a missing objc symbol, an unexported
+      # transitive dependency, a framework the umbrella forgot to export()). That used to
+      # surface only at tag time, in github-release.yml's ios-build-check. It runs green
+      # there on macos-latest, so the same pair runs here on the PR gate instead — against
+      # the simulator SDK, which is what the repo's iOS baseline is verified on.
+      - name: Link KursiKit.framework (simulator)
+        run: ./gradlew :cmp-ios:linkDebugFrameworkIosSimulatorArm64
+
+      - name: Build iosApp (no codesign)
+        run: |
+          xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build

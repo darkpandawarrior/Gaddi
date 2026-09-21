@@ -56,6 +56,9 @@ kotlin {
             implementation(project(":core:designsystem"))
             implementation("com.siddharth.kmp:feedback:1.0.0")
             implementation(project(":core:network"))
+            // RoomCode: the client-side party-code boundary (GKGameActivity wants "ABC-234",
+            // RoomRegistry mints "ABC234"). Types only — no Play Games / GameKit dependency here.
+            implementation(project(":game-services"))
             implementation(project(":shared-protocol"))
             implementation("com.siddharth.kmp:mvi-core:1.0.0")
             implementation(libs.kotlinx.coroutines.core)

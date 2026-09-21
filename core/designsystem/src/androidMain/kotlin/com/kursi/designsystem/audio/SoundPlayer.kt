@@ -42,6 +42,10 @@ actual class SoundPlayer actual constructor() {
 
     private val soundIds = mutableMapOf<KursiSound, Int>()
 
+    /** False until [KursiSoundAndroid.install] has run (or if SoundPool would not build). */
+    actual val isAvailable: Boolean
+        get() = pool != null && KursiSoundAndroid.appContext != null
+
     actual suspend fun play(sound: KursiSound) {
         val pool = pool ?: return
         val ctx = KursiSoundAndroid.appContext ?: return
@@ -49,13 +53,13 @@ actual class SoundPlayer actual constructor() {
             var id = soundIds[sound]
             if (id == null) {
                 val bytes = loadKursiSoundBytes(sound) ?: return@runCatching
-                val tmp = File.createTempFile("kursi_${sound.name}", ".ogg", ctx.cacheDir)
+                val tmp = File.createTempFile("kursi_${sound.name}", ".wav", ctx.cacheDir)
                 tmp.deleteOnExit()
                 tmp.writeBytes(bytes)
                 id = pool.load(tmp.absolutePath, 1)
                 soundIds[sound] = id
                 // ponytail: fire-and-forget load — SoundPool decodes async (typically single-digit
-                // ms for these <15KB clips), so the very first play of a never-before-heard sound
+                // ms for these clips), so the very first play of a never-before-heard sound
                 // can occasionally be silent. Upgrade to setOnLoadCompleteListener-gated playback
                 // if that edge case turns out to be audible on-device.
             }

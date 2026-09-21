@@ -9,8 +9,9 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 // `data:` URL and played through the DOM `Audio` element — simpler and more portable across
 // browsers than driving raw Web Audio AudioContext.decodeAudioData buffers for one-shot SFX.
 //
-// Ogg Vorbis playback support varies by browser engine (broad on Chromium/Firefox, absent on
-// WebKit/Safari), so this degrades gracefully via runCatching where unsupported. Best-effort:
+// The clips are PCM WAV, which every browser engine decodes — the previous Ogg Vorbis assets
+// played on Chromium/Firefox but were silent on WebKit/Safari. runCatching stays as the guard for
+// autoplay-policy rejections, which are a user-gesture issue and not a codec one. Best-effort:
 // compile-verified only here — needs an in-browser audio check across target browsers.
 // See docs/experience-assets.md §3.
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -19,12 +20,18 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 actual class SoundPlayer actual constructor() {
     private val dataUrls = mutableMapOf<KursiSound, String>()
 
+    // ponytail: every browser engine ships an Audio element and a PCM WAV decoder, so the only
+    // real gate here is the autoplay policy — and that cannot be queried synchronously, it only
+    // shows up as a rejected play() promise. Constant true is the honest answer to what this
+    // flag can actually know.
+    actual val isAvailable: Boolean = true
+
     actual suspend fun play(sound: KursiSound) {
         runCatching {
             val url =
                 dataUrls.getOrPut(sound) {
                     val bytes = loadKursiSoundBytes(sound) ?: return@runCatching
-                    "data:audio/ogg;base64,${Base64.encode(bytes)}"
+                    "data:audio/wav;base64,${Base64.encode(bytes)}"
                 }
             Audio(url).play()
         }

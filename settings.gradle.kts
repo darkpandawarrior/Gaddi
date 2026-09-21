@@ -131,5 +131,9 @@ include(":cmp-web")           // wasmJs browser shell; calls ComposeViewport(doc
 // ── SERVER (T9: JVM Ktor authoritative game server) ───────────────────────────
 include(":server")            // Ktor/Netty WebSocket server; authoritative GameState; Channel-actor per match.
 
+// ── GAME SERVICES (Game Center / Play Games: identity + leaderboards + achievements +
+//    saved games). Deliberately NOT matchmaking — :server + LAN keep the transport. ──
+include(":game-services")
+
 // Headless client for :engine — see cli/build.gradle.kts.
 include(":cli")
