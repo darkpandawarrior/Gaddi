@@ -18,7 +18,8 @@ kotlin {
 apply(from = "$rootDir/gradle/versioning.gradle.kts")
 val kursiFingerprintVersion = extra["kursiFingerprint"] as String
 val generatedVersionDir = layout.buildDirectory.dir("generated/kursiVersion/kotlin")
-val generateBuildInfo by tasks.registering {
+// `by tasks.registering` is deprecated and removed in Gradle 10.
+val generateBuildInfo = tasks.register("generateBuildInfo") {
     val outputDir = generatedVersionDir
     val fingerprint = kursiFingerprintVersion
     outputs.dir(outputDir)

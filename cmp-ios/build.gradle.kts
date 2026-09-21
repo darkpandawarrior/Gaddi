@@ -25,7 +25,11 @@ kotlin {
             baseName = "KursiKit"
             isStatic = true
             // export() requires api() in the source set below to surface the module's public API.
-            export(project(":cmp-shared"))
+            // `project(":x")` here resolves to Project.project(String) — a Project OBJECT, which is
+            // deprecated dependency notation and fails in Gradle 10. Inside the sourceSets
+            // dependencies { } block below the same call hits KotlinDependencyHandler.project and is
+            // already fine; only this one, on a Framework receiver, needed the DependencyHandler.
+            export(dependencies.project(":cmp-shared"))
         }
     }
 
