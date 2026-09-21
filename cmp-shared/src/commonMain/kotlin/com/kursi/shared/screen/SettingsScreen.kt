@@ -305,7 +305,7 @@ fun SettingsScreen(
                         modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        (2..10).forEach { n ->
+                        for (n in 2..10) {
                             val isSelected = n == defaultPlayers
                             val playerCountDesc = stringResource(Res.string.a11y_player_count_radio, n)
                             BrassToken(

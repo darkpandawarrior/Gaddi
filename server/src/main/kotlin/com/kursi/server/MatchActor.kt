@@ -139,6 +139,11 @@ class MatchActor(
     private fun nextSeq() = ++serverSeq
 
     // ── Actor loop ──────────────────────────────────────────────────────────
+    // TooGenericExceptionCaught: this is the actor's supervision boundary. One malformed command
+    // from one client must not kill the mailbox loop and take every other seat in the match down
+    // with it. CancellationException is rethrown above the catch so shutdown still works, and the
+    // exception is logged rather than swallowed.
+    @Suppress("TooGenericExceptionCaught")
     private val job: Job =
         scope.launch {
             for (cmd in mailbox) {
@@ -159,6 +164,11 @@ class MatchActor(
             }
         }
 
+    // DelicateCoroutinesApi: Channel.isClosedForSend is delicate because the answer can go stale
+    // the instant it is read. That is fine here and nowhere else — this is a liveness hint the
+    // registry uses to reap dead matches, never a guard before a send(). post() still suspends on
+    // send() and lets a ClosedSendChannelException surface if the race does happen.
+    @OptIn(DelicateCoroutinesApi::class)
     fun isFinished(): Boolean = mailbox.isClosedForSend || job.isCompleted
 
     // ── Public API (WebSocket handlers post here; never access state directly) ─

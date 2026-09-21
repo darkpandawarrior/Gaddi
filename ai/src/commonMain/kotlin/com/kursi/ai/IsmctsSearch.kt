@@ -161,6 +161,11 @@ class IsmctsSearch(
      * coroutine stops the loop at the next iteration boundary (see [Ismcts.search]'s own kdoc)
      * instead of only between whole calls, as [chooseIntent]'s `runBlocking` wrapper still does.
      */
+    // TooGenericExceptionCaught: the determinize lambda below catches Exception only to keep the
+    // rng stream advancing on a failed sample, then RETHROWS. Narrowing it would silently desync
+    // the deterministic seed for whichever failure type was left out, which is the one property
+    // every replay and strength test in this module depends on.
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun runSearchSuspend(
         view: PlayerView,
         legal: List<Intent>,

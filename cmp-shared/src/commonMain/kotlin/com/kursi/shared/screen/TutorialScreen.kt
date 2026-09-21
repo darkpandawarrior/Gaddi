@@ -152,7 +152,7 @@ fun TutorialScreen(
                 challenged = challenged,
                 revealed = revealed,
                 promptingAction = promptingAction,
-                challengerName = scriptedChallengerName(),
+                challengerName = ScriptedChallengerName,
             )
         }
 
@@ -213,8 +213,8 @@ private fun mechanicDoLabel(
         Mechanic.EXCHANGE -> s.tutorialDoExchange
     }
 
-/** The scripted rival who delivers the guaranteed challenge. Kept as a helper for one source of truth. */
-private fun scriptedChallengerName(): String = "Babu Filewala"
+/** The scripted rival who delivers the guaranteed challenge. One source of truth for the name. */
+private const val ScriptedChallengerName = "Babu Filewala"
 
 // ─────────────────────────── First-run offer dialog ───────────────────────────
 
@@ -568,7 +568,7 @@ private fun ScriptedTable(
 
             // Challenge banner — drops in when Babu challenges.
             AnimatedVisibility(visible = challenged, enter = fadeIn() + scaleIn(initialScale = 0.9f), exit = fadeOut()) {
-                ChallengeBanner(text = "$challengerName: ${if (revealed) revealVerdictLine() else challengeLine()}", revealed = revealed)
+                ChallengeBanner(text = "$challengerName: ${if (revealed) RevealVerdictLine else ChallengeLine}", revealed = revealed)
             }
 
             Spacer(Modifier.weight(1f))
@@ -660,9 +660,11 @@ private fun ChallengeBanner(
     }
 }
 
-private fun challengeLine(): String = "\"You hold NETA? Show me.\""
+/** The scripted challenge the rival delivers in the guided beat. */
+private const val ChallengeLine = "\"You hold NETA? Show me.\""
 
-private fun revealVerdictLine(): String = "JHOOTH! No NETA — the bluff is caught."
+/** The scripted verdict shown once the bluffed card flips face-up. */
+private const val RevealVerdictLine = "JHOOTH! No NETA — the bluff is caught."
 
 /** Your two cards: a hidden card + the bluffed NETA card that flips face-up to JHOOTH when caught. */
 @Composable
@@ -943,7 +945,7 @@ private fun MechanicTable(
 }
 
 /** Before/after flavor line for a [MechanicTable] beat. Hardcoded (not localized) like the existing
- *  [challengeLine]/[revealVerdictLine] scripted banners this mirrors. */
+ *  [ChallengeLine]/[RevealVerdictLine] scripted banners this mirrors. */
 private fun mechanicLine(
     mechanic: Mechanic,
     acted: Boolean,

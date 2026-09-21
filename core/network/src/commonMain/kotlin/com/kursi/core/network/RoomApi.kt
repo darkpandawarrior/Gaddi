@@ -50,6 +50,11 @@ class RoomApi(
      */
     suspend fun quickMatch(playerCount: Int): RoomResult = postForCode("/quickmatch/$playerCount")
 
+    // TooGenericExceptionCaught: Ktor's engines throw platform-specific I/O types (IOException on
+    // JVM/Android, a Darwin NSError wrapper on iOS, a DOM exception on wasmJs) with no common
+    // supertype below Exception that commonMain can name. "Unreachable" is exactly the outcome for
+    // all of them, and e.message is carried into the result rather than swallowed.
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun postForCode(path: String): RoomResult =
         try {
             val response = http.post("http://$host:$port$path")

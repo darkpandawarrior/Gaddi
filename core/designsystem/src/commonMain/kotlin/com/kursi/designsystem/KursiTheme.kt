@@ -201,34 +201,34 @@ object KursiSeatColors {
  */
 object TextureTokens {
     /** Alpha of the guilloché line overlay on brass bezels. */
-    val guillocheLinesAlpha = 0.18f
+    const val guillocheLinesAlpha = 0.18f
 
     /** Alpha of the paper grain noise overlay on cream surfaces. */
-    val paperGrainAlpha = 0.06f
+    const val paperGrainAlpha = 0.06f
 
     /** Alpha of the engraved hatch on dark teak panels. */
-    val teakHatchAlpha = 0.04f
+    const val teakHatchAlpha = 0.04f
 
     /** Alpha of the ghosted chair-in-sunburst centre emblem. */
-    val emblomAlpha = 0.035f
+    const val emblomAlpha = 0.035f
 
     /** Number of guilloché sine waves per 100dp of width. */
-    val guillocheDensity = 12
+    const val guillocheDensity = 12
 
     /** Brass specular highlight width fraction (0..1). */
-    val brassSpecularWidth = 0.25f
+    const val brassSpecularWidth = 0.25f
 
     /**
      * Film-grain per-pixel noise amplitude added by the [com.kursi.designsystem.shader.feltMaterial]
      * runtime-shader pass (additive, centred on zero — keep tiny, this is texture not TV static).
      */
-    val filmGrainIntensity = 0.018f
+    const val filmGrainIntensity = 0.018f
 
     /**
      * Warm bloom lift strength around the key-light pool, added by the
      * [com.kursi.designsystem.shader.feltMaterial] runtime-shader pass.
      */
-    val warmBloomStrength = 0.05f
+    const val warmBloomStrength = 0.05f
 }
 
 // ─────────────────────────── Role frame patterns (CVD non-color channel) ─────

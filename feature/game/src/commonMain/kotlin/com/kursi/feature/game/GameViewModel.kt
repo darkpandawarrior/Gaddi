@@ -687,7 +687,10 @@ class GameViewModel(
         val humanStep =
             try {
                 currentSession.applyHuman(action.intent)
-            } catch (e: IllegalStateException) {
+            } catch (ignored: IllegalStateException) {
+                // Expected, not exceptional: the engine rejects an intent that raced a state
+                // change (a tapped action that stopped being legal). Dropping the tap IS the
+                // handling — the UI already shows the newer state.
                 return
             }
         feedEventsToExperts(humanStep.newEvents)
@@ -759,13 +762,12 @@ class GameViewModel(
                 // Only apply if we're still on the very decision this advice was computed for:
                 // same session, still the human's turn, advice not already set, and the advice
                 // covers exactly the currently-shown legal moves (order-independent membership).
-                val shown = _state.value
-                if (session === this@GameViewModel.session &&
-                    shown != null &&
-                    shown.isHumanTurn &&
+                val shown = _state.value ?: return@launch
+                val stillOnSameDecision = session === this@GameViewModel.session && shown.isHumanTurn
+                val adviceMatchesWhatIsShown =
                     shown.advice.isEmpty() &&
-                    shown.legalIntents.toSet() == advice.map { it.intent }.toSet()
-                ) {
+                        shown.legalIntents.toSet() == advice.map { it.intent }.toSet()
+                if (stillOnSameDecision && adviceMatchesWhatIsShown) {
                     emitState(shown.copy(advice = advice))
                 }
             }
