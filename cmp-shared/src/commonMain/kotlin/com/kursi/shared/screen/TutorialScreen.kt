@@ -65,6 +65,15 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+/**
+ * Guilloche ring opacities, outermost first. Three rings fading inward is what makes the felt read
+ * as engraved rather than as three separate circles; the values are the engraving, not tuning.
+ */
+private val GuillocheRingAlphas = listOf(0.05f, 0.035f, 0.025f)
+
+/** Where a rim ray starts, as a fraction of the guilloche radius — the rays are a thin rim band. */
+private const val GuillocheRayInnerFraction = 0.85f
+
 /** The three post-claim mechanics taught as their own tappable beats (spec §6: claim → challenge →
  *  block → coup → exchange — claim/challenge/reveal are beats 4-6; these are 7-9). */
 private enum class Mechanic { BLOCK, COUP, EXCHANGE }
@@ -1027,7 +1036,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawFeltGuilloche()
     val cx = size.width * 0.5f
     val cy = size.height * 0.42f
     val baseR = minOf(size.width, size.height) * 0.5f
-    listOf(0.05f, 0.035f, 0.025f).forEachIndexed { i, a ->
+    GuillocheRingAlphas.forEachIndexed { i, a ->
         drawCircle(
             color = BrandTokens.BrassAged.copy(alpha = a),
             radius = baseR * (1f - i * 0.18f),
@@ -1044,7 +1053,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawFeltGuilloche()
             color = BrandTokens.BrassAged.copy(alpha = 0.04f),
             start =
                 androidx.compose.ui.geometry
-                    .Offset(cx + baseR * 0.85f * cos(angle), cy + baseR * 0.85f * sin(angle)),
+                    .Offset(cx + baseR * GuillocheRayInnerFraction * cos(angle), cy + baseR * GuillocheRayInnerFraction * sin(angle)),
             end =
                 androidx.compose.ui.geometry
                     .Offset(cx + baseR * cos(angle), cy + baseR * sin(angle)),

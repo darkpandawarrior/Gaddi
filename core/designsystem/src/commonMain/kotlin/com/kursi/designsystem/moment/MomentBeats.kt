@@ -35,6 +35,19 @@ import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
+/**
+ * Off-screen entry point for FDI/foreign-incoming moves — far past the top-right of any real
+ * table, so the token visibly flies in from outside the board.
+ */
+private val OffTableEntryDefault = Offset(2000f, -200f)
+
+/**
+ * Where a moment plays when the seat it names has no measured anchor yet (first frame, or a seat
+ * that has not been laid out). Roughly the middle of the table, so the beat is visible rather than
+ * stuck in a corner.
+ */
+private val TableCentreFallback = Offset(500f, 500f)
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // MomentBeats.kt — 13 beat composables, each a composition of the 5 primitives.
 // Design: kursi-plan/docs/15c_action_moments.md §2 (the beat sheet).
@@ -61,9 +74,9 @@ data class TableAnchors(
     /** Center of the treasury safe. */
     val treasuryCenter: Offset,
     /** Off-screen entry point for FDI/foreign-incoming moves. Defaults to top-right corner. */
-    val offTableEntry: Offset = Offset(2000f, -200f),
+    val offTableEntry: Offset = OffTableEntryDefault,
 ) {
-    fun seat(id: SeatId): Offset = seatCenters[id] ?: Offset(500f, 500f) // fallback: centre-ish
+    fun seat(id: SeatId): Offset = seatCenters[id] ?: TableCentreFallback
 }
 
 // ─────────────────────────── 1. Income ───────────────────────────────────────

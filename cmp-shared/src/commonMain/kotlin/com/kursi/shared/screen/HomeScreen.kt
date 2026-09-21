@@ -70,6 +70,9 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+/** Where an official-seal rim tick starts, as a fraction of the seal radius. */
+private const val SealRayInnerFraction = 0.86f
+
 // ── Ticker headlines ──────────────────────────────────────────────────────────
 
 private val TICKER_LINES =
@@ -2378,7 +2381,7 @@ private fun DrawScope.drawHomeDepth() {
         val angle = (i * 2.0 * PI / rays).toFloat()
         drawLine(
             color = brass.copy(alpha = 0.05f),
-            start = Offset(cx + baseR * 0.86f * cos(angle), cy + baseR * 0.86f * sin(angle)),
+            start = Offset(cx + baseR * SealRayInnerFraction * cos(angle), cy + baseR * SealRayInnerFraction * sin(angle)),
             end = Offset(cx + baseR * 1.0f * cos(angle), cy + baseR * 1.0f * sin(angle)),
             strokeWidth = 0.8f,
         )

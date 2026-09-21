@@ -304,6 +304,44 @@ private fun DrawScope.drawDeboss(
 }
 
 /**
+ * Slope of the paper-grain hatch, as a fraction of the surface height: each line runs from the top
+ * edge down to the bottom, shifted right by 30% of the height. Shallower reads as a machine scan,
+ * steeper as a deliberate crosshatch.
+ */
+private const val PaperGrainSlopeFraction = 0.3f
+
+/** The brass-plate variant of the same hatch, very slightly steeper so the two read as different surfaces. */
+private const val BrassPlateGrainSlopeFraction = 0.32f
+
+/** DEPTH3D ambient shadow opacity — the wide, cool half of the two-shadow stack. */
+private const val AmbientShadowAlpha = 0.55f
+
+/**
+ * How far across the surface a bevel's lit/shadow gradient runs before it has fully faded, as a
+ * fraction of the surface. The shadow gradient is the mirror of this, so one number sets both and
+ * the two halves cannot drift apart.
+ */
+private const val BevelGradientReach = 0.7f
+
+/** Geometry of the chair-in-sunburst watermark, as fractions of its own radius. */
+private object ChairEmblem {
+    const val RadiusFraction = 0.30f
+    const val RayCount = 16
+    const val RayInnerFraction = 0.45f
+    const val SeatBackRadiusFraction = 0.28f
+
+    /** The seat back sits slightly above the emblem centre; the legs start just below it. */
+    const val SeatBackCentreYFraction = 0.86f
+    const val LegTopYFraction = 0.96f
+    const val LegHalfWidthFraction = 0.22f
+    const val LegBottomFraction = 0.35f
+
+    /** The seat beam is wider than the leg spacing and sits at the legs' midpoint. */
+    const val BeamHalfWidthScale = 1.3f
+    const val BeamYFraction = 0.22f
+}
+
+/**
  * Subtle paper grain overlay: faint random-looking cross-hatch at very low alpha.
  * Approximated with two overlapping diagonal lines sets (no noise shader needed).
  */
@@ -315,7 +353,7 @@ private fun DrawScope.drawPaperGrain(color: Color = BrandTokens.CreamInk) {
         drawLine(
             color.copy(alpha = alpha),
             Offset(x, 0f),
-            Offset(x + size.height * 0.3f, size.height),
+            Offset(x + size.height * PaperGrainSlopeFraction, size.height),
             strokeWidth = 0.5.dp.toPx(),
         )
         x += step
@@ -330,13 +368,13 @@ private fun DrawScope.drawChairEmblem(color: Color = BrandTokens.GoldAntique) {
     val alpha = TextureTokens.emblomAlpha
     val cx = size.width / 2
     val cy = size.height / 2
-    val r = minOf(size.width, size.height) * 0.30f
+    val r = minOf(size.width, size.height) * ChairEmblem.RadiusFraction
 
     // Radiating sunburst lines
-    val rays = 16
+    val rays = ChairEmblem.RayCount
     for (i in 0 until rays) {
         val angle = (i * 2 * PI / rays).toFloat()
-        val innerR = r * 0.45f
+        val innerR = r * ChairEmblem.RayInnerFraction
         drawLine(
             color.copy(alpha = alpha),
             Offset(cx + innerR * cos(angle), cy + innerR * sin(angle)),
@@ -347,26 +385,31 @@ private fun DrawScope.drawChairEmblem(color: Color = BrandTokens.GoldAntique) {
     // Outer circle
     drawCircle(color.copy(alpha = alpha), r, Offset(cx, cy), style = Stroke(1.dp.toPx()))
     // Inner circle (seat back)
-    drawCircle(color.copy(alpha = alpha), r * 0.28f, Offset(cx, cy * 0.86f), style = Stroke(1.2.dp.toPx()))
+    drawCircle(
+        color.copy(alpha = alpha),
+        r * ChairEmblem.SeatBackRadiusFraction,
+        Offset(cx, cy * ChairEmblem.SeatBackCentreYFraction),
+        style = Stroke(1.2.dp.toPx()),
+    )
     // Seat legs — two downward lines
-    val legWidth = r * 0.22f
+    val legWidth = r * ChairEmblem.LegHalfWidthFraction
     drawLine(
         color.copy(alpha = alpha),
-        Offset(cx - legWidth, cy * 0.96f),
-        Offset(cx - legWidth, cy + r * 0.35f),
+        Offset(cx - legWidth, cy * ChairEmblem.LegTopYFraction),
+        Offset(cx - legWidth, cy + r * ChairEmblem.LegBottomFraction),
         strokeWidth = 1.5.dp.toPx(),
     )
     drawLine(
         color.copy(alpha = alpha),
-        Offset(cx + legWidth, cy * 0.96f),
-        Offset(cx + legWidth, cy + r * 0.35f),
+        Offset(cx + legWidth, cy * ChairEmblem.LegTopYFraction),
+        Offset(cx + legWidth, cy + r * ChairEmblem.LegBottomFraction),
         strokeWidth = 1.5.dp.toPx(),
     )
     // Seat beam
     drawLine(
         color.copy(alpha = alpha),
-        Offset(cx - legWidth * 1.3f, cy + r * 0.22f),
-        Offset(cx + legWidth * 1.3f, cy + r * 0.22f),
+        Offset(cx - legWidth * ChairEmblem.BeamHalfWidthScale, cy + r * ChairEmblem.BeamYFraction),
+        Offset(cx + legWidth * ChairEmblem.BeamHalfWidthScale, cy + r * ChairEmblem.BeamYFraction),
         strokeWidth = 1.2.dp.toPx(),
     )
 }
@@ -1946,8 +1989,8 @@ fun Modifier.tableDepth(
         .shadow(
             elevation = ambient,
             shape = shape,
-            ambientColor = Color(0xFF000000).copy(alpha = 0.55f),
-            spotColor = Color(0xFF000000).copy(alpha = 0.55f),
+            ambientColor = BrandTokens.ShadowBlack.copy(alpha = AmbientShadowAlpha),
+            spotColor = BrandTokens.ShadowBlack.copy(alpha = AmbientShadowAlpha),
             clip = false,
         )
         // Tight warm contact shadow (close, offset down)
@@ -1982,7 +2025,7 @@ fun Modifier.embossEdge(
                 Brush.linearGradient(
                     colors = listOf(highlight, highlight.copy(alpha = 0f)),
                     start = Offset(0f, 0f),
-                    end = Offset(size.width * 0.7f, size.height * 0.7f),
+                    end = Offset(size.width * BevelGradientReach, size.height * BevelGradientReach),
                 ),
             topLeft = Offset(inset, inset),
             size = Size(size.width - sw, size.height - sw),
@@ -1996,7 +2039,7 @@ fun Modifier.embossEdge(
             brush =
                 Brush.linearGradient(
                     colors = listOf(shadow.copy(alpha = 0f), shadow),
-                    start = Offset(size.width * 0.3f, size.height * 0.3f),
+                    start = Offset(size.width * (1f - BevelGradientReach), size.height * (1f - BevelGradientReach)),
                     end = Offset(size.width, size.height),
                 ),
             topLeft = Offset(inset, inset),
@@ -2105,7 +2148,7 @@ private fun sinUnit(t: Float): Float = sin(t * 2f * PI.toFloat())
  * @param spacingDp vertical line spacing.
  */
 fun DrawScope.drawScanlineSheen(
-    tint: Color = Color(0xFF8FE7DA),
+    tint: Color = BrandTokens.PhosphorCyan,
     alpha: Float = 0.05f,
     spacingDp: Float = 3f,
 ) {
@@ -2178,7 +2221,7 @@ fun Modifier.decoPopoverPaper(radius: Dp = KursiRadii.md): Modifier {
                 drawLine(
                     grain,
                     Offset(gx, 0f),
-                    Offset(gx + size.height * 0.32f, size.height),
+                    Offset(gx + size.height * BrassPlateGrainSlopeFraction, size.height),
                     strokeWidth = 0.5.dp.toPx(),
                 )
                 gx += step

@@ -65,6 +65,12 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
+ * Where the Win confetti and the verdict stamp land. The results screen has no real table, so both
+ * the (single) seat anchor and the treasury anchor point at the same mid-screen spot.
+ */
+private val ResultsScreenCentre = Offset(720f, 360f)
+
+/**
  * ResultsScreen — Faisla (S5) from 17_app_plan.md §4.
  *
  * Sarkari Noir rebuild: the winner medallion is the ONE raised focal point (design-language.md #5),
@@ -277,8 +283,8 @@ fun ResultsScreen(
 /** Centre-anchored geometry: the Win confetti + stamp land mid-screen. */
 private fun resultsAnchors(): TableAnchors =
     TableAnchors(
-        seatCenters = mapOf(0 to Offset(720f, 360f)),
-        treasuryCenter = Offset(720f, 360f),
+        seatCenters = mapOf(0 to ResultsScreenCentre),
+        treasuryCenter = ResultsScreenCentre,
     )
 
 // ─────────────────────────── Verdict medallion ────────────────────────────────

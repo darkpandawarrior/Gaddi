@@ -43,6 +43,25 @@ object BrandTokens {
     /** Ink / outer window background — deepest teak. */
     val TeakInk = Color(0xFF1E1008)
 
+    /** Pure black, used only as a shadow colour. Not a surface: nothing in the app is this dark. */
+    val ShadowBlack = Color(0xFF000000)
+
+    /** Cool phosphor cyan — the "sarkari teleprinter" scanline sheen on live surfaces. */
+    val PhosphorCyan = Color(0xFF8FE7DA)
+
+    // Decision-quality verdicts (Review screen). A four-stop ramp from "best move" to "costly
+    // miss", ending on StampRed. These lived as raw 0xFF... literals inside ReviewScreen until
+    // the quality pass; a colour in a screen is a token that escaped the design system.
+
+    /** Verdict SHARP — best or near-best move. */
+    val VerdictSharp = Color(0xFF6FCF97)
+
+    /** Verdict FINE — close enough. */
+    val VerdictFine = Color(0xFFB7C66B)
+
+    /** Verdict LOOSE — leaked some EV. */
+    val VerdictLoose = Color(0xFFE0B354)
+
     // Metal — aged brass / antique gold
 
     /** Aged brass: primary bezel and border metal. */

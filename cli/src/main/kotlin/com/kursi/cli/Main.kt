@@ -5,6 +5,9 @@ import com.kursi.engine.PlayerId
 import com.kursi.engine.RandomLegalPolicy
 import com.kursi.engine.SimHarness
 
+/** Width of the wins column, so the seat rows line up under each other. */
+private const val WIN_COUNT_COLUMN_WIDTH = 5
+
 /** Each `#` in the win-rate bar is worth this many percentage points. */
 private const val BAR_PERCENT_PER_HASH = 2
 
@@ -61,6 +64,10 @@ fun main(args: Array<String>) {
     for (s in 0 until seats) {
         val w = stats.winsBySeat[s] ?: 0
         val pct = 100.0 * w / total
-        println("    seat $s  ${w.toString().padStart(5)}  ${"%5.1f".format(pct)}%  ${"#".repeat((pct / BAR_PERCENT_PER_HASH).toInt())}")
+        println(
+            "    seat $s  ${w.toString().padStart(
+                WIN_COUNT_COLUMN_WIDTH,
+            )}  ${"%5.1f".format(pct)}%  ${"#".repeat((pct / BAR_PERCENT_PER_HASH).toInt())}",
+        )
     }
 }

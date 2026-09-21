@@ -354,9 +354,9 @@ private fun MoveCell(
 
 private fun verdictColor(v: ReplayAnnotation.Verdict): Color =
     when (v) {
-        ReplayAnnotation.Verdict.SHARP -> Color(0xFF6FCF97) // green — best/near-best
-        ReplayAnnotation.Verdict.FINE -> Color(0xFFB7C66B) // olive — close enough
-        ReplayAnnotation.Verdict.LOOSE -> Color(0xFFE0B354) // amber — leaked some EV
+        ReplayAnnotation.Verdict.SHARP -> BrandTokens.VerdictSharp
+        ReplayAnnotation.Verdict.FINE -> BrandTokens.VerdictFine
+        ReplayAnnotation.Verdict.LOOSE -> BrandTokens.VerdictLoose
         ReplayAnnotation.Verdict.COSTLY -> BrandTokens.StampRed // red — costly miss
     }
 
