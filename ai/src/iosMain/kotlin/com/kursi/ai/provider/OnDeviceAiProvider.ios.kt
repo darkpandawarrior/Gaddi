@@ -18,15 +18,17 @@ import kotlinx.coroutines.flow.map
  * FoundationModelsOnDeviceLlm/MediaPipeOnDeviceLlm) — same always-unavailable behavior as Kursi's old
  * local stub, now sourced from the shared toolkit instead of a duplicate.
  */
-actual class OnDeviceAiProvider actual constructor() : AiProvider {
-    actual override val id = "on_device"
-    actual override val displayName = "On-device AI (Apple Intelligence)"
+actual fun OnDeviceAiProvider(): AiProvider = IosOnDeviceAiProvider()
+
+private class IosOnDeviceAiProvider : AiProvider {
+    override val id = "on_device"
+    override val displayName = "On-device AI (Apple Intelligence)"
 
     private val llm: OnDeviceLlm = CompositeOnDeviceLlm(listOf(FoundationModelsOnDeviceLlm(), MediaPipeOnDeviceLlm()))
 
-    actual override suspend fun isAvailable(): Boolean = llm.isAvailable()
+    override suspend fun isAvailable(): Boolean = llm.isAvailable()
 
-    actual override suspend fun complete(
+    override suspend fun complete(
         messages: List<AiMessage>,
         config: AiConfig,
     ): AiResult<String> = llm.generate(messages.toOnDevicePrompt())

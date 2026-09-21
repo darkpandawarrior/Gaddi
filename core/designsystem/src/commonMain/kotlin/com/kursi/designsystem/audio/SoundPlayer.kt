@@ -31,7 +31,7 @@ internal suspend fun loadKursiSoundBytes(sound: KursiSound): ByteArray? = runCat
  * missing resource, an unavailable audio device, or a headless CI box all degrade to silence.
  * [release] frees native resources and is safe to call more than once.
  */
-expect class SoundPlayer() {
+interface SoundPlayer {
     /**
      * Whether this platform can actually make noise. False means every [play] is a silent no-op —
      * a missing Android install() hook, an audio session that would not activate, a headless box
@@ -45,6 +45,18 @@ expect class SoundPlayer() {
 
     fun release()
 }
+
+/**
+ * Builds the platform [SoundPlayer]. Named like a constructor on purpose: every call site reads
+ * `SoundPlayer()` exactly as it did when this was an `expect class`.
+ *
+ * An interface plus an `expect fun` factory rather than an `expect class`: expect/actual
+ * CLASSIFIERS are still Beta (KT-61573) and warn on every compile of every source set, and the
+ * only ways to silence that are the blanket `-Xexpect-actual-classes` flag or a `@Suppress` on
+ * each of the five files. Expect/actual FUNCTIONS are stable, the platform types become ordinary
+ * private classes, and nothing at a call site changes.
+ */
+expect fun SoundPlayer(): SoundPlayer
 
 /** Remembers a [SoundPlayer] for the composition's lifetime and releases it on dispose. */
 @Composable

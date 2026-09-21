@@ -54,7 +54,6 @@ class DeterminizerExchangeTest {
 
         val ph = state.phase
         assertTrue(ph is Phase.AwaitingExchange, "phase should be AwaitingExchange")
-        ph as Phase.AwaitingExchange
         assertEquals(me, ph.actor)
         assertEquals(2, ph.drawn.size, "drawn must be populated, not empty")
 

@@ -417,7 +417,7 @@ class MoveAdvisorTest {
 
             // stateA: human holds NETA → fewer unseen → bot's claim less credible → higher bluff odds
             assertTrue(
-                challengeA.successOdds!! >= challengeB.successOdds!!,
+                challengeA.successOdds >= challengeB.successOdds,
                 "Challenge odds should be >= when fewer unseen NETA exist: " +
                     "stateA=${challengeA.successOdds} vs stateB=${challengeB.successOdds}",
             )
@@ -501,7 +501,7 @@ class MoveAdvisorTest {
 
             val incomeAdvice =
                 advices.firstOrNull {
-                    it.intent is Intent.DeclareAction && (it.intent as Intent.DeclareAction).action == Action.Income
+                    it.intent is Intent.DeclareAction && it.intent.action == Action.Income
                 }
             assertNotNull(incomeAdvice, "Income must be in advices")
             assertNull(incomeAdvice.truthful, "Income makes no role claim — truthful must be null")
@@ -509,7 +509,7 @@ class MoveAdvisorTest {
 
             val faAdvice =
                 advices.firstOrNull {
-                    it.intent is Intent.DeclareAction && (it.intent as Intent.DeclareAction).action == Action.ForeignAid
+                    it.intent is Intent.DeclareAction && it.intent.action == Action.ForeignAid
                 }
             assertNotNull(faAdvice, "ForeignAid must be in advices")
             assertNull(faAdvice.truthful, "ForeignAid makes no role claim — truthful must be null")
@@ -546,7 +546,7 @@ class MoveAdvisorTest {
 
             val taxAdvice =
                 advices.firstOrNull {
-                    it.intent is Intent.DeclareAction && (it.intent as Intent.DeclareAction).action == Action.Tax
+                    it.intent is Intent.DeclareAction && it.intent.action == Action.Tax
                 }
             assertNotNull(taxAdvice)
             assertTrue(taxAdvice.bluff, "Tax without NETA is a bluff")

@@ -28,19 +28,21 @@ import platform.Foundation.create
 // com.siddharth.kmp.feedback.FeedbackIos, which has always done exactly this.
 // ═══════════════════════════════════════════════════════════════════════════════
 
+actual fun SoundPlayer(): SoundPlayer = IosSoundPlayer()
+
 @OptIn(ExperimentalForeignApi::class)
-actual class SoundPlayer actual constructor() {
+private class IosSoundPlayer : SoundPlayer {
     private val players = mutableMapOf<KursiSound, AVAudioPlayer>()
 
     /** False when the audio session could not be configured, i.e. play() is a silent no-op. */
-    actual val isAvailable: Boolean =
+    override val isAvailable: Boolean =
         runCatching {
             val session = AVAudioSession.sharedInstance()
             session.setCategory(AVAudioSessionCategoryAmbient, null)
             session.setActive(true, null)
         }.isSuccess
 
-    actual suspend fun play(sound: KursiSound) {
+    override suspend fun play(sound: KursiSound) {
         runCatching {
             val player =
                 players.getOrPut(sound) {
@@ -53,7 +55,7 @@ actual class SoundPlayer actual constructor() {
         }
     }
 
-    actual fun release() {
+    override fun release() {
         runCatching { players.values.forEach { it.stop() } }
         players.clear()
     }

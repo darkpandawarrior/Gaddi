@@ -176,7 +176,7 @@ internal fun OpponentChipItem(
     // window (someone may still challenge it). Outside that, the most-recent declared
     // claim becomes part of the STANDING summary below rather than a pulsing live claim.
     val isActorInReactions = phase is PhaseView.Reactions && phase.actor == opp.id
-    val liveClaimedRole: Role? = if (isActorInReactions) (phase as PhaseView.Reactions).claimedRole else null
+    val liveClaimedRole: Role? = if (isActorInReactions) phase.claimedRole else null
     val claim: String? = liveClaimedRole?.let { "${roleGlyphChar(it)} claims ${roleLabel(it)}" }
 
     // ── STANDING claim summary (persists across the whole game) ───────
@@ -263,7 +263,7 @@ internal fun OpponentChipItem(
                     is GameEvent.ActionDeclared -> "act"
                     is GameEvent.PlayerEliminated -> "lose"
                     is GameEvent.Challenged -> "challenged"
-                    is GameEvent.ChallengeRevealed -> if ((lastEventForOpp as GameEvent.ChallengeRevealed).hadRole) "act" else "bluff"
+                    is GameEvent.ChallengeRevealed -> if (lastEventForOpp.hadRole) "act" else "bluff"
                     else -> null
                 }
             if (barkEvent != null) {

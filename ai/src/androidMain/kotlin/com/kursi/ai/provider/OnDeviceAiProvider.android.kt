@@ -66,9 +66,11 @@ internal class KursiAiContextProvider : ContentProvider() {
  * chain — ML Kit GenAI Prompt (Gemini Nano, AICore devices) → MediaPipe LLM Inference (Gemma,
  * downloaded on demand) — instead of a hand-rolled always-unavailable stub.
  */
-actual class OnDeviceAiProvider actual constructor() : AiProvider {
-    actual override val id = "on_device"
-    actual override val displayName = "On-device AI (Gemini Nano / Gemma)"
+actual fun OnDeviceAiProvider(): AiProvider = AndroidOnDeviceAiProvider()
+
+private class AndroidOnDeviceAiProvider : AiProvider {
+    override val id = "on_device"
+    override val displayName = "On-device AI (Gemini Nano / Gemma)"
 
     private val llm: OnDeviceLlm by lazy {
         val context = KursiAiContextProvider.appContext
@@ -80,9 +82,9 @@ actual class OnDeviceAiProvider actual constructor() : AiProvider {
         )
     }
 
-    actual override suspend fun isAvailable(): Boolean = llm.isAvailable()
+    override suspend fun isAvailable(): Boolean = llm.isAvailable()
 
-    actual override suspend fun complete(
+    override suspend fun complete(
         messages: List<AiMessage>,
         config: AiConfig,
     ): AiResult<String> = llm.generate(messages.toOnDevicePrompt())

@@ -25,7 +25,9 @@ object KursiSoundAndroid {
     }
 }
 
-actual class SoundPlayer actual constructor() {
+actual fun SoundPlayer(): SoundPlayer = AndroidSoundPlayer()
+
+private class AndroidSoundPlayer : SoundPlayer {
     private val pool: SoundPool? =
         runCatching {
             SoundPool
@@ -43,10 +45,10 @@ actual class SoundPlayer actual constructor() {
     private val soundIds = mutableMapOf<KursiSound, Int>()
 
     /** False until [KursiSoundAndroid.install] has run (or if SoundPool would not build). */
-    actual val isAvailable: Boolean
+    override val isAvailable: Boolean
         get() = pool != null && KursiSoundAndroid.appContext != null
 
-    actual suspend fun play(sound: KursiSound) {
+    override suspend fun play(sound: KursiSound) {
         val pool = pool ?: return
         val ctx = KursiSoundAndroid.appContext ?: return
         runCatching {
@@ -67,7 +69,7 @@ actual class SoundPlayer actual constructor() {
         }
     }
 
-    actual fun release() {
+    override fun release() {
         runCatching { pool?.release() }
         soundIds.clear()
     }

@@ -13,13 +13,15 @@ import com.siddharth.kmp.result.AiResult
  * BYOK cloud tier in [com.kursi.ai.MunshiNarrator]'s own provider chain instead: see
  * [com.kursi.ai.createMunshiNarrator] for how a saved cloud-provider key reaches it.
  */
-actual class OnDeviceAiProvider actual constructor() : AiProvider {
-    actual override val id = "on_device"
-    actual override val displayName = "On-device AI"
+actual fun OnDeviceAiProvider(): AiProvider = WasmOnDeviceAiProvider()
 
-    actual override suspend fun isAvailable(): Boolean = UnavailableOnDeviceLlm.isAvailable()
+private class WasmOnDeviceAiProvider : AiProvider {
+    override val id = "on_device"
+    override val displayName = "On-device AI"
 
-    actual override suspend fun complete(
+    override suspend fun isAvailable(): Boolean = UnavailableOnDeviceLlm.isAvailable()
+
+    override suspend fun complete(
         messages: List<AiMessage>,
         config: AiConfig,
     ): AiResult<String> = UnavailableOnDeviceLlm.generate(messages.toOnDevicePrompt())
