@@ -11,8 +11,8 @@ social layer (DARBAR) and an ISMCTS-powered coach on top.
 
 [![CI](https://github.com/darkpandawarrior/Gaddi/actions/workflows/ci.yml/badge.svg)](https://github.com/darkpandawarrior/Gaddi/actions/workflows/ci.yml)
 [![Quality](https://github.com/darkpandawarrior/Gaddi/actions/workflows/quality.yml/badge.svg)](https://github.com/darkpandawarrior/Gaddi/actions/workflows/quality.yml)
-![Kotlin](https://img.shields.io/badge/Kotlin-2.4.20--RC-7F52FF?logo=kotlin&logoColor=white)
-![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.12.0--rc01-4285F4?logo=jetpackcompose&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.4.20-7F52FF?logo=kotlin&logoColor=white)
+![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.13.0--alpha01-4285F4?logo=jetpackcompose&logoColor=white)
 ![Platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Desktop%20%7C%20Web-3DDC84)
 [![License: GPL-3.0-or-later](https://img.shields.io/badge/license-GPL--3.0--or--later-blue)](LICENSE)
 [![Assets: CC BY-SA 4.0](https://img.shields.io/badge/assets-CC%20BY--SA%204.0-lightgrey)](ASSETS-LICENSE)
