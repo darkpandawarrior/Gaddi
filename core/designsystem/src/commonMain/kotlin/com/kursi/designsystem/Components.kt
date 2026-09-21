@@ -426,7 +426,6 @@ fun RoleCard(
     role: Role,
     modifier: Modifier = Modifier,
     size: CardSize = CardSize.Large,
-    faceUp: Boolean = true,
     lost: Boolean = false,
     lifted: Boolean = false,
     /** Tap = primary action (e.g. reveal during influence-loss). Null → no tap behaviour. */
@@ -919,8 +918,9 @@ fun OpponentPlate(
     roleColor: Color?, // null if unknown (face-down)
     role: Role?, // null if unknown (face-down) — drives the bespoke crest glyph
     coins: Int,
-    influenceAlive: Int, // 0..2 — alive (filled ◆)
-    influenceLost: Int, // 0..2 — lost (hollow ◇)
+    influenceLost: Int, // 0..2 — lost (hollow ◇). The alive count is derived from the slot total.
+    // The alive count is NOT a parameter: it is opponentPlateSemantics' job (see :feature:game
+    // A11y.kt), and the pip row here renders from influenceLost alone.
     claim: String?, // e.g. "⚖ claims NETA" or null — the LIVE/pending claim
     lastAction: String?, // e.g. "↳ FDI +2" or null
     state: ChipState,
@@ -1865,49 +1865,8 @@ fun FeltTableBackground(
 }
 
 // ─────────────────────────── Backward-compat aliases ──────────────────────────
-
-/** Back-compat: [RoleCard] with the old [CardFace] name. */
-@Composable
-fun CardFace(
-    role: Role?,
-    faceUp: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    if (role != null) {
-        RoleCard(
-            role = role,
-            modifier = modifier,
-            size = CardSize.Small,
-            faceUp = faceUp,
-            lost = !faceUp,
-        )
-    } else {
-        // Card back — brass-engraved chair seal
-        Box(
-            modifier =
-                modifier
-                    .size(width = 64.dp, height = 96.dp)
-                    .clip(Squircle(KursiRadii.md))
-                    .background(
-                        brush =
-                            Brush.verticalGradient(
-                                listOf(BrandTokens.BrassAged, BrandTokens.BrassDark),
-                            ),
-                    ).border(1.5.dp, BrandTokens.GoldAntique, Squircle(KursiRadii.md))
-                    .drawBehind {
-                        drawChairEmblem(BrandTokens.TeakDark)
-                    },
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = "K",
-                style = KursiType.display.copy(fontSize = 24.sp),
-                color = BrandTokens.TeakDark.copy(alpha = 0.7f),
-                textAlign = TextAlign.Center,
-            )
-        }
-    }
-}
+// CardFace was removed with RoleCard's dead `faceUp` parameter: it was the only caller and had
+// no callers of its own.
 
 /** Back-compat: [KursiActionButton] row under the old [ActionBar] name. */
 @Composable

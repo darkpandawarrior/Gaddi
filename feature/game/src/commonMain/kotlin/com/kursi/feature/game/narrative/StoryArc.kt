@@ -94,11 +94,10 @@ data class ArcState(
  * those. The player is always [instigator] = seat 0 in narrative mode.
  */
 object StoryArcs {
-    /** ARC_START chips offered for [arc] given the living opponents [opponents] + their dominant flaws. */
+    /** ARC_START chips offered for [arc] given the living opponents [opponents]. */
     fun openingSuggestions(
         arc: ArcId,
         opponents: List<SeatRef>,
-        flawOf: (Int) -> CharacterFlaw?,
     ): List<ChatSuggestion> =
         when (arc) {
             ArcId.GATHBANDHAN ->
@@ -273,7 +272,6 @@ object StoryArcs {
     fun reply(
         state: ArcState,
         input: HumanChatInput,
-        rivalName: String? = null,
     ): ArcStep =
         when (state.arc) {
             ArcId.GATHBANDHAN ->

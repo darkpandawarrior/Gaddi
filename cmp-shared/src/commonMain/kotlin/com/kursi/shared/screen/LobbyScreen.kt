@@ -103,7 +103,7 @@ fun LobbyScreen(
             modifier = Modifier.fillMaxSize(),
         ) {
             // Header
-            LobbyHeader(seed = currentSeed, onBack = onBack)
+            LobbyHeader(onBack = onBack)
 
             // Attendance register — centred on both axes so the register reads as a bound
             // ledger page floating on the teak desk, instead of stretching edge-to-edge on
@@ -391,10 +391,7 @@ private fun PersonaRegisterRow(
 }
 
 @Composable
-private fun LobbyHeader(
-    seed: Long,
-    onBack: () -> Unit,
-) {
+private fun LobbyHeader(onBack: () -> Unit) {
     val s = LocalKursiStrings.current
     // Short nav breadcrumb — the full engraved title (with subtitle) is the register's own
     // focal EngravedHeader below; repeating it here would be a second, competing focal point.

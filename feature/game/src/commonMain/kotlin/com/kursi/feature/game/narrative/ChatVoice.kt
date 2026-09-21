@@ -75,10 +75,7 @@ class ChatVoice(
         }
 
     // ── Flaw blurt: a bot's tell as it gets baited into a blunder ─────────────────
-    fun flawBlurt(
-        personaId: String,
-        flaw: CharacterFlaw,
-    ): String =
+    fun flawBlurt(flaw: CharacterFlaw): String =
         when (flaw) {
             CharacterFlaw.EGO -> if (hi) "Main sabse strong hoon. Abhi dikhata hoon." else "I'm the strongest. Watch me prove it."
             CharacterFlaw.GREED -> if (hi) "Itna maal? Chhodne ka sawaal hi nahi." else "That much loot? No way I'm passing."
@@ -89,10 +86,7 @@ class ChatVoice(
         }
 
     // ── Ally coordination ─────────────────────────────────────────────────────────
-    fun allyWith(
-        personaId: String,
-        allyName: String,
-    ): String = if (hi) "$allyName, apna gathbandhan zinda hai. Saath chalte hain." else "$allyName, our pact holds. We move together."
+    fun allyWith(allyName: String): String = if (hi) "$allyName, apna gathbandhan zinda hai. Saath chalte hain." else "$allyName, our pact holds. We move together."
 
     // ── Arc beats: player + narrator + generic bot fallback ───────────────────────
     fun arcBeat(

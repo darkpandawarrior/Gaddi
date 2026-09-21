@@ -394,7 +394,6 @@ internal fun loseInfluenceCause(state: GameUiState): String {
 @Composable
 internal fun ExchangeDock(
     state: GameUiState,
-    humanSeat: PlayerId,
     onAction: (GameAction) -> Unit,
 ) {
     val voice = LocalKursiVoice.current

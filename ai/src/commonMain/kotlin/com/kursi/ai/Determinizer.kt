@@ -44,7 +44,7 @@ class Determinizer(
         val aliveOpps = view.players.filter { !it.eliminated && it.id != view.viewer }
         for (opp in aliveOpps) {
             val belief = memory.beliefs[opp.id] ?: OpponentBelief()
-            val post = beliefModel.posterior(view, opp.id, belief)
+            val post = beliefModel.posterior(view, belief)
             val assigned = mutableListOf<Role>()
             repeat(opp.faceDownCount) {
                 if (unseenPool.isEmpty()) return@repeat

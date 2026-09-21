@@ -195,7 +195,6 @@ class BeliefModel {
      */
     fun posterior(
         view: PlayerView,
-        opponentId: PlayerId,
         belief: OpponentBelief,
     ): Map<Role, Double> {
         val cfg = view.config
@@ -233,7 +232,7 @@ class BeliefModel {
     ): Double {
         val k = view.players.firstOrNull { it.id == opponentId }?.faceDownCount ?: 0
         if (k <= 0) return 0.0
-        val pSlot = posterior(view, opponentId, belief)[role] ?: 0.0
+        val pSlot = posterior(view, belief)[role] ?: 0.0
         if (pSlot <= 0.0) return 0.0
         return 1.0 - (1.0 - pSlot).pow(k)
     }

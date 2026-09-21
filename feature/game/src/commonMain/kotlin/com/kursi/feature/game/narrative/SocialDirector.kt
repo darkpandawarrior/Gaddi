@@ -269,7 +269,7 @@ class SocialDirector(
         val arc = input.arc ?: return
         val state = arcs[arc] ?: return
         val rivalName = input.targetSeat?.let { info[it]?.name }
-        val step = StoryArcs.reply(state, input, rivalName)
+        val step = StoryArcs.reply(state, input)
         applyStep(step, turn)
     }
 

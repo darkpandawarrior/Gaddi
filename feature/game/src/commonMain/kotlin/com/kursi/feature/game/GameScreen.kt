@@ -207,7 +207,6 @@ fun GameScreen(
                     state = state,
                     gamePhase = gamePhase,
                     humanSeat = humanSeat,
-                    localPhase = localPhase,
                     onLocalPhase = { localPhase = it },
                     onAction = onAction,
                     onOpenGazette = onOpenGazette,
@@ -221,7 +220,6 @@ fun GameScreen(
                     state = state,
                     gamePhase = gamePhase,
                     humanSeat = humanSeat,
-                    localPhase = localPhase,
                     onLocalPhase = { localPhase = it },
                     onAction = onAction,
                     onOpenGazette = onOpenGazette,
@@ -403,7 +401,6 @@ internal fun DesktopLayout(
     state: GameUiState,
     gamePhase: GamePhase,
     humanSeat: PlayerId,
-    localPhase: GamePhase?,
     onLocalPhase: (GamePhase?) -> Unit,
     onAction: (GameAction) -> Unit,
     onOpenGazette: () -> Unit = {},
@@ -837,7 +834,6 @@ internal fun PhoneLayout(
     state: GameUiState,
     gamePhase: GamePhase,
     humanSeat: PlayerId,
-    localPhase: GamePhase?,
     onLocalPhase: (GamePhase?) -> Unit,
     onAction: (GameAction) -> Unit,
     onOpenGazette: () -> Unit = {},
@@ -1094,7 +1090,6 @@ internal fun ActionDock(
                 is GamePhase.Exchange ->
                     ExchangeDock(
                         state = state,
-                        humanSeat = humanSeat,
                         onAction = onAction,
                     )
                 is GamePhase.InvestigatePeek ->

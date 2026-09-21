@@ -68,14 +68,13 @@ class AiBotDecisionEngine(
                 }.getOrNull()?.getOrNull()
             }
 
-        return resolveIntent(llmResponse?.trim(), ranked, legal, botId) ?: fallback
+        return resolveIntent(llmResponse?.trim(), ranked, legal) ?: fallback
     }
 
     private fun resolveIntent(
         actionStr: String?,
         ranked: List<com.kursi.ai.advisor.MoveAdvice>,
         legal: List<Intent>,
-        botId: PlayerId,
     ): Intent? {
         if (actionStr.isNullOrBlank()) return null
 

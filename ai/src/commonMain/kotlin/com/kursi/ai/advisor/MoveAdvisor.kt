@@ -94,7 +94,7 @@ class MoveAdvisor(
         val rawAdvices: List<MoveAdvice> =
             legal.mapIndexed { idx, intent ->
                 val mv = moveValues.getOrNull(idx) ?: MoveValue(intent, 0.5, 0.0)
-                buildAdvice(intent, mv, view, state, humanId, recommended = false)
+                buildAdvice(intent, mv, view, recommended = false)
             }
 
         // Rank: primary = winProb desc, secondary = visitShare desc (most-visited tie-break)
@@ -144,8 +144,6 @@ class MoveAdvisor(
         intent: Intent,
         mv: MoveValue,
         view: PlayerView,
-        state: GameState,
-        humanId: PlayerId,
         recommended: Boolean,
     ): MoveAdvice {
         val label = labelFor(intent, view)
@@ -160,9 +158,9 @@ class MoveAdvisor(
 
         val bluff: Boolean = truthful == false // null → false, true → false, false → true
 
-        val successOdds: Double? = computeSuccessOdds(intent, view, state, humanId, bluff, claimedRole)
+        val successOdds: Double? = computeSuccessOdds(intent, view, bluff, claimedRole)
 
-        val rationale = rationaleFor(intent, view, truthful, bluff, claimedRole, successOdds, mv.winProb)
+        val rationale = rationaleFor(intent, truthful, bluff, claimedRole, successOdds, mv.winProb)
 
         return MoveAdvice(
             intent = intent,
@@ -205,8 +203,6 @@ class MoveAdvisor(
     private fun computeSuccessOdds(
         intent: Intent,
         view: PlayerView,
-        state: GameState,
-        humanId: PlayerId,
         bluff: Boolean,
         claimedRole: Role?,
     ): Double? {
@@ -329,7 +325,6 @@ class MoveAdvisor(
 
     private fun rationaleFor(
         intent: Intent,
-        view: PlayerView,
         truthful: Boolean?,
         bluff: Boolean,
         claimedRole: Role?,

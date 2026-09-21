@@ -178,7 +178,7 @@ class StoryArcTest {
                 arc = ArcId.BADLA,
                 targetSeat = 3, // the RIVAL we want the vengeful bot to hit
             )
-        val reply = StoryArcs.reply(arcState, input, rivalName = "Rival")
+        val reply = StoryArcs.reply(arcState, input)
         val grudge =
             reply.ops
                 .filterIsInstance<SocialOp.Grudge>()

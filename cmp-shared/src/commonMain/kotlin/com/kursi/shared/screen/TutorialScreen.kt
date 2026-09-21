@@ -176,7 +176,6 @@ fun TutorialScreen(
                 body = body,
                 step = step,
                 total = beats.size,
-                isLast = isLast,
                 primaryLabel =
                     when {
                         // Beat 5 (index 4) makes the primary CTA the "stamp GHOTALA" action so the learner
@@ -390,7 +389,6 @@ private fun CoachChit(
     body: String,
     step: Int,
     total: Int,
-    isLast: Boolean,
     primaryLabel: String,
     backLabel: String,
     canGoBack: Boolean,
@@ -544,7 +542,6 @@ private fun ScriptedTable(
                     name = challengerName,
                     monogram = "BF",
                     hue = KursiRoleHues.Babu,
-                    role = Role.BABU,
                     active = challenged,
                     modifier = Modifier.weight(1f),
                 )
@@ -552,7 +549,6 @@ private fun ScriptedTable(
                     name = stringResource(Res.string.tutorial_persona_netaji_vachan),
                     monogram = "NV",
                     hue = KursiRoleHues.Neta,
-                    role = Role.NETA,
                     active = false,
                     modifier = Modifier.weight(1f),
                 )
@@ -560,7 +556,6 @@ private fun ScriptedTable(
                     name = stringResource(Res.string.tutorial_persona_vakil_loophole),
                     monogram = "VL",
                     hue = KursiRoleHues.Vakil,
-                    role = Role.VAKIL,
                     active = false,
                     modifier = Modifier.weight(1f),
                 )
@@ -596,7 +591,6 @@ private fun RivalPlate(
     name: String,
     monogram: String,
     hue: Color,
-    role: Role,
     active: Boolean,
     modifier: Modifier = Modifier,
     /** True once this rival has lost an influence in the scripted scene (the COUP beat) — shows one
@@ -874,12 +868,11 @@ private fun MechanicTable(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                RivalPlate(name = "Babu Filewala", monogram = "BF", hue = KursiRoleHues.Babu, role = Role.BABU, active = false, modifier = Modifier.weight(1f))
+                RivalPlate(name = "Babu Filewala", monogram = "BF", hue = KursiRoleHues.Babu, active = false, modifier = Modifier.weight(1f))
                 RivalPlate(
                     name = "Netaji Vachan",
                     monogram = "NV",
                     hue = KursiRoleHues.Neta,
-                    role = Role.NETA,
                     active = mechanic == Mechanic.BLOCK,
                     modifier = Modifier.weight(1f),
                 )
@@ -887,7 +880,6 @@ private fun MechanicTable(
                     name = "Vakil Loophole",
                     monogram = "VL",
                     hue = KursiRoleHues.Vakil,
-                    role = Role.VAKIL,
                     active = mechanic == Mechanic.COUP,
                     pipsLost = mechanic == Mechanic.COUP && acted,
                     modifier = Modifier.weight(1f),

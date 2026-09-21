@@ -90,7 +90,7 @@ data class ReplayAnnotation(
                     else -> Verdict.COSTLY
                 }
 
-            val (hi, en) = beliefRead(chosen, chosenAdvice, view, personas)
+            val (hi, en) = beliefRead(chosen, chosenAdvice, view)
 
             return ReplayAnnotation(
                 playedLabel = labelOf(chosen, view, personas),
@@ -116,7 +116,6 @@ data class ReplayAnnotation(
             chosen: Intent,
             advice: MoveAdvice,
             view: PlayerView,
-            personas: Map<PlayerId, OpponentPersona>,
         ): Pair<String, String> {
             if (chosen is Intent.Challenge) {
                 val role = challengedRole(view)

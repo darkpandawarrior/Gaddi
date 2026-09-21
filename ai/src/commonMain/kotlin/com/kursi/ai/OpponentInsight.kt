@@ -67,7 +67,7 @@ data class OpponentInsight(
             val opp = view.players.firstOrNull { it.id == opponentId } ?: return null
             val belief = memory.beliefFor(opponentId)
 
-            val posterior = beliefModel.posterior(view, opponentId, belief)
+            val posterior = beliefModel.posterior(view, belief)
             val pHolds =
                 Role.entries.associateWith { role ->
                     beliefModel.pHolds(view, opponentId, belief, role)

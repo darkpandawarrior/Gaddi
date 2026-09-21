@@ -211,7 +211,6 @@ private fun HandCardsRow(
             RoleCard(
                 role = role,
                 size = CardSize.Large,
-                faceUp = true,
                 lost = false,
                 lifted = lifted,
                 modifier = cardModifier,
@@ -230,7 +229,6 @@ private fun HandCardsRow(
             RoleCard(
                 role = role,
                 size = CardSize.Large,
-                faceUp = true,
                 lost = true,
             )
         }

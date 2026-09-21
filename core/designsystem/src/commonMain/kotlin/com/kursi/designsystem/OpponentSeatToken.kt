@@ -55,7 +55,8 @@ fun OpponentSeatToken(
     seatColor: Color,
     roleColor: Color?, // null if unknown (face-down)
     role: Role?,
-    influenceAlive: Int,
+    // influenceAlive is deliberately absent: the pip row renders from influenceLost and the slot
+    // total, and the spoken "N influence remaining" comes from opponentPlateSemantics.
     influenceLost: Int,
     claim: String?, // LIVE/pending claim, or null
     state: ChipState,

@@ -161,7 +161,7 @@ class PersonaPolicy(
         val aliveOpponents = view.players.filter { !it.eliminated && it.id != view.viewer }
         if (aliveOpponents.isEmpty()) return chosen
 
-        val preferredTarget = pickTarget(aliveOpponents, view)
+        val preferredTarget = pickTarget(aliveOpponents)
         if (preferredTarget == null || preferredTarget == targetOf) return chosen
 
         // Find a legal intent of the same action type targeting our preferred target.
@@ -173,10 +173,7 @@ class PersonaPolicy(
         return sameTypeToPreferred ?: chosen
     }
 
-    private fun pickTarget(
-        opponents: List<OpponentView>,
-        view: PlayerView,
-    ): PlayerId? {
+    private fun pickTarget(opponents: List<OpponentView>): PlayerId? {
         if (opponents.isEmpty()) return null
         return when (p.targetingBias) {
             TargetingBias.LEADER -> opponents.maxByOrNull { it.faceDownCount * 10 + it.coins }?.id
@@ -304,7 +301,7 @@ class PersonaPolicy(
                     // Per-slot posterior (probability a single claimed card is the role), comparable to the
                     // per-slot deckPrior. posterior() already returns the per-slot role probability folding
                     // in evidence; pHolds raises it to faceDownCount, which we don't want here.
-                    val posterior = beliefModel.posterior(view, claimant, belief)[claimedRole] ?: deckPrior
+                    val posterior = beliefModel.posterior(view, belief)[claimedRole] ?: deckPrior
                     // Posterior weight grows with evidence, saturating at 0.65 once we've seen a few signals.
                     val w = (evidenceMass / (evidenceMass + 4.0)).coerceIn(0.0, 0.65)
                     (1.0 - w) * deckPrior + w * posterior

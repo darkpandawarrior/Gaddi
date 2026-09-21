@@ -351,7 +351,7 @@ fun WhisperChit(
                 when (content) {
                     is ChitContent.Identity -> IdentityChitContent(content)
                     is ChitContent.RiskAction -> RiskChitContent(content)
-                    is ChitContent.Dossier -> DossierChitContent(content, onDismiss)
+                    is ChitContent.Dossier -> DossierChitContent(content)
                     is ChitContent.ClaimDetail -> ClaimDetailChitContent(content)
                     is ChitContent.LogEvent -> LogEventChitContent(content)
                     is ChitContent.Coach -> CoachChitContent(content)
@@ -408,7 +408,6 @@ private fun AnchoredChit(
             anchorTopPx = anchor.top,
             gapPx = gap,
             content = content,
-            onDismiss = onDismiss,
             widthDp = chitWidth,
         )
     }
@@ -422,7 +421,6 @@ private fun ChitWithCaret(
     anchorTopPx: Float,
     gapPx: Float,
     content: ChitContent,
-    onDismiss: () -> Unit,
     widthDp: androidx.compose.ui.unit.Dp,
 ) {
     val density = LocalDensity.current
@@ -450,7 +448,7 @@ private fun ChitWithCaret(
             when (content) {
                 is ChitContent.Identity -> IdentityChitContent(content)
                 is ChitContent.RiskAction -> RiskChitContent(content)
-                is ChitContent.Dossier -> DossierChitContent(content, onDismiss)
+                is ChitContent.Dossier -> DossierChitContent(content)
                 is ChitContent.ClaimDetail -> ClaimDetailChitContent(content)
                 is ChitContent.LogEvent -> LogEventChitContent(content)
                 is ChitContent.Coach -> CoachChitContent(content)
@@ -589,10 +587,7 @@ private fun RiskChitContent(c: ChitContent.RiskAction) {
 }
 
 @Composable
-private fun DossierChitContent(
-    c: ChitContent.Dossier,
-    onDismiss: () -> Unit,
-) {
+private fun DossierChitContent(c: ChitContent.Dossier) {
     BrassParchmentSurface(modifier = Modifier.widthIn(max = 340.dp)) {
         // ── Header: name + a one-line headline READ (lead with intel) ──────────
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs)) {
