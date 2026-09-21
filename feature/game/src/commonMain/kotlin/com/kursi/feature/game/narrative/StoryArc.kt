@@ -166,9 +166,9 @@ object StoryArcs {
             ArcId.GATHBANDHAN -> {
                 val ops =
                     if (accepted) {
-                        listOf(SocialOp.Ally(0, target), SocialOp.Trust(target, 0, 0.5f))
+                        listOf(SocialOp.Ally(0, target), SocialOp.Trust(target, 0, delta = 0.5f))
                     } else {
-                        listOf(SocialOp.Suspicion(target, 0, 0.25f), SocialOp.Threat(0, 0.15f))
+                        listOf(SocialOp.Suspicion(target, 0, delta = 0.25f), SocialOp.Threat(0, delta = 0.15f))
                     }
                 val beats =
                     listOf(
@@ -204,9 +204,9 @@ object StoryArcs {
                 ArcStep(
                     ops =
                         listOf(
-                            SocialOp.Suspicion(SocialOp.ALL, target, 0.30f),
-                            SocialOp.Threat(target, 0.40f),
-                            SocialOp.Agitate(target, CharacterFlaw.PARANOIA, 0.5f),
+                            SocialOp.Suspicion(SocialOp.ALL, target, delta = 0.30f),
+                            SocialOp.Threat(target, delta = 0.40f),
+                            SocialOp.Agitate(target, CharacterFlaw.PARANOIA, delta = 0.5f),
                         ),
                     beats =
                         listOf(
@@ -231,9 +231,9 @@ object StoryArcs {
                 ArcStep(
                     ops =
                         listOf(
-                            SocialOp.Agitate(target, CharacterFlaw.EGO, 0.6f),
-                            SocialOp.Agitate(target, CharacterFlaw.GREED, 0.5f),
-                            SocialOp.Trust(target, 0, 0.3f),
+                            SocialOp.Agitate(target, CharacterFlaw.EGO, delta = 0.6f),
+                            SocialOp.Agitate(target, CharacterFlaw.GREED, delta = 0.5f),
+                            SocialOp.Trust(target, 0, delta = 0.3f),
                         ),
                     beats =
                         listOf(
@@ -257,7 +257,7 @@ object StoryArcs {
             ArcId.BADLA ->
                 ArcStep(
                     // Badla needs a rival; begin pre-seeds the *vengeful* bot, the reply picks the rival.
-                    ops = listOf(SocialOp.Trust(target, 0, 0.35f)),
+                    ops = listOf(SocialOp.Trust(target, 0, delta = 0.35f)),
                     beats =
                         listOf(
                             ArcBeat(0, "badla.approach", MessageTone.SLY, arc, target, fromPlayer = true),
@@ -278,7 +278,7 @@ object StoryArcs {
                 when (input.kind) {
                     ChatActionKind.DEFLECT ->
                         ArcStep( // knife the ally first
-                            ops = listOf(SocialOp.Betray(0), SocialOp.Grudge(state.ally ?: -1, 0, 0)),
+                            ops = listOf(SocialOp.Betray(0), SocialOp.Grudge(state.ally ?: -1, 0, weight = 0)),
                             beats =
                                 listOf(
                                     ArcBeat(0, "gathbandhan.knife", MessageTone.HOSTILE, state.arc, state.ally, fromPlayer = true),
@@ -290,7 +290,11 @@ object StoryArcs {
                 }
             ArcId.AFWAAH ->
                 ArcStep(
-                    ops = listOf(SocialOp.Suspicion(SocialOp.ALL, state.target ?: 0, 0.25f), SocialOp.Threat(state.target ?: 0, 0.35f)),
+                    ops =
+                        listOf(
+                            SocialOp.Suspicion(SocialOp.ALL, state.target ?: 0, delta = 0.25f),
+                            SocialOp.Threat(state.target ?: 0, delta = 0.35f),
+                        ),
                     beats = listOf(ArcBeat(0, "afwaah.fuel", MessageTone.SLY, state.arc, state.target, fromPlayer = true)),
                     nextState = state.copy(stage = state.stage + 1),
                 )
@@ -298,8 +302,8 @@ object StoryArcs {
                 ArcStep(
                     ops =
                         listOf(
-                            SocialOp.Agitate(state.target ?: 0, CharacterFlaw.EGO, 0.4f),
-                            SocialOp.Agitate(state.target ?: 0, CharacterFlaw.GREED, 0.4f),
+                            SocialOp.Agitate(state.target ?: 0, CharacterFlaw.EGO, delta = 0.4f),
+                            SocialOp.Agitate(state.target ?: 0, CharacterFlaw.GREED, delta = 0.4f),
                         ),
                     beats =
                         listOf(
@@ -314,9 +318,9 @@ object StoryArcs {
                 ArcStep(
                     ops =
                         listOf(
-                            SocialOp.Grudge(vengeful, rival, 3),
-                            SocialOp.Threat(rival, 0.4f),
-                            SocialOp.Suspicion(vengeful, rival, 0.4f),
+                            SocialOp.Grudge(vengeful, rival, weight = 3),
+                            SocialOp.Threat(rival, delta = 0.4f),
+                            SocialOp.Suspicion(vengeful, rival, delta = 0.4f),
                         ),
                     beats =
                         listOf(

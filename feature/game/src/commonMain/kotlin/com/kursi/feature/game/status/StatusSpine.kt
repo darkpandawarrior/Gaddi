@@ -338,7 +338,7 @@ internal fun deriveSpineTextAndTone(
             voice.opponentActing(actorName) to SpineTone.Info
         }
         is GamePhase.PickAction -> {
-            if (state.view.myCoins >= 10) {
+            if (state.view.myCoins >= state.view.config.forcedCoupThreshold) {
                 "${voice.forcedCoup} (${state.view.myCoins} coins)" to SpineTone.Danger
             } else {
                 voice.yourTurn to SpineTone.Gold

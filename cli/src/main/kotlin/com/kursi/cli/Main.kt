@@ -5,6 +5,9 @@ import com.kursi.engine.PlayerId
 import com.kursi.engine.RandomLegalPolicy
 import com.kursi.engine.SimHarness
 
+/** Each `#` in the win-rate bar is worth this many percentage points. */
+private const val BAR_PERCENT_PER_HASH = 2
+
 /**
  * Headless Kursi. Runs games entirely through the engine's public API, so a green run here is
  * evidence the engine carries the whole rule set without any UI, storage or platform help.
@@ -16,7 +19,9 @@ fun main(args: Array<String>) {
     val games = args.getOrNull(1)?.toIntOrNull() ?: 1000
     val seed = args.getOrNull(2)?.toLongOrNull() ?: 1L
 
-    require(seats in 2..10) { "seats must be between 2 and 10, got $seats" }
+    require(seats in GameConfig.MIN_SEATS..GameConfig.MAX_SEATS) {
+        "seats must be between ${GameConfig.MIN_SEATS} and ${GameConfig.MAX_SEATS}, got $seats"
+    }
     require(games > 0) { "games must be positive, got $games" }
 
     // copiesPerRole scales with the table so the deck stays a uniform multiset over active roles.
@@ -56,6 +61,6 @@ fun main(args: Array<String>) {
     for (s in 0 until seats) {
         val w = stats.winsBySeat[s] ?: 0
         val pct = 100.0 * w / total
-        println("    seat $s  ${w.toString().padStart(5)}  ${"%5.1f".format(pct)}%  ${"#".repeat((pct / 2).toInt())}")
+        println("    seat $s  ${w.toString().padStart(5)}  ${"%5.1f".format(pct)}%  ${"#".repeat((pct / BAR_PERCENT_PER_HASH).toInt())}")
     }
 }

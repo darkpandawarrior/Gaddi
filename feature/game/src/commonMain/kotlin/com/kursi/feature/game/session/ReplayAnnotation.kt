@@ -242,15 +242,9 @@ data class ReplayAnnotation(
 
         private fun roleHinglish(role: Role): String = role.name // role names already read as the cast
 
-        private fun numberHinglish(n: Int): String =
-            when (n) {
-                0 -> "Ek bhi nahi"
-                1 -> "Ek"
-                2 -> "Do"
-                3 -> "Teen"
-                4 -> "Chaar"
-                5 -> "Paanch"
-                else -> n.toString()
-            }
+        /** Hinglish numerals 0..5, indexed by the number itself. Past 5 the digit reads fine. */
+        private val HINGLISH_NUMERALS = listOf("Ek bhi nahi", "Ek", "Do", "Teen", "Chaar", "Paanch")
+
+        private fun numberHinglish(n: Int): String = HINGLISH_NUMERALS.getOrNull(n) ?: n.toString()
     }
 }

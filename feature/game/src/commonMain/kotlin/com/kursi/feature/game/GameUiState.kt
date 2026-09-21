@@ -6,6 +6,7 @@ import com.kursi.engine.GameEvent
 import com.kursi.engine.Intent
 import com.kursi.engine.PlayerId
 import com.kursi.engine.PlayerView
+import com.kursi.engine.darjaLevelOf
 import com.kursi.feature.game.narrative.ArcId
 import com.kursi.feature.game.narrative.ChatMessage
 import com.kursi.feature.game.narrative.ChatSuggestion
@@ -150,17 +151,14 @@ data class GameUiState(
     /** The PUBLIC-info dossier for [id], or null if none has been computed yet. */
     fun insightFor(id: PlayerId): OpponentInsight? = opponentInsights.firstOrNull { it.opponentId == id }
 
-    /** KHAZANA RAJ — Darja (corruption level) for [id] based on lifetime coins (0=none, 4=Sarkar). */
-    fun darjaLevelFor(id: PlayerId): Int {
-        val coins = (lifetimeCoins[id] ?: 0)
-        return when {
-            coins >= 20 -> 4 // Sarkar
-            coins >= 16 -> 3 // Mantri
-            coins >= 12 -> 2 // Sahib
-            coins >= 8 -> 1 // Mukhiya
-            else -> 0
-        }
-    }
+    /**
+     * KHAZANA RAJ — Darja (corruption level) for [id] based on lifetime coins (0=none, 4=Sarkar).
+     *
+     * Reads the engine's ladder rather than a second copy of 8/12/16/20: the engine EMITS
+     * DarjaReached from [com.kursi.engine.DARJA_LADDER], so a local copy could disagree with the
+     * event the player just saw.
+     */
+    fun darjaLevelFor(id: PlayerId): Int = darjaLevelOf(lifetimeCoins[id] ?: 0)
 
     /** KHAZANA RAJ — progress fraction [0.0..1.0] toward [GameConfig.khazanaTarget] for [id]. */
     fun khazanaProgressFor(

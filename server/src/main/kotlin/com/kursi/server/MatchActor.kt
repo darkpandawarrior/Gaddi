@@ -10,6 +10,12 @@ import kotlinx.coroutines.channels.*
 import kotlinx.serialization.encodeToString
 
 /**
+ * Seat-to-seed stride for the filler bots. An odd prime so two seats in the same match never share
+ * a policy stream, while the match seed still reproduces the whole table.
+ */
+private const val BOT_SEED_STRIDE = 37L
+
+/**
  * Commands sent into a [MatchActor]'s mailbox. Processed serially — no locks, no races.
  */
 sealed interface MatchCommand {
@@ -246,7 +252,7 @@ class MatchActor(
         humanSeats.remove(seat)
         // The seat becomes bot-driven AND eligible for reconnection by the same player.
         if (state.phase !is Phase.GameOver) {
-            botPolicies.getOrPut(seat) { EasyPolicy(seed + seat * 37L) }
+            botPolicies.getOrPut(seat) { EasyPolicy(seed + seat * BOT_SEED_STRIDE) }
             reconnectableSeats.add(seat)
         }
         // If the actor seat is now a bot, drive bots forward and broadcast the result.

@@ -21,6 +21,12 @@ import com.siddharth.kmp.feedback.NotificationPermissionState
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
+/** WEEK_STREAK is a seven-day daily-challenge run. */
+private const val WEEK_STREAK_DAYS = 7
+
+/** Do not ask for a Play review until the player has actually enjoyed the game a few times. */
+private const val MIN_WINS_BEFORE_REVIEW_PROMPT = 3
+
 class MainActivity : ComponentActivity() {
     private val appPrefs = AppPrefs()
 
@@ -97,7 +103,7 @@ class MainActivity : ComponentActivity() {
             launch {
                 appPrefs.dailyFlow.collect { daily ->
                     services.submitScore(Leaderboard.DAILY_BEST_STREAK, daily.bestStreak.toLong())
-                    if (daily.bestStreak >= 7) services.unlock(Achievement.WEEK_STREAK)
+                    if (daily.bestStreak >= WEEK_STREAK_DAYS) services.unlock(Achievement.WEEK_STREAK)
                 }
             }
             launch {
@@ -111,7 +117,7 @@ class MainActivity : ComponentActivity() {
     private fun scheduleInAppReview() {
         lifecycleScope.launch {
             appPrefs.ledgerFlow.collect { ledger ->
-                if (ledger.wins >= 3 && appPrefs.shouldShowReview(BuildConfig.VERSION_NAME)) {
+                if (ledger.wins >= MIN_WINS_BEFORE_REVIEW_PROMPT && appPrefs.shouldShowReview(BuildConfig.VERSION_NAME)) {
                     PlayFeatures.launchInAppReview(this@MainActivity, appPrefs)
                 }
             }

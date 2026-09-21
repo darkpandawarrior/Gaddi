@@ -205,6 +205,13 @@ class GameViewModel(
         /** Dramatic beats (challenge / block-stand / reveal / influence loss / elimination / win): full theatrical weight. */
         const val DRAMATIC_STEP_MS = 4000L
 
+        /**
+         * Pacing clamp after the turn-speed multiplier (SLOW 1.4x / NORMAL 1.0x / FAST 0.5x) is
+         * applied: FAST still leaves a beat readable, SLOW never drags past six seconds.
+         */
+        const val MIN_STEP_MS = 400L
+        const val MAX_STEP_MS = 6000L
+
         /** Okabe-Ito-ish hues for hot-seat human players (ARGB Long), distinct from the bot personas. */
         val HUMAN_SEAT_COLORS =
             longArrayOf(
@@ -821,7 +828,7 @@ class GameViewModel(
             }
         // M5 TURN-SPEED: scale the pacing by the live multiplier (SLOW 1.4× / NORMAL 1.0× / FAST 0.5×),
         // clamped so even FAST keeps a readable floor and SLOW never drags past ~3s.
-        return (base * speedMultiplier).toLong().coerceIn(400L, 6000L)
+        return (base * speedMultiplier).toLong().coerceIn(MIN_STEP_MS, MAX_STEP_MS)
     }
 
     /**

@@ -7,10 +7,17 @@ package com.kursi.engine
 private const val EMERGENCY_MIN_COINS = 7
 
 /**
- * Darja (rank) milestones: lifetime-coin threshold to the level it awards, ascending. The rungs are
- * the ladder's shape and the test that locks it reads them from here.
+ * Darja (rank) milestones: lifetime-coin threshold to the level it awards, ascending.
+ *
+ * Public because the UI has to agree with the engine about what level a coin count is worth, and
+ * it did not: :feature:game's GameUiState.darjaLevelFor carried its own copy of 8/12/16/20 as four
+ * literals in a `when`. Two copies of a ladder is one ladder and one bug waiting for someone to
+ * retune the other.
  */
-private val DARJA_LADDER = listOf(8 to 1, 12 to 2, 16 to 3, 20 to 4)
+val DARJA_LADDER: List<Pair<Int, Int>> = listOf(8 to 1, 12 to 2, 16 to 3, 20 to 4)
+
+/** The Darja level [lifetimeCoins] has earned, 0 if none. Single source of truth for engine and UI. */
+fun darjaLevelOf(lifetimeCoins: Int): Int = DARJA_LADDER.lastOrNull { lifetimeCoins >= it.first }?.second ?: 0
 
 // ─────────────────────────── Public engine API ───────────────────────────
 

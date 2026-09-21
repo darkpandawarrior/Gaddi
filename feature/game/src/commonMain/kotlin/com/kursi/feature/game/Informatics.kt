@@ -1436,7 +1436,7 @@ private fun deriveHintText(
 ): Pair<String, HintTone> =
     when (gamePhase) {
         is GamePhase.PickAction -> {
-            if (state.view.myCoins >= 10) {
+            if (state.view.myCoins >= state.view.config.forcedCoupThreshold) {
                 voice.phaseHint(PhaseHint.CoinCapKhela) to HintTone.Warning
             } else {
                 voice.phaseHint(PhaseHint.PickAction) to HintTone.Gold

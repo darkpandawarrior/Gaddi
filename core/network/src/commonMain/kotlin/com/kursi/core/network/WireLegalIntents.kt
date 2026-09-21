@@ -10,6 +10,9 @@ import com.kursi.protocol.wire.WireRole
 import com.kursi.protocol.wire.toEngine
 import com.kursi.protocol.wire.toWire
 
+/** PATRAKAAR is the sixth role; it only enters the deck on large tables. See GameConfig. */
+private const val ROLE_COUNT_WITH_PATRAKAAR = 6
+
 /**
  * Derives the concrete [WireIntent]s the receiving seat may legally submit RIGHT NOW, using ONLY
  * the redacted [WirePlayerView] the server sent it.
@@ -109,7 +112,7 @@ private fun WirePlayerView.legalActions(): List<WireAction> {
     out.add(WireAction.Exchange)
     // Jaanch (claims PATRAKAAR) — only when the 6th role is in this deck (roleCount == 6) and the target
     // has a face-down card to examine. Mirrors the engine's `Role.PATRAKAAR in cfg.activeRoles` gate.
-    if (cfg.roleCount >= 6) {
+    if (cfg.roleCount >= ROLE_COUNT_WITH_PATRAKAAR) {
         for (t in targets) if (players.first { it.id == t }.faceDownCount > 0) out.add(WireAction.Investigate(t))
     }
     return out
