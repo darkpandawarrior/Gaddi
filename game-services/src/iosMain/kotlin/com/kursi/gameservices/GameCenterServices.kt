@@ -167,8 +167,11 @@ class GameCenterServices(
 
     override suspend fun loadSnapshot(slot: SavedGameSlot): ByteArray? {
         if (!local.isAuthenticated()) return null
+        // Explicit type argument is load-bearing: saveSnapshot() above gets its T from the function's
+        // declared Boolean return, but this assigns to a bare val, so Kotlin has no expected type to
+        // infer from and T collapses to Nothing (cont.resume sits inside a NESTED callback lambda).
         val saved =
-            suspendCoroutine { cont ->
+            suspendCoroutine<GKSavedGame?> { cont ->
                 local.fetchSavedGamesWithCompletionHandler { games, _ ->
                     // Game Center keeps EVERY device's copy under the same name and hands back all
                     // of them; it does not merge. Newest-wins is the honest single-player rule here
