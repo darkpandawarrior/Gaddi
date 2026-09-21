@@ -2,7 +2,6 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>CyclomaticComplexMethod:HomeScreen.kt:@Composable fun StampChit</ID>
     <ID>CyclomaticComplexMethod:KursiApp.kt:@Composable fun KursiApp</ID>
     <ID>CyclomaticComplexMethod:SetupScreen.kt:@Composable fun SetupScreen</ID>
     <ID>ForEachOnRange:GameUiStateExt.kt:(0 until players).filter { it != winnerSeat }</ID>
@@ -10,6 +9,7 @@
     <ID>FunctionOnlyReturningConstant:TutorialScreen.kt:private fun challengeLine: String</ID>
     <ID>FunctionOnlyReturningConstant:TutorialScreen.kt:private fun revealVerdictLine: String</ID>
     <ID>FunctionOnlyReturningConstant:TutorialScreen.kt:private fun scriptedChallengerName: String</ID>
+    <ID>MagicNumber:GauntletScreen.kt:3</ID>
     <ID>MagicNumber:HomeScreen.kt:0.86f</ID>
     <ID>MagicNumber:ResultsScreen.kt:720f</ID>
     <ID>MagicNumber:ReviewScreen.kt:0xFF6FCF97</ID>

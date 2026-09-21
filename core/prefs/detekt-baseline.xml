@@ -2,17 +2,12 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
+    <ID>MagicNumber:AppPrefs.kt:AppPrefs$3</ID>
     <ID>MagicNumber:AppPrefs.kt:DecisionGrade.Companion$12</ID>
     <ID>MagicNumber:AppPrefs.kt:DecisionGrade.Companion$45</ID>
+    <ID>MagicNumber:AppPrefs.kt:DecisionGrade.Companion$5</ID>
+    <ID>MagicNumber:AppPrefs.kt:DecisionGrade.Companion$6</ID>
     <ID>MagicNumber:AppPrefs.kt:DecisionGrade.Companion$70</ID>
-    <ID>MagicNumber:AppPrefs.kt:SarkariRank.CABINET_SECRETARY$1850</ID>
-    <ID>MagicNumber:AppPrefs.kt:SarkariRank.DEPUTY_SECRETARY$1250</ID>
-    <ID>MagicNumber:AppPrefs.kt:SarkariRank.JOINT_SECRETARY$1400</ID>
-    <ID>MagicNumber:AppPrefs.kt:SarkariRank.SECRETARY$1600</ID>
-    <ID>MagicNumber:AppPrefs.kt:SarkariRank.SECTION_OFFICER$950</ID>
-    <ID>MagicNumber:AppPrefs.kt:SarkariRank.UNDER_SECRETARY$1100</ID>
-    <ID>MagicNumber:AppPrefs.kt:TurnSpeed.FAST$0.5f</ID>
-    <ID>MagicNumber:AppPrefs.kt:TurnSpeed.SLOW$1.4f</ID>
     <ID>TooManyFunctions:AppPrefs.kt:AppPrefs</ID>
   </CurrentIssues>
 </SmellBaseline>

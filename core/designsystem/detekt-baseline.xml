@@ -50,8 +50,6 @@
     <ID>MagicNumber:RoleGlyph.kt:64f</ID>
     <ID>MagicNumber:RoleGlyph.kt:66f</ID>
     <ID>MagicNumber:RoleGlyph.kt:68f</ID>
-    <ID>MatchingDeclarationName:ActionMomentOverlay.kt:MomentHost</ID>
-    <ID>MatchingDeclarationName:MomentBeats.kt:TableAnchors</ID>
     <ID>MayBeConstant:KursiTheme.kt:TextureTokens$/** * Film-grain per-pixel noise amplitude added by the [com.kursi.designsystem.shader.feltMaterial] * runtime-shader pass (additive, centred on zero — keep tiny, this is texture not TV static). */ val filmGrainIntensity = 0.018f</ID>
     <ID>MayBeConstant:KursiTheme.kt:TextureTokens$/** * Warm bloom lift strength around the key-light pool, added by the * [com.kursi.designsystem.shader.feltMaterial] runtime-shader pass. */ val warmBloomStrength = 0.05f</ID>
     <ID>MayBeConstant:KursiTheme.kt:TextureTokens$/** Alpha of the engraved hatch on dark teak panels. */ val teakHatchAlpha = 0.04f</ID>

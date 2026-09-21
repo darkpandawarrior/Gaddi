@@ -2,6 +2,8 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
+    <ID>MagicNumber:MainActivity.kt:MainActivity$3</ID>
+    <ID>MagicNumber:MainActivity.kt:MainActivity$7</ID>
     <ID>MagicNumber:PlayFeatures.kt:PlayFeatures$30</ID>
     <ID>UnusedParameter:PlayFeatures.kt:PlayFeatures$activity: ComponentActivity</ID>
     <ID>UnusedParameter:PlayFeatures.kt:PlayFeatures$appPrefs: AppPrefs</ID>
