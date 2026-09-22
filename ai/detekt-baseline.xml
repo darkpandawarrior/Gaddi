@@ -3,15 +3,6 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>CyclomaticComplexMethod:Determinizer.kt:Determinizer$fun sample: Pair&lt;GameState, Rng&gt;</ID>
-    <ID>CyclomaticComplexMethod:HardPolicy.kt:HardPolicy$private fun decideReaction: Intent</ID>
-    <ID>CyclomaticComplexMethod:HardPolicy.kt:HardPolicy$private fun decideTurn: Intent</ID>
-    <ID>CyclomaticComplexMethod:MediumPolicy.kt:MediumPolicy$private fun decideTurn: Intent</ID>
     <ID>LongMethod:Determinizer.kt:Determinizer$fun sample: Pair&lt;GameState, Rng&gt;</ID>
-    <ID>LongMethod:HardPolicy.kt:HardPolicy$private fun decideTurn: Intent</ID>
-    <ID>LongMethod:MediumPolicy.kt:MediumPolicy$private fun decideTurn: Intent</ID>
-    <ID>ReturnCount:HardPolicy.kt:HardPolicy$private fun decideReaction: Intent</ID>
-    <ID>ReturnCount:HardPolicy.kt:HardPolicy$private fun decideTurn: Intent</ID>
-    <ID>ReturnCount:MediumPolicy.kt:MediumPolicy$private fun decideReaction: Intent</ID>
-    <ID>ReturnCount:MediumPolicy.kt:MediumPolicy$private fun decideTurn: Intent</ID>
   </CurrentIssues>
 </SmellBaseline>
