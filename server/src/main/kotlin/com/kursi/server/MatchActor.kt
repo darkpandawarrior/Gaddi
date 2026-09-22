@@ -16,6 +16,13 @@ import kotlinx.serialization.encodeToString
 private const val BOT_SEED_STRIDE = 37L
 
 /**
+ * Hard ceiling on bot moves auto-driven in one `advanceAndBroadcast` run. A Kursi hand resolves in
+ * tens of moves, so this is a runaway guard, not a game rule: it only trips if the engine ever
+ * stops handing the turn on.
+ */
+private const val MAX_BOT_STEPS_PER_RUN = 10_000
+
+/**
  * Commands sent into a [MatchActor]'s mailbox. Processed serially — no locks, no races.
  */
 sealed interface MatchCommand {
@@ -339,32 +346,42 @@ class MatchActor(
         if (state.phase is Phase.GameOver) return
         val accumulated = ArrayList<GameEvent>()
         var advanced = false
-        var limit = 10_000 // safety cap
+        var limit = MAX_BOT_STEPS_PER_RUN
+        // GameOver needs no break of its own: whoActsNext returns null in that phase, so the next
+        // stepOneBot() stops the run.
         while (--limit > 0) {
-            val who = whoActsNext(state) ?: break // game over
-            val isBot = who.raw in botPolicies || who.raw !in humanSeats
-            if (!isBot) break // next actor is a connected human — stop and let them act
-
-            val policy = botPolicies.getOrPut(who.raw) { EasyPolicy(seed + who.raw * 37L) }
-            val legal = legalIntents(state, who)
-            if (legal.isEmpty()) break
-
-            val intent = policy.decide(redact(state, who), legal)
-            when (val outcome = applyIntent(state, intent)) {
-                is ApplyOutcome.Rejected -> {
-                    println("[MatchActor $matchId] Bot ${who.raw} produced illegal intent: ${outcome.reason}")
-                    break
-                }
-                is ApplyOutcome.Accepted -> {
-                    state = outcome.state
-                    accumulated += outcome.events
-                    advanced = true
-                }
-            }
-            if (state.phase is Phase.GameOver) break
+            accumulated += stepOneBot() ?: break
+            advanced = true
         }
         // Broadcast once after the bot run (avoid flooding one frame per bot move).
         if (advanced) broadcastStateToAll(accumulated)
+    }
+
+    /**
+     * Applies one bot seat's move to [state] and returns the events it produced, or null when the
+     * bot run must stop: the game is over, the next actor is a connected human, the seat has no
+     * legal intent, or the policy produced an illegal one.
+     */
+    private fun stepOneBot(): List<GameEvent>? {
+        val who = whoActsNext(state) ?: return null // game over
+        val isBot = who.raw in botPolicies || who.raw !in humanSeats
+        if (!isBot) return null // next actor is a connected human — stop and let them act
+
+        val policy = botPolicies.getOrPut(who.raw) { EasyPolicy(seed + who.raw * BOT_SEED_STRIDE) }
+        val legal = legalIntents(state, who)
+        if (legal.isEmpty()) return null
+
+        val intent = policy.decide(redact(state, who), legal)
+        return when (val outcome = applyIntent(state, intent)) {
+            is ApplyOutcome.Rejected -> {
+                println("[MatchActor $matchId] Bot ${who.raw} produced illegal intent: ${outcome.reason}")
+                null
+            }
+            is ApplyOutcome.Accepted -> {
+                state = outcome.state
+                outcome.events
+            }
+        }
     }
 
     // ── Broadcasting ─────────────────────────────────────────────────────────
