@@ -72,6 +72,16 @@ ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
 ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-multiplatform" }
+# The Compose Multiplatform @Preview annotation, usable directly in commonMain.
+# Since CMP 1.10 the annotation this artifact publishes IS androidx.compose.ui.tooling.preview.Preview
+# -- the AndroidX one, made multiplatform. org.jetbrains.compose.ui.tooling.preview.Preview and the
+# old org.jetbrains.compose.components:components-ui-tooling-preview artifact are the DEPRECATED
+# path; every pre-2026 blog post and StackOverflow answer says the opposite. Verified against the
+# published sources jar: ui-tooling-preview-1.13.0-alpha01-sources.jar carries
+# commonMain/androidx/compose/ui/tooling/preview/{Preview,MultiPreviews,PreviewParameter}.kt.
+# Publishes android/desktop/iosArm64/iosSimulatorArm64/js/macosArm64/wasmJs -- covers every target
+# :core:designsystem declares. Only :core:designsystem needs it; nothing else previews.
+ui-tooling-preview-mp = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-multiplatform" }
 # Firebase — BOM manages firebase-messaging's version at runtime
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 # Play Store in-app UX
