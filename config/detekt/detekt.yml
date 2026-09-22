@@ -110,6 +110,8 @@ complexity:
       # SocialDirector, KursiVoice) are real classes and survive. They are debt.
       - 'Composable'
       - 'Preview'
+      - 'androidx.compose.ui.tooling.preview.Preview'
+      - 'org.jetbrains.compose.ui.tooling.preview.Preview'
   LargeClass:
     excludes: *notOurs
   NestedBlockDepth:
@@ -249,7 +251,12 @@ style:
       # HomeScreen.kt Canvas lambdas). Those are NOT artefacts — a named
       # `NeedleRadiusFraction` constant is strictly better code.
       - 'Preview'
+      # BOTH Preview packages, deliberately. This is a Compose MULTIPLATFORM repo: shared
+      # modules import org.jetbrains.compose.ui.tooling.preview.Preview, not the androidx one.
+      # The family config listed only androidx, so an FQN-matching run silently missed exactly
+      # the shared UI where the findings live.
       - 'androidx.compose.ui.tooling.preview.Preview'
+      - 'org.jetbrains.compose.ui.tooling.preview.Preview'
     ignoreNumbers:
       # Keep this list SHORT. Kursi previously listed 0 through 10 inclusive plus 1000, which
       # silently exempted `if (retries > 5)`, `grade >= 7` and a 1000ms debounce.
@@ -312,6 +319,7 @@ style:
       # code. Prescribed by detekt's Compose guide.
       - 'Preview'
       - 'androidx.compose.ui.tooling.preview.Preview'
+      - 'org.jetbrains.compose.ui.tooling.preview.Preview'
   UnusedPrivateProperty:
     excludes: *notOurs
     allowedNames: '(_|ignored|expected|serialVersionUID)'
