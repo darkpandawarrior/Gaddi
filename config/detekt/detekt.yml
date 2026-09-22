@@ -251,10 +251,12 @@ style:
       # HomeScreen.kt Canvas lambdas). Those are NOT artefacts — a named
       # `NeedleRadiusFraction` constant is strictly better code.
       - 'Preview'
-      # BOTH Preview packages, deliberately. This is a Compose MULTIPLATFORM repo: shared
-      # modules import org.jetbrains.compose.ui.tooling.preview.Preview, not the androidx one.
-      # The family config listed only androidx, so an FQN-matching run silently missed exactly
-      # the shared UI where the findings live.
+      # BOTH Preview FQNs listed deliberately. androidx.compose.ui.tooling.preview.Preview IS
+      # the multiplatform annotation from Compose Multiplatform 1.10.0 onward and works in
+      # commonMain -- verified in this family: Mileway has 7 commonMain files importing the
+      # androidx FQN and zero importing the org.jetbrains one, and they compile green.
+      # org.jetbrains.compose.ui.tooling.preview.Preview is the LEGACY path, kept here only so
+      # older or vendored code still matches. Do not "correct" androidx out of this list.
       - 'androidx.compose.ui.tooling.preview.Preview'
       - 'org.jetbrains.compose.ui.tooling.preview.Preview'
     ignoreNumbers:
