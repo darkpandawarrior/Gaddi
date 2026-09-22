@@ -218,79 +218,86 @@ class MoveAdvisor(
         view: PlayerView,
         bluff: Boolean,
         claimedRole: Role?,
-    ): Double? {
+    ): Double? =
+        when {
+            intent is Intent.Challenge -> challengeSuccessOdds(view)
+            bluff && claimedRole != null -> bluffSurvivalOdds(view, claimedRole)
+            else -> null
+        }
+
+    /**
+     * P(the claim we are about to challenge is a bluff), read off [BluffOdds]' pip confidence.
+     * Null when the phase carries no challengeable claim.
+     */
+    private fun challengeSuccessOdds(view: PlayerView): Double? {
+        val phase = view.phase as? PhaseView.Reactions ?: return null
+        val claim =
+            when (phase.step) {
+                ReactionStep.CHALLENGE_ACTION -> phase.actor to phase.claimedRole
+                ReactionStep.CHALLENGE_BLOCK -> phase.blocker to phase.blockRole
+                else -> null
+            }
+        val actorId = claim?.first ?: return null
+        val roleBeingClaimed = claim.second ?: return null
+        val actorOppView = view.players.firstOrNull { it.id == actorId } ?: return null
+
         val cfg = view.config
+        val eliminated = view.players.sumOf { it.faceUpRoles.count { r -> r == roleBeingClaimed } }
+        val myHand = view.myInfluence.count { it == roleBeingClaimed }
+        val totalVisible = view.players.sumOf { it.faceUpRoles.size } + view.myFaceUp.size
 
-        // For Challenge: estimate P(claimer is bluffing)
-        if (intent is Intent.Challenge) {
-            val phase = view.phase
-            val (actorId, roleBeingClaimed) =
-                when (phase) {
-                    is PhaseView.Reactions ->
-                        when (phase.step) {
-                            ReactionStep.CHALLENGE_ACTION -> phase.actor to phase.claimedRole
-                            ReactionStep.CHALLENGE_BLOCK -> phase.blocker to phase.blockRole
-                            else -> return null
-                        }
-                    else -> return null
-                }
-            if (actorId == null || roleBeingClaimed == null) return null
+        val confidence =
+            BluffOdds.estimate(
+                claimedRole = roleBeingClaimed,
+                copiesPerRole = cfg.copiesPerRole,
+                deckSize = cfg.deckSize,
+                eliminatedRolesForClaimedRole = eliminated,
+                myHandContainsClaimedRole = myHand,
+                opponentFaceDownCount = actorOppView.faceDownCount,
+                totalVisibleCards = totalVisible,
+            )
+        // pips 1..5 mapped linearly to P(bluff) ~ (pips-1)/4. More precisely, reconstruct from
+        // BluffOdds thresholds: pips=1 -> pBluff<0.20, pips=2 -> 0.20-0.38, etc. We return the
+        // midpoint of each bucket.
+        return BluffProbabilityByPip.getOrElse(confidence.pips - 1) { BluffProbabilityByPip.last() }
+    }
 
-            val actorOppView = view.players.firstOrNull { it.id == actorId } ?: return null
-            val eliminated = view.players.sumOf { it.faceUpRoles.count { r -> r == roleBeingClaimed } }
-            val myHand = view.myInfluence.count { it == roleBeingClaimed }
-            val totalVisible = view.players.sumOf { it.faceUpRoles.size } + view.myFaceUp.size
+    /**
+     * For a bluffed action or block: rough P(safe — not caught) = 1 − P(someone challenges), which
+     * we approximate from [BluffOdds] run on the human's own bluff from the opponents' perspective.
+     */
+    private fun bluffSurvivalOdds(
+        view: PlayerView,
+        claimedRole: Role,
+    ): Double {
+        val cfg = view.config
+        val eliminated = view.players.sumOf { it.faceUpRoles.count { r -> r == claimedRole } }
+        // myHandContainsClaimedRole = 0 (we're bluffing, so we don't hold it)
+        val myHand = 0
+        val totalVisible = view.players.sumOf { it.faceUpRoles.size } + view.myFaceUp.size
+        val myInfluenceCount = view.myInfluence.size.coerceAtLeast(1)
 
-            val confidence =
-                BluffOdds.estimate(
-                    claimedRole = roleBeingClaimed,
-                    copiesPerRole = cfg.copiesPerRole,
-                    deckSize = cfg.deckSize,
-                    eliminatedRolesForClaimedRole = eliminated,
-                    myHandContainsClaimedRole = myHand,
-                    opponentFaceDownCount = actorOppView.faceDownCount,
-                    totalVisibleCards = totalVisible,
-                )
-            // pips 1..5 mapped linearly to P(bluff) ≈ (pips-1)/4
-            // More precisely, reconstruct from BluffOdds thresholds:
-            // pips=1 → pBluff<0.20, pips=2 → 0.20-0.38, etc.
-            // We return the midpoint of each bucket.
-            return BluffProbabilityByPip.getOrElse(confidence.pips - 1) { BluffProbabilityByPip.last() }
-        }
-
-        // For bluff action or bluff block: rough P(safe — not caught)
-        // = 1 − P(someone challenges) which we approximate from BluffOdds on the human's bluff
-        if (bluff && claimedRole != null) {
-            val eliminated = view.players.sumOf { it.faceUpRoles.count { r -> r == claimedRole } }
-            // myHandContainsClaimedRole = 0 (we're bluffing, so we don't hold it)
-            val myHand = 0
-            val totalVisible = view.players.sumOf { it.faceUpRoles.size } + view.myFaceUp.size
-            val myInfluenceCount = view.myInfluence.size.coerceAtLeast(1)
-
-            val confidence =
-                BluffOdds.estimate(
-                    claimedRole = claimedRole,
-                    copiesPerRole = cfg.copiesPerRole,
-                    deckSize = cfg.deckSize,
-                    eliminatedRolesForClaimedRole = eliminated,
-                    myHandContainsClaimedRole = myHand,
-                    opponentFaceDownCount = myInfluenceCount, // k = my influence count (from opponents' PoV)
-                    totalVisibleCards = totalVisible,
-                )
-            // P(opponents think I'm bluffing) ≈ midpoint of bucket
-            val pBluffFromOppPov =
-                when (confidence.pips) {
-                    1 -> 0.10
-                    2 -> 0.29
-                    3 -> 0.46
-                    4 -> 0.63
-                    else -> 0.86
-                }
-            // P(not challenged) ≈ 1 − pBluffFromOppPov (crude but calibrated)
-            return (1.0 - pBluffFromOppPov).coerceIn(0.0, 1.0)
-        }
-
-        return null
+        val confidence =
+            BluffOdds.estimate(
+                claimedRole = claimedRole,
+                copiesPerRole = cfg.copiesPerRole,
+                deckSize = cfg.deckSize,
+                eliminatedRolesForClaimedRole = eliminated,
+                myHandContainsClaimedRole = myHand,
+                opponentFaceDownCount = myInfluenceCount, // k = my influence count (from opponents' PoV)
+                totalVisibleCards = totalVisible,
+            )
+        // P(opponents think I'm bluffing) ~ midpoint of bucket
+        val pBluffFromOppPov =
+            when (confidence.pips) {
+                1 -> 0.10
+                2 -> 0.29
+                3 -> 0.46
+                4 -> 0.63
+                else -> 0.86
+            }
+        // P(not challenged) ~ 1 - pBluffFromOppPov (crude but calibrated)
+        return (1.0 - pBluffFromOppPov).coerceIn(0.0, 1.0)
     }
 
     // ── Labels ────────────────────────────────────────────────────────────────

@@ -9,13 +9,9 @@
     <ID>LongMethod:Determinizer.kt:Determinizer$fun sample: Pair&lt;GameState, Rng&gt;</ID>
     <ID>LongMethod:HardPolicy.kt:HardPolicy$private fun decideTurn: Intent</ID>
     <ID>LongMethod:MediumPolicy.kt:MediumPolicy$private fun decideTurn: Intent</ID>
-    <ID>LongMethod:PersonaPrompts.kt:PersonaPrompts$private fun voiceFor: String</ID>
-    <ID>ReturnCount:EasyPolicy.kt:EasyPolicy$private fun decideReaction: Intent</ID>
-    <ID>ReturnCount:GrandmasterPolicy.kt:GrandmasterPolicy$private fun turnExploit: Intent?</ID>
     <ID>ReturnCount:HardPolicy.kt:HardPolicy$private fun decideReaction: Intent</ID>
     <ID>ReturnCount:HardPolicy.kt:HardPolicy$private fun decideTurn: Intent</ID>
     <ID>ReturnCount:MediumPolicy.kt:MediumPolicy$private fun decideReaction: Intent</ID>
     <ID>ReturnCount:MediumPolicy.kt:MediumPolicy$private fun decideTurn: Intent</ID>
-    <ID>ReturnCount:MoveAdvisor.kt:MoveAdvisor$private fun computeSuccessOdds: Double?</ID>
   </CurrentIssues>
 </SmellBaseline>

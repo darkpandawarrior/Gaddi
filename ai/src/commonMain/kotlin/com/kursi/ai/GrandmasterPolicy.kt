@@ -156,38 +156,34 @@ class GrandmasterPolicy(
     private fun turnExploit(
         view: PlayerView,
         legal: List<Intent>,
+    ): Intent? = truthfulJaanchOnStrongest(view, legal) ?: bluffIntoPassiveTable(view, legal)
+
+    /** (a) A truthful Jaanch aimed at the biggest threat — uncatchable, so it is never a gamble. */
+    private fun truthfulJaanchOnStrongest(
+        view: PlayerView,
+        legal: List<Intent>,
     ): Intent? {
-        // a. Investigate the strongest opponent with a truthful (uncatchable) Jaanch.
-        if (view.myInfluence.contains(Role.PATRAKAAR)) {
-            val investigates =
-                legal
-                    .filterIsInstance<Intent.DeclareAction>()
-                    .filter { it.action is Action.Investigate }
-            if (investigates.isNotEmpty()) {
-                val strongest =
-                    view.targetableOpponents
-                        .maxByOrNull { threatScore(it) }
-                val onStrongest =
-                    investigates.firstOrNull {
-                        (it.action as Action.Investigate).target == strongest?.id
-                    }
-                if (onStrongest != null) return onStrongest
-            }
-        }
+        if (!view.myInfluence.contains(Role.PATRAKAAR)) return null
+        val strongest = view.targetableOpponents.maxByOrNull { threatScore(it) } ?: return null
+        return legal
+            .filterIsInstance<Intent.DeclareAction>()
+            .filter { it.action is Action.Investigate }
+            .firstOrNull { (it.action as Action.Investigate).target == strongest.id }
+    }
 
-        // b. Bluff into a passive (low-challengeRate) table.
+    /**
+     * (b) Promote a bluffed economy claim the search might skip, but only into a table whose
+     * inferred mean challengeRate says nobody calls. No read, or a table that calls — no bluff.
+     */
+    private fun bluffIntoPassiveTable(
+        view: PlayerView,
+        legal: List<Intent>,
+    ): Intent? {
         val read = tableChallengeRead(view) ?: return null
-        if (read >= EXPLOIT_CHALLENGE_LO) return null // table calls bluffs — don't hand them a free catch
-
-        // Prefer a Tax bluff (best economy), else Steal from the richest, but only as a *bluff*
-        // (we don't already hold the role) and only if the search isn't already taking it.
-        val taxBluff =
-            legal
-                .firstOrNull {
-                    it is Intent.DeclareAction && it.action == Action.Tax
-                }?.takeIf { !view.myInfluence.contains(Role.NETA) && remaining(view, Role.NETA) > 0 }
-        if (taxBluff != null) return taxBluff
-        return null
+        if (read >= EXPLOIT_CHALLENGE_LO) return null // table calls bluffs — no free catch for them
+        return legal
+            .firstOrNull { it is Intent.DeclareAction && it.action == Action.Tax }
+            ?.takeIf { !view.myInfluence.contains(Role.NETA) && remaining(view, Role.NETA) > 0 }
     }
 
     // ── Helpers (mirror HardPolicy's deck-odds math) ────────────────────────────
