@@ -352,13 +352,11 @@ class SocialDirector(
         choices: List<Intent>,
         view: PlayerView,
     ): Intent {
-        val declared = chosen as? Intent.DeclareAction
         val opponents = view.players.filter { !it.eliminated && it.id != view.viewer }.map { it.id.raw }
         if (opponents.isEmpty()) return chosen
 
-        // 1. Where does this bot want to point, socially?
-        val desired = desiredTarget(seat, opponents) ?: return chosen
-        if (desired == seat) return chosen
+        // 1. Where does this bot want to point, socially? (Never at itself.)
+        val desired = desiredTarget(seat, opponents)?.takeIf { it != seat } ?: return chosen
 
         // 2. How strongly? Conspiracy pull + flaw agitation, scaled by impulsiveness.
         val pull =
@@ -370,17 +368,21 @@ class SocialDirector(
         nudgeRng = r
         if (roll >= (pull * 100f).toInt()) return chosen
 
-        // 3a. If already attacking, re-target the SAME attack onto the desired seat.
-        if (declared != null && Rules.targetOf(declared.action) != null) {
-            attackTo(choices, desired, sameTypeAs = declared.action)?.let { return it }
-            attackTo(choices, desired, sameTypeAs = null)?.let { return it } // any attack onto desired
-            return chosen
-        }
-        // 3b. Bot was playing it safe but is agitated/pressured → upgrade into an attack on desired.
-        if (social.agitationOf(seat) >= NUDGE_AGITATION_FLOOR || social.threatOf(desired) >= NUDGE_THREAT_FLOOR) {
-            attackTo(choices, desired, sameTypeAs = null)?.let { return it }
-        }
-        return chosen
+        // 3. Point the move at the desired seat if the table's mood justifies it.
+        val attacking = (chosen as? Intent.DeclareAction)?.takeIf { Rules.targetOf(it.action) != null }
+        val pressured =
+            social.agitationOf(seat) >= NUDGE_AGITATION_FLOOR || social.threatOf(desired) >= NUDGE_THREAT_FLOOR
+        val nudged =
+            when {
+                // 3a. Already attacking: re-target the SAME attack onto the desired seat, else any attack.
+                attacking != null ->
+                    attackTo(choices, desired, sameTypeAs = attacking.action)
+                        ?: attackTo(choices, desired, sameTypeAs = null)
+                // 3b. Was playing it safe but is agitated/pressured → upgrade into an attack on desired.
+                pressured -> attackTo(choices, desired, sameTypeAs = null)
+                else -> null
+            }
+        return nudged ?: chosen
     }
 
     /** The seat this bot is socially primed to hit: vendetta/suspicion target, else the conspiracy target. */

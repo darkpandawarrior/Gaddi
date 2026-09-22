@@ -15,8 +15,6 @@
     <ID>LongMethod:KursiVoice.kt:KursiVoice$private fun englishPersonaBark: String</ID>
     <ID>LongMethod:KursiVoice.kt:KursiVoice$private fun hinglishPersonaBark: String</ID>
     <ID>LongMethod:StoryArc.kt:StoryArcs$fun begin: ArcStep</ID>
-    <ID>ReturnCount:ReplayAnnotation.kt:ReplayAnnotation.Companion$private fun beliefRead: Pair&lt;String, String&gt;</ID>
-    <ID>ReturnCount:SocialDirector.kt:SocialDirector$fun nudgeBotIntent: Intent</ID>
     <ID>TooManyFunctions:GameSession.kt:GameSession</ID>
     <ID>TooManyFunctions:KursiVoice.kt:KursiVoice</ID>
     <ID>TooManyFunctions:SocialDirector.kt:SocialDirector</ID>
