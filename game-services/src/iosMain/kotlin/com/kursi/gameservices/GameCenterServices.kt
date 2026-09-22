@@ -18,6 +18,7 @@ import platform.GameKit.GKLeaderboard
 import platform.GameKit.GKLocalPlayer
 import platform.GameKit.GKSavedGame
 import platform.GameKit.fetchSavedGamesWithCompletionHandler
+import platform.GameKit.loadDataWithCompletionHandler
 import platform.GameKit.saveGameData
 import platform.GameKit.setAuthenticateHandler
 import platform.UIKit.UIViewController
