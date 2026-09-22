@@ -32,6 +32,13 @@ import com.kursi.designsystem.KursiNeutrals
 import com.kursi.designsystem.KursiType
 import kotlin.math.roundToInt
 
+/**
+ * Where a frozen frame centres itself when no seat anchor has been measured, or when averaging
+ * them produced a non-finite result. Slightly above the table centre so the caption pill below
+ * the frame still fits on screen.
+ */
+private val FrameCentreFallback = Offset(500f, 400f)
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // MomentStaticFrames.kt — TENET 6: per-moment reduced-motion static end-frames.
 //
@@ -63,23 +70,43 @@ internal fun MomentStaticFrame(
         is KursiMoment.Steal -> StealFrame(anchors, moment)
         is KursiMoment.Assassinate -> StampFrame(anchors.seat(moment.target), "SUPARI", moment.roleHue, caption = "−3 · target hit")
         is KursiMoment.Exchange -> StampFrame(anchors.seat(moment.actorSeat), "SETTING", moment.roleHue, caption = "cards swapped")
-        is KursiMoment.Coup -> CrestFrame(anchors.seat(moment.target), word = "KHELA", caption = "−7 · chair toppled", tint = BrandTokens.GoldAntique)
+        is KursiMoment.Coup ->
+            CrestFrame(
+                anchors.seat(moment.target),
+                word = "KHELA",
+                caption = "−7 · chair toppled",
+                tint = BrandTokens.GoldAntique,
+            )
         is KursiMoment.Block -> StampFrame(anchors.seat(moment.actorSeat), "ROKA!", moment.roleHue, caption = "action blocked")
         is KursiMoment.Challenge -> ChallengeFrame(anchors, moment)
         is KursiMoment.Reveal -> VerdictFrame(anchors.seat(moment.claimant), moment)
-        is KursiMoment.InfluenceLoss -> StampFrame(anchors.seat(moment.actorSeat), "EXPOSED", BrandTokens.StampRed, caption = "card lost", rotationDeg = -12f)
+        is KursiMoment.InfluenceLoss ->
+            StampFrame(
+                anchors.seat(moment.actorSeat),
+                "EXPOSED",
+                BrandTokens.StampRed,
+                caption = "card lost",
+                rotationDeg = -12f,
+            )
         is KursiMoment.Elimination -> TippedChairFrame(anchors.seat(moment.actorSeat))
         is KursiMoment.TurnHandoff -> HandoffFrame(anchors, moment)
-        is KursiMoment.Win -> CrestFrame(centerOf(anchors), word = "KURSI", caption = "Kursi aapki!", tint = BrandTokens.GoldAntique, big = true)
+        is KursiMoment.Win ->
+            CrestFrame(
+                centerOf(anchors),
+                word = "KURSI",
+                caption = "Kursi aapki!",
+                tint = BrandTokens.GoldAntique,
+                big = true,
+            )
     }
 }
 
 private fun centerOf(anchors: TableAnchors): Offset {
     val xs = anchors.seatCenters.values
-    if (xs.isEmpty()) return Offset(500f, 400f)
+    if (xs.isEmpty()) return FrameCentreFallback
     val cx = xs.map { it.x }.average().toFloat()
     val cy = xs.map { it.y }.average().toFloat()
-    return if (cx.isFinite() && cy.isFinite()) Offset(cx, cy) else Offset(500f, 400f)
+    return if (cx.isFinite() && cy.isFinite()) Offset(cx, cy) else FrameCentreFallback
 }
 
 // ─────────────────────────── Caption pill ────────────────────────────────────
@@ -377,31 +404,11 @@ private fun TippedChairFrame(seatCenter: Offset) {
         // tipped chair glyph — frozen at ~100°, dropped a little
         translate(left = seatCenter.x, top = seatCenter.y + 18.dp.toPx()) {
             rotate(degrees = 100f, pivot = Offset(0f, 0f)) {
-                drawStaticChair(BrandTokens.BrassAged.copy(alpha = 0.85f))
+                drawChairGlyph(BrandTokens.BrassAged.copy(alpha = 0.85f))
             }
         }
     }
     CaptionPill(seatCenter, "out — kursi gayi", KursiNeutrals.TextSecondary, yPadDp = 50f)
-}
-
-/** A minimal geometric chair, same vocabulary as ChairTip's glyph. */
-private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawStaticChair(color: Color) {
-    val w = 40.dp.toPx()
-    val h = 48.dp.toPx()
-    val sw = 3.dp.toPx()
-    drawArc(
-        color = color,
-        startAngle = 180f,
-        sweepAngle = 180f,
-        useCenter = false,
-        topLeft = Offset(-w * 0.4f, -h * 0.5f),
-        size = Size(w * 0.8f, h * 0.35f),
-        style = Stroke(sw),
-    )
-    drawLine(color, Offset(-w * 0.4f, 0f), Offset(w * 0.4f, 0f), sw)
-    drawLine(color, Offset(-w * 0.3f, 0f), Offset(-w * 0.3f, h * 0.45f), sw)
-    drawLine(color, Offset(w * 0.3f, 0f), Offset(w * 0.3f, h * 0.45f), sw)
-    drawLine(color, Offset(-w * 0.4f, h * 0.38f), Offset(w * 0.4f, h * 0.38f), sw * 0.7f)
 }
 
 // ─────────────────────────── Turn handoff frame ──────────────────────────────

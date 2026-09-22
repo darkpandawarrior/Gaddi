@@ -65,6 +65,15 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+/**
+ * Guilloche ring opacities, outermost first. Three rings fading inward is what makes the felt read
+ * as engraved rather than as three separate circles; the values are the engraving, not tuning.
+ */
+private val GuillocheRingAlphas = listOf(0.05f, 0.035f, 0.025f)
+
+/** Where a rim ray starts, as a fraction of the guilloche radius — the rays are a thin rim band. */
+private const val GuillocheRayInnerFraction = 0.85f
+
 /** The three post-claim mechanics taught as their own tappable beats (spec §6: claim → challenge →
  *  block → coup → exchange — claim/challenge/reveal are beats 4-6; these are 7-9). */
 private enum class Mechanic { BLOCK, COUP, EXCHANGE }
@@ -152,7 +161,7 @@ fun TutorialScreen(
                 challenged = challenged,
                 revealed = revealed,
                 promptingAction = promptingAction,
-                challengerName = scriptedChallengerName(),
+                challengerName = ScriptedChallengerName,
             )
         }
 
@@ -176,7 +185,6 @@ fun TutorialScreen(
                 body = body,
                 step = step,
                 total = beats.size,
-                isLast = isLast,
                 primaryLabel =
                     when {
                         // Beat 5 (index 4) makes the primary CTA the "stamp GHOTALA" action so the learner
@@ -213,8 +221,8 @@ private fun mechanicDoLabel(
         Mechanic.EXCHANGE -> s.tutorialDoExchange
     }
 
-/** The scripted rival who delivers the guaranteed challenge. Kept as a helper for one source of truth. */
-private fun scriptedChallengerName(): String = "Babu Filewala"
+/** The scripted rival who delivers the guaranteed challenge. One source of truth for the name. */
+private const val ScriptedChallengerName = "Babu Filewala"
 
 // ─────────────────────────── First-run offer dialog ───────────────────────────
 
@@ -275,7 +283,12 @@ fun TutorialOfferDialog(
             ) {
                 Text("✦", style = KursiType.title.copy(fontSize = 20.sp), color = BrandTokens.TeakDark)
             }
-            Text(s.tutorialOfferTitle, style = KursiType.title_md.copy(fontSize = 18.sp), color = BrandTokens.CreamInk, textAlign = TextAlign.Center)
+            Text(
+                s.tutorialOfferTitle,
+                style = KursiType.title_md.copy(fontSize = 18.sp),
+                color = BrandTokens.CreamInk,
+                textAlign = TextAlign.Center,
+            )
             Text(
                 s.tutorialOfferBody,
                 style = KursiType.body.copy(fontSize = 13.sp),
@@ -348,7 +361,11 @@ private fun TutorialHeader(
                                 .border(0.7.dp, BrandTokens.StampRed.copy(alpha = 0.4f), RoundedCornerShape(3.dp))
                                 .padding(horizontal = 6.dp, vertical = 2.dp),
                     ) {
-                        Text(badge, style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.6.sp), color = BrandTokens.StampRed.copy(alpha = 0.8f))
+                        Text(
+                            badge,
+                            style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.6.sp),
+                            color = BrandTokens.StampRed.copy(alpha = 0.8f),
+                        )
                     }
                     Text("$stepLabel ${step + 1}/$total", style = KursiType.caption.copy(fontSize = 9.sp), color = KursiNeutrals.TextMuted)
                 }
@@ -390,7 +407,6 @@ private fun CoachChit(
     body: String,
     step: Int,
     total: Int,
-    isLast: Boolean,
     primaryLabel: String,
     backLabel: String,
     canGoBack: Boolean,
@@ -480,7 +496,11 @@ private fun CoachChit(
                                 .padding(horizontal = 8.dp),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text(text = backLabel, style = KursiType.label.copy(fontSize = 11.sp), color = BrandTokens.BrassDark.copy(alpha = 0.8f))
+                        Text(
+                            text = backLabel,
+                            style = KursiType.label.copy(fontSize = 11.sp),
+                            color = BrandTokens.BrassDark.copy(alpha = 0.8f),
+                        )
                     }
                 } else {
                     Spacer(Modifier.width(1.dp))
@@ -498,7 +518,11 @@ private fun CoachChit(
                                 contentDescription = primaryLabel
                             }.padding(horizontal = 18.dp, vertical = 9.dp),
                 ) {
-                    Text(primaryLabel, style = KursiType.label.copy(fontSize = 12.sp, fontWeight = FontWeight.Bold), color = BrandTokens.TeakDark)
+                    Text(
+                        primaryLabel,
+                        style = KursiType.label.copy(fontSize = 12.sp, fontWeight = FontWeight.Bold),
+                        color = BrandTokens.TeakDark,
+                    )
                 }
             }
         }
@@ -544,7 +568,6 @@ private fun ScriptedTable(
                     name = challengerName,
                     monogram = "BF",
                     hue = KursiRoleHues.Babu,
-                    role = Role.BABU,
                     active = challenged,
                     modifier = Modifier.weight(1f),
                 )
@@ -552,7 +575,6 @@ private fun ScriptedTable(
                     name = stringResource(Res.string.tutorial_persona_netaji_vachan),
                     monogram = "NV",
                     hue = KursiRoleHues.Neta,
-                    role = Role.NETA,
                     active = false,
                     modifier = Modifier.weight(1f),
                 )
@@ -560,7 +582,6 @@ private fun ScriptedTable(
                     name = stringResource(Res.string.tutorial_persona_vakil_loophole),
                     monogram = "VL",
                     hue = KursiRoleHues.Vakil,
-                    role = Role.VAKIL,
                     active = false,
                     modifier = Modifier.weight(1f),
                 )
@@ -568,7 +589,7 @@ private fun ScriptedTable(
 
             // Challenge banner — drops in when Babu challenges.
             AnimatedVisibility(visible = challenged, enter = fadeIn() + scaleIn(initialScale = 0.9f), exit = fadeOut()) {
-                ChallengeBanner(text = "$challengerName: ${if (revealed) revealVerdictLine() else challengeLine()}", revealed = revealed)
+                ChallengeBanner(text = "$challengerName: ${if (revealed) RevealVerdictLine else ChallengeLine}", revealed = revealed)
             }
 
             Spacer(Modifier.weight(1f))
@@ -596,7 +617,6 @@ private fun RivalPlate(
     name: String,
     monogram: String,
     hue: Color,
-    role: Role,
     active: Boolean,
     modifier: Modifier = Modifier,
     /** True once this rival has lost an influence in the scripted scene (the COUP beat) — shows one
@@ -660,9 +680,11 @@ private fun ChallengeBanner(
     }
 }
 
-private fun challengeLine(): String = "\"You hold NETA? Show me.\""
+/** The scripted challenge the rival delivers in the guided beat. */
+private const val ChallengeLine = "\"You hold NETA? Show me.\""
 
-private fun revealVerdictLine(): String = "JHOOTH! No NETA — the bluff is caught."
+/** The scripted verdict shown once the bluffed card flips face-up. */
+private const val RevealVerdictLine = "JHOOTH! No NETA — the bluff is caught."
 
 /** Your two cards: a hidden card + the bluffed NETA card that flips face-up to JHOOTH when caught. */
 @Composable
@@ -737,8 +759,11 @@ private fun HandCard(
                     Modifier
                         .size(34.dp)
                         .clip(CircleShape)
-                        .background(Brush.radialGradient(listOf(BrandTokens.BrassAged.copy(alpha = 0.4f), BrandTokens.BrassDark.copy(alpha = 0.6f))))
-                        .border(1.dp, BrandTokens.BrassDark, CircleShape),
+                        .background(
+                            Brush.radialGradient(
+                                listOf(BrandTokens.BrassAged.copy(alpha = 0.4f), BrandTokens.BrassDark.copy(alpha = 0.6f)),
+                            ),
+                        ).border(1.dp, BrandTokens.BrassDark, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
                 Text("✦", style = KursiType.title.copy(fontSize = 16.sp), color = BrandTokens.GoldAntique.copy(alpha = 0.7f))
@@ -809,8 +834,9 @@ private fun ActionDock(
                             Modifier
                         },
                     ).clip(RoundedCornerShape(10.dp))
-                    .background(if (pulse) BrandTokens.GoldAntique.copy(alpha = 0.20f + glow * 0.18f) else BrandTokens.TeakDark.copy(alpha = 0.55f))
-                    .border(
+                    .background(
+                        if (pulse) BrandTokens.GoldAntique.copy(alpha = 0.20f + glow * 0.18f) else BrandTokens.TeakDark.copy(alpha = 0.55f),
+                    ).border(
                         if (pulse) 2.dp else 1.dp,
                         if (pulse) BrandTokens.GoldAntique.copy(alpha = 0.7f + glow * 0.3f) else BrandTokens.BrassDark.copy(alpha = 0.5f),
                         RoundedCornerShape(10.dp),
@@ -843,7 +869,17 @@ private fun ActionDock(
                         .alpha(0.55f)
                         .padding(horizontal = 14.dp, vertical = 12.dp),
             ) {
-                Text(if (it == 0) dehaadiLabel else fdiLabel, style = KursiType.name.copy(fontSize = 12.sp), color = KursiNeutrals.TextSecondary)
+                Text(
+                    if (it ==
+                        0
+                    ) {
+                        dehaadiLabel
+                    } else {
+                        fdiLabel
+                    },
+                    style = KursiType.name.copy(fontSize = 12.sp),
+                    color = KursiNeutrals.TextSecondary,
+                )
             }
         }
     }
@@ -872,12 +908,17 @@ private fun MechanicTable(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                RivalPlate(name = "Babu Filewala", monogram = "BF", hue = KursiRoleHues.Babu, role = Role.BABU, active = false, modifier = Modifier.weight(1f))
+                RivalPlate(
+                    name = "Babu Filewala",
+                    monogram = "BF",
+                    hue = KursiRoleHues.Babu,
+                    active = false,
+                    modifier = Modifier.weight(1f),
+                )
                 RivalPlate(
                     name = "Netaji Vachan",
                     monogram = "NV",
                     hue = KursiRoleHues.Neta,
-                    role = Role.NETA,
                     active = mechanic == Mechanic.BLOCK,
                     modifier = Modifier.weight(1f),
                 )
@@ -885,7 +926,6 @@ private fun MechanicTable(
                     name = "Vakil Loophole",
                     monogram = "VL",
                     hue = KursiRoleHues.Vakil,
-                    role = Role.VAKIL,
                     active = mechanic == Mechanic.COUP,
                     pipsLost = mechanic == Mechanic.COUP && acted,
                     modifier = Modifier.weight(1f),
@@ -943,7 +983,7 @@ private fun MechanicTable(
 }
 
 /** Before/after flavor line for a [MechanicTable] beat. Hardcoded (not localized) like the existing
- *  [challengeLine]/[revealVerdictLine] scripted banners this mirrors. */
+ *  [ChallengeLine]/[RevealVerdictLine] scripted banners this mirrors. */
 private fun mechanicLine(
     mechanic: Mechanic,
     acted: Boolean,
@@ -996,7 +1036,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawFeltGuilloche()
     val cx = size.width * 0.5f
     val cy = size.height * 0.42f
     val baseR = minOf(size.width, size.height) * 0.5f
-    listOf(0.05f, 0.035f, 0.025f).forEachIndexed { i, a ->
+    GuillocheRingAlphas.forEachIndexed { i, a ->
         drawCircle(
             color = BrandTokens.BrassAged.copy(alpha = a),
             radius = baseR * (1f - i * 0.18f),
@@ -1013,7 +1053,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawFeltGuilloche()
             color = BrandTokens.BrassAged.copy(alpha = 0.04f),
             start =
                 androidx.compose.ui.geometry
-                    .Offset(cx + baseR * 0.85f * cos(angle), cy + baseR * 0.85f * sin(angle)),
+                    .Offset(cx + baseR * GuillocheRayInnerFraction * cos(angle), cy + baseR * GuillocheRayInnerFraction * sin(angle)),
             end =
                 androidx.compose.ui.geometry
                     .Offset(cx + baseR * cos(angle), cy + baseR * sin(angle)),

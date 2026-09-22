@@ -137,7 +137,14 @@ class DensityGraduationTest {
         // Great numbers, but under the minimum-sample floor — the un-competent threshold still applies.
         assertEquals(
             DensityLayer.FOCUS,
-            evaluateDensityGraduation(DensityLayer.FOCUS, manuallySet = false, gamesPlayed = 2, decisions = 3, accuracyPct = 100, avgEvLostPct = 0),
+            evaluateDensityGraduation(
+                DensityLayer.FOCUS,
+                manuallySet = false,
+                gamesPlayed = 2,
+                decisions = 3,
+                accuracyPct = 100,
+                avgEvLostPct = 0,
+            ),
         )
     }
 }

@@ -712,7 +712,14 @@ fun KursiApp() {
                                                 accuracyPct = t.accuracyPct,
                                                 avgEvLostPct = if (t.decisions == 0) 0 else ((t.evLostMilli / 10.0) / t.decisions).toInt(),
                                                 challenges = t.challenges,
-                                                challengeAccuracyPct = if (t.challenges == 0) 0 else (t.challengesGood * 100 / t.challenges),
+                                                challengeAccuracyPct =
+                                                    if (t.challenges ==
+                                                        0
+                                                    ) {
+                                                        0
+                                                    } else {
+                                                        (t.challengesGood * 100 / t.challenges)
+                                                    },
                                             )
                                         }
                                     val summary =

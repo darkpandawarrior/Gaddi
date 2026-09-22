@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-<SmellBaseline>
-  <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>MagicNumber:PlayFeatures.kt:PlayFeatures$30</ID>
-    <ID>UnusedParameter:PlayFeatures.kt:PlayFeatures$activity: ComponentActivity</ID>
-    <ID>UnusedParameter:PlayFeatures.kt:PlayFeatures$appPrefs: AppPrefs</ID>
-  </CurrentIssues>
-</SmellBaseline>

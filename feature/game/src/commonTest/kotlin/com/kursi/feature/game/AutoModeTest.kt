@@ -119,7 +119,7 @@ class AutoModeTest {
                     ) {
                         val decision = s.autoDecision()
                         assertTrue(decision != null, "single legal move must classify")
-                        assertEquals(GameSession.AutoKind.SINGLE_LEGAL, decision!!.kind)
+                        assertEquals(GameSession.AutoKind.SINGLE_LEGAL, decision.kind)
                         assertEquals(ui.legalIntents.single(), decision.intent)
                         matched = true
                         break

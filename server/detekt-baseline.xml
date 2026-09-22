@@ -1,17 +1,5 @@
 <?xml version="1.0" ?>
 <SmellBaseline>
   <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>CyclomaticComplexMethod:Routing.kt:fun Application.configureRouting</ID>
-    <ID>LongMethod:Routing.kt:fun Application.configureRouting</ID>
-    <ID>LoopWithTooManyJumpStatements:MatchActor.kt:MatchActor$while</ID>
-    <ID>LoopWithTooManyJumpStatements:OnlineAdapterProjectionTest.kt:OnlineAdapterProjectionTest$while</ID>
-    <ID>LoopWithTooManyJumpStatements:Routing.kt:for</ID>
-    <ID>MagicNumber:MatchActor.kt:MatchActor$37L</ID>
-    <ID>MatchingDeclarationName:Routing.kt:StandingDto</ID>
-    <ID>ReturnCount:OnlineAdapterProjectionTest.kt:OnlineAdapterProjectionTest$private fun chooseIntent: Intent</ID>
-    <ID>ReturnCount:ServerTest.kt:ServerTest$private fun chooseIntentFromView: WireIntent?</ID>
-    <ID>TooGenericExceptionCaught:MatchActor.kt:MatchActor$e: Exception</ID>
-    <ID>TooGenericExceptionCaught:Routing.kt:e: Exception</ID>
-  </CurrentIssues>
+  <CurrentIssues/>
 </SmellBaseline>

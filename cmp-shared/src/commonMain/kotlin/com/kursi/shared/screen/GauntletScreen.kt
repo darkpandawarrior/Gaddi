@@ -304,13 +304,12 @@ private fun rungNameOf(
     index: Int,
     s: KursiStrings,
 ): String =
-    when (index) {
-        0 -> s.gauntletRung0Name
-        1 -> s.gauntletRung1Name
-        2 -> s.gauntletRung2Name
-        3 -> s.gauntletRung3Name
-        else -> s.gauntletRung4Name
-    }
+    listOf(
+        s.gauntletRung0Name,
+        s.gauntletRung1Name,
+        s.gauntletRung2Name,
+        s.gauntletRung3Name,
+    ).getOrElse(index) { s.gauntletRung4Name }
 
 private fun difficultyNameOf(
     d: Difficulty,

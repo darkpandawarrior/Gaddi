@@ -1,3 +1,30 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Screenshots.kt — the headless fixture harness behind `./gradlew :cmp-desktop:renderScreens`.
+// Not shipped: nothing in the app links it, `main` here renders PNGs into build/shots/ and exits.
+//
+// WHY THIS FILE IS SUPPRESSED AS A WHOLE, when nothing else in this repo is:
+//
+//   MagicNumber (88 findings) — every literal is a FIXTURE, and the literal IS the datum.
+//     `OnlineStandingRow(2, "Aap", 1185, isMe = true)` is "second place, rating 1185"; a
+//     `private const val AapFixtureRating = 1185` used once, next to its own name, adds a line and
+//     no information. Same for the ELO spark-line history, the PersonaRecord(played, wins) pairs
+//     and the `repeat(n)` sim-drive counts.
+//
+//   LongMethod + CyclomaticComplexMethod — `main` and `buildFixtures` are a TABLE of scenes, one
+//     `run { }` block per screenshot, read top to bottom. detekt measures a declarative table as if
+//     it were control flow; splitting forty fixtures into forty functions scatters the table
+//     without making any single fixture clearer. Same reasoning detekt's own Compose guide applies
+//     to a preview sheet via ignoreAnnotatedFunctions.
+//
+//   LoopWithTooManyJumpStatements (4) — each is a bounded drive-the-engine-until-this-phase scan
+//     (`for (i in 0 until 2000) { ... break }`) whose whole job is to stop at the first state that
+//     matches the fixture and bail out if it never does.
+//
+// This is a deliberate, scoped decision recorded where a reader meets it, NOT a config-level
+// `active: false`. Everything outside this file is fixed in code.
+// ─────────────────────────────────────────────────────────────────────────────
+@file:Suppress("MagicNumber", "LongMethod", "CyclomaticComplexMethod", "LoopWithTooManyJumpStatements")
+
 package com.kursi.desktop
 
 import androidx.compose.foundation.ScrollState
@@ -361,7 +388,14 @@ fun main() {
                     tone = MessageTone.PANICKED,
                     kind = ChatKind.TABLE,
                 ),
-                ChatMessage(5, senderSeat = 3, targetSeat = 2, body = "Babu pehle. Baaki baad mein.", tone = MessageTone.HOSTILE, kind = ChatKind.TABLE),
+                ChatMessage(
+                    5,
+                    senderSeat = 3,
+                    targetSeat = 2,
+                    body = "Babu pehle. Baaki baad mein.",
+                    tone = MessageTone.HOSTILE,
+                    kind = ChatKind.TABLE,
+                ),
             )
         val suggestions =
             listOf(
@@ -374,7 +408,15 @@ fun main() {
                     "Bhai Teja",
                     "Secret pact — coordinate, then betray",
                 ),
-                ChatSuggestion("afwaah.fuel.2", "Aur hawa do", ChatActionKind.ARC_REPLY, ArcId.AFWAAH, 2, "Babu", "Twist the knife — more heat on Babu"),
+                ChatSuggestion(
+                    "afwaah.fuel.2",
+                    "Aur hawa do",
+                    ChatActionKind.ARC_REPLY,
+                    ArcId.AFWAAH,
+                    2,
+                    "Babu",
+                    "Twist the knife — more heat on Babu",
+                ),
                 ChatSuggestion("talk.taunt.3", "Taunt Jugaadu", ChatActionKind.TAUNT, null, 3, "Jugaadu", "Heat them up"),
             )
         val narrativeState =

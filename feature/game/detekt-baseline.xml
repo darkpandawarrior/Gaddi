@@ -2,28 +2,12 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>ComplexCondition:GameViewModel.kt:GameViewModel$session === this@GameViewModel.session &amp;&amp; shown != null &amp;&amp; shown.isHumanTurn &amp;&amp; shown.advice.isEmpty() &amp;&amp; shown.legalIntents.toSet() == advice.map { it.intent }.toSet()</ID>
-    <ID>ComplexCondition:TeamKhelTest.kt:TeamKhelTest$!ui.isGameOver &amp;&amp; ui.isHumanTurn &amp;&amp; ui.legalIntents.isNotEmpty() &amp;&amp; guard &lt; 5000</ID>
     <ID>CyclomaticComplexMethod:ActionDocks.kt:@Composable internal fun CompactActionChip</ID>
     <ID>CyclomaticComplexMethod:ActionDocks.kt:@OptIn(ExperimentalLayoutApi::class) @Composable internal fun PickActionDock</ID>
-    <ID>CyclomaticComplexMethod:ChatVoice.kt:ChatVoice$fun arcBeat: String</ID>
-    <ID>CyclomaticComplexMethod:ChatVoice.kt:ChatVoice$fun botArcBeat: String</ID>
-    <ID>CyclomaticComplexMethod:Darbar.kt:@Composable internal fun DarbarPanel</ID>
     <ID>CyclomaticComplexMethod:GameLog.kt:@Composable internal fun CollapsibleLogDrawer</ID>
     <ID>CyclomaticComplexMethod:GameLog.kt:@Composable internal fun GameLogEntry</ID>
-    <ID>CyclomaticComplexMethod:GameMoments.kt:internal fun mapEventToMoment: KursiMoment?</ID>
     <ID>CyclomaticComplexMethod:GameScreen.kt:@Composable fun GameScreen</ID>
-    <ID>CyclomaticComplexMethod:KursiVoice.kt:KursiVoice$fun actionBark: String</ID>
-    <ID>CyclomaticComplexMethod:KursiVoice.kt:KursiVoice$fun actionConsequence: String</ID>
-    <ID>CyclomaticComplexMethod:KursiVoice.kt:KursiVoice$fun logActorVerb: String</ID>
-    <ID>CyclomaticComplexMethod:KursiVoice.kt:KursiVoice$fun personaBio: String</ID>
-    <ID>CyclomaticComplexMethod:KursiVoice.kt:KursiVoice$fun personaRivalry: String</ID>
-    <ID>CyclomaticComplexMethod:KursiVoice.kt:KursiVoice$fun phaseHint: String</ID>
-    <ID>CyclomaticComplexMethod:KursiVoice.kt:KursiVoice$fun recap: String?</ID>
-    <ID>CyclomaticComplexMethod:KursiVoice.kt:KursiVoice$private fun englishPersonaBark: String</ID>
-    <ID>CyclomaticComplexMethod:KursiVoice.kt:KursiVoice$private fun hinglishPersonaBark: String</ID>
     <ID>CyclomaticComplexMethod:OpponentArc.kt:@Composable internal fun OpponentChipItem</ID>
-    <ID>CyclomaticComplexMethod:ReplayAnnotation.kt:ReplayAnnotation.Companion$private fun labelOf: String</ID>
     <ID>CyclomaticComplexMethod:StatusSpine.kt:internal fun deriveSpineTextAndTone: Pair&lt;String, SpineTone&gt;</ID>
     <ID>LargeClass:KursiVoice.kt:KursiVoice</ID>
     <ID>LongMethod:GameMoments.kt:internal fun mapEventToMoment: KursiMoment?</ID>
@@ -31,64 +15,8 @@
     <ID>LongMethod:KursiVoice.kt:KursiVoice$private fun englishPersonaBark: String</ID>
     <ID>LongMethod:KursiVoice.kt:KursiVoice$private fun hinglishPersonaBark: String</ID>
     <ID>LongMethod:StoryArc.kt:StoryArcs$fun begin: ArcStep</ID>
-    <ID>LoopWithTooManyJumpStatements:AutoPlayer.kt:AutoPlayer$while</ID>
-    <ID>LoopWithTooManyJumpStatements:GameSession.kt:GameSession$for</ID>
-    <ID>LoopWithTooManyJumpStatements:MatchResumeTest.kt:MatchResumeTest$while</ID>
-    <ID>LoopWithTooManyJumpStatements:ReplaySession.kt:ReplaySession.Companion$for</ID>
-    <ID>MagicNumber:DailyChallenge.kt:DailyChallenge.Companion$0x7fff_ffff_ffff_ffffL</ID>
-    <ID>MagicNumber:DailyChallenge.kt:DailyChallenge.Companion$27</ID>
-    <ID>MagicNumber:DailyChallenge.kt:DailyChallenge.Companion$30</ID>
-    <ID>MagicNumber:DailyChallenge.kt:DailyChallenge.Companion$31</ID>
-    <ID>MagicNumber:Elo.kt:Elo$1050</ID>
-    <ID>MagicNumber:Elo.kt:Elo$1300</ID>
-    <ID>MagicNumber:Elo.kt:Elo$1600</ID>
-    <ID>MagicNumber:Elo.kt:Elo$1900</ID>
-    <ID>MagicNumber:Elo.kt:Elo$400.0</ID>
-    <ID>MagicNumber:Elo.kt:Elo$4000</ID>
-    <ID>MagicNumber:Elo.kt:Elo$850</ID>
-    <ID>MagicNumber:FeltTable.kt:0.16f</ID>
-    <ID>MagicNumber:FeltTable.kt:0.32f</ID>
-    <ID>MagicNumber:GameUiState.kt:GameUiState$12</ID>
-    <ID>MagicNumber:GameUiState.kt:GameUiState$16</ID>
-    <ID>MagicNumber:GameUiState.kt:GameUiState$20</ID>
-    <ID>MagicNumber:GameViewModel.kt:GameViewModel$400L</ID>
-    <ID>MagicNumber:GameViewModel.kt:GameViewModel$6000L</ID>
-    <ID>MagicNumber:SocialDirector.kt:SocialDirector$0.12f</ID>
-    <ID>MagicNumber:SocialDirector.kt:SocialDirector$0.15f</ID>
-    <ID>MagicNumber:SocialDirector.kt:SocialDirector$0.2f</ID>
-    <ID>MagicNumber:SocialDirector.kt:SocialDirector$0.3f</ID>
-    <ID>MagicNumber:SocialDirector.kt:SocialDirector$0.4f</ID>
-    <ID>MagicNumber:SocialDirector.kt:SocialDirector$0.5f</ID>
-    <ID>MagicNumber:SocialDirector.kt:SocialDirector$0.6f</ID>
-    <ID>MagicNumber:SocialDirector.kt:SocialDirector$0.7f</ID>
-    <ID>MagicNumber:SocialDirector.kt:SocialDirector$0.8f</ID>
-    <ID>MagicNumber:SocialDirector.kt:SocialDirector$35</ID>
-    <ID>MagicNumber:SocialDirector.kt:SocialDirector$38</ID>
-    <ID>MagicNumber:SocialDirector.kt:SocialDirector$45</ID>
-    <ID>MagicNumber:StoryArc.kt:StoryArcs$0.25f</ID>
-    <ID>MagicNumber:StoryArc.kt:StoryArcs$0.30f</ID>
-    <ID>MagicNumber:StoryArc.kt:StoryArcs$0.35f</ID>
-    <ID>MagicNumber:StoryArc.kt:StoryArcs$0.3f</ID>
-    <ID>MagicNumber:StoryArc.kt:StoryArcs$0.40f</ID>
-    <ID>MagicNumber:StoryArc.kt:StoryArcs$0.4f</ID>
-    <ID>MagicNumber:StoryArc.kt:StoryArcs$0.5f</ID>
-    <ID>MagicNumber:StoryArc.kt:StoryArcs$0.6f</ID>
-    <ID>MatchingDeclarationName:GameMoments.kt:SeatIdResolver</ID>
-    <ID>ReturnCount:GameScreen.kt:fun deriveGamePhase: GamePhase</ID>
-    <ID>ReturnCount:GameSession.kt:GameSession$suspend fun autoDecision: AutoDecision?</ID>
-    <ID>ReturnCount:GameViewModel.kt:GameViewModel$private fun submitIntent</ID>
-    <ID>ReturnCount:ReplayAnnotation.kt:ReplayAnnotation.Companion$private fun beliefRead: Pair&lt;String, String&gt;</ID>
-    <ID>ReturnCount:SocialDirector.kt:SocialDirector$fun nudgeBotIntent: Intent</ID>
-    <ID>SwallowedException:GameViewModel.kt:GameViewModel$e: IllegalStateException</ID>
     <ID>TooManyFunctions:GameSession.kt:GameSession</ID>
     <ID>TooManyFunctions:KursiVoice.kt:KursiVoice</ID>
     <ID>TooManyFunctions:SocialDirector.kt:SocialDirector</ID>
-    <ID>UnusedParameter:ChatVoice.kt:ChatVoice$personaId: String</ID>
-    <ID>UnusedParameter:GameScreen.kt:localPhase: GamePhase?</ID>
-    <ID>UnusedParameter:Informatics.kt:onDismiss: () -&gt; Unit</ID>
-    <ID>UnusedParameter:ReactionDocks.kt:humanSeat: PlayerId</ID>
-    <ID>UnusedParameter:ReplayAnnotation.kt:ReplayAnnotation.Companion$personas: Map&lt;PlayerId, OpponentPersona&gt;</ID>
-    <ID>UnusedParameter:StoryArc.kt:StoryArcs$flawOf: (Int) -&gt; CharacterFlaw?</ID>
-    <ID>UnusedParameter:StoryArc.kt:StoryArcs$rivalName: String? = null</ID>
   </CurrentIssues>
 </SmellBaseline>

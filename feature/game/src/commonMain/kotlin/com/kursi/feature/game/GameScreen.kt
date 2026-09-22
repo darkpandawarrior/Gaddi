@@ -207,7 +207,6 @@ fun GameScreen(
                     state = state,
                     gamePhase = gamePhase,
                     humanSeat = humanSeat,
-                    localPhase = localPhase,
                     onLocalPhase = { localPhase = it },
                     onAction = onAction,
                     onOpenGazette = onOpenGazette,
@@ -221,7 +220,6 @@ fun GameScreen(
                     state = state,
                     gamePhase = gamePhase,
                     humanSeat = humanSeat,
-                    localPhase = localPhase,
                     onLocalPhase = { localPhase = it },
                     onAction = onAction,
                     onOpenGazette = onOpenGazette,
@@ -248,7 +246,12 @@ fun GameScreen(
                 ) {
                     Text(
                         text = voice.spectatorBanner,
-                        style = KursiType.caption.copy(fontSize = 10.sp, letterSpacing = 1.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
+                        style =
+                            KursiType.caption.copy(
+                                fontSize = 10.sp,
+                                letterSpacing = 1.sp,
+                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                            ),
                         color = KursiNeutrals.Cream,
                     )
                 }
@@ -403,7 +406,6 @@ internal fun DesktopLayout(
     state: GameUiState,
     gamePhase: GamePhase,
     humanSeat: PlayerId,
-    localPhase: GamePhase?,
     onLocalPhase: (GamePhase?) -> Unit,
     onAction: (GameAction) -> Unit,
     onOpenGazette: () -> Unit = {},
@@ -837,7 +839,6 @@ internal fun PhoneLayout(
     state: GameUiState,
     gamePhase: GamePhase,
     humanSeat: PlayerId,
-    localPhase: GamePhase?,
     onLocalPhase: (GamePhase?) -> Unit,
     onAction: (GameAction) -> Unit,
     onOpenGazette: () -> Unit = {},
@@ -879,7 +880,12 @@ internal fun PhoneLayout(
                     StatusSpineBar(state = state, gamePhase = gamePhase, modifier = Modifier.fillMaxWidth())
                     RecapRail(state = state, gamePhase = gamePhase, modifier = Modifier.fillMaxWidth())
                 } else {
-                    EngravedTurnHeader(state = state, gamePhase = gamePhase, onOpenGazette = onOpenGazette, modifier = Modifier.fillMaxWidth())
+                    EngravedTurnHeader(
+                        state = state,
+                        gamePhase = gamePhase,
+                        onOpenGazette = onOpenGazette,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
                 }
 
                 // ── MIDDLE: opponents + felt + hand (fills remaining space) ──────────
@@ -1094,7 +1100,6 @@ internal fun ActionDock(
                 is GamePhase.Exchange ->
                     ExchangeDock(
                         state = state,
-                        humanSeat = humanSeat,
                         onAction = onAction,
                     )
                 is GamePhase.InvestigatePeek ->

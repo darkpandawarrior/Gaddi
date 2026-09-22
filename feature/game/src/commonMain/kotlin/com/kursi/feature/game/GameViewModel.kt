@@ -205,6 +205,13 @@ class GameViewModel(
         /** Dramatic beats (challenge / block-stand / reveal / influence loss / elimination / win): full theatrical weight. */
         const val DRAMATIC_STEP_MS = 4000L
 
+        /**
+         * Pacing clamp after the turn-speed multiplier (SLOW 1.4x / NORMAL 1.0x / FAST 0.5x) is
+         * applied: FAST still leaves a beat readable, SLOW never drags past six seconds.
+         */
+        const val MIN_STEP_MS = 400L
+        const val MAX_STEP_MS = 6000L
+
         /** Okabe-Ito-ish hues for hot-seat human players (ARGB Long), distinct from the bot personas. */
         val HUMAN_SEAT_COLORS =
             longArrayOf(
@@ -687,7 +694,10 @@ class GameViewModel(
         val humanStep =
             try {
                 currentSession.applyHuman(action.intent)
-            } catch (e: IllegalStateException) {
+            } catch (ignored: IllegalStateException) {
+                // Expected, not exceptional: the engine rejects an intent that raced a state
+                // change (a tapped action that stopped being legal). Dropping the tap IS the
+                // handling — the UI already shows the newer state.
                 return
             }
         feedEventsToExperts(humanStep.newEvents)
@@ -759,13 +769,12 @@ class GameViewModel(
                 // Only apply if we're still on the very decision this advice was computed for:
                 // same session, still the human's turn, advice not already set, and the advice
                 // covers exactly the currently-shown legal moves (order-independent membership).
-                val shown = _state.value
-                if (session === this@GameViewModel.session &&
-                    shown != null &&
-                    shown.isHumanTurn &&
+                val shown = _state.value ?: return@launch
+                val stillOnSameDecision = session === this@GameViewModel.session && shown.isHumanTurn
+                val adviceMatchesWhatIsShown =
                     shown.advice.isEmpty() &&
-                    shown.legalIntents.toSet() == advice.map { it.intent }.toSet()
-                ) {
+                        shown.legalIntents.toSet() == advice.map { it.intent }.toSet()
+                if (stillOnSameDecision && adviceMatchesWhatIsShown) {
                     emitState(shown.copy(advice = advice))
                 }
             }
@@ -819,7 +828,7 @@ class GameViewModel(
             }
         // M5 TURN-SPEED: scale the pacing by the live multiplier (SLOW 1.4× / NORMAL 1.0× / FAST 0.5×),
         // clamped so even FAST keeps a readable floor and SLOW never drags past ~3s.
-        return (base * speedMultiplier).toLong().coerceIn(400L, 6000L)
+        return (base * speedMultiplier).toLong().coerceIn(MIN_STEP_MS, MAX_STEP_MS)
     }
 
     /**

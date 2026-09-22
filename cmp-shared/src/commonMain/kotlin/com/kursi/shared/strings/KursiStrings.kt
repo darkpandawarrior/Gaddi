@@ -658,24 +658,33 @@ sealed class KursiStrings {
         override val tut2Title = "Khokha Hi Taqat Hai"
         override val tut2Body = "Sikke = power. 7 pe Khela (hit) khareeda jaata hai, 10 pe majboori. Ginti par nazar rakhiye."
         override val tut3Title = "Daava Karo — Sach Ho Ya Na Ho"
-        override val tut3Body = "Har chaal ek role ka daava hai. Sabse mazedaar baat: aap ke paas wo role ho, ye zaroori nahi. Bluff allowed hai."
+        override val tut3Body =
+            "Har chaal ek role ka daava hai. Sabse mazedaar baat: aap ke paas wo role ho, ye zaroori nahi. Bluff " +
+                "allowed hai."
         override val tut4Title = "Salahkaar Kyun Bataata Hai"
         override val tut4Body = "Mashwara ON ho, toh har option pe ⭐ best move aur 'kitne % chalega' dikhega. Ye aapka babu mukhbir hai."
         override val tut5Title = "Ab Aapki Baari: GHOTALA"
         override val tut5Body = "GHOTALA, NETA hone ka daava — +3 khokha. Sach? Koi nahi jaanta. Stamp lagaiye aur dekhiye kya hota hai."
         override val tut6Title = "Babu Filewala ne Challenge Kiya!"
-        override val tut6Body = "\"Tumhare paas NETA hai? Dikhao.\" Challenge ka matlab: card khol ke saabit karo. Jhooth pakda gaya toh card jaayega."
+        override val tut6Body =
+            "\"Tumhare paas NETA hai? Dikhao.\" Challenge ka matlab: card khol ke saabit karo. Jhooth pakda gaya toh " +
+                "card jaayega."
         override val tut7Title = "JHOOTH! Card Khul Gaya"
         override val tut7Body =
-            "Aapke paas NETA tha hi nahi — bluff rangey haath pakda gaya. Ek certificate kurbaan. Yahi hai khel ka dil: daava, challenge, " +
+            "Aapke paas NETA tha hi nahi — bluff rangey haath pakda gaya. Ek certificate kurbaan. Yahi hai khel ka dil: daava, " +
+                "challenge, " +
                 "faisla."
         override val tutBlockTitle = "VAKIL Rokta Hai"
         override val tutBlockBody =
             "Netaji Vachan SUPARI bol raha hai — aapki jaan lene ka daava. VAKIL block karta hai. Ek tap, khatra tal gaya."
         override val tutCoupTitle = "KHELA — Seedha Vaar"
-        override val tutCoupBody = "7 khokha ho toh KHELA khareediye. Na block, na challenge — seedha ek influence chhinti hai. 10 pe majboori."
+        override val tutCoupBody =
+            "7 khokha ho toh KHELA khareediye. Na block, na challenge — seedha ek influence chhinti hai. 10 pe " +
+                "majboori."
         override val tutExchangeTitle = "SETTING — Hath Badaliye"
-        override val tutExchangeBody = "SETTING se 2 naye card khinchte hain, best do rakh ke baaki laut dete hain. Koi nahi jaanta kya badla."
+        override val tutExchangeBody =
+            "SETTING se 2 naye card khinchte hain, best do rakh ke baaki laut dete hain. Koi nahi jaanta kya " +
+                "badla."
         override val tut8Title = "Hazri Poori, Sarkar"
         override val tut8Body =
             "Ab aap sab jaante hain — daava, challenge, block, khela, aur setting. Kursi pe baithne ka waqt aa gaya."
@@ -712,7 +721,9 @@ sealed class KursiStrings {
         override val gauntletClearedTag = "PAAR · muhar lagi"
         override val gauntletCurrentTag = "ABHI YAHIN"
         override val gauntletConqueredTitle = "POORI SEEDHI FATEH"
-        override val gauntletConqueredBody = "Cabinet Secretary saab. Sabse oonchi kursi aapki. Phir bhi koi paaydaan dobara khel sakte hain."
+        override val gauntletConqueredBody =
+            "Cabinet Secretary saab. Sabse oonchi kursi aapki. Phir bhi koi paaydaan dobara khel sakte " +
+                "hain."
         override val gauntletRung0Name = "PROBATIONER"
         override val gauntletRung1Name = "BABU"
         override val gauntletRung2Name = "SECTION OFFICER"
@@ -1051,13 +1062,17 @@ sealed class KursiStrings {
         override val tutorialDoCoup = "STAMP KHELA"
         override val tutorialDoExchange = "RUN SETTING"
         override val tut1Title = "Two Certificates, Two Lives"
-        override val tut1Body = "These two secret certificates are your real identities. Lose both and you're out of the chair. Keep them hidden."
+        override val tut1Body =
+            "These two secret certificates are your real identities. Lose both and you're out of the chair. Keep " +
+                "them hidden."
         override val tut2Title = "Coins Are Power"
         override val tut2Body = "Coins buy power. 7 buys a hit (KHELA), 10 forces one. Always watch the count."
         override val tut3Title = "Claim a Role — True or Not"
         override val tut3Body = "Every move claims a role. The best part: you don't actually need that role. Bluffing is allowed."
         override val tut4Title = "Why the Advisor Speaks"
-        override val tut4Body = "With the coach ON, every option shows a ⭐ best move and a 'how likely it flies' read. It's your inside man."
+        override val tut4Body =
+            "With the coach ON, every option shows a ⭐ best move and a 'how likely it flies' read. It's your inside " +
+                "man."
         override val tut5Title = "Now Your Turn: GHOTALA"
         override val tut5Body = "GHOTALA claims NETA — for +3 coins. True? Nobody knows. Stamp it and see what happens."
         override val tut6Title = "Babu Filewala Challenges!"

@@ -6,6 +6,19 @@ import com.siddharth.kmp.botspolicy.SearchBudget
 import kotlinx.coroutines.CancellationException
 
 /**
+ * P(bluff) for each of BluffOdds' 1..5 confidence pips — the midpoint of that pip's bucket
+ * (pip 1 means pBluff < 0.20, pip 2 means 0.20..0.38, and so on). Indexed by `pips - 1`.
+ * A table, not five `when` arms, because the shape (monotonic, bucket midpoints) is the contract.
+ */
+private val BluffProbabilityByPip = listOf(0.10, 0.29, 0.46, 0.63, 0.86)
+
+/** Odds are shown to the player as whole percentages. */
+private const val PercentScale = 100
+
+/** At or above this the advisor calls a challenge "favourable" rather than "a long shot". */
+private const val FavourablePct = 50
+
+/**
  * MoveAdvisor — pure, UI-free "AI brain" shared by the decision-coach, best-move highlight,
  * AI assistant, and auto-mode.
  *
@@ -94,7 +107,7 @@ class MoveAdvisor(
         val rawAdvices: List<MoveAdvice> =
             legal.mapIndexed { idx, intent ->
                 val mv = moveValues.getOrNull(idx) ?: MoveValue(intent, 0.5, 0.0)
-                buildAdvice(intent, mv, view, state, humanId, recommended = false)
+                buildAdvice(intent, mv, view, recommended = false)
             }
 
         // Rank: primary = winProb desc, secondary = visitShare desc (most-visited tie-break)
@@ -144,8 +157,6 @@ class MoveAdvisor(
         intent: Intent,
         mv: MoveValue,
         view: PlayerView,
-        state: GameState,
-        humanId: PlayerId,
         recommended: Boolean,
     ): MoveAdvice {
         val label = labelFor(intent, view)
@@ -160,9 +171,9 @@ class MoveAdvisor(
 
         val bluff: Boolean = truthful == false // null → false, true → false, false → true
 
-        val successOdds: Double? = computeSuccessOdds(intent, view, state, humanId, bluff, claimedRole)
+        val successOdds: Double? = computeSuccessOdds(intent, view, bluff, claimedRole)
 
-        val rationale = rationaleFor(intent, view, truthful, bluff, claimedRole, successOdds, mv.winProb)
+        val rationale = rationaleFor(intent, truthful, bluff, claimedRole, successOdds, mv.winProb)
 
         return MoveAdvice(
             intent = intent,
@@ -205,89 +216,88 @@ class MoveAdvisor(
     private fun computeSuccessOdds(
         intent: Intent,
         view: PlayerView,
-        state: GameState,
-        humanId: PlayerId,
         bluff: Boolean,
         claimedRole: Role?,
-    ): Double? {
+    ): Double? =
+        when {
+            intent is Intent.Challenge -> challengeSuccessOdds(view)
+            bluff && claimedRole != null -> bluffSurvivalOdds(view, claimedRole)
+            else -> null
+        }
+
+    /**
+     * P(the claim we are about to challenge is a bluff), read off [BluffOdds]' pip confidence.
+     * Null when the phase carries no challengeable claim.
+     */
+    private fun challengeSuccessOdds(view: PlayerView): Double? {
+        val phase = view.phase as? PhaseView.Reactions ?: return null
+        val claim =
+            when (phase.step) {
+                ReactionStep.CHALLENGE_ACTION -> phase.actor to phase.claimedRole
+                ReactionStep.CHALLENGE_BLOCK -> phase.blocker to phase.blockRole
+                else -> null
+            }
+        val actorId = claim?.first ?: return null
+        val roleBeingClaimed = claim.second ?: return null
+        val actorOppView = view.players.firstOrNull { it.id == actorId } ?: return null
+
         val cfg = view.config
+        val eliminated = view.players.sumOf { it.faceUpRoles.count { r -> r == roleBeingClaimed } }
+        val myHand = view.myInfluence.count { it == roleBeingClaimed }
+        val totalVisible = view.players.sumOf { it.faceUpRoles.size } + view.myFaceUp.size
 
-        // For Challenge: estimate P(claimer is bluffing)
-        if (intent is Intent.Challenge) {
-            val phase = view.phase
-            val (actorId, roleBeingClaimed) =
-                when (phase) {
-                    is PhaseView.Reactions ->
-                        when (phase.step) {
-                            ReactionStep.CHALLENGE_ACTION -> phase.actor to phase.claimedRole
-                            ReactionStep.CHALLENGE_BLOCK -> phase.blocker to phase.blockRole
-                            else -> return null
-                        }
-                    else -> return null
-                }
-            if (actorId == null || roleBeingClaimed == null) return null
+        val confidence =
+            BluffOdds.estimate(
+                claimedRole = roleBeingClaimed,
+                copiesPerRole = cfg.copiesPerRole,
+                deckSize = cfg.deckSize,
+                eliminatedRolesForClaimedRole = eliminated,
+                myHandContainsClaimedRole = myHand,
+                opponentFaceDownCount = actorOppView.faceDownCount,
+                totalVisibleCards = totalVisible,
+            )
+        // pips 1..5 mapped linearly to P(bluff) ~ (pips-1)/4. More precisely, reconstruct from
+        // BluffOdds thresholds: pips=1 -> pBluff<0.20, pips=2 -> 0.20-0.38, etc. We return the
+        // midpoint of each bucket.
+        return BluffProbabilityByPip.getOrElse(confidence.pips - 1) { BluffProbabilityByPip.last() }
+    }
 
-            val actorOppView = view.players.firstOrNull { it.id == actorId } ?: return null
-            val eliminated = view.players.sumOf { it.faceUpRoles.count { r -> r == roleBeingClaimed } }
-            val myHand = view.myInfluence.count { it == roleBeingClaimed }
-            val totalVisible = view.players.sumOf { it.faceUpRoles.size } + view.myFaceUp.size
+    /**
+     * For a bluffed action or block: rough P(safe — not caught) = 1 − P(someone challenges), which
+     * we approximate from [BluffOdds] run on the human's own bluff from the opponents' perspective.
+     */
+    private fun bluffSurvivalOdds(
+        view: PlayerView,
+        claimedRole: Role,
+    ): Double {
+        val cfg = view.config
+        val eliminated = view.players.sumOf { it.faceUpRoles.count { r -> r == claimedRole } }
+        // myHandContainsClaimedRole = 0 (we're bluffing, so we don't hold it)
+        val myHand = 0
+        val totalVisible = view.players.sumOf { it.faceUpRoles.size } + view.myFaceUp.size
+        val myInfluenceCount = view.myInfluence.size.coerceAtLeast(1)
 
-            val confidence =
-                BluffOdds.estimate(
-                    claimedRole = roleBeingClaimed,
-                    copiesPerRole = cfg.copiesPerRole,
-                    deckSize = cfg.deckSize,
-                    eliminatedRolesForClaimedRole = eliminated,
-                    myHandContainsClaimedRole = myHand,
-                    opponentFaceDownCount = actorOppView.faceDownCount,
-                    totalVisibleCards = totalVisible,
-                )
-            // pips 1..5 mapped linearly to P(bluff) ≈ (pips-1)/4
-            // More precisely, reconstruct from BluffOdds thresholds:
-            // pips=1 → pBluff<0.20, pips=2 → 0.20-0.38, etc.
-            // We return the midpoint of each bucket.
-            return when (confidence.pips) {
+        val confidence =
+            BluffOdds.estimate(
+                claimedRole = claimedRole,
+                copiesPerRole = cfg.copiesPerRole,
+                deckSize = cfg.deckSize,
+                eliminatedRolesForClaimedRole = eliminated,
+                myHandContainsClaimedRole = myHand,
+                opponentFaceDownCount = myInfluenceCount, // k = my influence count (from opponents' PoV)
+                totalVisibleCards = totalVisible,
+            )
+        // P(opponents think I'm bluffing) ~ midpoint of bucket
+        val pBluffFromOppPov =
+            when (confidence.pips) {
                 1 -> 0.10
                 2 -> 0.29
                 3 -> 0.46
                 4 -> 0.63
                 else -> 0.86
             }
-        }
-
-        // For bluff action or bluff block: rough P(safe — not caught)
-        // = 1 − P(someone challenges) which we approximate from BluffOdds on the human's bluff
-        if (bluff && claimedRole != null) {
-            val eliminated = view.players.sumOf { it.faceUpRoles.count { r -> r == claimedRole } }
-            // myHandContainsClaimedRole = 0 (we're bluffing, so we don't hold it)
-            val myHand = 0
-            val totalVisible = view.players.sumOf { it.faceUpRoles.size } + view.myFaceUp.size
-            val myInfluenceCount = view.myInfluence.size.coerceAtLeast(1)
-
-            val confidence =
-                BluffOdds.estimate(
-                    claimedRole = claimedRole,
-                    copiesPerRole = cfg.copiesPerRole,
-                    deckSize = cfg.deckSize,
-                    eliminatedRolesForClaimedRole = eliminated,
-                    myHandContainsClaimedRole = myHand,
-                    opponentFaceDownCount = myInfluenceCount, // k = my influence count (from opponents' PoV)
-                    totalVisibleCards = totalVisible,
-                )
-            // P(opponents think I'm bluffing) ≈ midpoint of bucket
-            val pBluffFromOppPov =
-                when (confidence.pips) {
-                    1 -> 0.10
-                    2 -> 0.29
-                    3 -> 0.46
-                    4 -> 0.63
-                    else -> 0.86
-                }
-            // P(not challenged) ≈ 1 − pBluffFromOppPov (crude but calibrated)
-            return (1.0 - pBluffFromOppPov).coerceIn(0.0, 1.0)
-        }
-
-        return null
+        // P(not challenged) ~ 1 - pBluffFromOppPov (crude but calibrated)
+        return (1.0 - pBluffFromOppPov).coerceIn(0.0, 1.0)
     }
 
     // ── Labels ────────────────────────────────────────────────────────────────
@@ -329,7 +339,6 @@ class MoveAdvisor(
 
     private fun rationaleFor(
         intent: Intent,
-        view: PlayerView,
         truthful: Boolean?,
         bluff: Boolean,
         claimedRole: Role?,
@@ -339,8 +348,8 @@ class MoveAdvisor(
         // Challenge: odds-first rationale
         if (intent is Intent.Challenge) {
             return if (successOdds != null) {
-                val pct = (successOdds * 100).toInt()
-                if (pct >= 50) {
+                val pct = (successOdds * PercentScale).toInt()
+                if (pct >= FavourablePct) {
                     "~$pct% chance they're bluffing — challenge is favourable."
                 } else {
                     "~$pct% chance they're bluffing — challenge is a long shot."

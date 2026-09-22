@@ -1,5 +1,24 @@
 package com.kursi.engine
 
+/**
+ * ADHYADESH (Emergency) also demands a meaningful payment on top of the lifetime-coin threshold —
+ * without it a seat that had once been rich but is now broke could still fire it.
+ */
+private const val EMERGENCY_MIN_COINS = 7
+
+/**
+ * Darja (rank) milestones: lifetime-coin threshold to the level it awards, ascending.
+ *
+ * Public because the UI has to agree with the engine about what level a coin count is worth, and
+ * it did not: :feature:game's GameUiState.darjaLevelFor carried its own copy of 8/12/16/20 as four
+ * literals in a `when`. Two copies of a ladder is one ladder and one bug waiting for someone to
+ * retune the other.
+ */
+val DARJA_LADDER: List<Pair<Int, Int>> = listOf(8 to 1, 12 to 2, 16 to 3, 20 to 4)
+
+/** The Darja level [lifetimeCoins] has earned, 0 if none. Single source of truth for engine and UI. */
+fun darjaLevelOf(lifetimeCoins: Int): Int = DARJA_LADDER.lastOrNull { lifetimeCoins >= it.first }?.second ?: 0
+
 // ─────────────────────────── Public engine API ───────────────────────────
 
 /** Deterministic initial state: shuffle + deal via the seeded RNG. (config, seed) fully determines this. */
@@ -87,7 +106,11 @@ fun legalActions(
     if (me.coins >= cfg.effectiveCoupCost(state.turnNumber)) for (t in targets) out.add(Action.Coup(t)) // ANARCHY/INFLATION: cost varies
     out.add(Action.Tax)
     for (t in targets) if (state.player(t).coins >= 1) out.add(Action.Steal(t)) // D9: Vasooli on 0-coin target is illegal
-    if (me.coins >= cfg.effectiveAssassinateCost(state.turnNumber)) for (t in targets) out.add(Action.Assassinate(t)) // INFLATION: cost rises
+    // INFLATION: the Supari cost rises with the turn number, so affordability is re-checked here
+    // rather than read off a constant.
+    if (me.coins >= cfg.effectiveAssassinateCost(state.turnNumber)) {
+        for (t in targets) out.add(Action.Assassinate(t))
+    }
     out.add(Action.Exchange)
     // Jaanch (claims PATRAKAAR) — only offered when the 6th role is in this deck (otherwise it is a
     // guaranteed-losing bluff). Free action, no cost; target must have a face-down card to examine.
@@ -111,7 +134,7 @@ fun legalActions(
     // ADHYADESH (Emergency): lifetime coins ≥ threshold AND current coins ≥ 7 (must pay something meaningful).
     if (cfg.emergencyEnabled &&
         (state.lifetimeCoins[pid] ?: 0) >= cfg.emergencyThreshold &&
-        me.coins >= 7
+        me.coins >= EMERGENCY_MIN_COINS
     ) {
         out.add(Action.Emergency)
     }
@@ -290,7 +313,7 @@ private class EngineStep(
     ) {
         if (!cfg.khazanaEnabled) return
         // Emit Darja milestone events when a threshold is crossed for the first time.
-        for ((threshold, level) in listOf(8 to 1, 12 to 2, 16 to 3, 20 to 4)) {
+        for ((threshold, level) in DARJA_LADDER) {
             if (prev < threshold && next >= threshold) {
                 events.add(GameEvent.DarjaReached(pid, level, next))
             }
@@ -537,8 +560,24 @@ private class EngineStep(
                 if (state.isAlive(a.target)) transfer(a.target, actor, cfg.stealAmount)
                 if (state.phase !is Phase.GameOver) endTurn(actor)
             }
-            is Action.Coup -> if (state.isAlive(a.target)) requireLoss(a.target, LossReason.COUPED, AfterLoss.EndTurn(actor)) else endTurn(actor)
-            is Action.Assassinate -> if (state.isAlive(a.target)) requireLoss(a.target, LossReason.ASSASSINATED, AfterLoss.EndTurn(actor)) else endTurn(actor)
+            is Action.Coup ->
+                if (state.isAlive(
+                        a.target,
+                    )
+                ) {
+                    requireLoss(a.target, LossReason.COUPED, AfterLoss.EndTurn(actor))
+                } else {
+                    endTurn(actor)
+                }
+            is Action.Assassinate ->
+                if (state.isAlive(
+                        a.target,
+                    )
+                ) {
+                    requireLoss(a.target, LossReason.ASSASSINATED, AfterLoss.EndTurn(actor))
+                } else {
+                    endTurn(actor)
+                }
             Action.Exchange -> startExchange(actor)
             is Action.Investigate -> startInvestigate(actor, a.target)
             // ── Variant actions ─────────────────────────────────────────────────────────────────────────
@@ -1001,7 +1040,9 @@ fun checkInvariants(state: GameState) {
                 }
                 !cfg.isTeamGame -> {
                     // Classic free-for-all: exactly one player alive, and it is the declared winner.
-                    check(alive.size == 1 && alive.first().id == ph.winner) { "I10: GameOver(${ph.winner}) but alive=${alive.map { it.id }}" }
+                    check(
+                        alive.size == 1 && alive.first().id == ph.winner,
+                    ) { "I10: GameOver(${ph.winner}) but alive=${alive.map { it.id }}" }
                 }
                 else -> {
                     // TEAMS: exactly one team alive, the winner is alive and on that team.

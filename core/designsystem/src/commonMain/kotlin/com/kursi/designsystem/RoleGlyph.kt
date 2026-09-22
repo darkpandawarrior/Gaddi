@@ -39,14 +39,33 @@ import com.kursi.engine.Role
 //  so the same path is crisp from a 10dp chit pip to a 96dp role-card centre.
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/** Drawing recipe for one role glyph on a normalised 0..100 canvas. */
+/** One stroked path of a glyph, with its weight as a multiple of the glyph's base stroke. */
+private data class GlyphStroke(
+    val path: Path,
+    val weight: Float,
+)
+
+/** One filled dot of a glyph, on the same normalised 0..100 canvas as the paths. */
+private data class GlyphDot(
+    val cx: Float,
+    val cy: Float,
+    val radius: Float,
+)
+
+/**
+ * Drawing recipe for one role glyph on a normalised 0..100 canvas.
+ *
+ * [GlyphStroke] and [GlyphDot] replace the `Pair<Path, Float>` and `Triple<Float, Float, Float>`
+ * these used to be. `crown to 0.7f` and `Triple(64f, 62f, 2.4f)` gave the reader no way to tell a
+ * stroke weight from a radius or an x from a y; `GlyphStroke(crown, weight = 0.7f)` does.
+ */
 private data class GlyphSpec(
-    /** Strokes: each is a Path plus its relative stroke weight (× base). */
-    val strokes: List<Pair<Path, Float>> = emptyList(),
+    /** Strokes, each with its relative weight (x base). */
+    val strokes: List<GlyphStroke> = emptyList(),
     /** Solid fills (e.g. the blade body, the stamp disc). */
     val fills: List<Path> = emptyList(),
-    /** Filled dots: center + radius (normalised). */
-    val dots: List<Triple<Float, Float, Float>> = emptyList(),
+    /** Filled dots. */
+    val dots: List<GlyphDot> = emptyList(),
 )
 
 private const val UNIT = 100f
@@ -112,11 +131,11 @@ private fun netaSpec(): GlyphSpec {
         fills = listOf(seatBack),
         strokes =
             listOf(
-                crown to 0.7f,
-                seat to 1.15f,
-                arms to 0.9f,
-                legs to 1.0f,
-                dais to 1.0f,
+                GlyphStroke(crown, weight = 0.7f),
+                GlyphStroke(seat, weight = 1.15f),
+                GlyphStroke(arms, weight = 0.9f),
+                GlyphStroke(legs, weight = 1.0f),
+                GlyphStroke(dais, weight = 1.0f),
             ),
     )
 }
@@ -158,8 +177,8 @@ private fun bhaiSpec(): GlyphSpec {
         fills = listOf(blade),
         strokes =
             listOf(
-                hilt to 1.1f,
-                fist to 1.0f,
+                GlyphStroke(hilt, weight = 1.1f),
+                GlyphStroke(fist, weight = 1.0f),
             ),
     )
 }
@@ -205,12 +224,12 @@ private fun babuSpec(): GlyphSpec {
         fills = listOf(folderTab),
         strokes =
             listOf(
-                folderBody to 1.15f,
-                lines to 0.7f,
-                stampRing to 1.1f,
-                stampInner to 0.7f,
+                GlyphStroke(folderBody, weight = 1.15f),
+                GlyphStroke(lines, weight = 0.7f),
+                GlyphStroke(stampRing, weight = 1.1f),
+                GlyphStroke(stampInner, weight = 0.7f),
             ),
-        dots = listOf(Triple(64f, 62f, 2.4f)),
+        dots = listOf(GlyphDot(cx = 64f, cy = 62f, radius = 2.4f)),
     )
 }
 
@@ -260,9 +279,9 @@ private fun jugaaduSpec(): GlyphSpec {
         fills = listOf(zipHead),
         strokes =
             listOf(
-                wrench to 1.25f,
-                wrenchHandleEnd to 1.1f,
-                zipLoop to 1.05f,
+                GlyphStroke(wrench, weight = 1.25f),
+                GlyphStroke(wrenchHandleEnd, weight = 1.1f),
+                GlyphStroke(zipLoop, weight = 1.05f),
             ),
     )
 }
@@ -326,12 +345,12 @@ private fun vakilSpec(): GlyphSpec {
         fills = listOf(gavelHead),
         strokes =
             listOf(
-                beam to 1.1f,
-                column to 0.9f,
-                leftPan to 0.85f,
-                rightPan to 0.85f,
-                gavelHandle to 1.2f,
-                gavelBlock to 1.2f,
+                GlyphStroke(beam, weight = 1.1f),
+                GlyphStroke(column, weight = 0.9f),
+                GlyphStroke(leftPan, weight = 0.85f),
+                GlyphStroke(rightPan, weight = 0.85f),
+                GlyphStroke(gavelHandle, weight = 1.2f),
+                GlyphStroke(gavelBlock, weight = 1.2f),
             ),
     )
 }
@@ -394,13 +413,13 @@ private fun patrakaarSpec(): GlyphSpec {
         fills = listOf(card, nib),
         strokes =
             listOf(
-                clipSlot to 1.0f,
-                headline to 0.7f,
-                portrait to 0.9f,
-                nibSlit to 0.7f,
+                GlyphStroke(clipSlot, weight = 1.0f),
+                GlyphStroke(headline, weight = 0.7f),
+                GlyphStroke(portrait, weight = 0.9f),
+                GlyphStroke(nibSlit, weight = 0.7f),
             ),
         // the nib's vent-hole (the breather of a real pen-nib)
-        dots = listOf(Triple(66f, 68f, 2.2f)),
+        dots = listOf(GlyphDot(cx = 66f, cy = 68f, radius = 2.2f)),
     )
 }
 
@@ -488,20 +507,20 @@ private fun DrawScope.paintSpec(
     spec.fills.forEach { path ->
         drawPath(path, color = color.copy(alpha = color.alpha * fillAlpha), style = Fill)
     }
-    spec.strokes.forEach { (path, w) ->
+    spec.strokes.forEach { (path, weight) ->
         drawPath(
             path,
             color = color,
             style =
                 Stroke(
-                    width = stroke * w,
+                    width = stroke * weight,
                     cap = StrokeCap.Round,
                     join = StrokeJoin.Round,
                 ),
         )
     }
-    spec.dots.forEach { (cx, cy, r) ->
-        drawCircle(color, radius = r, center = Offset(cx, cy))
+    spec.dots.forEach { (cx, cy, radius) ->
+        drawCircle(color, radius = radius, center = Offset(cx, cy))
     }
 }
 

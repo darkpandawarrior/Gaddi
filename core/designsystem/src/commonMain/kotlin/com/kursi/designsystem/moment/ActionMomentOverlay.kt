@@ -142,23 +142,23 @@ private fun momentToSlipContent(m: KursiMoment): Pair<String, String> =
         is KursiMoment.Coup -> "KHL" to "KHELA!"
         is KursiMoment.Block -> "BLK" to "blocked"
         is KursiMoment.Challenge -> "CHK" to "challenge!"
-        is KursiMoment.Reveal -> "REV" to if ((m as KursiMoment.Reveal).truthful) "SACH" else "JHOOTH"
+        is KursiMoment.Reveal -> "REV" to if (m.truthful) "SACH" else "JHOOTH"
         is KursiMoment.InfluenceLoss -> "EXP" to "EXPOSED"
         is KursiMoment.Elimination -> "OUT" to "KURSI GAYI"
-        is KursiMoment.TurnHandoff -> "→" to "seat ${(m as KursiMoment.TurnHandoff).nextSeat}"
+        is KursiMoment.TurnHandoff -> "→" to "seat ${m.nextSeat}"
         is KursiMoment.Win -> "WIN" to "Kursi aapki!"
     }
 
 /** Returns the tint color for a moment's ticker slip and static variant. */
 private fun momentTint(m: KursiMoment): androidx.compose.ui.graphics.Color =
     when (m) {
-        is KursiMoment.Tax -> (m as KursiMoment.Tax).roleHue
-        is KursiMoment.Steal -> (m as KursiMoment.Steal).roleHue
-        is KursiMoment.Assassinate -> (m as KursiMoment.Assassinate).roleHue
-        is KursiMoment.Exchange -> (m as KursiMoment.Exchange).roleHue
-        is KursiMoment.Block -> (m as KursiMoment.Block).roleHue
-        is KursiMoment.Reveal -> (m as KursiMoment.Reveal).roleHue
-        is KursiMoment.InfluenceLoss -> (m as KursiMoment.InfluenceLoss).roleHue
+        is KursiMoment.Tax -> m.roleHue
+        is KursiMoment.Steal -> m.roleHue
+        is KursiMoment.Assassinate -> m.roleHue
+        is KursiMoment.Exchange -> m.roleHue
+        is KursiMoment.Block -> m.roleHue
+        is KursiMoment.Reveal -> m.roleHue
+        is KursiMoment.InfluenceLoss -> m.roleHue
         is KursiMoment.Coup,
         is KursiMoment.Elimination,
         is KursiMoment.Win,

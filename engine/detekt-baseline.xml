@@ -2,18 +2,7 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>CyclomaticComplexMethod:Engine.kt:EngineStep$private fun resolveEffect</ID>
     <ID>CyclomaticComplexMethod:Engine.kt:fun legalActions: Set&lt;Action&gt;</ID>
-    <ID>MagicNumber:Engine.kt:EngineStep$12</ID>
-    <ID>MagicNumber:Engine.kt:EngineStep$16</ID>
-    <ID>MagicNumber:Engine.kt:EngineStep$20</ID>
-    <ID>MagicNumber:Model.kt:GameConfig$50</ID>
-    <ID>MagicNumber:Rng.kt:27</ID>
-    <ID>MagicNumber:Rng.kt:30</ID>
-    <ID>MagicNumber:Rng.kt:31</ID>
-    <ID>ThrowsCount:Engine.kt:EngineStep$fun dispatch</ID>
-    <ID>ThrowsCount:Engine.kt:EngineStep$private fun chooseExchange</ID>
-    <ID>ThrowsCount:Engine.kt:EngineStep$private fun reaction</ID>
     <ID>TooManyFunctions:Engine.kt:EngineStep</ID>
   </CurrentIssues>
 </SmellBaseline>

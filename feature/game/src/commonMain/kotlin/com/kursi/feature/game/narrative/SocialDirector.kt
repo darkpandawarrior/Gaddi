@@ -93,7 +93,8 @@ class SocialDirector(
     fun socialSnapshot(): SocialState = social
 
     /** True when [seat] is the seat the table currently most wants gone (the live conspiracy target). */
-    fun isConspiracyTarget(seat: Int): Boolean = social.threatOf(seat) >= 0.6f && social.threat.maxByOrNull { it.value }?.key == seat
+    fun isConspiracyTarget(seat: Int): Boolean =
+        social.threatOf(seat) >= CONSPIRACY_THREAT && social.threat.maxByOrNull { it.value }?.key == seat
 
     /**
      * Restyles the already-emitted message [id] through [embellisher], replacing its template body
@@ -224,12 +225,23 @@ class SocialDirector(
             ChatActionKind.ARC_REPLY, ChatActionKind.DEFLECT, ChatActionKind.ALLY_PING -> replyArc(input, turn)
             ChatActionKind.TAUNT -> {
                 val t = input.targetSeat ?: return
-                emit(humanSeat, voice.arcBeat("afwaah.plant", "Aap", info[t]?.name), MessageTone.HOSTILE, ChatKind.TABLE, t, turn, fromPlayer = true)
-                social = social.withThreat(t, 0.2f).withStance(t, humanSeat) { it.adjust(suspicion = 0.15f) }
+                emit(
+                    humanSeat,
+                    voice.arcBeat("afwaah.plant", "Aap", info[t]?.name),
+                    MessageTone.HOSTILE,
+                    ChatKind.TABLE,
+                    t,
+                    turn,
+                    fromPlayer = true,
+                )
+                social = social.withThreat(t, ACCUSE_THREAT_GAIN).withStance(t, humanSeat) { it.adjust(suspicion = ACCUSE_SUSPICION_GAIN) }
             }
             ChatActionKind.PLACATE -> {
                 val t = input.targetSeat ?: return
-                social = social.withStance(t, humanSeat) { it.adjust(trust = 0.3f, suspicion = -0.2f) }.withThreat(humanSeat, -0.15f)
+                social =
+                    social
+                        .withStance(t, humanSeat) { it.adjust(trust = DEFEND_TRUST_GAIN, suspicion = -DEFEND_SUSPICION_DROP) }
+                        .withThreat(humanSeat, -DEFEND_SELF_THREAT_DROP)
             }
         }
         if (view != null) recomputeSuggestions(view)
@@ -269,7 +281,7 @@ class SocialDirector(
         val arc = input.arc ?: return
         val state = arcs[arc] ?: return
         val rivalName = input.targetSeat?.let { info[it]?.name }
-        val step = StoryArcs.reply(state, input, rivalName)
+        val step = StoryArcs.reply(state, input)
         applyStep(step, turn)
     }
 
@@ -287,7 +299,13 @@ class SocialDirector(
                     beat.fromPlayer || beat.speakerSeat == humanSeat -> voice.arcBeat(beat.beatKey, speakerName, targetName)
                     else -> {
                         val pid = info[beat.speakerSeat]?.personaId
-                        if (pid != null) voice.botArcBeat(beat.beatKey, pid, targetName) else voice.arcBeat(beat.beatKey, speakerName, targetName)
+                        if (pid !=
+                            null
+                        ) {
+                            voice.botArcBeat(beat.beatKey, pid, targetName)
+                        } else {
+                            voice.arcBeat(beat.beatKey, speakerName, targetName)
+                        }
                     }
                 }
             val kind = if (beat.speakerSeat < 0) ChatKind.SYSTEM else ChatKind.ARC
@@ -304,8 +322,11 @@ class SocialDirector(
             is SocialOp.Threat -> social = social.withThreat(op.seat, op.delta)
             is SocialOp.Suspicion ->
                 if (op.observer == SocialOp.ALL) {
-                    info.keys.filter { it != op.target }.forEach { o -> social = social.withStance(o, op.target) { it.adjust(suspicion = op.delta) } }
-                    social = social.withThreat(op.target, op.delta * 0.5f)
+                    info.keys.filter { it != op.target }.forEach { o ->
+                        social =
+                            social.withStance(o, op.target) { it.adjust(suspicion = op.delta) }
+                    }
+                    social = social.withThreat(op.target, op.delta * GRUDGE_TO_THREAT_RATIO)
                 } else {
                     social = social.withStance(op.observer, op.target) { it.adjust(suspicion = op.delta) }
                 }
@@ -313,7 +334,7 @@ class SocialDirector(
             is SocialOp.Agitate -> social = social.withAgitation(op.seat, op.delta * flawWeight(op.seat, op.flaw))
             is SocialOp.Grudge -> {
                 onGrudge(op.holder, op.target, op.weight)
-                social = social.withThreat(op.target, 0.2f)
+                social = social.withThreat(op.target, BETRAY_THREAT_GAIN)
             }
         }
     }
@@ -331,13 +352,11 @@ class SocialDirector(
         choices: List<Intent>,
         view: PlayerView,
     ): Intent {
-        val declared = chosen as? Intent.DeclareAction
         val opponents = view.players.filter { !it.eliminated && it.id != view.viewer }.map { it.id.raw }
         if (opponents.isEmpty()) return chosen
 
-        // 1. Where does this bot want to point, socially?
-        val desired = desiredTarget(seat, opponents) ?: return chosen
-        if (desired == seat) return chosen
+        // 1. Where does this bot want to point, socially? (Never at itself.)
+        val desired = desiredTarget(seat, opponents)?.takeIf { it != seat } ?: return chosen
 
         // 2. How strongly? Conspiracy pull + flaw agitation, scaled by impulsiveness.
         val pull =
@@ -349,17 +368,21 @@ class SocialDirector(
         nudgeRng = r
         if (roll >= (pull * 100f).toInt()) return chosen
 
-        // 3a. If already attacking, re-target the SAME attack onto the desired seat.
-        if (declared != null && Rules.targetOf(declared.action) != null) {
-            attackTo(choices, desired, sameTypeAs = declared.action)?.let { return it }
-            attackTo(choices, desired, sameTypeAs = null)?.let { return it } // any attack onto desired
-            return chosen
-        }
-        // 3b. Bot was playing it safe but is agitated/pressured → upgrade into an attack on desired.
-        if (social.agitationOf(seat) >= 0.4f || social.threatOf(desired) >= 0.7f) {
-            attackTo(choices, desired, sameTypeAs = null)?.let { return it }
-        }
-        return chosen
+        // 3. Point the move at the desired seat if the table's mood justifies it.
+        val attacking = (chosen as? Intent.DeclareAction)?.takeIf { Rules.targetOf(it.action) != null }
+        val pressured =
+            social.agitationOf(seat) >= NUDGE_AGITATION_FLOOR || social.threatOf(desired) >= NUDGE_THREAT_FLOOR
+        val nudged =
+            when {
+                // 3a. Already attacking: re-target the SAME attack onto the desired seat, else any attack.
+                attacking != null ->
+                    attackTo(choices, desired, sameTypeAs = attacking.action)
+                        ?: attackTo(choices, desired, sameTypeAs = null)
+                // 3b. Was playing it safe but is agitated/pressured → upgrade into an attack on desired.
+                pressured -> attackTo(choices, desired, sameTypeAs = null)
+                else -> null
+            }
+        return nudged ?: chosen
     }
 
     /** The seat this bot is socially primed to hit: vendetta/suspicion target, else the conspiracy target. */
@@ -371,7 +394,7 @@ class SocialDirector(
         // Vengeance/Paranoia steer toward whom this bot personally resents/suspects most.
         if (flaw == CharacterFlaw.VENGEANCE || flaw == CharacterFlaw.PARANOIA) {
             val personal = opponents.maxByOrNull { social.stance(seat, it).suspicion - social.stance(seat, it).trust }
-            if (personal != null && social.stance(seat, personal).suspicion >= 0.3f) return personal
+            if (personal != null && social.stance(seat, personal).suspicion >= PERSONAL_GRUDGE_SUSPICION) return personal
         }
         // Allies are spared; otherwise follow the table's conspiracy target.
         val ally = social.allyOf(seat)
@@ -398,7 +421,7 @@ class SocialDirector(
         val target = Rules.targetOf(a)?.raw ?: return
         val sp = info[e.actor.raw] ?: return
         if (sp.isHuman || sp.personaId == null) return
-        if (!chance(38)) return
+        if (!chance(TABLE_TALK_PCT)) return
         emit(sp.seat, voice.taunt(sp.personaId, info[target]?.name ?: "unhe"), MessageTone.HOSTILE, ChatKind.TABLE, target, turn)
     }
 
@@ -416,7 +439,7 @@ class SocialDirector(
         turn: Int,
     ) {
         val sp = info[seat] ?: return
-        if (sp.isHuman || sp.personaId == null || !chance(45)) return
+        if (sp.isHuman || sp.personaId == null || !chance(SPEAK_UP_PCT)) return
         emit(sp.seat, voice.gloat(sp.personaId), MessageTone.BOAST, ChatKind.TABLE, turn = turn)
     }
 
@@ -430,10 +453,17 @@ class SocialDirector(
         if (tgt == humanSeat) {
             // Bots openly rally against the player.
             val rallier = info.values.firstOrNull { !it.isHuman && it.personaId != null && chance(35) } ?: return
-            emit(rallier.seat, voice.pileOn(rallier.personaId!!, info[humanSeat]?.name ?: "khiladi"), MessageTone.HOSTILE, ChatKind.TABLE, humanSeat, turn)
+            emit(
+                rallier.seat,
+                voice.pileOn(rallier.personaId!!, info[humanSeat]?.name ?: "khiladi"),
+                MessageTone.HOSTILE,
+                ChatKind.TABLE,
+                humanSeat,
+                turn,
+            )
         } else {
             val ti = info[tgt] ?: return
-            if (!ti.isHuman && ti.personaId != null && chance(35)) {
+            if (!ti.isHuman && ti.personaId != null && chance(REPLY_PCT)) {
                 emit(ti.seat, voice.threatened(ti.personaId), MessageTone.PANICKED, ChatKind.TABLE, turn = turn)
             }
         }
@@ -508,9 +538,19 @@ class SocialDirector(
             }
         val tableTalk =
             leader(view, opps)?.let {
-                listOf(ChatSuggestion("talk.taunt.${it.seat}", "Taunt ${it.name}", ChatActionKind.TAUNT, null, it.seat, it.name, "Heat them up"))
+                listOf(
+                    ChatSuggestion(
+                        "talk.taunt.${it.seat}",
+                        "Taunt ${it.name}",
+                        ChatActionKind.TAUNT,
+                        null,
+                        it.seat,
+                        it.name,
+                        "Heat them up",
+                    ),
+                )
             } ?: emptyList()
-        pendingSuggestions = (activeReplies + starters + tableTalk).distinctBy { it.id }.take(6)
+        pendingSuggestions = (activeReplies + starters + tableTalk).distinctBy { it.id }.take(MAX_SUGGESTIONS)
     }
 
     private fun bestForGathbandhan(
@@ -561,7 +601,7 @@ class SocialDirector(
      */
     private fun botAcceptsPact(seat: Int): Boolean {
         val st = social.stance(seat, humanSeat)
-        return (st.trust - st.suspicion * 0.8f) >= -0.12f
+        return (st.trust - st.suspicion * SUSPICION_WEIGHT) >= -ALLY_TOLERANCE
     }
 
     private fun dominantFlaw(seat: Int): CharacterFlaw = info[seat]?.profile?.let { FlawModel.dominantFlaw(it) } ?: CharacterFlaw.IMPULSE
@@ -569,19 +609,24 @@ class SocialDirector(
     private fun flawWeight(
         seat: Int,
         flaw: CharacterFlaw,
-    ): Float = info[seat]?.profile?.let { FlawModel.susceptibility(it, flaw) } ?: 0.5f
+    ): Float = info[seat]?.profile?.let { FlawModel.susceptibility(it, flaw) } ?: NEUTRAL_SUSCEPTIBILITY
 
-    private fun impulse(seat: Int): Float = info[seat]?.profile?.let { 1f - it.predictability } ?: 0.3f
+    private fun impulse(seat: Int): Float = info[seat]?.profile?.let { 1f - it.predictability } ?: NEUTRAL_IMPULSE
 
     private fun bestFlaw(
         opps: List<SeatRef>,
         flaw: CharacterFlaw,
-    ): SeatRef? = opps.maxByOrNull { flawWeight(it.seat, flaw) }?.takeIf { flawWeight(it.seat, flaw) >= 0.4f }
+    ): SeatRef? = opps.maxByOrNull { flawWeight(it.seat, flaw) }?.takeIf { flawWeight(it.seat, flaw) >= MIN_BAITABLE_WEIGHT }
 
     private fun livingOpponents(): List<SeatRef> = info.values.filter { !it.isHuman }.map { SeatRef(it.seat, it.name) }
 
     private fun livingOpponentsFrom(view: PlayerView): List<SeatRef> =
-        view.players.filter { !it.eliminated && it.id.raw != humanSeat }.map { SeatRef(it.id.raw, info[it.id.raw]?.name ?: "Seat ${it.id.raw}") }
+        view.players.filter { !it.eliminated && it.id.raw != humanSeat }.map {
+            SeatRef(
+                it.id.raw,
+                info[it.id.raw]?.name ?: "Seat ${it.id.raw}",
+            )
+        }
 
     private fun leader(
         view: PlayerView,
@@ -591,7 +636,7 @@ class SocialDirector(
     private fun strength(
         view: PlayerView,
         seat: Int,
-    ): Int = view.players.firstOrNull { it.id.raw == seat }?.let { it.faceDownCount * 10 + it.coins } ?: 0
+    ): Int = view.players.firstOrNull { it.id.raw == seat }?.let { it.faceDownCount * INFLUENCE_COIN_EQUIVALENT + it.coins } ?: 0
 
     private fun sameType(
         a: Action,
@@ -609,5 +654,53 @@ class SocialDirector(
         private const val SOCIAL_SALT = 0x44415242_41522121L // "DARBAR!!" — cosmetic chatter stream
         private const val NUDGE_SALT = 0x4E55_44_4745_5221L // "NUDGER!"  — game-affecting nudge stream
         const val MAX_FEED = 80
+
+        // ── Social thresholds ────────────────────────────────────────────────────
+
+        /** Threat at or above which a seat is read as the table's conspiracy target. */
+        private const val CONSPIRACY_THREAT = 0.6f
+
+        /** What a public accusation does to the accused: table threat up, human's trust in them down. */
+        private const val ACCUSE_THREAT_GAIN = 0.2f
+        private const val ACCUSE_SUSPICION_GAIN = 0.15f
+
+        /** What publicly defending a seat does: they trust you more, the table eyes you slightly less. */
+        private const val DEFEND_TRUST_GAIN = 0.3f
+        private const val DEFEND_SUSPICION_DROP = 0.2f
+        private const val DEFEND_SELF_THREAT_DROP = 0.15f
+
+        /** A grudge is half a threat: being hated by one seat is milder than being feared by all. */
+        private const val GRUDGE_TO_THREAT_RATIO = 0.5f
+        private const val BETRAY_THREAT_GAIN = 0.2f
+
+        /** A bot only lets the narrative override its chosen intent past one of these two floors. */
+        private const val NUDGE_AGITATION_FLOOR = 0.4f
+        private const val NUDGE_THREAT_FLOOR = 0.7f
+
+        /** Suspicion at which a bot prefers its own grudge target over the table's. */
+        private const val PERSONAL_GRUDGE_SUSPICION = 0.3f
+
+        /** Ally test: trust discounted by weighted suspicion, allowed to go slightly negative. */
+        private const val SUSPICION_WEIGHT = 0.8f
+        private const val ALLY_TOLERANCE = 0.12f
+
+        /** Fallbacks when a seat has no personality profile (a human, or an unconfigured bot). */
+        private const val NEUTRAL_SUSCEPTIBILITY = 0.5f
+        private const val NEUTRAL_IMPULSE = 0.3f
+
+        /** A flaw has to be at least this exploitable before a bait line is worth offering. */
+        private const val MIN_BAITABLE_WEIGHT = 0.4f
+
+        /** Same "how far ahead is this seat" weighting :ai PersonaPolicy uses for targeting. */
+        private const val INFLUENCE_COIN_EQUIVALENT = 10
+
+        // ── Chatter rates (percent) ──────────────────────────────────────────────
+
+        private const val TABLE_TALK_PCT = 38
+        private const val SPEAK_UP_PCT = 45
+        private const val REPLY_PCT = 35
+
+        /** Suggestion chips shown at once — more than this and the strip stops being scannable. */
+        private const val MAX_SUGGESTIONS = 6
     }
 }

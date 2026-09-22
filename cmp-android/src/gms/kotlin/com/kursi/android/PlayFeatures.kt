@@ -10,6 +10,12 @@ import com.kursi.core.prefs.AppPrefs
 
 /** Gms-flavor implementation: Play Core in-app review + in-app update. Stubbed out in noGms. */
 object PlayFeatures {
+    /**
+     * Only force an IMMEDIATE (blocking) update once the installed build is this far behind.
+     * Google's own guidance is 30+ days for immediate updates; below that it is rude.
+     */
+    private const val IMMEDIATE_UPDATE_STALE_DAYS = 30
+
     fun launchInAppReview(
         activity: ComponentActivity,
         appPrefs: AppPrefs,
@@ -29,7 +35,7 @@ object PlayFeatures {
         manager.appUpdateInfo.addOnSuccessListener { info ->
             val staleDays = info.clientVersionStalenessDays() ?: 0
             if (info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
-                staleDays >= 30 &&
+                staleDays >= IMMEDIATE_UPDATE_STALE_DAYS &&
                 info.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
             ) {
                 manager.startUpdateFlow(

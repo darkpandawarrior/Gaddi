@@ -20,7 +20,11 @@ class ReplayAnnotationTest {
     private val seed = 4242L
     private val players = 4
 
-    private fun botsFor(): Map<PlayerId, Policy> = (1 until players).associate { seat -> PlayerId(seat) to EasyPolicy(seed * 31L + seat) as Policy }
+    private fun botsFor(): Map<PlayerId, Policy> =
+        (1 until players).associate { seat ->
+            PlayerId(seat) to
+                EasyPolicy(seed * 31L + seat) as Policy
+        }
 
     private fun makeSession(): com.kursi.feature.game.session.GameSession =
         com.kursi.feature.game.session.GameSession(

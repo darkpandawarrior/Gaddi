@@ -61,8 +61,8 @@ class StoryArcTest {
     fun afwaah_begin_nextStateIsAlive() {
         val step = beginAccepted(ArcId.AFWAAH)
         assertNotNull(step.nextState)
-        assertFalse(step.nextState!!.ended, "AFWAAH arc must not be ended immediately after begin")
-        assertEquals(ArcId.AFWAAH, step.nextState!!.arc)
+        assertFalse(step.nextState.ended, "AFWAAH arc must not be ended immediately after begin")
+        assertEquals(ArcId.AFWAAH, step.nextState.arc)
     }
 
     @Test
@@ -89,8 +89,8 @@ class StoryArcTest {
     fun gathbandhan_begin_accepted_nextStateHasAllySet() {
         val step = beginAccepted(ArcId.GATHBANDHAN, target = 3)
         assertNotNull(step.nextState)
-        assertEquals(3, step.nextState!!.ally, "accepted GATHBANDHAN next state must carry the ally seat")
-        assertFalse(step.nextState!!.ended)
+        assertEquals(3, step.nextState.ally, "accepted GATHBANDHAN next state must carry the ally seat")
+        assertFalse(step.nextState.ended)
     }
 
     @Test
@@ -178,7 +178,7 @@ class StoryArcTest {
                 arc = ArcId.BADLA,
                 targetSeat = 3, // the RIVAL we want the vengeful bot to hit
             )
-        val reply = StoryArcs.reply(arcState, input, rivalName = "Rival")
+        val reply = StoryArcs.reply(arcState, input)
         val grudge =
             reply.ops
                 .filterIsInstance<SocialOp.Grudge>()

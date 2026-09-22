@@ -30,6 +30,14 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+/**
+ * Concentric guilloche rings, as fractions of the table radius: four rings starting at 0.48x and
+ * widening by 0.16x each. Fewer rings reads as a plain circle, more fills the felt with noise.
+ */
+private const val GuillocheRingCount = 4
+private const val GuillocheInnermostRingFraction = 0.32f
+private const val GuillocheRingStepFraction = 0.16f
+
 // ─────────────────────────── Felt Table Surface ───────────────────────────
 // The hero surface: dark green felt with gold rim and inner vignette.
 
@@ -127,8 +135,13 @@ internal fun DrawScope.drawFeltGuilloche() {
     val baseR = minOf(size.width, size.height) * 0.48f
     val c = BrandTokens.GoldAntique.copy(alpha = 0.10f)
     // A few concentric rings widening out from the heart.
-    for (k in 1..4) {
-        drawCircle(c, baseR * (0.32f + 0.16f * k), Offset(cx, cy), style = Stroke(0.8.dp.toPx()))
+    for (k in 1..GuillocheRingCount) {
+        drawCircle(
+            c,
+            baseR * (GuillocheInnermostRingFraction + GuillocheRingStepFraction * k),
+            Offset(cx, cy),
+            style = Stroke(0.8.dp.toPx()),
+        )
     }
     // A rosette wave riding the mid radius — the certificate's interference look.
     val petals = 48

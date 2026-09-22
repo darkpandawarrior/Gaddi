@@ -10,6 +10,9 @@ import com.kursi.protocol.wire.WireRole
 import com.kursi.protocol.wire.toEngine
 import com.kursi.protocol.wire.toWire
 
+/** PATRAKAAR is the sixth role; it only enters the deck on large tables. See GameConfig. */
+private const val ROLE_COUNT_WITH_PATRAKAAR = 6
+
 /**
  * Derives the concrete [WireIntent]s the receiving seat may legally submit RIGHT NOW, using ONLY
  * the redacted [WirePlayerView] the server sent it.
@@ -30,14 +33,14 @@ import com.kursi.protocol.wire.toWire
  */
 fun WirePlayerView.legalIntents(): List<WireIntent> {
     val seat = viewer
+    // ONE actor check, using the helper that already encodes "is it my turn" per phase. Each branch
+    // below used to repeat its own `if (ph.actor != seat) return emptyList()`, which is five copies
+    // of isMyTurn() free to drift away from it.
+    if (!isMyTurn()) return emptyList()
     return when (val ph = phase) {
-        is WirePhaseView.Turn -> {
-            if (ph.actor != seat) return emptyList()
-            legalActions().map { WireIntent.DeclareAction(seat, it) }
-        }
+        is WirePhaseView.Turn -> legalActions().map { WireIntent.DeclareAction(seat, it) }
 
         is WirePhaseView.Reactions -> {
-            if (ph.toRespond != seat) return emptyList()
             when (ph.step) {
                 WireReactionStep.CHALLENGE_ACTION, WireReactionStep.CHALLENGE_BLOCK ->
                     listOf(WireIntent.Challenge(seat), WireIntent.Pass(seat))
@@ -48,27 +51,24 @@ fun WirePlayerView.legalIntents(): List<WireIntent> {
         }
 
         is WirePhaseView.InfluenceLoss -> {
-            if (ph.loser != seat) return emptyList()
             // Address a specific OWN face-down CardId — only knowable from myCards.
             myCards.filter { !it.faceUp }.map { WireIntent.ChooseInfluenceToLose(seat, it.id) }
         }
 
         is WirePhaseView.Exchange -> {
-            if (ph.actor != seat) return emptyList()
             val ownFaceDown = myCards.filter { !it.faceUp }.map { it.id }
             val pool = ownFaceDown + ph.drawn.map { it.id }
             val keepSize = ownFaceDown.size
             combinations(pool, keepSize).map { WireIntent.ChooseExchange(seat, it) }
         }
 
-        is WirePhaseView.InvestigatePeek -> {
-            if (ph.examiner != seat) return emptyList()
+        is WirePhaseView.InvestigatePeek ->
             listOf(
                 WireIntent.ResolveInvestigate(seat, forceRedraw = false),
                 WireIntent.ResolveInvestigate(seat, forceRedraw = true),
             )
-        }
 
+        // Unreachable: isMyTurn() is false in Over, so the guard above already returned.
         is WirePhaseView.Over -> emptyList()
     }
 }
@@ -109,7 +109,7 @@ private fun WirePlayerView.legalActions(): List<WireAction> {
     out.add(WireAction.Exchange)
     // Jaanch (claims PATRAKAAR) — only when the 6th role is in this deck (roleCount == 6) and the target
     // has a face-down card to examine. Mirrors the engine's `Role.PATRAKAAR in cfg.activeRoles` gate.
-    if (cfg.roleCount >= 6) {
+    if (cfg.roleCount >= ROLE_COUNT_WITH_PATRAKAAR) {
         for (t in targets) if (players.first { it.id == t }.faceDownCount > 0) out.add(WireAction.Investigate(t))
     }
     return out

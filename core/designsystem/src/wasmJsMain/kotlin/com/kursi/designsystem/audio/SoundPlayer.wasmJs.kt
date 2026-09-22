@@ -16,17 +16,19 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 // See docs/experience-assets.md §3.
 // ═══════════════════════════════════════════════════════════════════════════════
 
+actual fun SoundPlayer(): SoundPlayer = WasmSoundPlayer()
+
 @OptIn(ExperimentalEncodingApi::class, kotlin.js.ExperimentalWasmJsInterop::class)
-actual class SoundPlayer actual constructor() {
+private class WasmSoundPlayer : SoundPlayer {
     private val dataUrls = mutableMapOf<KursiSound, String>()
 
     // ponytail: every browser engine ships an Audio element and a PCM WAV decoder, so the only
     // real gate here is the autoplay policy — and that cannot be queried synchronously, it only
     // shows up as a rejected play() promise. Constant true is the honest answer to what this
     // flag can actually know.
-    actual val isAvailable: Boolean = true
+    override val isAvailable: Boolean = true
 
-    actual suspend fun play(sound: KursiSound) {
+    override suspend fun play(sound: KursiSound) {
         runCatching {
             val url =
                 dataUrls.getOrPut(sound) {
@@ -37,7 +39,7 @@ actual class SoundPlayer actual constructor() {
         }
     }
 
-    actual fun release() {
+    override fun release() {
         dataUrls.clear()
     }
 }

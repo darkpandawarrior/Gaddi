@@ -111,25 +111,25 @@ class AutoPlayer(
         autoJob?.cancel()
         autoJob =
             scope.launch {
-                while (currentSession.awaitingHumanOrOver() && shown()?.isHumanTurn == true) {
-                    val decision = currentSession.autoDecision() ?: break
-                    val allowed =
-                        when (decision.kind) {
-                            GameSession.AutoKind.ONLY_PASS -> autoPass
-                            GameSession.AutoKind.SINGLE_LEGAL,
-                            GameSession.AutoKind.FORCED_COUP,
-                            -> autoForced
-                        }
-                    if (!allowed) break
-                    // Let the player register what they're being relieved of before it fires.
-                    delay((AUTO_RESOLVE_BASE_MS * speed()).toLong().coerceIn(MIN_AUTO_RESOLVE_DELAY_MS, MAX_AUTO_RESOLVE_DELAY_MS))
-                    // Bail if the situation changed under us (race with the advance loop).
-                    val s = shown() ?: break
-                    if (!s.isHumanTurn || decision.intent !in s.legalIntents) break
-                    submit(GameAction.Submit(decision.intent))
-                    // submit() kicks its own advance loop; yield so it can settle, then re-check.
-                    return@launch
-                }
+                // Deliberately NOT a loop. Every path below either bails or hands off to submit(),
+                // which kicks its own advance loop and re-enters here through the next state
+                // emission. The `while` this replaced could never run a second iteration.
+                if (!currentSession.awaitingHumanOrOver() || shown()?.isHumanTurn != true) return@launch
+                val decision = currentSession.autoDecision() ?: return@launch
+                val allowed =
+                    when (decision.kind) {
+                        GameSession.AutoKind.ONLY_PASS -> autoPass
+                        GameSession.AutoKind.SINGLE_LEGAL,
+                        GameSession.AutoKind.FORCED_COUP,
+                        -> autoForced
+                    }
+                if (!allowed) return@launch
+                // Let the player register what they're being relieved of before it fires.
+                delay((AUTO_RESOLVE_BASE_MS * speed()).toLong().coerceIn(MIN_AUTO_RESOLVE_DELAY_MS, MAX_AUTO_RESOLVE_DELAY_MS))
+                // Bail if the situation changed under us (race with the advance loop).
+                val s = shown() ?: return@launch
+                if (!s.isHumanTurn || decision.intent !in s.legalIntents) return@launch
+                submit(GameAction.Submit(decision.intent))
             }
         return autoJob?.isActive == true
     }

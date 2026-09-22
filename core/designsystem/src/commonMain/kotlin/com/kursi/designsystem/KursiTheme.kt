@@ -43,6 +43,25 @@ object BrandTokens {
     /** Ink / outer window background — deepest teak. */
     val TeakInk = Color(0xFF1E1008)
 
+    /** Pure black, used only as a shadow colour. Not a surface: nothing in the app is this dark. */
+    val ShadowBlack = Color(0xFF000000)
+
+    /** Cool phosphor cyan — the "sarkari teleprinter" scanline sheen on live surfaces. */
+    val PhosphorCyan = Color(0xFF8FE7DA)
+
+    // Decision-quality verdicts (Review screen). A four-stop ramp from "best move" to "costly
+    // miss", ending on StampRed. These lived as raw 0xFF... literals inside ReviewScreen until
+    // the quality pass; a colour in a screen is a token that escaped the design system.
+
+    /** Verdict SHARP — best or near-best move. */
+    val VerdictSharp = Color(0xFF6FCF97)
+
+    /** Verdict FINE — close enough. */
+    val VerdictFine = Color(0xFFB7C66B)
+
+    /** Verdict LOOSE — leaked some EV. */
+    val VerdictLoose = Color(0xFFE0B354)
+
     // Metal — aged brass / antique gold
 
     /** Aged brass: primary bezel and border metal. */
@@ -201,34 +220,34 @@ object KursiSeatColors {
  */
 object TextureTokens {
     /** Alpha of the guilloché line overlay on brass bezels. */
-    val guillocheLinesAlpha = 0.18f
+    const val guillocheLinesAlpha = 0.18f
 
     /** Alpha of the paper grain noise overlay on cream surfaces. */
-    val paperGrainAlpha = 0.06f
+    const val paperGrainAlpha = 0.06f
 
     /** Alpha of the engraved hatch on dark teak panels. */
-    val teakHatchAlpha = 0.04f
+    const val teakHatchAlpha = 0.04f
 
     /** Alpha of the ghosted chair-in-sunburst centre emblem. */
-    val emblomAlpha = 0.035f
+    const val emblomAlpha = 0.035f
 
     /** Number of guilloché sine waves per 100dp of width. */
-    val guillocheDensity = 12
+    const val guillocheDensity = 12
 
     /** Brass specular highlight width fraction (0..1). */
-    val brassSpecularWidth = 0.25f
+    const val brassSpecularWidth = 0.25f
 
     /**
      * Film-grain per-pixel noise amplitude added by the [com.kursi.designsystem.shader.feltMaterial]
      * runtime-shader pass (additive, centred on zero — keep tiny, this is texture not TV static).
      */
-    val filmGrainIntensity = 0.018f
+    const val filmGrainIntensity = 0.018f
 
     /**
      * Warm bloom lift strength around the key-light pool, added by the
      * [com.kursi.designsystem.shader.feltMaterial] runtime-shader pass.
      */
-    val warmBloomStrength = 0.05f
+    const val warmBloomStrength = 0.05f
 }
 
 // ─────────────────────────── Role frame patterns (CVD non-color channel) ─────

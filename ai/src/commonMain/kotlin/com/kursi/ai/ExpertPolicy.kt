@@ -40,7 +40,11 @@ class ExpertPolicy(
             val (_, r) = rng.nextLong()
             rng = r
             if (chosen in legal) chosen else fallback.decide(view, legal)
-        } catch (t: Throwable) {
+        } catch (ignored: Throwable) {
+            // Deliberately ignored, and named so. The search is best-effort: a determinization
+            // bug, an arithmetic edge or a stack overflow deep in a rollout must degrade to the
+            // fallback policy, never surface as a crash mid-hand. `ignored` matches detekt's
+            // allowedExceptionNameRegex, so the intent is on the page instead of in a baseline.
             fallback.decide(view, legal)
         }
     }

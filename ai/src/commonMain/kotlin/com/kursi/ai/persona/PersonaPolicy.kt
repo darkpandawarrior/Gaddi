@@ -161,7 +161,7 @@ class PersonaPolicy(
         val aliveOpponents = view.players.filter { !it.eliminated && it.id != view.viewer }
         if (aliveOpponents.isEmpty()) return chosen
 
-        val preferredTarget = pickTarget(aliveOpponents, view)
+        val preferredTarget = pickTarget(aliveOpponents)
         if (preferredTarget == null || preferredTarget == targetOf) return chosen
 
         // Find a legal intent of the same action type targeting our preferred target.
@@ -173,14 +173,11 @@ class PersonaPolicy(
         return sameTypeToPreferred ?: chosen
     }
 
-    private fun pickTarget(
-        opponents: List<OpponentView>,
-        view: PlayerView,
-    ): PlayerId? {
+    private fun pickTarget(opponents: List<OpponentView>): PlayerId? {
         if (opponents.isEmpty()) return null
         return when (p.targetingBias) {
-            TargetingBias.LEADER -> opponents.maxByOrNull { it.faceDownCount * 10 + it.coins }?.id
-            TargetingBias.WEAKEST -> opponents.minByOrNull { it.faceDownCount * 10 + it.coins }?.id
+            TargetingBias.LEADER -> opponents.maxByOrNull { it.standingScore() }?.id
+            TargetingBias.WEAKEST -> opponents.minByOrNull { it.standingScore() }?.id
             TargetingBias.VINDICTIVE -> {
                 val ids = opponents.map { it.id }
                 grudge.topTarget(ids) ?: opponents.minByOrNull { it.faceDownCount }?.id
@@ -304,7 +301,7 @@ class PersonaPolicy(
                     // Per-slot posterior (probability a single claimed card is the role), comparable to the
                     // per-slot deckPrior. posterior() already returns the per-slot role probability folding
                     // in evidence; pHolds raises it to faceDownCount, which we don't want here.
-                    val posterior = beliefModel.posterior(view, claimant, belief)[claimedRole] ?: deckPrior
+                    val posterior = beliefModel.posterior(view, belief)[claimedRole] ?: deckPrior
                     // Posterior weight grows with evidence, saturating at 0.65 once we've seen a few signals.
                     val w = (evidenceMass / (evidenceMass + 4.0)).coerceIn(0.0, 0.65)
                     (1.0 - w) * deckPrior + w * posterior
@@ -358,3 +355,12 @@ class PersonaPolicy(
         t: Float,
     ): Float = min + (max - min) * t.coerceIn(0f, 1f)
 }
+
+/**
+ * How "ahead" a seat looks from across the table: a face-down influence card is worth ten coins,
+ * because cards are what actually keep you in the game and coins only buy one Khela. LEADER and
+ * WEAKEST targeting are the two ends of this same ordering, so it lives in one place.
+ */
+private const val InfluenceCoinEquivalent = 10
+
+private fun OpponentView.standingScore(): Int = faceDownCount * InfluenceCoinEquivalent + coins

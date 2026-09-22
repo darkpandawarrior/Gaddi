@@ -1,8 +1,0 @@
-<?xml version="1.0" ?>
-<SmellBaseline>
-  <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>CyclomaticComplexMethod:Mappers.kt:fun GameEvent.toWireFor: WireGameEvent</ID>
-    <ID>LoopWithTooManyJumpStatements:ProtocolRoundTripTest.kt:ProtocolRoundTripTest$while</ID>
-  </CurrentIssues>
-</SmellBaseline>

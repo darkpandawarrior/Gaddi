@@ -129,7 +129,13 @@ fun SetupScreen(
      * [onNext] so a fresh seed is generated; the app layer overrides it to route through the Lobby.
      */
     onStartPreset: (seed: Long, players: Int, difficulty: Difficulty) -> Unit =
-        { seed, players, difficulty -> onNext(seed, players, difficulty, 1, 0, false, false, "", false, false, false, false, false, 25, false, false) },
+        {
+            seed,
+            players,
+            difficulty,
+            ->
+            onNext(seed, players, difficulty, 1, 0, false, false, "", false, false, false, false, false, 25, false, false)
+        },
     /**
      * M7 ONLINE — the three online modes (PRIVATE KAMRA / KHULI BOLI / EK HI LAN) now route into the
      * Online Mehfil hub instead of sitting "JALD AANE WAALA". Defaults to a no-op so older call sites
@@ -430,7 +436,10 @@ fun SetupScreen(
                                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                     val (bailLabel, bailSub) = stringResource(Res.string.setup_vishesh_bail).split(" / ", limit = 2)
                                     VisheshToggle(bailLabel, bailSub, bailEnabled) { bailEnabled = it }
-                                    val (sabotageLabel, sabotageSub) = stringResource(Res.string.setup_vishesh_sabotage).split(" / ", limit = 2)
+                                    val (sabotageLabel, sabotageSub) =
+                                        stringResource(
+                                            Res.string.setup_vishesh_sabotage,
+                                        ).split(" / ", limit = 2)
                                     VisheshToggle(sabotageLabel, sabotageSub, sabotageEnabled) { sabotageEnabled = it }
                                     val (hawalaLabel, hawalaSub) = stringResource(Res.string.setup_vishesh_hawala).split(" / ", limit = 2)
                                     VisheshToggle(hawalaLabel, hawalaSub, hawalaEnabled) { hawalaEnabled = it }
@@ -805,7 +814,11 @@ private fun TeamToggle(
                 }.padding(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
             Text(
                 text = if (on) onLabel else offLabel,
                 style = KursiType.name.copy(fontSize = 13.sp),
@@ -819,7 +832,11 @@ private fun TeamToggle(
                         .size(width = 44.dp, height = 24.dp)
                         .clip(RoundedCornerShape(50))
                         .background(if (on) BrandTokens.GoldAntique.copy(alpha = 0.4f) else BrandTokens.TeakDark)
-                        .border(1.dp, if (on) BrandTokens.GoldAntique else BrandTokens.BrassDark.copy(alpha = 0.5f), RoundedCornerShape(50)),
+                        .border(
+                            1.dp,
+                            if (on) BrandTokens.GoldAntique else BrandTokens.BrassDark.copy(alpha = 0.5f),
+                            RoundedCornerShape(50),
+                        ),
                 contentAlignment = if (on) Alignment.CenterEnd else Alignment.CenterStart,
             ) {
                 Box(
@@ -931,8 +948,11 @@ private fun StepperButton(
                 .size(32.dp)
                 .clip(RoundedCornerShape(50))
                 .background(if (enabled) BrandTokens.BrassAged.copy(alpha = 0.25f) else BrandTokens.TeakDark.copy(alpha = 0.4f))
-                .border(1.dp, if (enabled) BrandTokens.GoldAntique.copy(alpha = 0.7f) else BrandTokens.BrassDark.copy(alpha = 0.3f), RoundedCornerShape(50))
-                .clickable(enabled = enabled, onClick = onClick)
+                .border(
+                    1.dp,
+                    if (enabled) BrandTokens.GoldAntique.copy(alpha = 0.7f) else BrandTokens.BrassDark.copy(alpha = 0.3f),
+                    RoundedCornerShape(50),
+                ).clickable(enabled = enabled, onClick = onClick)
                 .alpha(if (enabled) 1f else 0.5f),
         contentAlignment = Alignment.Center,
     ) {
@@ -1342,10 +1362,20 @@ private fun QuickMatchChit(
                     contentDescription = "$label. $sublabel"
                 }.padding(horizontal = 16.dp, vertical = 14.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(label, style = KursiType.title.copy(fontSize = 17.sp, fontWeight = FontWeight.Bold), color = BrandTokens.TeakDark)
-                Text(sublabel, style = KursiType.caption.copy(fontSize = 10.sp), color = BrandTokens.BrassDark, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(
+                    sublabel,
+                    style = KursiType.caption.copy(fontSize = 10.sp),
+                    color = BrandTokens.BrassDark,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
             // APPROVED-style instant stamp
             Box(
@@ -1388,7 +1418,11 @@ private fun PresetChit(
             },
     ) {
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(name, style = KursiType.name.copy(fontSize = 14.sp, letterSpacing = 0.5.sp), color = BrandTokens.GoldAntique)
                     Text(
@@ -1407,7 +1441,11 @@ private fun PresetChit(
                             .border(0.7.dp, BrandTokens.GoldAntique.copy(alpha = 0.6f), RoundedCornerShape(3.dp))
                             .padding(horizontal = 6.dp, vertical = 2.dp),
                 ) {
-                    Text(stamp, style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.6.sp), color = BrandTokens.GoldAntique.copy(alpha = 0.85f))
+                    Text(
+                        stamp,
+                        style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.6.sp),
+                        color = BrandTokens.GoldAntique.copy(alpha = 0.85f),
+                    )
                 }
             }
             // Brass monogram rail — the curated cast, capped so 10p stays legible.
@@ -1423,11 +1461,19 @@ private fun PresetChit(
                                 .border(0.8.dp, BrandTokens.GoldAntique.copy(alpha = 0.6f), CircleShape),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text(mono.take(2), style = KursiType.caption.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold), color = BrandTokens.TeakDark)
+                        Text(
+                            mono.take(2),
+                            style = KursiType.caption.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+                            color = BrandTokens.TeakDark,
+                        )
                     }
                 }
                 if (lineupMonograms.size > shown.size) {
-                    Text("+${lineupMonograms.size - shown.size}", style = KursiType.caption.copy(fontSize = 9.sp), color = KursiNeutrals.TextMuted)
+                    Text(
+                        "+${lineupMonograms.size - shown.size}",
+                        style = KursiType.caption.copy(fontSize = 9.sp),
+                        color = KursiNeutrals.TextMuted,
+                    )
                 }
             }
         }
@@ -1455,9 +1501,15 @@ private fun BrassAbacusRail(
                             if (isActive) {
                                 Brush.radialGradient(listOf(BrandTokens.GoldAntique, BrandTokens.BrassDark))
                             } else {
-                                Brush.radialGradient(listOf(BrandTokens.BrassDark.copy(alpha = 0.3f), BrandTokens.TeakDark.copy(alpha = 0.5f)))
+                                Brush.radialGradient(
+                                    listOf(BrandTokens.BrassDark.copy(alpha = 0.3f), BrandTokens.TeakDark.copy(alpha = 0.5f)),
+                                )
                             },
-                        ).border(1.dp, if (isActive) BrandTokens.BrassAged else BrandTokens.BrassDark.copy(alpha = 0.3f), RoundedCornerShape(50)),
+                        ).border(
+                            1.dp,
+                            if (isActive) BrandTokens.BrassAged else BrandTokens.BrassDark.copy(alpha = 0.3f),
+                            RoundedCornerShape(50),
+                        ),
                 contentAlignment = Alignment.Center,
             ) {
                 if (i == 0) {
@@ -1521,7 +1573,11 @@ private fun DifficultyTab(
                             .border(0.7.dp, BrandTokens.GoldAntique.copy(alpha = 0.7f), RoundedCornerShape(3.dp))
                             .padding(horizontal = 6.dp, vertical = 2.dp),
                 ) {
-                    Text("✓", style = KursiType.caption.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold), color = BrandTokens.GoldAntique)
+                    Text(
+                        "✓",
+                        style = KursiType.caption.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+                        color = BrandTokens.GoldAntique,
+                    )
                 }
             }
         }

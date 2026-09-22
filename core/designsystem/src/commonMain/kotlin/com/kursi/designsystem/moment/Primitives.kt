@@ -408,43 +408,66 @@ fun ChairTip(
     }
 }
 
-/** Minimal geometric chair drawn with Canvas paths. */
-private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawChairGlyph(color: Color) {
-    val w = 40.dp.toPx()
-    val h = 48.dp.toPx()
-    val sw = 3.dp.toPx()
-    val cx = 0f
-    val cy = 0f
+/**
+ * The Kursi chair glyph, drawn around the current origin.
+ *
+ * ONE copy. MomentStaticFrames.kt carried a byte-identical second one (drawStaticChair) with the
+ * same nine fractions typed out again, so the animated moment and its frozen frame could silently
+ * drift apart. Every fraction below is named: they are proportions of the glyph box, not tuning.
+ */
+private object ChairGlyph {
+    val Width = 40.dp
+    val Height = 48.dp
+    val StrokeWidth = 3.dp
+
+    /** Back rest: a half-ellipse spanning 80% of the width, 35% of the height, sitting above the seat. */
+    const val BackRestHalfWidthFraction = 0.4f
+    const val BackRestTopFraction = 0.5f
+    const val BackRestWidthFraction = 0.8f
+    const val BackRestHeightFraction = 0.35f
+
+    /** Seat beam spans the full back-rest width; the legs are inset from it. */
+    const val LegInsetFraction = 0.3f
+    const val LegLengthFraction = 0.45f
+
+    /** Foot rail sits just above the leg ends and is drawn lighter than the frame. */
+    const val FootRailHeightFraction = 0.38f
+    const val FootRailStrokeScale = 0.7f
+
+    const val BackRestStartAngle = 180f
+    const val BackRestSweepAngle = 180f
+}
+
+internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawChairGlyph(color: Color) {
+    val w = ChairGlyph.Width.toPx()
+    val h = ChairGlyph.Height.toPx()
+    val sw = ChairGlyph.StrokeWidth.toPx()
+    val halfW = w * ChairGlyph.BackRestHalfWidthFraction
+    val legX = w * ChairGlyph.LegInsetFraction
 
     // Back rest (top arc)
     drawArc(
         color = color,
-        startAngle = 180f,
-        sweepAngle = 180f,
+        startAngle = ChairGlyph.BackRestStartAngle,
+        sweepAngle = ChairGlyph.BackRestSweepAngle,
         useCenter = false,
-        topLeft = Offset(cx - w * 0.4f, cy - h * 0.5f),
+        topLeft = Offset(-halfW, -h * ChairGlyph.BackRestTopFraction),
         size =
             androidx.compose.ui.geometry
-                .Size(w * 0.8f, h * 0.35f),
+                .Size(w * ChairGlyph.BackRestWidthFraction, h * ChairGlyph.BackRestHeightFraction),
         style = Stroke(sw),
     )
     // Seat beam
-    drawLine(
-        color = color,
-        start = Offset(cx - w * 0.4f, cy),
-        end = Offset(cx + w * 0.4f, cy),
-        strokeWidth = sw,
-    )
-    // Left leg
-    drawLine(color, Offset(cx - w * 0.3f, cy), Offset(cx - w * 0.3f, cy + h * 0.45f), sw)
-    // Right leg
-    drawLine(color, Offset(cx + w * 0.3f, cy), Offset(cx + w * 0.3f, cy + h * 0.45f), sw)
+    drawLine(color = color, start = Offset(-halfW, 0f), end = Offset(halfW, 0f), strokeWidth = sw)
+    // Legs
+    drawLine(color, Offset(-legX, 0f), Offset(-legX, h * ChairGlyph.LegLengthFraction), sw)
+    drawLine(color, Offset(legX, 0f), Offset(legX, h * ChairGlyph.LegLengthFraction), sw)
     // Foot rail
     drawLine(
         color = color,
-        start = Offset(cx - w * 0.4f, cy + h * 0.38f),
-        end = Offset(cx + w * 0.4f, cy + h * 0.38f),
-        strokeWidth = sw * 0.7f,
+        start = Offset(-halfW, h * ChairGlyph.FootRailHeightFraction),
+        end = Offset(halfW, h * ChairGlyph.FootRailHeightFraction),
+        strokeWidth = sw * ChairGlyph.FootRailStrokeScale,
     )
 }
 

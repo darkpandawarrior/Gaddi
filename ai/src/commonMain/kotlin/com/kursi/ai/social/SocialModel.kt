@@ -149,7 +149,7 @@ data class SocialState(
         weight: Float = 1f,
     ): SocialState =
         withStance(victim, aggressor) { it.adjust(trust = -0.30f * weight, fear = 0.18f * weight, suspicion = 0.10f * weight) }
-            .withThreat(aggressor, 0.12f * weight)
+            .withThreat(aggressor, HitThreatGain * weight)
 
     /** Per-turn fade so recent events dominate (mirrors the bot grudge decay cadence). */
     fun decay(
@@ -159,23 +159,38 @@ data class SocialState(
     ): SocialState =
         copy(
             stances = stances.mapValues { it.value.decay(stanceFactor) }.filterValues { !it.isNeutral() },
-            threat = threat.mapValues { it.value * threatFactor }.filterValues { it > 0.02f },
-            agitation = agitation.mapValues { it.value * agitationFactor }.filterValues { it > 0.02f },
+            threat = threat.mapValues { it.value * threatFactor }.filterValues { it > NeutralEpsilon },
+            agitation = agitation.mapValues { it.value * agitationFactor }.filterValues { it > NeutralEpsilon },
         )
 
     companion object {
         const val THREAT_CAP = 3f
 
+        /** Directed seat-pair key layout: observer in the high half, target in the low 16 bits. */
+        private const val SeatKeyShift = 16
+        private const val SeatKeyMask = 0xFFFFL
+
         /** Pack a directed (observer,target) seat pair into one Long key (each seat < 2^16). */
         fun key(
             observer: Int,
             target: Int,
-        ): Long = (observer.toLong() shl 16) or (target.toLong() and 0xFFFF)
+        ): Long = (observer.toLong() shl SeatKeyShift) or (target.toLong() and SeatKeyMask)
 
-        private fun observerOf(k: Long): Int = (k shr 16).toInt()
+        private fun observerOf(k: Long): Int = (k shr SeatKeyShift).toInt()
 
-        private fun targetOf(k: Long): Int = (k and 0xFFFF).toInt()
+        private fun targetOf(k: Long): Int = (k and SeatKeyMask).toInt()
     }
 }
 
-private fun SocialStance.isNeutral(): Boolean = kotlin.math.abs(trust) < 0.02f && fear < 0.02f && suspicion < 0.02f
+/**
+ * Below this magnitude a stance, threat or agitation reading is indistinguishable from "no
+ * opinion", and carrying it just grows the maps forever as [SocialState.decay] shrinks values
+ * asymptotically toward zero. It is the prune threshold, not a tuning knob.
+ */
+internal const val NeutralEpsilon = 0.02f
+
+/** How much the whole table's read of an aggressor rises per hit they land, at weight 1. */
+private const val HitThreatGain = 0.12f
+
+private fun SocialStance.isNeutral(): Boolean =
+    kotlin.math.abs(trust) < NeutralEpsilon && fear < NeutralEpsilon && suspicion < NeutralEpsilon

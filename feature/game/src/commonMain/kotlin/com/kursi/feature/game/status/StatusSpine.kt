@@ -258,7 +258,11 @@ internal fun EngravedTurnHeader(
         ) {
             Text(
                 text = text.uppercase(),
-                style = KursiType.numeral_sm.dmMono().copy(letterSpacing = 2.5.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold),
+                style =
+                    KursiType.numeral_sm.dmMono().copy(
+                        letterSpacing = 2.5.sp,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                    ),
                 color = accent,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -334,7 +338,7 @@ internal fun deriveSpineTextAndTone(
             voice.opponentActing(actorName) to SpineTone.Info
         }
         is GamePhase.PickAction -> {
-            if (state.view.myCoins >= 10) {
+            if (state.view.myCoins >= state.view.config.forcedCoupThreshold) {
                 "${voice.forcedCoup} (${state.view.myCoins} coins)" to SpineTone.Danger
             } else {
                 voice.yourTurn to SpineTone.Gold

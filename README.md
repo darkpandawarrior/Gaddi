@@ -11,8 +11,8 @@ social layer (DARBAR) and an ISMCTS-powered coach on top.
 
 [![CI](https://github.com/darkpandawarrior/Gaddi/actions/workflows/ci.yml/badge.svg)](https://github.com/darkpandawarrior/Gaddi/actions/workflows/ci.yml)
 [![Quality](https://github.com/darkpandawarrior/Gaddi/actions/workflows/quality.yml/badge.svg)](https://github.com/darkpandawarrior/Gaddi/actions/workflows/quality.yml)
-![Kotlin](https://img.shields.io/badge/Kotlin-2.4.20--RC-7F52FF?logo=kotlin&logoColor=white)
-![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.12.0--rc01-4285F4?logo=jetpackcompose&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.4.20-7F52FF?logo=kotlin&logoColor=white)
+![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.13.0--alpha01-4285F4?logo=jetpackcompose&logoColor=white)
 ![Platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Desktop%20%7C%20Web-3DDC84)
 [![License: GPL-3.0-or-later](https://img.shields.io/badge/license-GPL--3.0--or--later-blue)](LICENSE)
 [![Assets: CC BY-SA 4.0](https://img.shields.io/badge/assets-CC%20BY--SA%204.0-lightgrey)](ASSETS-LICENSE)
@@ -161,6 +161,20 @@ teak/aged-brass/document-paper, enforced structurally rather than left to per-sc
 This is why the render harness in `cmp-desktop/src/jvmMain/kotlin/com/kursi/desktop/Screenshots.kt`
 matters as much as it does, it's the actual QA loop this visual system was built with, not an
 afterthought bolted on for the README.
+
+The harness photographs *scenes*. The other half is
+`core/designsystem/src/commonMain/kotlin/com/kursi/designsystem/DesignSystemPreviews.kt`, which
+previews the *tokens* a scene is built from, in states no scene shows on its own: every role card
+in its lost variant, `CoinPill` at 0 / 2 / 12, all six `OutcomeKind` tags, the `CountdownBar` either
+side of the 0.25 threshold where amber becomes stamp-red. Nothing below `:core:designsystem` has
+previews and nothing should: the feature screens have real `GameState` behind them and
+`renderScreens` already shoots them with real fixtures.
+
+Those previews use `androidx.compose.ui.tooling.preview.Preview` in `commonMain`. Since Compose
+Multiplatform 1.10 the AndroidX annotation **is** the multiplatform one —
+`org.jetbrains.compose.ui:ui-tooling-preview` publishes it into `commonMain` — and the
+`org.jetbrains.compose.ui.tooling.preview` annotation is the deprecated path. Almost every answer
+written before 2026 has this the wrong way round.
 
 ---
 

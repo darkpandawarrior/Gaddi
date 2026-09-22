@@ -22,7 +22,13 @@ class ChatVoice(
     // ── Opening: a bot greets the table when a narrative game begins ─────────────
     fun greet(personaId: String): String =
         when (personaId) {
-            "netaji_vachan" -> if (hi) "Aa gaye? Achha hua. Vote… matlab support, ready rakho." else "You came? Good. Keep your support ready."
+            "netaji_vachan" ->
+                if (hi) {
+                    "Aa gaye? Achha hua. Vote… matlab support, ready rakho."
+                } else {
+                    "You came? Good. Keep your support " +
+                        "ready."
+                }
             "bhai_teja" -> if (hi) "Table pe baith. Zyada haath-paer mat chalana." else "Sit at the table. Don't move too much."
             "babu_filewala" -> if (hi) "Form bhar do pehle. Khel baad mein." else "Fill the form first. Game later."
             "jugaadu_chhotu" -> if (hi) "Aaja aaja, setting kar dete hain saath mein." else "Come, let's fix a deal together."
@@ -40,7 +46,13 @@ class ChatVoice(
     ): String =
         when (personaId) {
             "bhai_teja" -> if (hi) "$targetName ko main dekh leta hoon. Tum log piche raho." else "I'll handle $targetName. You stay back."
-            "vakil_loophole" -> if (hi) "$targetName ke khilaaf case strong hai. Saath do." else "The case against $targetName is strong. Back me."
+            "vakil_loophole" ->
+                if (hi) {
+                    "$targetName ke khilaaf case strong hai. Saath do."
+                } else {
+                    "The case against $targetName is " +
+                        "strong. Back me."
+                }
             "madam_sarpanch" -> if (hi) "Sab milke $targetName ko hatao. Hukum hai." else "Everyone, remove $targetName. That's an order."
             else -> if (hi) "$targetName pehle. Baaki baad mein." else "$targetName first. The rest later."
         }
@@ -75,24 +87,25 @@ class ChatVoice(
         }
 
     // ── Flaw blurt: a bot's tell as it gets baited into a blunder ─────────────────
-    fun flawBlurt(
-        personaId: String,
-        flaw: CharacterFlaw,
-    ): String =
+    fun flawBlurt(flaw: CharacterFlaw): String =
         when (flaw) {
             CharacterFlaw.EGO -> if (hi) "Main sabse strong hoon. Abhi dikhata hoon." else "I'm the strongest. Watch me prove it."
             CharacterFlaw.GREED -> if (hi) "Itna maal? Chhodne ka sawaal hi nahi." else "That much loot? No way I'm passing."
-            CharacterFlaw.PARANOIA -> if (hi) "Yeh sab mere against hai. Pehle main maarta hoon." else "This is all against me. I strike first."
+            CharacterFlaw.PARANOIA ->
+                if (hi) {
+                    "Yeh sab mere against hai. Pehle main maarta hoon."
+                } else {
+                    "This is all against me. I strike " +
+                        "first."
+                }
             CharacterFlaw.VENGEANCE -> if (hi) "Hisaab baaki hai. Aaj chukta karta hoon." else "A score is pending. I settle it today."
             CharacterFlaw.ZEAL -> if (hi) "Yeh anyaay hai! Main rok ke rahunga." else "This is injustice! I will stop it."
             CharacterFlaw.IMPULSE -> if (hi) "Soch ke kya karna, chalo kar dete hain." else "Why overthink — let's just do it."
         }
 
     // ── Ally coordination ─────────────────────────────────────────────────────────
-    fun allyWith(
-        personaId: String,
-        allyName: String,
-    ): String = if (hi) "$allyName, apna gathbandhan zinda hai. Saath chalte hain." else "$allyName, our pact holds. We move together."
+    fun allyWith(allyName: String): String =
+        if (hi) "$allyName, apna gathbandhan zinda hai. Saath chalte hain." else "$allyName, our pact holds. We move together."
 
     // ── Arc beats: player + narrator + generic bot fallback ───────────────────────
     fun arcBeat(
@@ -111,15 +124,39 @@ class ChatVoice(
                 }
             "gathbandhan.knife" -> if (hi) "$t, gathbandhan khatam. Sorry, politics hai." else "$t, the pact is over. Sorry, it's politics."
             // AFWAAH
-            "afwaah.plant" -> if (hi) "Suna? $t ke paas Patrakaar chhupa hai. Sambhal ke." else "Heard? $t is hiding a Patrakaar. Be careful."
-            "afwaah.spreads" -> if (hi) "Darbar mein khusur-phusur shuru… $t ke khilaaf." else "Whispers ripple through the Darbar… against $t."
+            "afwaah.plant" ->
+                if (hi) {
+                    "Suna? $t ke paas Patrakaar chhupa hai. Sambhal ke."
+                } else {
+                    "Heard? $t is hiding a Patrakaar. Be " +
+                        "careful."
+                }
+            "afwaah.spreads" ->
+                if (hi) {
+                    "Darbar mein khusur-phusur shuru… $t ke khilaaf."
+                } else {
+                    "Whispers ripple through the Darbar… " +
+                        "against $t."
+                }
             "afwaah.fuel" -> if (hi) "Aur ek baat — $t ne pichli baar bhi jhooth bola tha." else "One more thing — $t lied last time too."
             // STING
-            "sting.flatter" -> if (hi) "$t, tu hi asli khiladi hai. Inhe dikha de tera dum." else "$t, you're the real player. Show them your strength."
+            "sting.flatter" ->
+                if (hi) {
+                    "$t, tu hi asli khiladi hai. Inhe dikha de tera dum."
+                } else {
+                    "$t, you're the real player. Show them " +
+                        "your strength."
+                }
             "sting.dare" -> if (hi) "$t, baatein toh sab karte hain. Karke dikha." else "$t, anyone can talk. Prove it."
             // BADLA
             "badla.approach" -> if (hi) "$t, gussa toh tujhe bhi hai. Main jaanta hoon kispe." else "$t, you're angry too. I know at whom."
-            "badla.point" -> if (hi) "$t, asli dushman woh hai — $targetName. Usse nipta." else "$t, the real enemy is $targetName. Deal with them."
+            "badla.point" ->
+                if (hi) {
+                    "$t, asli dushman woh hai — $targetName. Usse nipta."
+                } else {
+                    "$t, the real enemy is $targetName. Deal " +
+                        "with them."
+                }
             else -> if (hi) "$speakerName: …" else "$speakerName: …"
         }
     }

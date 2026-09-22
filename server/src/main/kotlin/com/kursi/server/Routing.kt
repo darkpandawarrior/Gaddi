@@ -8,6 +8,7 @@ import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import java.util.UUID
@@ -56,182 +57,160 @@ fun Application.configureRouting(registry: RoomRegistry) {
         }
 
         // ── Main game WebSocket endpoint ────────────────────────────────────
+        // The handshake and the message pump live in their own functions below. Inlining them here
+        // put configureRouting at 153 lines and cyclomatic complexity 25 — a route table that
+        // nobody could read past the first endpoint.
         webSocket("/play") {
             val connectionId = UUID.randomUUID().toString()
-
-            // 1. Read the first frame — must be a JoinRoom ClientMessage
-            val firstText =
-                (incoming.receive() as? Frame.Text)?.readText()
-                    ?: run {
-                        close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "Expected JoinRoom"))
-                        return@webSocket
-                    }
-
-            val joinMsg: ClientMessage =
-                try {
-                    KursiJson.decodeFromString(firstText)
-                } catch (e: Exception) {
-                    close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "Invalid ClientMessage: ${e.message}"))
-                    return@webSocket
-                }
-
-            if (joinMsg !is ClientMessage.JoinRoom) {
-                close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "First message must be JoinRoom"))
-                return@webSocket
-            }
-
-            // 2. Find or create the room
-            val roomCode = joinMsg.roomCode.uppercase()
-            val actor =
-                registry.findRoom(roomCode)
-                    ?: run {
-                        // Auto-create a 2-player room if the code doesn't exist (for simple discovery)
-                        // In a real deployment the client would call a REST endpoint to create rooms first.
-                        // For the test harness and demo, we auto-create if the code is the matchId literal.
-                        registry.createRoom(2).let { newCode ->
-                            // The caller used a specific code; we can't honor it after creation since our
-                            // registry generates its own codes. Return an error.
-                            val errMsg: ServerMessage =
-                                ServerMessage.Error(
-                                    matchId = roomCode,
-                                    seq = 0,
-                                    clientSeq = -1,
-                                    reason = "Room '$roomCode' not found. Create a room first.",
-                                )
-                            send(Frame.Text(KursiJson.encodeToString(errMsg)))
-                            close(CloseReason(CloseReason.Codes.NORMAL, "Room not found"))
-                            return@webSocket
-                        }
-                    }
-
-            // 3. Register this connection with the match actor (honouring a reconnect-seat request)
-            val replyDeferred = CompletableDeferred<PlayerJoinedResult>()
-            actor.post(
-                MatchCommand.PlayerJoined(
-                    connectionId = connectionId,
-                    session = this,
-                    reconnectSeat = joinMsg.reconnectSeat,
-                    replyChannel = replyDeferred,
-                ),
-            )
-
-            val joinResult =
-                try {
-                    replyDeferred.await()
-                } catch (e: Exception) {
-                    val errMsg: ServerMessage =
-                        ServerMessage.Error(
-                            matchId = roomCode,
-                            seq = 0,
-                            clientSeq = -1,
-                            reason = "Could not join: ${e.message}",
-                        )
-                    send(Frame.Text(KursiJson.encodeToString(errMsg)))
-                    close(CloseReason(CloseReason.Codes.NORMAL, "Join failed"))
-                    return@webSocket
-                }
-
-            // 4. RoomJoined is sent by the actor itself (in the serial actor loop) so it always
-            //    precedes any StateUpdate — see MatchActor.handleJoin. Here we only act on metadata.
-            //
-            // Once a quick-match room is full, retire it from the open queue so the next
-            // quick-match request opens a fresh room rather than landing in a started game.
-            if (joinResult.playerCount >= actor.seatCount) {
-                registry.markFilled(roomCode)
-            }
-
-            // 5. Message loop: read intents and forward to the actor
+            val joined = handshakeJoin(registry, connectionId) ?: return@webSocket
             try {
-                for (frame in incoming) {
-                    if (frame !is Frame.Text) continue
-                    val text = frame.readText()
-                    val msg: ClientMessage =
-                        try {
-                            KursiJson.decodeFromString(text)
-                        } catch (e: Exception) {
-                            val errMsg: ServerMessage =
-                                ServerMessage.Error(
-                                    matchId = roomCode,
-                                    seq = -1,
-                                    clientSeq = -1,
-                                    reason = "Invalid message: ${e.message}",
-                                )
-                            send(Frame.Text(KursiJson.encodeToString(errMsg)))
-                            continue
-                        }
-
-                    when (msg) {
-                        is ClientMessage.SubmitIntent -> {
-                            actor.post(
-                                MatchCommand.IntentSubmitted(
-                                    connectionId = connectionId,
-                                    clientSeq = msg.seq,
-                                    wireIntent = msg.intent,
-                                ),
-                            )
-                        }
-                        is ClientMessage.Pass -> {
-                            // The Pass fast-path: look up the seat's current state to determine
-                            // which Pass intent to submit. We encode it as a WireIntent.Pass for
-                            // the seat assigned on join.
-                            val wirePass = WireIntent.Pass(actor = joinResult.seat)
-                            actor.post(
-                                MatchCommand.IntentSubmitted(
-                                    connectionId = connectionId,
-                                    clientSeq = msg.seq,
-                                    wireIntent = wirePass,
-                                ),
-                            )
-                        }
-                        is ClientMessage.ContinueBeat -> {
-                            // Track 6: release a currently-pending beat wait now instead of waiting out
-                            // the server's bounded ack timeout (see BeatAckGate). No-op if none is pending.
-                            actor.post(MatchCommand.BeatAckReceived(connectionId))
-                        }
-                        is ClientMessage.JoinRoom -> {
-                            // Ignore subsequent JoinRoom frames
-                        }
-                    }
-                }
+                pumpClientMessages(joined, connectionId)
             } finally {
-                // 6. Notify the actor the connection dropped
-                actor.post(MatchCommand.PlayerLeft(connectionId))
+                // Notify the actor the connection dropped.
+                joined.actor.post(MatchCommand.PlayerLeft(connectionId))
             }
-        }
-
-        // ── Room creation REST endpoint ─────────────────────────────────────
-        post("/rooms/{playerCount}") {
-            val playerCount =
-                call.parameters["playerCount"]?.toIntOrNull()
-                    ?: run {
-                        call.respond(io.ktor.http.HttpStatusCode.BadRequest, "Invalid player count")
-                        return@post
-                    }
-            if (playerCount !in 2..10) {
-                call.respond(io.ktor.http.HttpStatusCode.BadRequest, "Player count must be 2..10")
-                return@post
-            }
-            val code = registry.createRoom(playerCount)
-            call.respondText(code)
-        }
-
-        // ── Public quick-match endpoint ─────────────────────────────────────
-        // Returns the code of a WAITING public room of the requested size (creating one if none is
-        // open), so two callers asking for the same size are paired into the same room. The client
-        // then connects to /play with this code exactly as for a private room.
-        post("/quickmatch/{playerCount}") {
-            val playerCount =
-                call.parameters["playerCount"]?.toIntOrNull()
-                    ?: run {
-                        call.respond(io.ktor.http.HttpStatusCode.BadRequest, "Invalid player count")
-                        return@post
-                    }
-            if (playerCount !in 2..10) {
-                call.respond(io.ktor.http.HttpStatusCode.BadRequest, "Player count must be 2..10")
-                return@post
-            }
-            val code = registry.quickMatch(playerCount)
-            call.respondText(code)
         }
     }
+}
+
+/** What a successful `/play` handshake yields: the match actor, the room code and the seat taken. */
+private data class JoinedRoom(
+    val actor: MatchActor,
+    val roomCode: String,
+    val result: PlayerJoinedResult,
+)
+
+/**
+ * Steps 1-4 of the `/play` handshake: read the opening JoinRoom frame, resolve the room, register
+ * with its actor and await the seat assignment. Returns null once it has already closed the socket
+ * with the reason, so the caller just returns.
+ *
+ * TooGenericExceptionCaught: the join awaits a CompletableDeferred the ACTOR completes, so the
+ * failure type is whatever the actor threw — there is no narrower supertype to name here. The
+ * message is forwarded to the client in a ServerMessage.Error rather than dropped.
+ */
+@Suppress("TooGenericExceptionCaught")
+private suspend fun DefaultWebSocketServerSession.handshakeJoin(
+    registry: RoomRegistry,
+    connectionId: String,
+): JoinedRoom? {
+    // 1. Read the first frame — must be a JoinRoom ClientMessage
+    val firstText =
+        (incoming.receive() as? Frame.Text)?.readText()
+            ?: run {
+                close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "Expected JoinRoom"))
+                return null
+            }
+
+    val joinMsg: ClientMessage =
+        try {
+            KursiJson.decodeFromString(firstText)
+        } catch (e: SerializationException) {
+            close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "Invalid ClientMessage: ${e.message}"))
+            return null
+        }
+
+    if (joinMsg !is ClientMessage.JoinRoom) {
+        close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "First message must be JoinRoom"))
+        return null
+    }
+
+    // 2. Find the room. The registry generates its own codes, so a code we do not hold cannot be
+    //    honoured by creating one — the client must create a room first.
+    val roomCode = joinMsg.roomCode.uppercase()
+    val actor =
+        registry.findRoom(roomCode) ?: run {
+            sendServerError(roomCode, seq = 0, reason = "Room '$roomCode' not found. Create a room first.")
+            close(CloseReason(CloseReason.Codes.NORMAL, "Room not found"))
+            return null
+        }
+
+    // 3. Register this connection with the match actor (honouring a reconnect-seat request)
+    val replyDeferred = CompletableDeferred<PlayerJoinedResult>()
+    actor.post(
+        MatchCommand.PlayerJoined(
+            connectionId = connectionId,
+            session = this,
+            reconnectSeat = joinMsg.reconnectSeat,
+            replyChannel = replyDeferred,
+        ),
+    )
+
+    val joinResult =
+        try {
+            replyDeferred.await()
+        } catch (e: Exception) {
+            sendServerError(roomCode, seq = 0, reason = "Could not join: ${e.message}")
+            close(CloseReason(CloseReason.Codes.NORMAL, "Join failed"))
+            return null
+        }
+
+    // 4. RoomJoined is sent by the actor itself (in the serial actor loop) so it always precedes
+    //    any StateUpdate — see MatchActor.handleJoin. Here we only act on metadata.
+    //
+    // Once a quick-match room is full, retire it from the open queue so the next quick-match
+    // request opens a fresh room rather than landing in a started game.
+    if (joinResult.playerCount >= actor.seatCount) {
+        registry.markFilled(roomCode)
+    }
+    return JoinedRoom(actor, roomCode, joinResult)
+}
+
+/**
+ * Step 5: read client frames and forward them to the match actor until the socket closes.
+ *
+ * TooGenericExceptionCaught: a malformed frame from one client must not drop that client's socket,
+ * let alone the match. The decode failure is reported back as a ServerMessage.Error and the loop
+ * continues; `Exception` is the boundary because the frame is attacker-controlled input.
+ */
+@Suppress("TooGenericExceptionCaught")
+private suspend fun DefaultWebSocketServerSession.pumpClientMessages(
+    joined: JoinedRoom,
+    connectionId: String,
+) {
+    for (frame in incoming) {
+        if (frame !is Frame.Text) continue
+        val msg: ClientMessage =
+            try {
+                KursiJson.decodeFromString(frame.readText())
+            } catch (e: Exception) {
+                sendServerError(joined.roomCode, seq = -1, reason = "Invalid message: ${e.message}")
+                continue
+            }
+
+        when (msg) {
+            is ClientMessage.SubmitIntent ->
+                joined.actor.post(
+                    MatchCommand.IntentSubmitted(
+                        connectionId = connectionId,
+                        clientSeq = msg.seq,
+                        wireIntent = msg.intent,
+                    ),
+                )
+            is ClientMessage.Pass ->
+                // The Pass fast-path: encode a WireIntent.Pass for the seat assigned on join.
+                joined.actor.post(
+                    MatchCommand.IntentSubmitted(
+                        connectionId = connectionId,
+                        clientSeq = msg.seq,
+                        wireIntent = WireIntent.Pass(actor = joined.result.seat),
+                    ),
+                )
+            is ClientMessage.ContinueBeat ->
+                // Track 6: release a currently-pending beat wait now instead of waiting out the
+                // server's bounded ack timeout (see BeatAckGate). No-op if none is pending.
+                joined.actor.post(MatchCommand.BeatAckReceived(connectionId))
+            is ClientMessage.JoinRoom -> Unit // Ignore subsequent JoinRoom frames
+        }
+    }
+}
+
+/** Sends a [ServerMessage.Error] frame. The three call sites above differed only in seq and reason. */
+private suspend fun DefaultWebSocketServerSession.sendServerError(
+    matchId: String,
+    seq: Long,
+    reason: String,
+) {
+    val errMsg: ServerMessage = ServerMessage.Error(matchId = matchId, seq = seq, clientSeq = -1, reason = reason)
+    send(Frame.Text(KursiJson.encodeToString(errMsg)))
 }

@@ -152,7 +152,11 @@ private fun BrassDivider() {
                 .height(1.dp)
                 .background(
                     Brush.horizontalGradient(
-                        listOf(BrandTokens.BrassDark.copy(alpha = 0.3f), BrandTokens.GoldAntique.copy(alpha = 0.8f), BrandTokens.BrassDark.copy(alpha = 0.3f)),
+                        listOf(
+                            BrandTokens.BrassDark.copy(alpha = 0.3f),
+                            BrandTokens.GoldAntique.copy(alpha = 0.8f),
+                            BrandTokens.BrassDark.copy(alpha = 0.3f),
+                        ),
                     ),
                 ),
     )
@@ -338,7 +342,6 @@ fun WhisperChit(
                 anchor = anchorBounds,
                 container = containerSize,
                 content = content,
-                onDismiss = onDismiss,
                 modifier = modifier,
             )
         } else {
@@ -351,7 +354,7 @@ fun WhisperChit(
                 when (content) {
                     is ChitContent.Identity -> IdentityChitContent(content)
                     is ChitContent.RiskAction -> RiskChitContent(content)
-                    is ChitContent.Dossier -> DossierChitContent(content, onDismiss)
+                    is ChitContent.Dossier -> DossierChitContent(content)
                     is ChitContent.ClaimDetail -> ClaimDetailChitContent(content)
                     is ChitContent.LogEvent -> LogEventChitContent(content)
                     is ChitContent.Coach -> CoachChitContent(content)
@@ -372,7 +375,6 @@ private fun AnchoredChit(
     anchor: androidx.compose.ui.geometry.Rect,
     container: androidx.compose.ui.unit.IntSize,
     content: ChitContent,
-    onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
@@ -408,7 +410,6 @@ private fun AnchoredChit(
             anchorTopPx = anchor.top,
             gapPx = gap,
             content = content,
-            onDismiss = onDismiss,
             widthDp = chitWidth,
         )
     }
@@ -422,7 +423,6 @@ private fun ChitWithCaret(
     anchorTopPx: Float,
     gapPx: Float,
     content: ChitContent,
-    onDismiss: () -> Unit,
     widthDp: androidx.compose.ui.unit.Dp,
 ) {
     val density = LocalDensity.current
@@ -450,7 +450,7 @@ private fun ChitWithCaret(
             when (content) {
                 is ChitContent.Identity -> IdentityChitContent(content)
                 is ChitContent.RiskAction -> RiskChitContent(content)
-                is ChitContent.Dossier -> DossierChitContent(content, onDismiss)
+                is ChitContent.Dossier -> DossierChitContent(content)
                 is ChitContent.ClaimDetail -> ClaimDetailChitContent(content)
                 is ChitContent.LogEvent -> LogEventChitContent(content)
                 is ChitContent.Coach -> CoachChitContent(content)
@@ -589,10 +589,7 @@ private fun RiskChitContent(c: ChitContent.RiskAction) {
 }
 
 @Composable
-private fun DossierChitContent(
-    c: ChitContent.Dossier,
-    onDismiss: () -> Unit,
-) {
+private fun DossierChitContent(c: ChitContent.Dossier) {
     BrassParchmentSurface(modifier = Modifier.widthIn(max = 340.dp)) {
         // ── Header: name + a one-line headline READ (lead with intel) ──────────
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs)) {
@@ -1385,7 +1382,9 @@ fun HintRail(
                 .background(BrandTokens.TeakDark.copy(alpha = 0.92f))
                 .border(
                     KursiDimens.stroke_hairline,
-                    Brush.horizontalGradient(listOf(borderColor.copy(alpha = 0.6f), borderColor.copy(alpha = 0.4f), borderColor.copy(alpha = 0.6f))),
+                    Brush.horizontalGradient(
+                        listOf(borderColor.copy(alpha = 0.6f), borderColor.copy(alpha = 0.4f), borderColor.copy(alpha = 0.6f)),
+                    ),
                     Squircle(KursiRadii.sm),
                 ).padding(horizontal = KursiDimens.space_sm),
         verticalAlignment = Alignment.CenterVertically,
@@ -1435,7 +1434,7 @@ private fun deriveHintText(
 ): Pair<String, HintTone> =
     when (gamePhase) {
         is GamePhase.PickAction -> {
-            if (state.view.myCoins >= 10) {
+            if (state.view.myCoins >= state.view.config.forcedCoupThreshold) {
                 voice.phaseHint(PhaseHint.CoinCapKhela) to HintTone.Warning
             } else {
                 voice.phaseHint(PhaseHint.PickAction) to HintTone.Gold
@@ -1790,7 +1789,12 @@ private fun DhandhaTab() {
         items(actions) { (action, name, rules) ->
             HairlineRow(verticalPadding = 10.dp) {
                 Text(name, style = KursiType.label_sm, color = KursiNeutrals.TextPrimary, modifier = Modifier.weight(1.2f))
-                Text(actionCostSummary(action), style = KursiType.label_sm, color = BrandTokens.GoldAntique, modifier = Modifier.weight(0.6f))
+                Text(
+                    actionCostSummary(action),
+                    style = KursiType.label_sm,
+                    color = BrandTokens.GoldAntique,
+                    modifier = Modifier.weight(0.6f),
+                )
                 Text(rules, style = KursiType.label_micro, color = KursiNeutrals.TextSecondary, modifier = Modifier.weight(2f))
             }
         }

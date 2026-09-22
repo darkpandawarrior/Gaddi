@@ -25,6 +25,14 @@ class EasyPolicy(
     SimPolicy {
     private var rng = Rng(seed)
 
+    private companion object {
+        /** Percentage dice rolls (rng.nextInt(100)). Easy's whole "good but beatable" band. */
+        const val TopTierPickPct = 60
+        const val RandomChallengeNoisePct = 5
+        const val BluffBlockPct = 15
+        const val RandomExchangeKeepPct = 40
+    }
+
     override fun decide(
         view: PlayerView,
         legal: List<Intent>,
@@ -69,7 +77,7 @@ class EasyPolicy(
         // Easy bot: 60% pick from top-priority tier, 40% pick randomly among all
         val (roll, r1) = rng.nextInt(100)
         rng = r1
-        if (roll < 60) {
+        if (roll < TopTierPickPct) {
             for (tier in listOf(coup, assassinate, steal, tax, investigate, foreignAid, income)) {
                 if (tier.isNotEmpty()) return preferWeakTarget(tier, view)
             }
@@ -113,33 +121,26 @@ class EasyPolicy(
         val hasBlock = legal.any { it is Intent.Block }
         val passIntent = legal.first { it is Intent.Pass }
 
-        // Challenge only if the claim is literally impossible (remaining[R]==0).
-        val claimedRole = phase.claimedRole
-        if (hasChallenge && claimedRole != null) {
-            val remaining = remaining(view, claimedRole)
-            if (remaining <= 0) return legal.first { it is Intent.Challenge }
-        }
-        // Also challenge block if block role is exhausted.
-        val blockRole = phase.blockRole
-        if (hasChallenge && blockRole != null) {
-            val remaining = remaining(view, blockRole)
-            if (remaining <= 0) return legal.first { it is Intent.Challenge }
-        }
-        // ~5% random challenge noise.
+        // Challenge only if the claim is literally impossible (remaining[R] == 0) — either the
+        // action claim or the block claim.
+        val impossibleClaim =
+            hasChallenge &&
+                listOfNotNull(phase.claimedRole, phase.blockRole).any { remaining(view, it) <= 0 }
+        if (impossibleClaim) return legal.first { it is Intent.Challenge }
+
+        // ~5% random challenge noise. Drawn AFTER the impossible-claim check so the rng stream
+        // stays exactly where it was: an impossible claim short-circuits without consuming a draw.
         val (roll1, r1) = rng.nextInt(100)
         rng = r1
-        if (hasChallenge && roll1 < 5) return legal.first { it is Intent.Challenge }
+        if (hasChallenge && roll1 < RandomChallengeNoisePct) return legal.first { it is Intent.Challenge }
 
-        // ~15% bluff-block when we're the target and can block.
-        if (hasBlock) {
-            val (roll2, r2) = rng.nextInt(100)
-            rng = r2
-            if (roll2 < 15) {
-                val block = legal.filterIsInstance<Intent.Block>()
-                if (block.isNotEmpty()) return randomFrom(block)
-            }
-        }
-        return passIntent
+        // ~15% bluff-block when we're the target and can block. Same rule: no draw unless we could
+        // actually block.
+        if (!hasBlock) return passIntent
+        val (roll2, r2) = rng.nextInt(100)
+        rng = r2
+        val blocks = legal.filterIsInstance<Intent.Block>()
+        return if (roll2 < BluffBlockPct && blocks.isNotEmpty()) randomFrom(blocks) else passIntent
     }
 
     // ── Exchange ──────────────────────────────────────────────────────────────
@@ -153,7 +154,7 @@ class EasyPolicy(
         // role-optimal keep (resolved via myCards + Exchange.drawn). Good-but-beatable.
         val (roll, r1) = rng.nextInt(100)
         rng = r1
-        if (roll < 40) return randomFrom(legal)
+        if (roll < RandomExchangeKeepPct) return randomFrom(legal)
         return CardChoice.bestExchange(view, legal) ?: legal.first()
     }
 

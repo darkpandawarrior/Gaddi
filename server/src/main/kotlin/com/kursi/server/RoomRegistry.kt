@@ -7,6 +7,9 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.random.Random
 
+/** Room codes are read out loud over a call, so they stay short. */
+private const val ROOM_CODE_LENGTH = 6
+
 /**
  * Thread-safe registry of active rooms (invite-code → [MatchActor]).
  *
@@ -89,11 +92,11 @@ class RoomRegistry(
     fun activeRoomCount(): Int = rooms.size
 
     private fun generateRoomCode(): String {
-        // 6-character alphanumeric code (uppercase, no ambiguous chars like 0/O/I/1)
+        // Uppercase alphanumeric, no ambiguous chars like 0/O/I/1 — these get read aloud.
         val alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
         var code: String
         do {
-            code = (1..6).map { alphabet[Random.nextInt(alphabet.length)] }.joinToString("")
+            code = (1..ROOM_CODE_LENGTH).map { alphabet[Random.nextInt(alphabet.length)] }.joinToString("")
         } while (rooms.containsKey(code))
         return code
     }

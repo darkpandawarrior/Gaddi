@@ -451,7 +451,10 @@ internal fun CompactActionChip(
             !enabled -> Brush.verticalGradient(listOf(BrandTokens.TeakDark, BrandTokens.TeakInk))
             recommended -> Brush.verticalGradient(listOf(BrandTokens.GoldAntique, BrandTokens.BrassAged))
             forced -> Brush.verticalGradient(listOf(familyColor.copy(alpha = 0.95f), familyColor.copy(alpha = 0.65f)))
-            coachAccentColor != null -> Brush.verticalGradient(listOf(coachAccentColor.copy(alpha = 0.22f), coachAccentColor.copy(alpha = 0.08f)))
+            coachAccentColor != null ->
+                Brush.verticalGradient(
+                    listOf(coachAccentColor.copy(alpha = 0.22f), coachAccentColor.copy(alpha = 0.08f)),
+                )
             else -> Brush.verticalGradient(listOf(BrandTokens.TeakMid, BrandTokens.TeakDark))
         }
     val borderColor =

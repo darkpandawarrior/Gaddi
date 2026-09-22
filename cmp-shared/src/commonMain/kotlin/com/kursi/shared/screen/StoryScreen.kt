@@ -87,7 +87,9 @@ private val ARC_METAS =
             code = ArcId.STING.name,
             title = "PHASAAO",
             subtitle = "Honeytrap / Sting Operation",
-            blurb = "Someone is being set up. Flattery, false friendship, a trap laid in plain sight. You can pull the strings — or cut them.",
+            blurb =
+                "Someone is being set up. Flattery, false friendship, a trap laid in plain sight. You can pull the strings — or cut " +
+                    "them.",
             glyph = "🪤",
         ),
         ArcMeta(
@@ -316,7 +318,11 @@ private fun ArcRow(
                     ).border(1.dp, BrandTokens.BrassAged.copy(alpha = if (selected) 0.9f else 0.5f), CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            Text(meta.glyph, style = KursiType.title.copy(fontSize = 16.sp), color = if (selected) BrandTokens.TeakDark else BrandTokens.GoldAntique)
+            Text(
+                meta.glyph,
+                style = KursiType.title.copy(fontSize = 16.sp),
+                color = if (selected) BrandTokens.TeakDark else BrandTokens.GoldAntique,
+            )
         }
 
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {

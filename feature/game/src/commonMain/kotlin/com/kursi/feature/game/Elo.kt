@@ -13,8 +13,32 @@ import kotlin.math.roundToInt
  * magnitude scales with how surprising the result was (the standard ELO expected-score curve).
  */
 object Elo {
+    // Implied table ratings, one rung per Difficulty. The spacing is the point: beating a
+    // Grandmaster table climbs fast, beating an Easy table barely moves you, and losing to Easy
+    // stings. Spelled out here so the ladder's shape is one readable block instead of five
+    // literals buried in a `when`.
+    private const val EasyTableRating = 850
+    private const val MediumTableRating = 1050
+    private const val HardTableRating = 1300
+    private const val ExpertTableRating = 1600
+    private const val GrandmasterTableRating = 1900
+
     /** K-factor — the maximum single-game swing magnitude. A moderate value for a casual ladder. */
     const val K = 32.0
+
+    /**
+     * The rating gap, in points, at which the stronger side is expected to score 10:1. 400 is
+     * standard ELO and it is what makes [expectedScore] a *rating* curve rather than an arbitrary
+     * logistic; changing it rescales the whole ladder.
+     */
+    private const val RatingScale = 400.0
+
+    /** Base of the ELO logistic. Paired with [RatingScale]: 10 points per 400 rating. */
+    private const val LogisticBase = 10.0
+
+    /** Rating floor and ceiling. A casual ladder never goes negative and never runs away. */
+    private const val MinRating = 0
+    private const val MaxRating = 4000
 
     /**
      * Implied opponent rating for a table of the given [Difficulty]. Easy < Medium < Hard < Expert <
@@ -23,18 +47,18 @@ object Elo {
      */
     fun opponentRating(difficulty: Difficulty): Int =
         when (difficulty) {
-            Difficulty.Easy -> 850
-            Difficulty.Medium -> 1050
-            Difficulty.Hard -> 1300
-            Difficulty.Expert -> 1600
-            Difficulty.Grandmaster -> 1900
+            Difficulty.Easy -> EasyTableRating
+            Difficulty.Medium -> MediumTableRating
+            Difficulty.Hard -> HardTableRating
+            Difficulty.Expert -> ExpertTableRating
+            Difficulty.Grandmaster -> GrandmasterTableRating
         }
 
     /** Expected score for [rating] against [opponent] — the logistic ELO curve, in (0,1). */
     fun expectedScore(
         rating: Int,
         opponent: Int,
-    ): Double = 1.0 / (1.0 + 10.0.pow((opponent - rating) / 400.0))
+    ): Double = 1.0 / (1.0 + LogisticBase.pow((opponent - rating) / RatingScale))
 
     /**
      * One ELO step. Returns the NEW rating after a game vs an opponent of [opponentRating], where
@@ -58,7 +82,7 @@ object Elo {
                 // A loss never increases the rating: at most -1, even vs a far-stronger table.
                 rawDelta.roundToInt().coerceAtMost(-1)
             }
-        return (rating + delta).coerceIn(0, 4000)
+        return (rating + delta).coerceIn(MinRating, MaxRating)
     }
 
     /** Convenience: the new rating after a finished game on a table of [difficulty]. */

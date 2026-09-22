@@ -50,6 +50,12 @@ data class ReplayAnnotation(
     enum class Verdict { SHARP, FINE, LOOSE, COSTLY }
 
     companion object {
+        /** A challenge at or above even money reads as favourable; below it, as a long shot. */
+        private const val EvenOdds = 0.5
+
+        /** MoveAdvice odds are a 0..1 probability; the voiced read quotes them as a percentage. */
+        private const val PercentScale = 100
+
         /**
          * Compute the annotation for the human's [chosen] move at [state] (full authoritative state).
          * [advisor] is a FAIR, internally-redacting [MoveAdvisor] reused across the replay (so the read
@@ -90,7 +96,7 @@ data class ReplayAnnotation(
                     else -> Verdict.COSTLY
                 }
 
-            val (hi, en) = beliefRead(chosen, chosenAdvice, view, personas)
+            val (hi, en) = beliefRead(chosen, chosenAdvice, view)
 
             return ReplayAnnotation(
                 playedLabel = labelOf(chosen, view, personas),
@@ -116,56 +122,54 @@ data class ReplayAnnotation(
             chosen: Intent,
             advice: MoveAdvice,
             view: PlayerView,
-            personas: Map<PlayerId, OpponentPersona>,
         ): Pair<String, String> {
-            if (chosen is Intent.Challenge) {
-                val role = challengedRole(view)
-                val odds = advice.successOdds
-                val favourable = (odds ?: 0.0) >= 0.5
-                if (role != null) {
-                    val accounted = accountedFor(view, role)
-                    val copies = view.config.copiesPerRole
-                    val roleHi = roleHinglish(role)
-                    val nHi = numberHinglish(accounted)
-                    val tail = if (favourable) "lalkaar faayde ka tha" else "lalkaar jokhim bhara tha"
-                    val tailEn = if (favourable) "the challenge was favourable" else "the challenge was a long shot"
-                    val hi = "$nHi $roleHi hisaab mein the — $tail."
-                    val en = "All $accounted of $copies $role accounted for — $tailEn."
-                    return hi to en
-                }
-                val tail = if (favourable) "lalkaar faayde ka tha" else "lalkaar jokhim bhara tha"
-                val tailEn = if (favourable) "the challenge was favourable" else "the challenge was a long shot"
-                return "Daawe pe shak — $tail." to "Doubting the claim — $tailEn."
-            }
-
+            if (chosen is Intent.Challenge) return challengeRead(advice, view)
             // Bluff action / block — named bluff + its risk.
-            if (advice.bluff) {
-                val role = advice.intent.let { claimedRoleOf(it) }
-                val safe = advice.successOdds
-                val roleHi = role?.let { roleHinglish(it) } ?: "patta"
-                val roleEn = role?.name ?: "the card"
-                return if (safe != null) {
-                    val pct = (safe * 100).roundToInt()
-                    "$roleHi haath mein nahi tha — jhaansa. ~$pct% bina lalkaar bach jaata." to
-                        "Did not hold $roleEn — a bluff. ~$pct% it slips through unchallenged."
-                } else {
-                    "$roleHi haath mein nahi tha — saaf jhaansa." to
-                        "Did not hold $roleEn — a clean bluff."
-                }
-            }
-
+            if (advice.bluff) return bluffRead(advice)
             // Truthful claim — confirm the held role.
-            if (advice.truthful == true) {
-                val role = claimedRoleOf(advice.intent)
-                val roleHi = role?.let { roleHinglish(it) } ?: "patta"
-                val roleEn = role?.name ?: "the card"
-                return "$roleHi sach mein tha — daawa pakka, surakshit." to
-                    "Genuinely held $roleEn — the claim was real and safe."
-            }
-
+            if (advice.truthful == true) return truthfulRead(advice)
             // No-claim move — lean on the advisor's own rationale, lightly localised.
             val en = advice.rationale
             return en to en
+        }
+
+        /** Counts the accounted-for copies of the challenged role and frames the odds around them. */
+        private fun challengeRead(
+            advice: MoveAdvice,
+            view: PlayerView,
+        ): Pair<String, String> {
+            val favourable = (advice.successOdds ?: 0.0) >= EvenOdds
+            val tail = if (favourable) "lalkaar faayde ka tha" else "lalkaar jokhim bhara tha"
+            val tailEn = if (favourable) "the challenge was favourable" else "the challenge was a long shot"
+            val role = challengedRole(view) ?: return "Daawe pe shak — $tail." to "Doubting the claim — $tailEn."
+            val accounted = accountedFor(view, role)
+            val copies = view.config.copiesPerRole
+            val hi = "${numberHinglish(accounted)} ${roleHinglish(role)} hisaab mein the — $tail."
+            val en = "All $accounted of $copies $role accounted for — $tailEn."
+            return hi to en
+        }
+
+        /** Names the bluffed role and, when the advisor scored it, how often it slips through. */
+        private fun bluffRead(advice: MoveAdvice): Pair<String, String> {
+            val role = claimedRoleOf(advice.intent)
+            val roleHi = role?.let { roleHinglish(it) } ?: "patta"
+            val roleEn = role?.name ?: "the card"
+            val safe =
+                advice.successOdds
+                    ?: return "$roleHi haath mein nahi tha — saaf jhaansa." to
+                        "Did not hold $roleEn — a clean bluff."
+            val pct = (safe * PercentScale).roundToInt()
+            return "$roleHi haath mein nahi tha — jhaansa. ~$pct% bina lalkaar bach jaata." to
+                "Did not hold $roleEn — a bluff. ~$pct% it slips through unchallenged."
+        }
+
+        /** Confirms the role the seat genuinely held behind a truthful claim. */
+        private fun truthfulRead(advice: MoveAdvice): Pair<String, String> {
+            val role = claimedRoleOf(advice.intent)
+            val roleHi = role?.let { roleHinglish(it) } ?: "patta"
+            val roleEn = role?.name ?: "the card"
+            return "$roleHi sach mein tha — daawa pakka, surakshit." to
+                "Genuinely held $roleEn — the claim was real and safe."
         }
 
         /** The role being challenged in the current reaction window, if the view is in one. */
@@ -243,15 +247,9 @@ data class ReplayAnnotation(
 
         private fun roleHinglish(role: Role): String = role.name // role names already read as the cast
 
-        private fun numberHinglish(n: Int): String =
-            when (n) {
-                0 -> "Ek bhi nahi"
-                1 -> "Ek"
-                2 -> "Do"
-                3 -> "Teen"
-                4 -> "Chaar"
-                5 -> "Paanch"
-                else -> n.toString()
-            }
+        /** Hinglish numerals 0..5, indexed by the number itself. Past 5 the digit reads fine. */
+        private val HINGLISH_NUMERALS = listOf("Ek bhi nahi", "Ek", "Do", "Teen", "Chaar", "Paanch")
+
+        private fun numberHinglish(n: Int): String = HINGLISH_NUMERALS.getOrNull(n) ?: n.toString()
     }
 }

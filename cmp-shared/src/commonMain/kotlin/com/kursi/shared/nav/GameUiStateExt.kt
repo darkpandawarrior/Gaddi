@@ -40,7 +40,8 @@ fun GameUiState.toMatchSummary(
                 val name = if (s == 0) "Aap" else opponentPersonas[com.kursi.engine.PlayerId(s)]?.name ?: "P$s"
                 add(name)
             }
-            (0 until players).filter { it != winnerSeat }.forEach { s ->
+            for (s in 0 until players) {
+                if (s == winnerSeat) continue
                 val name = if (s == 0) "Aap" else opponentPersonas[com.kursi.engine.PlayerId(s)]?.name ?: "P$s"
                 add(name)
             }

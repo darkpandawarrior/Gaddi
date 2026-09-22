@@ -3,6 +3,12 @@ package com.kursi.ai.persona
 import com.kursi.engine.PlayerId
 
 /**
+ * Below this a decayed grudge is dead. Dropping it keeps [GrudgeBook.topTarget] honest and stops
+ * the score map growing forever, since [GrudgeBook.decay] only ever shrinks values asymptotically.
+ */
+private const val GrudgeEpsilon = 0.05
+
+/**
  * Seven personality axes that drive how a bot plays.
  * These are *behavioral biases*, not strength levers — they reshape play-style
  * without changing the base policy's competence level.
@@ -70,12 +76,13 @@ class GrudgeMap {
         while (it.hasNext()) {
             val e = it.next()
             val next = e.value * factor
-            if (next < 0.05) it.remove() else e.setValue(next)
+            if (next < GrudgeEpsilon) it.remove() else e.setValue(next)
         }
     }
 
     /** Returns the candidate with the highest live grudge score, or null if none carries a grudge. */
-    fun topTarget(candidates: List<PlayerId>): PlayerId? = candidates.maxByOrNull { scores[it] ?: 0.0 }?.takeIf { (scores[it] ?: 0.0) > 0.0 }
+    fun topTarget(candidates: List<PlayerId>): PlayerId? =
+        candidates.maxByOrNull { scores[it] ?: 0.0 }?.takeIf { (scores[it] ?: 0.0) > 0.0 }
 
     /** Current grudge score for [pid] (0.0 if none). */
     fun scoreFor(pid: PlayerId): Double = scores[pid] ?: 0.0

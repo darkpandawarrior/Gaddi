@@ -5,6 +5,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/** Fields per persisted head-to-head token: `id:played:wins`. See encodeH2H/decodeH2H. */
+private const val H2HTokenFields = 3
+
 /**
  * AppPrefs — multiplatform key-value preferences backed by multiplatform-settings.
  *
@@ -797,7 +800,8 @@ class AppPrefs(
     }
 
     // H2H codec: "id:played:wins;id:played:wins" — avoids a serialization dependency in :core:prefs.
-    private fun encodeH2H(map: Map<String, PersonaRecord>): String = map.entries.joinToString(";") { (id, r) -> "$id:${r.played}:${r.wins}" }
+    private fun encodeH2H(map: Map<String, PersonaRecord>): String =
+        map.entries.joinToString(";") { (id, r) -> "$id:${r.played}:${r.wins}" }
 
     private fun decodeH2H(raw: String): Map<String, PersonaRecord> {
         if (raw.isBlank()) return emptyMap()
@@ -805,7 +809,8 @@ class AppPrefs(
             .split(";")
             .mapNotNull { token ->
                 val parts = token.split(":")
-                if (parts.size != 3) return@mapNotNull null
+                // id:played:wins — see encodeH2H above.
+                if (parts.size != H2HTokenFields) return@mapNotNull null
                 val id = parts[0]
                 val played = parts[1].toIntOrNull() ?: return@mapNotNull null
                 val wins = parts[2].toIntOrNull() ?: return@mapNotNull null
@@ -942,9 +947,20 @@ enum class DecisionGrade {
     ;
 
     companion object {
+        /** Below this many rated decisions the sample is too small to grade at all. */
+        private const val MinDecisionsToGrade = 6
+
+        /** SHARP needs at least this best-move match rate AND at most [SharpMaxEvLostPct] bled. */
+        private const val SharpMinAccuracyPct = 70
+        private const val SharpMaxEvLostPct = 5
+
+        /** RECKLESS is below this match rate OR at/above [RecklessMinEvLostPct] bled. */
+        private const val RecklessMaxAccuracyPct = 45
+        private const val RecklessMinEvLostPct = 12
+
         /**
-         * Tiering: needs a sample of [decisions] ≥ 6 to rate at all. SHARP = ≥ 70% best-move match
-         * AND ≤ 5% avg EV bled; RECKLESS = < 45% match OR ≥ 12% avg EV bled; STEADY in between.
+         * Tiering: needs a sample of [decisions] >= [MinDecisionsToGrade] to rate at all.
+         * SHARP and RECKLESS are the two ends; STEADY is everything in between.
          */
         fun of(
             accuracyPct: Int,
@@ -952,9 +968,9 @@ enum class DecisionGrade {
             decisions: Int,
         ): DecisionGrade =
             when {
-                decisions < 6 -> UNRATED
-                accuracyPct >= 70 && avgEvLostPct <= 5 -> SHARP
-                accuracyPct < 45 || avgEvLostPct >= 12 -> RECKLESS
+                decisions < MinDecisionsToGrade -> UNRATED
+                accuracyPct >= SharpMinAccuracyPct && avgEvLostPct <= SharpMaxEvLostPct -> SHARP
+                accuracyPct < RecklessMaxAccuracyPct || avgEvLostPct >= RecklessMinEvLostPct -> RECKLESS
                 else -> STEADY
             }
     }

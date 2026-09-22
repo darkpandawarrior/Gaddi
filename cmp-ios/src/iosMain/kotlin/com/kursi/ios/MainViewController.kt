@@ -20,5 +20,11 @@ import com.kursi.shared.KursiApp
  *     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
  * }
  * ```
+ *
+ * ktlint:standard:function-naming — the Swift side calls this by name
+ * (MainViewControllerKt.MainViewController(), see the KDoc above), and
+ * ComposeUIViewController factories are PascalCase across Compose Multiplatform.
+ * Renaming it would break the Xcode app, not just a style rule.
  */
+@Suppress("ktlint:standard:function-naming")
 fun MainViewController() = ComposeUIViewController { KursiApp() }

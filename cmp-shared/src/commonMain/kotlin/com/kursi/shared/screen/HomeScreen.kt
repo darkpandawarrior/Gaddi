@@ -70,6 +70,9 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+/** Where an official-seal rim tick starts, as a fraction of the seal radius. */
+private const val SealRayInnerFraction = 0.86f
+
 // ── Ticker headlines ──────────────────────────────────────────────────────────
 
 private val TICKER_LINES =
@@ -310,7 +313,6 @@ fun HomeScreen(
                     onNewGame = onNewGame,
                     onGazette = onGazette,
                     onSettings = onSettings,
-                    onOnlineTap = onOnlineTap,
                     onStory = onStory,
                     onTutorial = onTutorial,
                     wordmarkAlpha = wordmarkAlpha,
@@ -392,7 +394,8 @@ private fun ColumnScope.ExpandedHomeLayout(
                     label = s.homeCtaNewGame,
                     sublabel = s.homeCtaNewGameSub,
                     description =
-                        "Challenge the Cabinet in a single-player match. Outmanoeuvre AI opponents, seize the Kursi, and survive the vote of no " +
+                        "Challenge the Cabinet in a single-player match. Outmanoeuvre AI opponents, seize the Kursi, and survive the " +
+                            "vote of no " +
                             "confidence.",
                     details = listOf("Players" to "2 – 5", "Opponent" to "AI Cabinet", "Duration" to "~20 min"),
                     isHero = true,
@@ -405,7 +408,8 @@ private fun ColumnScope.ExpandedHomeLayout(
                     label = s.homeCtaStory,
                     sublabel = s.homeCtaStorySub,
                     description =
-                        "Enter the Darbar. Bots talk, conspire, and betray each other in real time. You observe the room and pull the strings from " +
+                        "Enter the Darbar. Bots talk, conspire, and betray each other in real time. You observe the room and pull the " +
+                            "strings from " +
                             "the shadows.",
                     details = listOf("Format" to "Narrative", "Control" to "Indirect", "Bots" to "Fully reactive"),
                     onClick = onStory,
@@ -417,7 +421,8 @@ private fun ColumnScope.ExpandedHomeLayout(
                     label = s.homeCtaGauntlet,
                     sublabel = s.homeCtaGauntletSub,
                     description =
-                        "Climb from Peon to Prime Minister. Each rung is a harder table — beat it to advance. Lose and the rung resets. Progress " +
+                        "Climb from Peon to Prime Minister. Each rung is a harder table — beat it to advance. Lose and the rung resets. " +
+                            "Progress " +
                             "persists between sessions.",
                     details = listOf("Format" to "Gauntlet", "Tiers" to "Progressive", "Progress" to "Persistent"),
                     onClick = onGauntlet,
@@ -429,7 +434,8 @@ private fun ColumnScope.ExpandedHomeLayout(
                     label = s.homeCtaSpectate,
                     sublabel = s.homeCtaSpectateSub,
                     description =
-                        "Watch a full game with no input required. Today's Tamasha seed is deterministic — the exact same table plays out for every " +
+                        "Watch a full game with no input required. Today's Tamasha seed is deterministic — the exact same table plays " +
+                            "out for every " +
                             "player.",
                     details = listOf("Input" to "None", "Seed" to "Today's date", "Players" to "4 bots"),
                     onClick = onSpectate,
@@ -440,7 +446,9 @@ private fun ColumnScope.ExpandedHomeLayout(
                     accentArgb = 0xFF1A3A3AL,
                     label = s.homeCtaTutorial,
                     sublabel = s.homeCtaTutorialSub,
-                    description = "Your first day in the daftar. The game walks you through every rule interactively, one move at a time. No reading required.",
+                    description =
+                        "Your first day in the daftar. The game walks you through every rule interactively, one move at a " +
+                            "time. No reading required.",
                     details = listOf("Format" to "Interactive", "Pace" to "Self-guided", "For" to "New players"),
                     onClick = onTutorial,
                 ),
@@ -451,7 +459,8 @@ private fun ColumnScope.ExpandedHomeLayout(
                     label = s.homeCtaRules,
                     sublabel = s.homeCtaRulesSub,
                     description =
-                        "The complete NIYAM Gazette. Every card, every action class, who beats whom, and the full laws of succession — in one " +
+                        "The complete NIYAM Gazette. Every card, every action class, who beats whom, and the full laws of succession — " +
+                            "in one " +
                             "reference.",
                     details = listOf("Contents" to "Full rules", "Beat chart" to "Included", "Cards" to "All 15"),
                     onClick = onGazette,
@@ -462,7 +471,9 @@ private fun ColumnScope.ExpandedHomeLayout(
                     accentArgb = 0xFF1A1E2EL,
                     label = s.homeCtaSettings,
                     sublabel = s.homeCtaSettingsSub,
-                    description = "Adjust sound, motion reduction, language, and AI difficulty defaults. All preferences carry across every game session.",
+                    description =
+                        "Adjust sound, motion reduction, language, and AI difficulty defaults. All preferences carry across " +
+                            "every game session.",
                     details = listOf("Sound" to "On / Off", "Language" to "EN / HI", "Motion" to "Full / Reduced"),
                     onClick = onSettings,
                 ),
@@ -473,7 +484,8 @@ private fun ColumnScope.ExpandedHomeLayout(
                     label = s.homeCtaMultiplayer,
                     sublabel = s.homeCtaMultiplayerSub,
                     description =
-                        "Open the Mehfil to outsiders. Create a private room and share the code, or drop into a quick match. Works online and on " +
+                        "Open the Mehfil to outsiders. Create a private room and share the code, or drop into a quick match. Works " +
+                            "online and on " +
                             "local network — no account required.",
                     details = listOf("Players" to "2 – 5", "Network" to "Online + LAN", "Rooms" to "Private / Quick"),
                     onClick = onOnlineTap,
@@ -575,8 +587,13 @@ private fun ColumnScope.ExpandedHomeLayout(
                                 .fillMaxWidth()
                                 // Raised lit surface — real cast shadow, no thin brass border framing
                                 // an otherwise-flat panel (non-negotiable #1).
-                                .shadow(14.dp, RoundedCornerShape(20.dp), clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
-                                .clip(RoundedCornerShape(20.dp))
+                                .shadow(
+                                    14.dp,
+                                    RoundedCornerShape(20.dp),
+                                    clip = false,
+                                    ambientColor = Color.Black,
+                                    spotColor = BrandTokens.TeakInk,
+                                ).clip(RoundedCornerShape(20.dp))
                                 .background(Brush.verticalGradient(listOf(BrandTokens.TeakMid, BrandTokens.TeakDark)))
                                 .padding(horizontal = 40.dp, vertical = 48.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -658,7 +675,6 @@ private fun ColumnScope.CompactHomeLayout(
     onNewGame: () -> Unit,
     onGazette: () -> Unit,
     onSettings: () -> Unit,
-    onOnlineTap: () -> Unit,
     onStory: () -> Unit,
     onTutorial: () -> Unit,
     wordmarkAlpha: Float,
@@ -1313,7 +1329,13 @@ private fun GauntletStrip(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            Text(label, style = KursiType.caption.copy(fontSize = 10.sp), color = KursiNeutrals.TextMuted, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                label,
+                style = KursiType.caption.copy(fontSize = 10.sp),
+                color = KursiNeutrals.TextMuted,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
         }
         Text("›", style = KursiType.title.copy(fontSize = 16.sp), color = BrandTokens.GoldAntique)
     }
@@ -1335,7 +1357,13 @@ private fun ResumeStrip(
         Text("⟳", style = KursiType.title.copy(fontSize = 18.sp), color = BrandTokens.GoldAntique)
         Column(modifier = Modifier.weight(1f)) {
             Text(s.homeResumeLabel, style = KursiType.title.copy(fontSize = 14.sp), color = KursiNeutrals.TextPrimary)
-            Text(label, style = KursiType.caption.copy(fontSize = 10.sp), color = KursiNeutrals.TextMuted, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                label,
+                style = KursiType.caption.copy(fontSize = 10.sp),
+                color = KursiNeutrals.TextMuted,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
         }
         Text("›", style = KursiType.title.copy(fontSize = 16.sp), color = BrandTokens.GoldAntique)
     }
@@ -1529,7 +1557,13 @@ private fun KursiWordmark(
                             // Seat legs
                             drawLine(col, Offset(cx - r * 0.4f, cy), Offset(cx - r * 0.4f, cy + r * 0.8f), strokeWidth = size.width * 0.09f)
                             drawLine(col, Offset(cx + r * 0.4f, cy), Offset(cx + r * 0.4f, cy + r * 0.8f), strokeWidth = size.width * 0.09f)
-                            drawLine(col, Offset(cx - r * 0.55f, cy + r * 0.5f), Offset(cx + r * 0.55f, cy + r * 0.5f), strokeWidth = size.width * 0.08f)
+                            drawLine(
+                                col,
+                                Offset(cx - r * 0.55f, cy + r * 0.5f),
+                                Offset(cx + r * 0.55f, cy + r * 0.5f),
+                                strokeWidth =
+                                    size.width * 0.08f,
+                            )
                         },
                 contentAlignment = Alignment.Center,
             ) {}
@@ -1555,7 +1589,13 @@ private fun KursiWordmark(
                     .height(1.dp)
                     .background(
                         Brush.horizontalGradient(
-                            listOf(Color.Transparent, BrandTokens.BrassAged, BrandTokens.GoldAntique, BrandTokens.BrassAged, Color.Transparent),
+                            listOf(
+                                Color.Transparent,
+                                BrandTokens.BrassAged,
+                                BrandTokens.GoldAntique,
+                                BrandTokens.BrassAged,
+                                Color.Transparent,
+                            ),
                         ),
                     ).graphicsLayer { alpha = wordmarkAlpha },
         )
@@ -1583,8 +1623,11 @@ fun BrassSeal(modifier: Modifier = Modifier) {
                     Brush.radialGradient(
                         listOf(BrandTokens.GoldAntique.copy(alpha = 0.3f), BrandTokens.BrassDark.copy(alpha = 0.5f)),
                     ),
-                ).border(2.dp, Brush.sweepGradient(listOf(BrandTokens.GoldAntique, BrandTokens.BrassDark, BrandTokens.GoldAntique)), CircleShape)
-                .drawBehind {
+                ).border(
+                    2.dp,
+                    Brush.sweepGradient(listOf(BrandTokens.GoldAntique, BrandTokens.BrassDark, BrandTokens.GoldAntique)),
+                    CircleShape,
+                ).drawBehind {
                     // Engraved ring text approximation — 3 concentric rings
                     val cx = size.width / 2
                     val cy = size.height / 2
@@ -2338,7 +2381,7 @@ private fun DrawScope.drawHomeDepth() {
         val angle = (i * 2.0 * PI / rays).toFloat()
         drawLine(
             color = brass.copy(alpha = 0.05f),
-            start = Offset(cx + baseR * 0.86f * cos(angle), cy + baseR * 0.86f * sin(angle)),
+            start = Offset(cx + baseR * SealRayInnerFraction * cos(angle), cy + baseR * SealRayInnerFraction * sin(angle)),
             end = Offset(cx + baseR * 1.0f * cos(angle), cy + baseR * 1.0f * sin(angle)),
             strokeWidth = 0.8f,
         )

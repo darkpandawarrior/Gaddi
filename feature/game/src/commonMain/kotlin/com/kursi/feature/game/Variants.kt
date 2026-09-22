@@ -37,5 +37,12 @@ object DraftPresets {
     val ALL: List<DraftPreset> = listOf(CLASSIC, PRESS, NO_VAKIL, KNIVES)
 
     /** The engine role set for a preset [code], or null for "no draft" (classic scaling). */
-    fun rolesOf(code: String?): List<Role>? = if (code.isNullOrBlank() || code == CLASSIC.code) null else ALL.firstOrNull { it.code == code }?.roles
+    fun rolesOf(code: String?): List<Role>? =
+        if (code.isNullOrBlank() ||
+            code == CLASSIC.code
+        ) {
+            null
+        } else {
+            ALL.firstOrNull { it.code == code }?.roles
+        }
 }

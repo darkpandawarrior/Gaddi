@@ -42,6 +42,32 @@ class HardPolicy(
     private var rng = Rng(seed)
 
     // PATRAKAAR (Inquisitor / Jaanch): info-then-disrupt, no own counter — valued just under BABU.
+    private companion object {
+        /** Percentage dice rolls (rng.nextInt(100)) — Hard's difficulty band in one place. */
+        const val StealWhenTargetRichPct = 60
+        const val BluffJaanchPct = 25
+        const val ForeignAidWhenNetaScarcePct = 70
+
+        /** Tax-bluff rate while most NETA copies are still unseen, so a challenge is unlikely. */
+        const val TaxBluffWhileNetaPlentifulPct = 20
+
+        /** Tax-bluff rate once NETA is visibly scarce and the table is watching for the claim. */
+        const val TaxBluffWhenNetaScarcePct = 30
+
+        /** A Steal only pays when the target actually holds the full two coins it takes. */
+        const val MinCoinsWorthStealing = 2
+
+        /** remaining[NETA] at or below this makes a ForeignAid block unlikely — worth the two coins. */
+        const val NetaScarceThreshold = 1
+
+        /** A face-down influence card is worth this many coins of threat; coins count for half. */
+        const val InfluenceThreatWeight = 3
+        const val CoinThreatDivisor = 2
+
+        /** Role-value floor for "worth forcing a redraw on" — BABU's rank. See roleValue below. */
+        const val ForceRedrawValueFloor = 5
+    }
+
     private val roleValue: Map<Role, Int> =
         mapOf(
             Role.NETA to 6,
@@ -69,116 +95,131 @@ class HardPolicy(
 
     // ── Turn ──────────────────────────────────────────────────────────────────
 
+    /**
+     * The turn priority ladder in three groups, each returning the intent it wants or null to hand
+     * on to the next: take a seat out if we can, else build the economy, else take an opportunity,
+     * else fall back to something safe.
+     *
+     * Order matters twice over: it is the priority order AND the order in which [rng] is consumed,
+     * so a line that rolls its dice and then declines still advances the stream. Reordering the
+     * groups, or skipping one, changes every seeded game.
+     */
     private fun decideTurn(
         view: PlayerView,
         legal: List<Intent>,
     ): Intent {
-        val cfg = view.config
-        val myCoins = view.myCoins
+        val chosen =
+            aggressiveLine(view, legal)
+                ?: economicLine(view, legal)
+                ?: opportunistLine(view, legal)
+        if (chosen != null) return chosen
 
-        // Forced Coup.
-        val coupOnly = legal.all { it is Intent.DeclareAction && it.action is Action.Coup }
-        if (coupOnly) return coupByThreat(view, legal)
-
-        // Voluntary Coup (≥7) — always preferred.
-        if (myCoins >= cfg.coupCost) {
-            val coupsAvail = legal.filter { it is Intent.DeclareAction && it.action is Action.Coup }
-            if (coupsAvail.isNotEmpty()) return coupByThreat(view, coupsAvail)
-        }
-
-        // Assassinate a 1-influence opponent (finish them off).
-        if (myCoins >= cfg.assassinateCost) {
-            val assassins =
-                legal
-                    .filterIsInstance<Intent.DeclareAction>()
-                    .filter { it.action is Action.Assassinate }
-            val wounded =
-                assassins.filter { intent ->
-                    opponentById(view, (intent.action as Action.Assassinate).target)?.faceDownCount == 1
-                }
-            if (wounded.isNotEmpty()) {
-                // Among wounded, prefer the most threatening (most coins → near Coup).
-                return wounded.maxByOrNull { intent ->
-                    opponentById(view, (intent.action as Action.Assassinate).target)?.coins ?: 0
-                } ?: wounded.first()
-            }
-        }
-
-        // Tax: prefer truthful claim (we hold NETA) — never gets caught; bluff sparingly.
-        val taxIntent = legal.firstOrNull { it is Intent.DeclareAction && it.action == Action.Tax }
-        if (taxIntent != null && remaining(view, Role.NETA) > 0) {
-            val holdsNeta = view.myInfluence.contains(Role.NETA)
-            if (holdsNeta) {
-                // Truthful Tax: always do it (100% rate — free +3, no challenge risk).
-                return taxIntent
-            } else {
-                // Bluff Tax: selective — avoid getting caught too often.
-                // At N=4, pSlot is slightly higher so bluffing is slightly safer.
-                val netaLeft = remaining(view, Role.NETA)
-                val bluffRate = if (netaLeft >= view.config.copiesPerRole - 1) 20 else 30
-                val (r, r1) = rng.nextInt(100)
-                rng = r1
-                if (r < bluffRate) return taxIntent
-            }
-        }
-
-        // Steal from richest opponent with ≥2 coins.
-        val steals =
-            legal
-                .filterIsInstance<Intent.DeclareAction>()
-                .filter { it.action is Action.Steal }
-        if (steals.isNotEmpty()) {
-            val best =
-                steals.maxByOrNull { intent ->
-                    opponentById(view, (intent.action as Action.Steal).target)?.coins ?: 0
-                }
-            if (best != null) {
-                val targetCoins = opponentById(view, (best.action as Action.Steal).target)?.coins ?: 0
-                if (targetCoins >= 2) {
-                    val (r, r1) = rng.nextInt(100)
-                    rng = r1
-                    if (r < 60) return best
-                }
-            }
-        }
-
-        // Investigate (claim PATRAKAAR / Jaanch): prefer a truthful claim (we hold PATRAKAAR) for a
-        // free info-then-disrupt against the most threatening opponent; bluff it sparingly otherwise.
-        val investigates =
-            legal
-                .filterIsInstance<Intent.DeclareAction>()
-                .filter { it.action is Action.Investigate }
-        if (investigates.isNotEmpty() && remaining(view, Role.PATRAKAAR) > 0) {
-            val best =
-                investigates.maxByOrNull { intent ->
-                    opponentById(view, (intent.action as Action.Investigate).target)?.let { threatScore(it) } ?: 0
-                }
-            if (best != null) {
-                val holdsPatrakaar = view.myInfluence.contains(Role.PATRAKAAR)
-                if (holdsPatrakaar) return best // truthful Jaanch — uncatchable, pure info+disruption
-                val (r, r1) = rng.nextInt(100)
-                rng = r1
-                if (r < 25) return best // occasional bluff
-            }
-        }
-
-        // ForeignAid when few Neta remain.
-        val faIntent = legal.firstOrNull { it is Intent.DeclareAction && it.action == Action.ForeignAid }
-        if (faIntent != null && remaining(view, Role.NETA) <= 1) {
-            val (r, r1) = rng.nextInt(100)
-            rng = r1
-            if (r < 70) return faIntent
-        }
-
-        // Tax fallback.
-        if (taxIntent != null) return taxIntent
-
-        val incomeIntent = legal.firstOrNull { it is Intent.DeclareAction && it.action == Action.Income }
-        if (incomeIntent != null) return incomeIntent
-        if (faIntent != null) return faIntent
+        // Fall back: Tax unconditionally, then Income, then ForeignAid.
+        val fallback =
+            legal.firstOrNull { it is Intent.DeclareAction && it.action == Action.Tax }
+                ?: legal.firstOrNull { it is Intent.DeclareAction && it.action == Action.Income }
+                ?: legal.firstOrNull { it is Intent.DeclareAction && it.action == Action.ForeignAid }
+        if (fallback != null) return fallback
 
         val nonExchange = legal.filter { !(it is Intent.DeclareAction && it.action == Action.Exchange) }
         return if (nonExchange.isNotEmpty()) randomFrom(nonExchange) else randomFrom(legal)
+    }
+
+    /** Coup first (forced, then voluntary), then an Assassinate that finishes a wounded seat. */
+    private fun aggressiveLine(
+        view: PlayerView,
+        legal: List<Intent>,
+    ): Intent? {
+        // Forced Coup: at >= 10 coins it is the only legal action.
+        if (legal.all { it is Intent.DeclareAction && it.action is Action.Coup }) {
+            return coupByThreat(view, legal)
+        }
+        if (view.myCoins >= view.config.coupCost) {
+            // Voluntary Coup — Hard always prefers it once affordable.
+            val coupsAvail = legal.filter { it is Intent.DeclareAction && it.action is Action.Coup }
+            if (coupsAvail.isNotEmpty()) return coupByThreat(view, coupsAvail)
+        }
+        if (view.myCoins < view.config.assassinateCost) return null
+        // Assassinate a seat down to its last influence, richest (closest to Coup) first.
+        return legal
+            .filterIsInstance<Intent.DeclareAction>()
+            .filter { it.action is Action.Assassinate }
+            .filter { intent ->
+                opponentById(view, (intent.action as Action.Assassinate).target)?.faceDownCount == 1
+            }.maxByOrNull { intent ->
+                opponentById(view, (intent.action as Action.Assassinate).target)?.coins ?: 0
+            }
+    }
+
+    /**
+     * Tax — always when we truly hold NETA (uncatchable +3), otherwise a selective bluff — then a
+     * Steal from the richest seat holding at least the two coins it takes.
+     */
+    private fun economicLine(
+        view: PlayerView,
+        legal: List<Intent>,
+    ): Intent? {
+        val tax = legal.firstOrNull { it is Intent.DeclareAction && it.action == Action.Tax }
+        val netaLeft = remaining(view, Role.NETA)
+        if (tax != null && netaLeft > 0) {
+            // Truthful Tax: always do it (100% rate — free +3, no challenge risk).
+            if (view.myInfluence.contains(Role.NETA)) return tax
+            // Bluff Tax: with almost every NETA still unseen a challenge is unlikely, so bluff a
+            // little less often than when NETA is scarce and the table is watching for the claim.
+            val netaMostlyUnseen = netaLeft >= view.config.copiesPerRole - 1
+            val bluffRate = if (netaMostlyUnseen) TaxBluffWhileNetaPlentifulPct else TaxBluffWhenNetaScarcePct
+            if (rollUnder(bluffRate)) return tax
+        }
+
+        val best =
+            legal
+                .filterIsInstance<Intent.DeclareAction>()
+                .filter { it.action is Action.Steal }
+                .maxByOrNull { intent ->
+                    opponentById(view, (intent.action as Action.Steal).target)?.coins ?: 0
+                }
+        val targetCoins = best?.let { opponentById(view, (it.action as Action.Steal).target)?.coins } ?: 0
+        if (best == null || targetCoins < MinCoinsWorthStealing) return null
+        return best.takeIf { rollUnder(StealWhenTargetRichPct) }
+    }
+
+    /**
+     * Investigate (claim PATRAKAAR / Jaanch) against the most threatening seat — free
+     * info-then-disruption when we hold PATRAKAAR, a sparing bluff when we do not — then ForeignAid
+     * once NETA is scarce enough that a block is unlikely.
+     */
+    private fun opportunistLine(
+        view: PlayerView,
+        legal: List<Intent>,
+    ): Intent? {
+        val best =
+            if (remaining(view, Role.PATRAKAAR) > 0) {
+                legal
+                    .filterIsInstance<Intent.DeclareAction>()
+                    .filter { it.action is Action.Investigate }
+                    .maxByOrNull { intent ->
+                        opponentById(view, (intent.action as Action.Investigate).target)?.let { threatScore(it) } ?: 0
+                    }
+            } else {
+                null
+            }
+        if (best != null) {
+            // Truthful Jaanch — uncatchable, pure info + disruption.
+            if (view.myInfluence.contains(Role.PATRAKAAR)) return best
+            if (rollUnder(BluffJaanchPct)) return best // occasional bluff
+        }
+
+        val foreignAid = legal.firstOrNull { it is Intent.DeclareAction && it.action == Action.ForeignAid }
+        val netaScarce = remaining(view, Role.NETA) <= NetaScarceThreshold
+        if (foreignAid != null && netaScarce && rollUnder(ForeignAidWhenNetaScarcePct)) return foreignAid
+        return null
+    }
+
+    /** Draws the next 0..99 value off [rng] and reports whether it lands under [pct]. */
+    private fun rollUnder(pct: Int): Boolean {
+        val (r, r1) = rng.nextInt(100)
+        rng = r1
+        return r < pct
     }
 
     private fun coupByThreat(
@@ -197,7 +238,7 @@ class HardPolicy(
         return coupsAvail.first()
     }
 
-    private fun threatScore(opp: OpponentView): Int = opp.faceDownCount * 3 + opp.coins / 2
+    private fun threatScore(opp: OpponentView): Int = opp.faceDownCount * InfluenceThreatWeight + opp.coins / CoinThreatDivisor
 
     // ── Reactions ─────────────────────────────────────────────────────────────
 
@@ -207,85 +248,85 @@ class HardPolicy(
     ): Intent {
         val phase = view.phase as PhaseView.Reactions
         val passIntent = legal.first { it is Intent.Pass }
-        val hasChallenge = legal.any { it is Intent.Challenge }
-        val hasBlock = legal.any { it is Intent.Block }
-
         return when (phase.step) {
-            ReactionStep.CHALLENGE_ACTION -> {
-                val claimedRole = phase.claimedRole
-                if (hasChallenge && claimedRole != null) {
-                    val left = remaining(view, claimedRole)
-                    if (left <= 0) return legal.first { it is Intent.Challenge } // guaranteed bluff
-                    val p = pSlot(view, claimedRole)
-                    val claimantInfluence = opponentById(view, phase.actor)?.faceDownCount ?: 1
-                    val myInfluence = view.myInfluence.size
-                    val tau =
-                        when {
-                            myInfluence == 1 -> 0.25 // conservative when vulnerable
-                            claimantInfluence == 1 -> 0.45 // aggressive vs wounded opponents
-                            else -> 0.35 // same as Medium's baseline
-                        }
-                    if (p < tau) return legal.first { it is Intent.Challenge }
-                }
-                passIntent
-            }
-            ReactionStep.CHALLENGE_BLOCK -> {
-                val blockRole = phase.blockRole
-                if (hasChallenge && blockRole != null) {
-                    val left = remaining(view, blockRole)
-                    if (left <= 0) return legal.first { it is Intent.Challenge } // guaranteed bluff
-                    val p = pSlot(view, blockRole)
-                    val blockerInfluence = opponentById(view, phase.blocker ?: phase.actor)?.faceDownCount ?: 1
-                    val myInfluence = view.myInfluence.size
-                    val tau =
-                        when {
-                            myInfluence == 1 -> 0.25 // conservative
-                            blockerInfluence == 1 -> 0.50 // aggressive vs wounded blockers
-                            else -> 0.40 // more aggressive than action challenges
-                        }
-                    if (p < tau) return legal.first { it is Intent.Challenge }
-                }
-                passIntent
-            }
-            ReactionStep.BLOCK -> {
-                if (!hasBlock) return passIntent
-                val action = phase.action
-                val blockRoles = legal.filterIsInstance<Intent.Block>()
-                if (blockRoles.isEmpty()) return passIntent
-
-                // Never bluff a role with no remaining copies.
-                val survivableBlocks = blockRoles.filter { remaining(view, it.role) > 0 }
-                if (survivableBlocks.isEmpty()) return passIntent
-
-                // *** KEY HARD ADVANTAGE ***: Always block truthfully when holding the role.
-                // Medium never distinguishes truthful from bluff blocks.
-                val truthfulBlocks = survivableBlocks.filter { view.myInfluence.contains(it.role) }
-                if (truthfulBlocks.isNotEmpty()) return truthfulBlocks.first()
-
-                // Survival: always bluff-block Assassinate at 1 influence.
-                if (action is Action.Assassinate && view.myInfluence.size == 1) {
-                    val vakils = survivableBlocks.filter { it.role == Role.VAKIL }
-                    return if (vakils.isNotEmpty()) vakils.first() else randomFrom(survivableBlocks)
-                }
-
-                // Belief-based bluff blocks: use P(attacker holds claimed role) to decide.
-                // If P(holds) is LOW → attacker likely bluffing → we bluff-block safely.
-                val attackerHoldsP = pHolds(view, phase.actor, Rules.claimedRole(action))
-                val threshold =
-                    when (action) {
-                        is Action.Assassinate -> if (attackerHoldsP < 0.42) 45 else 0
-                        is Action.Steal -> if (attackerHoldsP < 0.38) 35 else 0
-                        Action.ForeignAid -> 12 // Low bluff-block rate for FA (no per-opponent belief needed)
-                        else -> 0
-                    }
-                if (threshold > 0) {
-                    val (r, r1) = rng.nextInt(100)
-                    rng = r1
-                    if (r < threshold) return randomFrom(survivableBlocks)
-                }
-                passIntent
-            }
+            ReactionStep.CHALLENGE_ACTION ->
+                challengeOrPass(view, legal, phase.claimedRole, phase.actor, actionChallenge = true) ?: passIntent
+            ReactionStep.CHALLENGE_BLOCK ->
+                challengeOrPass(
+                    view,
+                    legal,
+                    phase.blockRole,
+                    phase.blocker ?: phase.actor,
+                    actionChallenge = false,
+                ) ?: passIntent
+            ReactionStep.BLOCK -> blockOrPass(view, legal, phase, passIntent)
         }
+    }
+
+    /**
+     * Challenges [claimedRole] when it looks like a bluff, or returns null to pass.
+     *
+     * The threshold tau moves with the stakes: lower (more cautious) when we are one card from
+     * elimination, higher (more aggressive) against a claimant who is, and higher again for block
+     * claims than action claims because a wrong block-challenge costs less.
+     */
+    private fun challengeOrPass(
+        view: PlayerView,
+        legal: List<Intent>,
+        claimedRole: Role?,
+        claimant: PlayerId,
+        actionChallenge: Boolean,
+    ): Intent? {
+        val challenge = legal.firstOrNull { it is Intent.Challenge } ?: return null
+        if (claimedRole == null) return null
+        if (remaining(view, claimedRole) <= 0) return challenge // guaranteed bluff
+        val claimantInfluence = opponentById(view, claimant)?.faceDownCount ?: 1
+        val tau =
+            when {
+                view.myInfluence.size == 1 -> 0.25 // conservative when vulnerable
+                claimantInfluence == 1 -> if (actionChallenge) 0.45 else 0.50 // aggressive vs wounded
+                actionChallenge -> 0.35 // same as Medium's baseline
+                else -> 0.40 // block claims: more aggressive, a wrong call costs less
+            }
+        return challenge.takeIf { pSlot(view, claimedRole) < tau }
+    }
+
+    /**
+     * Picks a block for the action aimed at us, or [passIntent]. Truthful blocks come first — that
+     * is Hard's main edge over Medium, which never distinguishes a held role from a bluff.
+     */
+    private fun blockOrPass(
+        view: PlayerView,
+        legal: List<Intent>,
+        phase: PhaseView.Reactions,
+        passIntent: Intent,
+    ): Intent {
+        // Never bluff a role with no remaining copies.
+        val survivableBlocks = legal.filterIsInstance<Intent.Block>().filter { remaining(view, it.role) > 0 }
+        if (survivableBlocks.isEmpty()) return passIntent
+
+        // *** KEY HARD ADVANTAGE ***: Always block truthfully when holding the role.
+        val truthfulBlock = survivableBlocks.firstOrNull { view.myInfluence.contains(it.role) }
+        if (truthfulBlock != null) return truthfulBlock
+
+        val action = phase.action
+        // Survival: always bluff-block Assassinate at 1 influence, claiming VAKIL if that is open.
+        if (action is Action.Assassinate && view.myInfluence.size == 1) {
+            return survivableBlocks.firstOrNull { it.role == Role.VAKIL } ?: randomFrom(survivableBlocks)
+        }
+
+        // Belief-based bluff blocks: use P(attacker holds claimed role) to decide.
+        // If P(holds) is LOW -> attacker likely bluffing -> we bluff-block safely.
+        val attackerHoldsP = pHolds(view, phase.actor, Rules.claimedRole(action))
+        val threshold =
+            when (action) {
+                is Action.Assassinate -> if (attackerHoldsP < 0.42) 45 else 0
+                is Action.Steal -> if (attackerHoldsP < 0.38) 35 else 0
+                Action.ForeignAid -> 12 // Low bluff-block rate for FA (no per-opponent belief needed)
+                else -> 0
+            }
+        if (threshold <= 0) return passIntent
+        return if (rollUnder(threshold)) randomFrom(survivableBlocks) else passIntent
     }
 
     // ── InfluenceLoss ─────────────────────────────────────────────────────────
@@ -330,7 +371,7 @@ class HardPolicy(
         val role = peek.examinedCard?.role ?: return keep ?: legal.first()
         val value = roleValue[role] ?: 0
         // Disrupt the target's strong roles (>= BABU value); leave weak ones alone.
-        return if (value >= (roleValue[Role.BABU] ?: 5)) {
+        return if (value >= (roleValue[Role.BABU] ?: ForceRedrawValueFloor)) {
             (redraw ?: keep ?: legal.first())
         } else {
             (keep ?: legal.first())

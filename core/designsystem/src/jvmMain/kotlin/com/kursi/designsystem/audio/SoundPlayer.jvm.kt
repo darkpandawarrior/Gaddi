@@ -16,17 +16,19 @@ import javax.sound.sampled.LineEvent
 // the guard for a headless/no-mixer environment. See docs/experience-assets.md §3.
 // ═══════════════════════════════════════════════════════════════════════════════
 
-actual class SoundPlayer actual constructor() {
+actual fun SoundPlayer(): SoundPlayer = DesktopSoundPlayer()
+
+private class DesktopSoundPlayer : SoundPlayer {
     private val clipBytes = mutableMapOf<KursiSound, ByteArray>()
 
     @Volatile
     private var released = false
 
     /** False on a headless/no-mixer box, where every play() degrades to silence. */
-    actual val isAvailable: Boolean =
+    override val isAvailable: Boolean =
         runCatching { AudioSystem.getMixerInfo().isNotEmpty() }.getOrDefault(false)
 
-    actual suspend fun play(sound: KursiSound) {
+    override suspend fun play(sound: KursiSound) {
         if (released) return
         runCatching {
             val bytes = clipBytes.getOrPut(sound) { loadKursiSoundBytes(sound) ?: return@runCatching }
@@ -39,7 +41,7 @@ actual class SoundPlayer actual constructor() {
         }
     }
 
-    actual fun release() {
+    override fun release() {
         released = true
         clipBytes.clear()
     }

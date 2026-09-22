@@ -58,6 +58,12 @@ kotlin {
             implementation(libs.foundation)
             implementation(libs.material3)
             implementation(libs.ui)
+            // @Preview for the design-system tokens (DesignSystemPreviews.kt). The RENDERER
+            // (org.jetbrains.compose.ui:ui-tooling) is deliberately not declared: it is
+            // androidRuntimeClasspath-only under AGP's KMP library plugin, and the IDE preview
+            // panel needs an Android Studio that understands AGP 9.5.0-alpha06 anyway. These
+            // previews compile on every target this module declares, which is the part that holds.
+            implementation(libs.ui.tooling.preview.mp)
             // material-icons-extended: AccountBalance, LocalFireDepartment, Work, SwapHoriz, Gavel
             // for role glyphs — all targets supported by CMP 1.11.x
             implementation(libs.material.icons.extended)

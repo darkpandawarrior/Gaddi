@@ -106,11 +106,17 @@ class OnlineKursiClient(
         connectionJob = scope.launch { runConnectionLoop() }
     }
 
+    // TooGenericExceptionCaught: same reason as RoomApi.postForCode — a dropped socket surfaces as
+    // a different platform type on every target, and this loop's whole job is to treat all of them
+    // as "reconnect". CancellationException is rethrown above the catch so caller cancellation is
+    // never mistaken for a drop, and e.message goes into ConnectionState.Dropped.
+
     /**
      * The connect → run → drop → backoff → reconnect loop. Each iteration runs ONE socket lifetime.
      * On normal completion (server closed the socket) or failure, it either reconnects (resuming the
      * seat) or settles into a terminal [ConnectionState].
      */
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun runConnectionLoop() {
         var attempt = 0
         while (true) {
