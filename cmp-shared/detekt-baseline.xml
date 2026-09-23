@@ -2,7 +2,7 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>CyclomaticComplexMethod:KursiApp.kt:@Composable fun KursiApp</ID>
+    <ID>CyclomaticComplexMethod:GaddiApp.kt:@Composable fun GaddiApp</ID>
     <ID>CyclomaticComplexMethod:SetupScreen.kt:@Composable fun SetupScreen</ID>
   </CurrentIssues>
 </SmellBaseline>
