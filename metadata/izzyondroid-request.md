@@ -134,8 +134,8 @@ retention-window concern.
 
 **Signing:** release APK signed with the developer's own key,
 SHA-256 `e3cd9ed25baaa6db5501621a2a7399edc0878022f9b64b5d95446db0348dd19c`. Latest tag:
-`v2026.08.35.1.234`, GitHub Release asset name `Kursi-v2026.08.35.1.234.apk`
-(SHA-256 sidecar: `Kursi-v2026.08.35.1.234.apk.sha256`), release URL:
+`v2026.08.35.1.234`, GitHub Release asset name `Gaddi-v2026.08.35.1.234.apk`
+(SHA-256 sidecar: `Gaddi-v2026.08.35.1.234.apk.sha256`), release URL:
 `https://github.com/darkpandawarrior/Gaddi/releases/tag/v2026.08.35.1.234`. Tags follow
 `v<YYYY>.<0M>.<0W>.<MILESTONE>.<commitCount>` — for automated update tracking on your end, a
 `UpdateCheckMode: Tags ^v[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]+\.[0-9]+$` /

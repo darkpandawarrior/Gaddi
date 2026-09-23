@@ -1,4 +1,4 @@
-# Kursi Launch Overhaul — Design Spec (rev 3)
+# Gaddi Launch Overhaul — Design Spec (rev 3)
 
 **Date:** 2026-07-18 (rev 3 — resources folded in, licensing policy, free code-first design tooling)
 **Status:** Approved direction; Wave 0 in execution
@@ -22,7 +22,7 @@ None of this is a bug. It is density + self-advancing pacing + flat presentation
 
 ## 2. North star
 
-> **Kursi should feel like operating a piece of confiscated government machinery to get away with a lie.**
+> **Gaddi should feel like operating a piece of confiscated government machinery to get away with a lie.**
 
 Reference points: **Balatro** (tactility/juice on a humble card game), **Reigns** (diegetic, near-zero-chrome decisions), **Inscryption** (the interface is a physical table), **Blood on the Clocktower** digital (making a social read legible). Modern = Balatro's juice × Reigns' restraint × a material, lamplit world.
 
@@ -75,14 +75,14 @@ Not flat Canvas, not plain bitmaps — a compositor:
 1. **Canvas base** — existing felt/guilloché/emblem drawing, deepened (lighting gradient, vignette, warm key light: the lamplit-desk look).
 2. **AGSL / Skia runtime shader layer** — film grain, felt weave, brass specular that sweeps with device tilt, bloom on hero beats. `expect/actual` shader host per platform (Android AGSL / Skiko `RuntimeEffect` elsewhere); graceful no-shader fallback path (web/older devices) that must look intentional, not broken. **Reference/absorb** (docs/resources.md): [ShaderX](https://github.com/Debanshu777/ShaderX) for the exact AGSL+Skia expect/actual split, [Cloudy](https://github.com/skydoves/Cloudy) (Apache-2.0, candidate dependency) for GPU-blur-with-CPU-fallback powering the Focus-Pull bokeh and the no-shader path, [Shady](https://github.com/drinkthestars/shady) for grain/texture passes.
 3. **Particle layer** — coin trails, stamp-ink spray, dust motes; capped counts, object-pooled.
-4. **Asset layer** — new `composeResources` art track: 10 persona portraits, 6 role card faces, hero-moment art (KURSI crest, tipped chair). **AI-generated art is the launch art** (§9): produced in-style ("License Raj Deco → Sarkari Noir"), passed through a style-lock QA gate (palette, line weight, CVD pattern channels embedded in card frames) before acceptance. Commissioned art remains a post-launch drop-in option. WebP with per-density variants; total asset budget ≤ 8 MB per target.
+4. **Asset layer** — new `composeResources` art track: 10 persona portraits, 6 role card faces, hero-moment art (GADDI crest, tipped chair). **AI-generated art is the launch art** (§9): produced in-style ("License Raj Deco → Sarkari Noir"), passed through a style-lock QA gate (palette, line weight, CVD pattern channels embedded in card frames) before acceptance. Commissioned art remains a post-launch drop-in option. WebP with per-density variants; total asset budget ≤ 8 MB per target.
 5. **Moment overlays** — existing `MomentHost`/`ActionMomentOverlay` system, extended with the new beats; every new moment gets a `StaticMomentFrame` reduced-motion end-state.
 
-Plus: full wiring of the bundled Rozha One / Marcellus / DM Mono (removing the Serif/Monospace fallbacks in `KursiType`), a spring-physics motion-token set in `core/designsystem` (durations/damping named, not scattered), a **distinct haptic signature per action class** (Android `HapticFeedback`/Vibrator, iOS Core Haptics via expect/actual; silent no-op on desktop/web), and a **CC0 sound layer** (stamp-slam / coin / card-deal beats) sourced per docs/resources.md ([Freesound](https://opengameart.org/content/cc0-sound-effects) CC0 / [Kenney](https://kenney.itch.io/kenney-game-assets) / [Pixabay](https://pixabay.com/sound-effects/search/cc0/)), gated by the existing `soundEnabled` pref. The juice design bible is the [Balatro feedback breakdown](https://blakecrosley.com/guides/design/balatro) — the layered stack (animation → particles → screen → audio → haptics) applied to every beat.
+Plus: full wiring of the bundled Rozha One / Marcellus / DM Mono (removing the Serif/Monospace fallbacks in `GaddiType`), a spring-physics motion-token set in `core/designsystem` (durations/damping named, not scattered), a **distinct haptic signature per action class** (Android `HapticFeedback`/Vibrator, iOS Core Haptics via expect/actual; silent no-op on desktop/web), and a **CC0 sound layer** (stamp-slam / coin / card-deal beats) sourced per docs/resources.md ([Freesound](https://opengameart.org/content/cc0-sound-effects) CC0 / [Kenney](https://kenney.itch.io/kenney-game-assets) / [Pixabay](https://pixabay.com/sound-effects/search/cc0/)), gated by the existing `soundEnabled` pref. The juice design bible is the [Balatro feedback breakdown](https://blakecrosley.com/guides/design/balatro) — the layered stack (animation → particles → screen → audio → haptics) applied to every beat.
 
 ## 8. Workstream G — Intelligence & AI
 
-Kursi already ships ISMCTS (`ai/IsmctsSearch.kt`), `BeliefModel`, 10 personas, `MoveAdvisor`, and a provider-agnostic LLM layer (`OnDeviceAiProvider` expect/actual + cloud `AiProvider` BYOK). This workstream fires that loaded gun.
+Gaddi already ships ISMCTS (`ai/IsmctsSearch.kt`), `BeliefModel`, 10 personas, `MoveAdvisor`, and a provider-agnostic LLM layer (`OnDeviceAiProvider` expect/actual + cloud `AiProvider` BYOK). This workstream fires that loaded gun.
 
 ### 8.1 The Munshi (AI narrator)
 A diegetic court-scribe turns engine events into in-character plain language: *"Bahenji stamped the Neta's seal for tax — bold; she's been silent three turns."* Replaces the log in FOCUS. Prompted with the redacted `PlayerView` + recent events only (never hidden cards).

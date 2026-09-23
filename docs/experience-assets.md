@@ -5,7 +5,7 @@ external assets, mapped to game beats. **Shipping rule (same as [resources.md](r
 OFL / permissive only; **CC-BY → in-app Credits screen**; no copyleft. Every clip carries a license
 check before it's bundled.
 
-**The absorption pattern** mirrors the art pipeline (`KursiArt.readySlots`): build the pipeline + a
+**The absorption pattern** mirrors the art pipeline (`GaddiArt.readySlots`): build the pipeline + a
 manifest of needed clips now; each asset is *inert until the file is dropped in*, then it lights up. No
 half-built states, no broken audio if a clip is missing.
 
@@ -50,15 +50,15 @@ gated by the existing `soundEnabled` flag, with per-event volume + a global mute
 - New `core/audio` module (or in `core/designsystem`): `expect class SoundPlayer` —
   Android `SoundPool` (SFX) + `MediaPlayer`/ExoPlayer (music loop); desktop `javax.sound` / JavaFX media;
   iOS `AVAudioPlayer`; wasm Web Audio API.
-- `enum KursiSound` + `play(KursiSound)`; a `GameEvent → KursiSound` map driven from the moment layer.
+- `enum GaddiSound` + `play(GaddiSound)`; a `GameEvent → GaddiSound` map driven from the moment layer.
 - composeResources `files/audio/` track (like the art `drawable/` track) — **graceful no-op when a clip is
-  absent** + honors `soundEnabled`. Inert until clips are dropped in (mirrors `KursiArt`).
+  absent** + honors `soundEnabled`. Inert until clips are dropped in (mirrors `GaddiArt`).
 - Music: one looping ambient with volume ducking during dramatic tiers (reuse `BeatTier`).
 
 ## 4. Fonts — Devanagari for the Hindi locale (OFL)
 
 - **Tiro Devanagari Hindi** (display) + **Hind** (UI/body) — both OFL, free commercial, embeddable. Bundle
-  into `core/designsystem/composeResources/font/`, wire into `KursiType` for the `hi` locale (Latin
+  into `core/designsystem/composeResources/font/`, wire into `GaddiType` for the `hi` locale (Latin
   Rozha/Marcellus/DM Mono already wired). Closes the l10n-typography gap for the game's Hindi voice.
 
 ## 5. Haptics vocabulary (mapped)
@@ -77,8 +77,8 @@ overlays.
 
 | Track | Pipeline | Assets |
 |---|---|---|
-| Art (portraits/faces/hero) | ✅ ready (`KursiArt.readySlots`) | ⏭ need real files |
-| Audio (SFX) | ✅ wired (`core/designsystem/.../audio/SoundPlayer` expect/actual + GameEvent→KursiSound map) | ✅ 17 clips bundled |
+| Art (portraits/faces/hero) | ✅ ready (`GaddiArt.readySlots`) | ⏭ need real files |
+| Audio (SFX) | ✅ wired (`core/designsystem/.../audio/SoundPlayer` expect/actual + GameEvent→GaddiSound map) | ✅ 17 clips bundled |
 | Music (ambient/tension) | ⏭ (part of audio arch) | ⏭ shortlist on request |
 | Latin fonts | ✅ wired | ✅ |
 | Devanagari fonts | ⏭ | Tiro Devanagari + Hind (OFL) |
@@ -93,7 +93,7 @@ overlays.
 Source packs are **CC0 public domain** (no attribution required; `License.txt` retained). Final pick by
 filename — a listen-and-swap pass is worth doing, but these are sensible defaults.
 
-| KursiSound | Clip | Pack |
+| GaddiSound | Clip | Pack |
 |---|---|---|
 | CoinSingle / Double / Cascade / Swipe | chips-handle-1 / chips-stack-2 / chips-collide-1 / chips-handle-3 | Casino |
 | CardDeal / Slide / PlaceHard / Fan | card-shuffle / card-slide-1 / card-place-4 / card-fan-1 | Casino |
@@ -104,7 +104,7 @@ filename — a listen-and-swap pass is worth doing, but these are sensible defau
 
 **Wired**: all 17 clips live at `core/designsystem/src/commonMain/composeResources/files/audio/`,
 loaded through the `SoundPlayer` expect/actual (Android `SoundPool`, desktop `javax.sound.sampled`,
-iOS `AVAudioPlayer`, wasm `Audio` element) and fired from a pure `GameEvent -> KursiSound` map in
+iOS `AVAudioPlayer`, wasm `Audio` element) and fired from a pure `GameEvent -> GaddiSound` map in
 `feature/game/GameSound.kt`, gated by the existing `soundEnabled` flag.
 
 **Format — why PCM WAV, not Ogg Vorbis.** The clips shipped as Ogg Vorbis and were audible on
@@ -124,7 +124,7 @@ it did not make them audible, and two separate silent no-ops survived that pass 
 the build or the test suite fails when sound simply does not come out.
 
 - *Android* — `SoundPlayer.android.kt` needs an application `Context` for its cache dir and gets it
-  from `KursiSoundAndroid.install(...)`. Nothing ever called it. `play()` hit
+  from `GaddiSoundAndroid.install(...)`. Nothing ever called it. `play()` hit
   `appContext ?: return` every time, so all 17 clips were silent on the one platform that had been
   decoding them correctly all along. Now installed in `MainActivity.onCreate`, beside the
   `FeedbackAndroid.install(...)` it was always supposed to mirror.

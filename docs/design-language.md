@@ -2,7 +2,7 @@
 
 The AAA standard proven on the in-game FOCUS board. Every screen and flow must read as the same lit,
 crafted world. **Reference artifacts:** the rebuilt game board (`feature/game`), and the approved mockup
-`scratchpad/kursi-aaa-board.html`. When in doubt, match those.
+`scratchpad/gaddi-aaa-board.html`. When in doubt, match those.
 
 ## The 9 non-negotiables
 
@@ -24,14 +24,14 @@ crafted world. **Reference artifacts:** the rebuilt game board (`feature/game`),
    void — space is composed, elements are anchored, nothing floats aimlessly).
 7. **One accent.** Oxblood/stamp-red is reserved for the single element needing attention
    (destructive/alert). Gold = primary/focal. Everything else recedes into the warm neutrals.
-8. **Motion.** `KursiMotion` springs on transitions/press; always reduced-motion aware.
+8. **Motion.** `GaddiMotion` springs on transitions/press; always reduced-motion aware.
 9. **Accessibility.** Semantics/contentDescription, ≥48dp targets, contrast on the dark ground, dynamic
    type / font-scale.
 
 ## Reuse, don't reinvent
 
-`KursiType` (real Rozha/Marcellus/DM Mono, already wired) · `BrandTokens` · `KursiRoleHues` +
-`RoleFramePattern` · `KursiMotion` · the lit felt/teak background + `drawKeyLightPool`/`drawTableVignette`
+`GaddiType` (real Rozha/Marcellus/DM Mono, already wired) · `BrandTokens` · `GaddiRoleHues` +
+`RoleFramePattern` · `GaddiMotion` · the lit felt/teak background + `drawKeyLightPool`/`drawTableVignette`
 · `OpponentSeatToken` (brass-rimmed token) · `RoleCard` (paper card) · `BrassMedallion` · the engraved
 header pattern (`EngravedTurnHeader` in `status/StatusSpine.kt`) · the raised stamp-chip
 (`CompactActionChip`). Extract a shared component only if ≥2 screens need the exact same new thing;

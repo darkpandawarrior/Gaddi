@@ -6,7 +6,7 @@
   "dither": "none",
   "clip_to_base_alpha": true,
   "layers": [
-    {"id": "kursi-shine", "enter": {"start": 0.4, "end": 1.6, "from": [-260, 0]}, "exit": {"start": 1.7, "end": 2.3, "to": [260, 0]}},
-    {"id": "kursi-coin", "enter": {"start": 0.5, "end": 1.1, "from": [0, -18]}, "exit": {"start": 4.0, "end": 4.8, "to": [0, 0]}}
+    {"id": "gaddi-shine", "enter": {"start": 0.4, "end": 1.6, "from": [-260, 0]}, "exit": {"start": 1.7, "end": 2.3, "to": [260, 0]}},
+    {"id": "gaddi-coin", "enter": {"start": 0.5, "end": 1.1, "from": [0, -18]}, "exit": {"start": 4.0, "end": 4.8, "to": [0, 0]}}
   ]
 }

@@ -35,7 +35,7 @@ and Uptodown doesn't undercut that story the way a moderate-risk mirror site wou
    Release build, so it can be recognized as the same app if you ever claim/merge listings).
 3. Upload the signed APK. Use the exact release asset, not a glob — the release also carries
    `-gms-release-unsigned` and `-noGms-release-unsigned` builds that are NOT signed:
-   `https://github.com/darkpandawarrior/Gaddi/releases/download/v2026.08.35.1.234/Kursi-v2026.08.35.1.234.apk`
+   `https://github.com/darkpandawarrior/Gaddi/releases/download/v2026.08.35.1.234/Gaddi-v2026.08.35.1.234.apk`
    (signing cert SHA-256: `e3cd9ed25baaa6db5501621a2a7399edc0878022f9b64b5d95446db0348dd19c` — verify
    with `apksigner verify --print-certs` before uploading, per the app-distribution skill's rule of
    verifying the certificate, not just the presence of one).

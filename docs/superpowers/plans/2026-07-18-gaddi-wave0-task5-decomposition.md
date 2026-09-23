@@ -11,7 +11,7 @@
 > - The detekt baseline re-fingerprinted exactly as the "DISCOVERED CONSTRAINT" below predicted: `feature/game/detekt-baseline.xml` now carries **86** `<ID>` entries.
 >
 > Provenance: this plan originated in the repo (`docs/superpowers/plans/`); copied to
-> `AgentHarness/plans/kursi/` on 2026-08-05 so both plan homes carry it.
+> `AgentHarness/plans/gaddi/` on 2026-08-05 so both plan homes carry it.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development or executing-plans. Steps are `- [ ]`. Behaviour-preserving refactor — **no functional change**; the gate is "still compiles, all existing tests + screenshots unchanged."
 
