@@ -57,6 +57,6 @@ jobs:
         # An artifact is a convenience; the account's 500 MB artifact quota must not fail the gate.
         continue-on-error: true
         with:
-          name: kursi-debug-apk
+          name: gaddi-debug-apk
           path: cmp-android/build/outputs/apk/gms/debug/*.apk
           retention-days: 2
