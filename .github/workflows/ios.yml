@@ -15,6 +15,7 @@ on:
     paths:
       - 'engine/**'
       - 'ai/**'
+      - 'game-services/**'
       - 'cmp-shared/**'
       - 'cmp-ios/**'
       - 'iosApp/**'
