@@ -36,7 +36,7 @@ import kotlin.math.sin
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Primitives.kt — the 5 reusable animation primitives + HalftoneBurst.
-// Design: kursi-plan/docs/15c_action_moments.md §1.3
+// Design: gaddi-plan/docs/15c_action_moments.md §1.3
 //
 // ALL animation math is driven by a single 0→1 Float progress. Callers pass a
 // sub-range remapped to 0..1. No Animatable here; ownership is in the overlay/beats.
@@ -46,12 +46,12 @@ import kotlin.math.sin
 
 // ─────────────────────────── Easing helpers ──────────────────────────────────
 // lerp/easeInQuart/easeOutCubic/easeOutBack now come from :common (Backlog #25) —
-// pure Float math with zero Compose dependency, deduped with PaymentsLab's ShieldPulse.kt copy.
+// pure Float math with zero Compose dependency, deduped with PaymentsLab-KMP's ShieldPulse.kt copy.
 
 // ─────────────────────────── 1. RubberStamp ──────────────────────────────────
 
 /**
- * THE Kursi rubber-stamp — the single gesture that appears in nearly every moment.
+ * THE Gaddi rubber-stamp — the single gesture that appears in nearly every moment.
  * Tune this once; the whole game's feel changes coherently.
  *
  * Timeline for [progress] 0→1:
@@ -59,7 +59,7 @@ import kotlin.math.sin
  *   Phase B (0.55–0.78): OVERSHOOT to 0.92× (the press); [HalftoneBurst] fires on impact.
  *   Phase C (0.78–1.00): settle to 1.0× via EaseOutBack; ink-bleed edge + 1px channel offset lock in.
  *
- * @param glyphText  Stamp word to render (e.g. "GHOTALA", "EXPOSED", "JHOOTH!", "KURSI").
+ * @param glyphText  Stamp word to render (e.g. "GHOTALA", "EXPOSED", "JHOOTH!", "GADDI").
  * @param tint       Ink colour — brass / stamp-red / role-hue / verdigris per moment.
  * @param progress   0→1 float, remapped by the caller from the moment's full timeline.
  * @param impactCenter Absolute Offset where the halftone burst rings outward from.
@@ -409,7 +409,7 @@ fun ChairTip(
 }
 
 /**
- * The Kursi chair glyph, drawn around the current origin.
+ * The Gaddi chair glyph, drawn around the current origin.
  *
  * ONE copy. MomentStaticFrames.kt carried a byte-identical second one (drawStaticChair) with the
  * same nine fractions typed out again, so the animated moment and its frozen frame could silently

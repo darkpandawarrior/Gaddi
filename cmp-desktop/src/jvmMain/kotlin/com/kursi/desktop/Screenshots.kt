@@ -63,11 +63,11 @@ import com.kursi.core.prefs.PersonaRecord
 import com.kursi.core.prefs.RankedStanding
 import com.kursi.core.prefs.StatsLedger
 import com.kursi.designsystem.BrandTokens
-import com.kursi.designsystem.KursiRoleHues
-import com.kursi.designsystem.KursiTheme
-import com.kursi.designsystem.KursiType
+import com.kursi.designsystem.GaddiRoleHues
+import com.kursi.designsystem.GaddiTheme
+import com.kursi.designsystem.GaddiType
 import com.kursi.designsystem.moment.ActionMomentOverlay
-import com.kursi.designsystem.moment.KursiMoment
+import com.kursi.designsystem.moment.GaddiMoment
 import com.kursi.designsystem.moment.MomentHost
 import com.kursi.designsystem.moment.TableAnchors
 import com.kursi.engine.*
@@ -120,7 +120,7 @@ import java.io.File
 // ─────────────────────────────────────────────────────────────────────────────
 
 fun main() {
-    val outDir = File(System.getProperty("kursi.shots.dir", "build/shots")).also { it.mkdirs() }
+    val outDir = File(System.getProperty("gaddi.shots.dir", "build/shots")).also { it.mkdirs() }
 
     val shots = buildFixtures()
     println("Rendering ${shots.size} screenshot(s) to ${outDir.absolutePath}")
@@ -159,7 +159,7 @@ fun main() {
     val p1Id = p1Persona?.name?.lowercase()?.replace(" ", "_") ?: ""
     val voice =
         com.kursi.feature.game
-            .KursiVoice(com.kursi.feature.game.Language.ENGLISH)
+            .GaddiVoice(com.kursi.feature.game.Language.ENGLISH)
 
     fun actionLabel(a: Action): String =
         when (a) {
@@ -816,8 +816,8 @@ fun main() {
 
     // ── reduced_motion_frames: per-moment static end-frames (Tenet 6) ──
     // A 3×3 gallery, each cell mounting the ActionMomentOverlay in reducedMotion=true
-    // with one queued KursiMoment so its TAILORED frozen frame renders (held stamp,
-    // verdict card, tipped chair, KURSI crest, coin-row, etc.) — proving reduced motion
+    // with one queued GaddiMoment so its TAILORED frozen frame renders (held stamp,
+    // verdict card, tipped chair, GADDI crest, coin-row, etc.) — proving reduced motion
     // is no longer a uniform TickerSlip.
     renderComposable(outDir, "reduced_motion_frames") {
         ReducedMotionGallery()
@@ -943,7 +943,7 @@ private fun renderTeamSetup(dir: File) {
     val scrollState = ScrollState(initial = 0)
     val scene =
         ImageComposeScene(width = 1440, height = 900, density = Density(1f)) {
-            KursiTheme {
+            GaddiTheme {
                 SetupScreen(
                     onBack = {},
                     onNext = { _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ -> },
@@ -1005,18 +1005,18 @@ private fun ReducedMotionGallery() {
                 ),
             treasuryCenter = Offset(235f, 150f),
         )
-    val hue = KursiRoleHues
-    val moments: List<Pair<String, KursiMoment>> =
+    val hue = GaddiRoleHues
+    val moments: List<Pair<String, GaddiMoment>> =
         listOf(
-            "Income (coins)" to KursiMoment.Income(actorSeat = 0),
-            "Tax (held stamp)" to KursiMoment.Tax(actorSeat = 0, roleHue = hue.Neta),
-            "Steal (yank)" to KursiMoment.Steal(actorSeat = 0, victim = 1, roleHue = hue.Babu),
-            "Reveal JHOOTH" to KursiMoment.Reveal(actorSeat = 1, claimant = 1, claimedRole = "BABU", truthful = false, roleHue = hue.Babu),
-            "Reveal SACH" to KursiMoment.Reveal(actorSeat = 2, claimant = 2, claimedRole = "NETA", truthful = true, roleHue = hue.Neta),
-            "Influence lost" to KursiMoment.InfluenceLoss(actorSeat = 0, lostRole = "VAKIL", roleHue = hue.Vakil),
-            "Elimination" to KursiMoment.Elimination(actorSeat = 1),
-            "Coup (crest)" to KursiMoment.Coup(actorSeat = 0, target = 1),
-            "Win (KURSI)" to KursiMoment.Win(actorSeat = 0),
+            "Income (coins)" to GaddiMoment.Income(actorSeat = 0),
+            "Tax (held stamp)" to GaddiMoment.Tax(actorSeat = 0, roleHue = hue.Neta),
+            "Steal (yank)" to GaddiMoment.Steal(actorSeat = 0, victim = 1, roleHue = hue.Babu),
+            "Reveal JHOOTH" to GaddiMoment.Reveal(actorSeat = 1, claimant = 1, claimedRole = "BABU", truthful = false, roleHue = hue.Babu),
+            "Reveal SACH" to GaddiMoment.Reveal(actorSeat = 2, claimant = 2, claimedRole = "NETA", truthful = true, roleHue = hue.Neta),
+            "Influence lost" to GaddiMoment.InfluenceLoss(actorSeat = 0, lostRole = "VAKIL", roleHue = hue.Vakil),
+            "Elimination" to GaddiMoment.Elimination(actorSeat = 1),
+            "Coup (crest)" to GaddiMoment.Coup(actorSeat = 0, target = 1),
+            "Win (GADDI)" to GaddiMoment.Win(actorSeat = 0),
         )
     Box(Modifier.fillMaxSize().background(BrandTokens.TeakInk).padding(8.dp)) {
         Column(
@@ -1040,7 +1040,7 @@ private fun ReducedMotionGallery() {
 @Composable
 private fun ReducedMotionCell(
     label: String,
-    moment: KursiMoment,
+    moment: GaddiMoment,
     anchors: TableAnchors,
     modifier: Modifier = Modifier,
 ) {
@@ -1054,7 +1054,7 @@ private fun ReducedMotionCell(
         ActionMomentOverlay(host = host, anchors = anchors, reducedMotion = true)
         BasicText(
             text = label,
-            style = KursiType.label_micro.copy(color = BrandTokens.GoldAntique),
+            style = GaddiType.label_micro.copy(color = BrandTokens.GoldAntique),
             modifier = Modifier.align(Alignment.TopStart).padding(6.dp),
         )
     }
@@ -1088,7 +1088,7 @@ private fun sampleMatchSummary(): MatchSummary =
             listOf(
                 "Aap ne GHOTALA stamp kiya — +3 Khokha.",
                 "Babu Filewala challenged. Rangey haath pakda gaya.",
-                "Inspector Damaad ki kursi gayi.",
+                "Inspector Damaad ki gaddi gayi.",
             ),
         finalStandings =
             listOf(
@@ -1123,7 +1123,7 @@ private fun renderComposable(
             height = (height * density).toInt(),
             density = Density(density),
         ) {
-            KursiTheme { content() }
+            GaddiTheme { content() }
         }
     val data = scene.render().encodeToData() ?: error("encode null for $name")
     File(dir, "$name.png").writeBytes(data.bytes)
@@ -1158,7 +1158,7 @@ private fun renderComposableAnimated(
             height = (height * density).toInt(),
             density = Density(density),
         ) {
-            KursiTheme { content() }
+            GaddiTheme { content() }
         }
     val frameNs = 16_000_000L // 16 ms per frame
     for (frame in 0L..60L) {
@@ -1193,7 +1193,7 @@ private fun renderToPng(
             height = (height * density).toInt(),
             density = Density(density),
         ) {
-            KursiTheme {
+            GaddiTheme {
                 // Suppress the first-run "Your Certificates" SwearingInPrimer coachmark so the
                 // real in-game table renders un-dimmed for portfolio capture (otherwise the whole
                 // game UI sits at ~30% opacity behind the centered onboarding modal).

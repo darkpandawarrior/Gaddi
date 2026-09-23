@@ -71,7 +71,7 @@ derives the fingerprint version string's `yyyy.MM.ww` (year/month/week) componen
 `Date()` — the wall-clock date at the moment Gradle configures, not from the tag's commit date. Tag
 `v2026.08.35.1.234` got that string when the release workflow ran on the week it was cut; if
 F-Droid's builder checks out that same tag/commit weeks later (its build queue has no SLA), its
-`kursiFmt("yyyy")/("MM")/("ww")` calls will read *that* day's date instead, embedding a different
+`gaddiFmt("yyyy")/("MM")/("ww")` calls will read *that* day's date instead, embedding a different
 `versionName` (and therefore different APK bytes) than the originally tagged release. This doesn't
 block the source build or the MR — F-Droid will still build, sign with its own key, and ship it —
 but it would make any future reproducible-build claim false more often than not. Fix before adding

@@ -15,12 +15,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kursi.designsystem.BrandTokens
-import com.kursi.designsystem.KursiType
+import com.kursi.designsystem.GaddiType
 import com.kursi.designsystem.marcellus
 import com.kursi.engine.GameEvent
+import com.kursi.feature.game.GaddiVoice
 import com.kursi.feature.game.GameUiState
-import com.kursi.feature.game.KursiVoice
-import com.kursi.feature.game.LocalKursiVoice
+import com.kursi.feature.game.LocalGaddiVoice
 import com.kursi.feature.game.status.isRecapWorthy
 import com.kursi.feature.game.status.recapNames
 
@@ -28,7 +28,7 @@ import com.kursi.feature.game.status.recapNames
  * FOCUS/GUIDED "what's happening" headline (spec §6, §8.1) — one calm, plain-language sentence
  * for the most recent meaningful beat, replacing ANALYST's denser [com.kursi.feature.game.status.RecapRail].
  *
- * Templated + deterministic, ALWAYS: it reuses [KursiVoice.recap], the same bilingual copy source
+ * Templated + deterministic, ALWAYS: it reuses [GaddiVoice.recap], the same bilingual copy source
  * ANALYST's recap strip already draws from. Per spec §8.6's latency rule this is the floor that
  * must render instantly — it stays pure and synchronous on purpose, never awaits anything. The AI
  * Munshi narrator (spec §8.1) does not replace this function; see [displayHeadlineFor], which
@@ -37,7 +37,7 @@ import com.kursi.feature.game.status.recapNames
 fun headlineFor(
     events: List<GameEvent>,
     state: GameUiState,
-    voice: KursiVoice,
+    voice: GaddiVoice,
 ): String {
     val event = events.lastOrNull { isRecapWorthy(it) } ?: return voice.opponentActing(actorName(state))
     val (actor, other) = recapNames(event, state)
@@ -74,7 +74,7 @@ sealed interface BeatLine {
 fun displayHeadlineFor(
     events: List<GameEvent>,
     state: GameUiState,
-    voice: KursiVoice,
+    voice: GaddiVoice,
 ): BeatLine {
     val narration = state.narrationText?.trim()?.takeIf { it.isNotBlank() }
     return if (narration != null) {
@@ -96,14 +96,14 @@ internal fun BeatHeadline(
     state: GameUiState,
     modifier: Modifier = Modifier,
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val line = displayHeadlineFor(state.recentEvents, state, voice)
     // A player "can tell whether the AI actually spoke" (spec §8.1): a subtle dip in-progress,
     // full weight once the AI line settles — same weight as the templated line always had.
     val alpha = if (line is BeatLine.Ai && line.streaming) 0.85f else 1f
     Text(
         text = line.text,
-        style = KursiType.body.marcellus().copy(fontStyle = FontStyle.Italic, fontSize = 15.sp, lineHeight = 20.sp),
+        style = GaddiType.body.marcellus().copy(fontStyle = FontStyle.Italic, fontSize = 15.sp, lineHeight = 20.sp),
         color = BrandTokens.GoldAntique.copy(alpha = alpha),
         textAlign = TextAlign.Center,
         maxLines = 2,

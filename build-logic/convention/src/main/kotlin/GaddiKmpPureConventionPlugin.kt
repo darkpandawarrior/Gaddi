@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 /**
- * Convention plugin for Kursi's pure (dependency-free) core modules: :engine and :ai.
+ * Convention plugin for Gaddi's pure (dependency-free) core modules: :engine and :ai.
  *
  * Applies Kotlin Multiplatform + the AGP KMP-library plugin and declares ALL shared targets:
  *   jvm, iosArm64, iosSimulatorArm64, wasmJs.
@@ -17,7 +17,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
  *
  * Deliberately applies NO Compose, NO Ktor, NO kotlinx-serialization — the engine must stay a leaf.
  */
-class KursiKmpPureConventionPlugin : Plugin<Project> {
+class GaddiKmpPureConventionPlugin : Plugin<Project> {
     @OptIn(ExperimentalWasmDsl::class)
     override fun apply(target: Project) = with(target) {
         with(pluginManager) {

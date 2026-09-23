@@ -15,7 +15,7 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":engine"))
             // api, not implementation: SearchBudget/Policy from this module are part of :ai's own
-            // public surface (KursiRules.Policy typealias, IsmctsSearch/MoveAdvisor budget params),
+            // public surface (GaddiRules.Policy typealias, IsmctsSearch/MoveAdvisor budget params),
             // consumed transitively by :feature:game and :server.
             api("com.siddharth.kmp:bots-policy:1.0.0")
             // Consolidation #10: AiProvider/AiMessage/AiConfig/AiProviderConfig/buildProviderChain +

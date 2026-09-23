@@ -2,7 +2,7 @@ package com.kursi.server
 
 import com.kursi.core.network.ConnectionState
 import com.kursi.core.network.OnlineEngineProjection
-import com.kursi.core.network.OnlineKursiClient
+import com.kursi.core.network.OnlineGaddiClient
 import com.kursi.core.network.toEngineProjection
 import com.kursi.engine.Action
 import com.kursi.engine.Intent
@@ -33,7 +33,7 @@ import kotlin.test.assertTrue
 /**
  * GATE integration test for the M7 ONLINE ADAPTER.
  *
- * Drives the REAL [OnlineKursiClient] from :core:network against a REAL embedded Netty :server over a
+ * Drives the REAL [OnlineGaddiClient] from :core:network against a REAL embedded Netty :server over a
  * real loopback TCP socket, then exercises the adapter's SOURCE-NEUTRAL projection core
  * ([OnlineUiState.toEngineProjection], the engine re-hydration the `feature.game` `GameUiState` is built
  * from). It plays a FULL match to game-over and asserts the reconstructed REDACTED engine state is
@@ -96,8 +96,8 @@ class OnlineAdapterProjectionTest {
         runBlocking {
             val h = Harness()
             val roomCode = h.createRoom(2)
-            val clientA = OnlineKursiClient(h.scope)
-            val clientB = OnlineKursiClient(h.scope)
+            val clientA = OnlineGaddiClient(h.scope)
+            val clientB = OnlineGaddiClient(h.scope)
             try {
                 clientA.connect("localhost", h.port, roomCode)
                 clientB.connect("localhost", h.port, roomCode)

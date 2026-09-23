@@ -6,7 +6,7 @@ import kotlinx.serialization.json.Json
 // ─────────────────────────── Json instance ───────────────────────────
 
 /**
- * The canonical [Json] instance for all Kursi wire messages.
+ * The canonical [Json] instance for all Gaddi wire messages.
  *
  * Configuration rationale:
  * - [ignoreUnknownKeys] = true — enables additive server-to-client evolution: a client built against an
@@ -16,7 +16,7 @@ import kotlinx.serialization.json.Json
  * - [encodeDefaults] = false — keeps frames compact; default-valued fields (e.g. [WirePlayerView.schemaVersion])
  *   are omitted from frames produced by the current schema version and must be handled gracefully when absent.
  */
-val KursiJson: Json =
+val GaddiJson: Json =
     Json {
         ignoreUnknownKeys = true
         classDiscriminator = "type"

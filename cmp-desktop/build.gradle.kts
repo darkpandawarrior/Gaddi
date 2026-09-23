@@ -7,10 +7,10 @@ plugins {
 }
 
 // Three-tier versioning — see gradle/versioning.gradle.kts + docs/RELEASE.md.
-// Native distributions need strict MAJOR.MINOR.BUILD, so desktop uses kursiDesktopPackageVersion
+// Native distributions need strict MAJOR.MINOR.BUILD, so desktop uses gaddiDesktopPackageVersion
 // (MILESTONE.0.commitCount), not the date-based MARKETING string.
 apply(from = "$rootDir/gradle/versioning.gradle.kts")
-val kursiMarketingVersion = extra["kursiDesktopPackageVersion"] as String
+val gaddiMarketingVersion = extra["gaddiDesktopPackageVersion"] as String
 
 kotlin {
     jvm()
@@ -31,7 +31,7 @@ kotlin {
 
 // ── Headless screenshot task ───────────────────────────────────────────────────
 tasks.register<JavaExec>("renderScreens") {
-    group = "kursi"
+    group = "gaddi"
     description = "Render GameScreen fixture states to PNG files in build/shots/"
     mainClass.set("com.kursi.desktop.ScreenshotsKt")
     classpath = configurations["jvmRuntimeClasspath"] +
@@ -47,7 +47,7 @@ tasks.register<JavaExec>("renderScreens") {
             .dir("shots")
             .get()
             .asFile
-    systemProperty("kursi.shots.dir", shotsDir.absolutePath)
+    systemProperty("gaddi.shots.dir", shotsDir.absolutePath)
     doFirst { shotsDir.mkdirs() }
     dependsOn("jvmMainClasses")
 }
@@ -62,7 +62,7 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
 
             packageName = "Gaddi"
-            packageVersion = kursiMarketingVersion
+            packageVersion = gaddiMarketingVersion
             description = "Bluffing card game — Gaddi ke liye kuch bhi karega."
             copyright = "© 2025 Siddharth Pandalai"
             vendor = "darkpandawarrior"
@@ -71,10 +71,10 @@ compose.desktop {
             // packaging. Conditional so compilation still works without the files.
             val iconsDir = project.file("src/jvmMain/resources/icons")
             macOS {
-                iconsDir.resolve("kursi.icns").takeIf { it.exists() }?.let { iconFile.set(it) }
+                iconsDir.resolve("gaddi.icns").takeIf { it.exists() }?.let { iconFile.set(it) }
                 bundleID = "com.kursi.desktop"
-                packageVersion = kursiMarketingVersion
-                dmgPackageVersion = kursiMarketingVersion
+                packageVersion = gaddiMarketingVersion
+                dmgPackageVersion = gaddiMarketingVersion
                 infoPlist {
                     extraKeysRawXml =
                         """
@@ -83,16 +83,16 @@ compose.desktop {
                 }
             }
             windows {
-                iconsDir.resolve("kursi.ico").takeIf { it.exists() }?.let { iconFile.set(it) }
-                packageVersion = kursiMarketingVersion
-                msiPackageVersion = kursiMarketingVersion
+                iconsDir.resolve("gaddi.ico").takeIf { it.exists() }?.let { iconFile.set(it) }
+                packageVersion = gaddiMarketingVersion
+                msiPackageVersion = gaddiMarketingVersion
                 menuGroup = "Gaddi"
                 upgradeUuid = "2E5F3A1C-9B4D-4E7A-8C0F-1D2B3E4A5F6C"
             }
             linux {
-                iconsDir.resolve("kursi_512.png").takeIf { it.exists() }?.let { iconFile.set(it) }
-                packageVersion = kursiMarketingVersion
-                debPackageVersion = kursiMarketingVersion
+                iconsDir.resolve("gaddi_512.png").takeIf { it.exists() }?.let { iconFile.set(it) }
+                packageVersion = gaddiMarketingVersion
+                debPackageVersion = gaddiMarketingVersion
                 menuGroup = "Game"
             }
         }

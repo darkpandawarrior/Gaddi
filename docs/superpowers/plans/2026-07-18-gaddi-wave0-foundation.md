@@ -1,14 +1,14 @@
-# Kursi Launch Overhaul — Wave 0 (Foundation) Implementation Plan
+# Gaddi Launch Overhaul — Wave 0 (Foundation) Implementation Plan
 
 > **STATUS: LANDED — verified in code 2026-08-05. DO NOT RE-EXECUTE.** All 32 checkboxes below
 > are unticked, but every task shipped via PR #24 (merge `86f6b039`, 2026-07-19, branch
 > `launch-overhaul-integration`). Evidence on `origin/main`:
 >
-> - **Task 1 (DensityLayer):** `feature/game/src/commonMain/kotlin/com/kursi/feature/game/DensityLayer.kt`; `core/prefs/.../AppPrefs.kt:368` `val densityLayerFlow`; wired at `cmp-shared/.../KursiApp.kt:550-551`; `DensityLayerTest.kt` in `commonTest`.
+> - **Task 1 (DensityLayer):** `feature/game/src/commonMain/kotlin/com/kursi/feature/game/DensityLayer.kt`; `core/prefs/.../AppPrefs.kt:368` `val densityLayerFlow`; wired at `cmp-shared/.../GaddiApp.kt:550-551`; `DensityLayerTest.kt` in `commonTest`.
 > - **Task 2 (Beat gate):** `feature/game/.../BeatGate.kt`; `GameViewModel.kt:163` `private var beatAck`, `:430` `is GameAction.ContinueBeat -> beatAck?.complete(Unit)`; `GameAction.kt:94` `data object ContinueBeat`; `BeatGateTest.kt` in `commonTest`.
-> - **Task 3 (Motion tokens):** `core/designsystem/.../KursiMotion.kt` + `KursiMotionTest.kt`.
+> - **Task 3 (Motion tokens):** `core/designsystem/.../GaddiMotion.kt` + `GaddiMotionTest.kt`.
 > - **Task 4 (String externalization):** landed as **scaffold only** — `core/designsystem/src/commonMain/composeResources/values/strings.xml` has exactly one `<string>` entry and there is exactly one `stringResource()` call site repo-wide (`SettingsScreen.kt`). Finishing externalization is FRONTIER item 4 — new bounded work, not a re-run of this plan.
-> - **Task 5 (Decomposition):** split out into `2026-07-18-kursi-wave0-task5-decomposition.md`, also LANDED — see that file's banner.
+> - **Task 5 (Decomposition):** split out into `2026-07-18-gaddi-wave0-task5-decomposition.md`, also LANDED — see that file's banner.
 >
 > **Gate correction 2026-08-05:** the gate is `:feature:game:jvmTest` (and `:<module>:jvmTest`
 > per module). The harness copy previously prescribed `testDebugUnitTest` at 10 sites; running
@@ -43,7 +43,7 @@ Introduce the three-layer density model as a new field alongside `coachEnabled`,
 - Modify: `feature/game/src/commonMain/kotlin/com/kursi/feature/game/GameUiState.kt` (add field, ~line 108)
 - Modify: `feature/game/src/commonMain/kotlin/com/kursi/feature/game/GameViewModel.kt` (constructor param + init collector, near lines 60–107 and 332–348)
 - Modify: `core/prefs/src/commonMain/kotlin/com/kursi/core/prefs/AppPrefs.kt` (String-backed pref + flow, following the `language` String pattern at lines ~270 & 318)
-- Modify: `cmp-shared/src/commonMain/kotlin/com/kursi/shared/KursiApp.kt` (map prefs String ↔ DensityLayer, pass typed flow to the VM — mirror the `coachEnabledFlow` wiring)
+- Modify: `cmp-shared/src/commonMain/kotlin/com/kursi/shared/GaddiApp.kt` (map prefs String ↔ DensityLayer, pass typed flow to the VM — mirror the `coachEnabledFlow` wiring)
 - Test: `feature/game/src/commonTest/kotlin/com/kursi/feature/game/DensityLayerTest.kt`
 
 **Interfaces:**
@@ -185,7 +185,7 @@ Add key + accessor + flow following the `language` pattern:
     val densityLayerFlow: StateFlow<String> = _densityLayerFlow.asStateFlow()
 ```
 
-- [ ] **Step 7: Wire it in `KursiApp.kt`** (mirror the coach wiring — find where `GameViewModel(` is constructed and where `coachEnabledFlow` is derived from prefs; add a mapped typed flow):
+- [ ] **Step 7: Wire it in `GaddiApp.kt`** (mirror the coach wiring — find where `GameViewModel(` is constructed and where `coachEnabledFlow` is derived from prefs; add a mapped typed flow):
 
 ```kotlin
         // near the existing prefs→VM flow derivations:
@@ -198,7 +198,7 @@ Add key + accessor + flow following the `language` pattern:
         //     onDensityLayerChange = { prefs.densityLayerName = it.name },
 ```
 
-Add the imports it needs (`kotlinx.coroutines.flow.map`, `stateIn`, `SharingStarted`, `com.kursi.feature.game.DensityLayer`). Use whatever app-scope `CoroutineScope` KursiApp already holds; if none, reuse the existing scope pattern already present for the coach flow.
+Add the imports it needs (`kotlinx.coroutines.flow.map`, `stateIn`, `SharingStarted`, `com.kursi.feature.game.DensityLayer`). Use whatever app-scope `CoroutineScope` GaddiApp already holds; if none, reuse the existing scope pattern already present for the coach flow.
 
 - [ ] **Step 8: Run tests to verify they pass**
 
@@ -208,7 +208,7 @@ Expected: PASS (3 tests).
 - [ ] **Step 9: Full module gate**
 
 Run: `./gradlew :feature:game:jvmTest :core:prefs:jvmTest testAndroidHostTest detekt ktlintCheck`
-Expected: BUILD SUCCESSFUL. (If `cmp-shared` fails to compile, the KursiApp wiring in Step 7 is incomplete — fix the `GameViewModel(...)` call site.)
+Expected: BUILD SUCCESSFUL. (If `cmp-shared` fails to compile, the GaddiApp wiring in Step 7 is incomplete — fix the `GameViewModel(...)` call site.)
 
 - [ ] **Step 10: Commit**
 
@@ -218,7 +218,7 @@ git add feature/game/src/commonMain/kotlin/com/kursi/feature/game/DensityLayer.k
         feature/game/src/commonMain/kotlin/com/kursi/feature/game/GameViewModel.kt \
         feature/game/src/commonTest/kotlin/com/kursi/feature/game/DensityLayerTest.kt \
         core/prefs/src/commonMain/kotlin/com/kursi/core/prefs/AppPrefs.kt \
-        cmp-shared/src/commonMain/kotlin/com/kursi/shared/KursiApp.kt
+        cmp-shared/src/commonMain/kotlin/com/kursi/shared/GaddiApp.kt
 git commit -m "feat(game): add DensityLayer axis (FOCUS/GUIDED/ANALYST), ANALYST default"
 ```
 
@@ -429,39 +429,39 @@ git commit -m "feat(game): beat-gate state machine (PendingBeat/ContinueBeat), A
 A named spring-physics motion vocabulary in the design system so Track 2 (renderer) and Track 1 (Focus Pull) reference tokens, not scattered literals (instinct: design-tokens-not-hardcoded).
 
 **Files:**
-- Create: `core/designsystem/src/commonMain/kotlin/com/kursi/designsystem/KursiMotion.kt`
-- Test: `core/designsystem/src/commonTest/kotlin/com/kursi/designsystem/KursiMotionTest.kt`
+- Create: `core/designsystem/src/commonMain/kotlin/com/kursi/designsystem/GaddiMotion.kt`
+- Test: `core/designsystem/src/commonTest/kotlin/com/kursi/designsystem/GaddiMotionTest.kt`
 
 **Interfaces:**
-- Produces: `object KursiMotion` with named `AnimationSpec` tokens: `snap`, `beat`, `settle`, `dramatic` (spring specs) + `focusPullMs: Int`, `dealMs: Int` duration tokens. All honor reduced-motion at call sites (the tokens themselves are just specs).
+- Produces: `object GaddiMotion` with named `AnimationSpec` tokens: `snap`, `beat`, `settle`, `dramatic` (spring specs) + `focusPullMs: Int`, `dealMs: Int` duration tokens. All honor reduced-motion at call sites (the tokens themselves are just specs).
 
 - [ ] **Step 1: Write the failing test**
 
 ```kotlin
-// KursiMotionTest.kt
+// GaddiMotionTest.kt
 package com.kursi.designsystem
 
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class KursiMotionTest {
+class GaddiMotionTest {
     @Test
     fun durations_are_positive_and_ordered() {
-        assertTrue(KursiMotion.dealMs > 0)
-        assertTrue(KursiMotion.focusPullMs > 0)
+        assertTrue(GaddiMotion.dealMs > 0)
+        assertTrue(GaddiMotion.focusPullMs > 0)
     }
 }
 ```
 
 - [ ] **Step 2: Run to verify fail**
 
-Run: `./gradlew :core:designsystem:jvmTest --tests "com.kursi.designsystem.KursiMotionTest"`
-Expected: FAIL — `KursiMotion` unresolved.
+Run: `./gradlew :core:designsystem:jvmTest --tests "com.kursi.designsystem.GaddiMotionTest"`
+Expected: FAIL — `GaddiMotion` unresolved.
 
 - [ ] **Step 3: Create the tokens**
 
 ```kotlin
-// KursiMotion.kt
+// GaddiMotion.kt
 package com.kursi.designsystem
 
 import androidx.compose.animation.core.AnimationSpec
@@ -472,7 +472,7 @@ import androidx.compose.animation.core.spring
  * Named motion vocabulary (spec §7). Tracks reference these tokens, never raw literals. Call sites
  * are responsible for collapsing to a static end-state under reducedMotion (see MomentStaticFrames).
  */
-object KursiMotion {
+object GaddiMotion {
     /** Crisp UI response (chip press, toggle). */
     fun <T> snap(): AnimationSpec<T> = spring(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessHigh)
 
@@ -492,15 +492,15 @@ object KursiMotion {
 
 - [ ] **Step 4: Run to verify pass**
 
-Run: `./gradlew :core:designsystem:jvmTest --tests "com.kursi.designsystem.KursiMotionTest"`
+Run: `./gradlew :core:designsystem:jvmTest --tests "com.kursi.designsystem.GaddiMotionTest"`
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add core/designsystem/src/commonMain/kotlin/com/kursi/designsystem/KursiMotion.kt \
-        core/designsystem/src/commonTest/kotlin/com/kursi/designsystem/KursiMotionTest.kt
-git commit -m "feat(designsystem): add KursiMotion spring/duration tokens"
+git add core/designsystem/src/commonMain/kotlin/com/kursi/designsystem/GaddiMotion.kt \
+        core/designsystem/src/commonTest/kotlin/com/kursi/designsystem/GaddiMotionTest.kt
+git commit -m "feat(designsystem): add GaddiMotion spring/duration tokens"
 ```
 
 ---
@@ -560,7 +560,7 @@ After Tasks 1–4 merge to `feat/launch-overhaul`, these are frozen for the six 
 
 - **`DensityLayer { FOCUS, GUIDED, ANALYST }`** + `GameUiState.densityLayer` + `densityLayerFlow`/`onDensityLayerChange` VM params. Overlays gate on this (Track 4).
 - **Beat gate:** `BeatTier`, `tierFor`, `PendingBeat`, `GameUiState.pendingBeat`, `GameAction.ContinueBeat`, `awaitBeat`/`beatAck`. Track 1 builds the UI; Track 6 adds the server ack-timeout at `awaitBeat`'s suspension point.
-- **`KursiMotion`** tokens. Track 1/2 reference these.
+- **`GaddiMotion`** tokens. Track 1/2 reference these.
 - **String-resource path** (`Res.string.*`). All tracks add copy as resources.
 
 Each Wave 1 track then gets its own plan (written against these frozen contracts) and runs in its **own git worktree**, merged one at a time behind the verification gate.

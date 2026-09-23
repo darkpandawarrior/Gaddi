@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Single-source version bump for Kursi.
+# Single-source version bump for Gaddi.
 #
 # Three-tier model (see docs/RELEASE.md):
 #   FINGERPRINT = YYYY.0M.0W.<MILESTONE>.<commitCount>  (tag, release title, BuildConfig, debug suffix)

@@ -16,13 +16,13 @@ kotlin {
 // Stamps FINGERPRINT into a generated BuildInfo.kt consumed by the /version endpoint.
 // See gradle/versioning.gradle.kts + docs/RELEASE.md.
 apply(from = "$rootDir/gradle/versioning.gradle.kts")
-val kursiFingerprintVersion = extra["kursiFingerprint"] as String
-val generatedVersionDir = layout.buildDirectory.dir("generated/kursiVersion/kotlin")
+val gaddiFingerprintVersion = extra["gaddiFingerprint"] as String
+val generatedVersionDir = layout.buildDirectory.dir("generated/gaddiVersion/kotlin")
 // `by tasks.registering` is deprecated and removed in Gradle 10.
 val generateBuildInfo =
     tasks.register("generateBuildInfo") {
         val outputDir = generatedVersionDir
-        val fingerprint = kursiFingerprintVersion
+        val fingerprint = gaddiFingerprintVersion
         outputs.dir(outputDir)
         doLast {
             val file = outputDir.get().asFile.resolve("com/kursi/server/BuildInfo.kt")

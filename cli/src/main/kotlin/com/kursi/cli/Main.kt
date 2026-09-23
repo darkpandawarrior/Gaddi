@@ -12,10 +12,10 @@ private const val WIN_COUNT_COLUMN_WIDTH = 5
 private const val BAR_PERCENT_PER_HASH = 2
 
 /**
- * Headless Kursi. Runs games entirely through the engine's public API, so a green run here is
+ * Headless Gaddi. Runs games entirely through the engine's public API, so a green run here is
  * evidence the engine carries the whole rule set without any UI, storage or platform help.
  *
- * Usage: kursi-cli [seats] [games] [seed]
+ * Usage: gaddi-cli [seats] [games] [seed]
  */
 fun main(args: Array<String>) {
     val seats = args.getOrNull(0)?.toIntOrNull() ?: 4
@@ -30,7 +30,7 @@ fun main(args: Array<String>) {
     // copiesPerRole scales with the table so the deck stays a uniform multiset over active roles.
     val config = GameConfig(seatCount = seats, copiesPerRole = if (seats <= 6) 3 else 4)
 
-    println("Kursi engine, headless")
+    println("Gaddi engine, headless")
     println("  seats $seats, games $games, seed $seed")
     println()
 

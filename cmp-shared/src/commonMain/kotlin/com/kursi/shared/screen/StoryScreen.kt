@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.kursi.designsystem.*
 import com.kursi.feature.game.Difficulty
 import com.kursi.feature.game.narrative.ArcId
-import com.kursi.shared.strings.LocalKursiStrings
+import com.kursi.shared.strings.LocalGaddiStrings
 import kursi.core.designsystem.generated.resources.Res
 import kursi.core.designsystem.generated.resources.label_selected_stamp
 import kursi.core.designsystem.generated.resources.story_arc_section_header
@@ -119,7 +119,7 @@ fun StoryScreen(
     onStart: (seed: Long, players: Int, difficulty: Difficulty, arc: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val scroll = rememberScrollState()
 
     var selectedArcCode by remember { mutableStateOf("") }
@@ -145,8 +145,8 @@ fun StoryScreen(
             trailing = {
                 Text(
                     stringResource(Res.string.story_badge),
-                    style = KursiType.caption.copy(fontSize = 9.sp),
-                    color = KursiNeutrals.TextMuted,
+                    style = GaddiType.caption.copy(fontSize = 9.sp),
+                    color = GaddiNeutrals.TextMuted,
                 )
             },
         )
@@ -169,13 +169,13 @@ fun StoryScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
                         text = s.storyTagline,
-                        style = KursiType.body.copy(fontSize = 14.sp, fontStyle = FontStyle.Italic),
+                        style = GaddiType.body.copy(fontSize = 14.sp, fontStyle = FontStyle.Italic),
                         color = BrandTokens.GoldAntique,
                     )
                     Text(
                         text = stringResource(Res.string.story_explainer_body),
-                        style = KursiType.body.copy(fontSize = 12.sp),
-                        color = KursiNeutrals.TextSecondary,
+                        style = GaddiType.body.copy(fontSize = 12.sp),
+                        color = GaddiNeutrals.TextSecondary,
                     )
                 }
 
@@ -183,8 +183,8 @@ fun StoryScreen(
                 EngravedHeader(eyebrow = stringResource(Res.string.story_arc_section_header)) {
                     Text(
                         text = stringResource(Res.string.story_arc_section_sub),
-                        style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                        color = KursiNeutrals.TextSecondary,
+                        style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                        color = GaddiNeutrals.TextSecondary,
                     )
                 }
                 Column {
@@ -202,8 +202,8 @@ fun StoryScreen(
                 EngravedHeader(eyebrow = stringResource(Res.string.story_player_count_header)) {
                     Text(
                         text = stringResource(Res.string.story_player_count_sub),
-                        style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                        color = KursiNeutrals.TextSecondary,
+                        style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                        color = GaddiNeutrals.TextSecondary,
                     )
                 }
                 Column {
@@ -212,13 +212,13 @@ fun StoryScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text("2", style = KursiType.caption, color = KursiNeutrals.TextMuted)
+                        Text("2", style = GaddiType.caption, color = GaddiNeutrals.TextMuted)
                         Text(
                             text = "⊙ $playerCount",
-                            style = KursiType.display.rozha().copy(fontSize = 20.sp),
+                            style = GaddiType.display.rozha().copy(fontSize = 20.sp),
                             color = BrandTokens.GoldAntique,
                         )
-                        Text("10", style = KursiType.caption, color = KursiNeutrals.TextMuted)
+                        Text("10", style = GaddiType.caption, color = GaddiNeutrals.TextMuted)
                     }
                     Slider(
                         value = playerCount.toFloat(),
@@ -239,8 +239,8 @@ fun StoryScreen(
                 EngravedHeader(eyebrow = stringResource(Res.string.story_difficulty_header)) {
                     Text(
                         text = stringResource(Res.string.story_difficulty_sub),
-                        style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                        color = KursiNeutrals.TextSecondary,
+                        style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                        color = GaddiNeutrals.TextSecondary,
                     )
                 }
                 DifficultyQuickPick(
@@ -320,7 +320,7 @@ private fun ArcRow(
         ) {
             Text(
                 meta.glyph,
-                style = KursiType.title.copy(fontSize = 16.sp),
+                style = GaddiType.title.copy(fontSize = 16.sp),
                 color = if (selected) BrandTokens.TeakDark else BrandTokens.GoldAntique,
             )
         }
@@ -328,19 +328,19 @@ private fun ArcRow(
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(
                 text = meta.title,
-                style = KursiType.name.copy(fontSize = 14.sp, letterSpacing = 0.5.sp),
-                color = if (selected) BrandTokens.GoldAntique else KursiNeutrals.TextPrimary,
+                style = GaddiType.name.copy(fontSize = 14.sp, letterSpacing = 0.5.sp),
+                color = if (selected) BrandTokens.GoldAntique else GaddiNeutrals.TextPrimary,
                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
             )
             Text(
                 text = meta.subtitle,
-                style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                color = KursiNeutrals.TextSecondary,
+                style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                color = GaddiNeutrals.TextSecondary,
             )
             Text(
                 text = meta.blurb,
-                style = KursiType.body.copy(fontSize = 10.sp),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.body.copy(fontSize = 10.sp),
+                color = GaddiNeutrals.TextMuted,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -357,7 +357,7 @@ private fun ArcRow(
             ) {
                 Text(
                     stringResource(Res.string.label_selected_stamp),
-                    style = KursiType.caption.copy(fontSize = 8.sp, fontWeight = FontWeight.Bold),
+                    style = GaddiType.caption.copy(fontSize = 8.sp, fontWeight = FontWeight.Bold),
                     color = BrandTokens.GoldAntique,
                 )
             }
@@ -384,7 +384,7 @@ private fun DifficultyQuickPick(
                         .weight(1f)
                         .shadow(
                             if (isSelected) 5.dp else 2.dp,
-                            Squircle(KursiRadii.sm),
+                            Squircle(GaddiRadii.sm),
                             clip = false,
                             ambientColor = Color.Black,
                             spotColor = BrandTokens.TeakInk,
@@ -396,7 +396,7 @@ private fun DifficultyQuickPick(
                                 Brush.verticalGradient(listOf(BrandTokens.TeakMid, BrandTokens.TeakDark))
                             },
                         ).border(
-                            if (isSelected) 1.5.dp else KursiDimens.stroke_ring_idle,
+                            if (isSelected) 1.5.dp else GaddiDimens.stroke_ring_idle,
                             if (isSelected) BrandTokens.GoldAntique else BrandTokens.BrassDark.copy(alpha = 0.6f),
                             RoundedCornerShape(8.dp),
                         ).clickable { onSelect(tier) }
@@ -408,8 +408,8 @@ private fun DifficultyQuickPick(
             ) {
                 Text(
                     text = name,
-                    style = KursiType.caption.copy(fontSize = 9.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal),
-                    color = if (isSelected) BrandTokens.TeakDark else KursiNeutrals.TextSecondary,
+                    style = GaddiType.caption.copy(fontSize = 9.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal),
+                    color = if (isSelected) BrandTokens.TeakDark else GaddiNeutrals.TextSecondary,
                     textAlign = TextAlign.Center,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,

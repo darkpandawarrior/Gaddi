@@ -1,6 +1,6 @@
 package com.kursi.feature.game
 
-import com.kursi.core.network.OnlineKursiClient
+import com.kursi.core.network.OnlineGaddiClient
 import com.kursi.core.network.OnlineUiState
 import com.kursi.protocol.wire.toWire
 import kotlinx.coroutines.CoroutineScope
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
- * ONLINE SESSION ADAPTER — drives the existing offline [GameScreen] from an [OnlineKursiClient].
+ * ONLINE SESSION ADAPTER — drives the existing offline [GameScreen] from an [OnlineGaddiClient].
  *
  * It is the online counterpart of [GameViewModel]: it exposes the SAME `StateFlow<GameUiState?>` the
  * screen already renders and accepts the SAME [GameAction] the screen already dispatches, but its source
@@ -47,7 +47,7 @@ import kotlinx.coroutines.launch
  * @param scope  the coroutine scope owning the projection collector.
  */
 class OnlineGameAdapter(
-    private val client: OnlineKursiClient,
+    private val client: OnlineGaddiClient,
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
 ) {
     private val _state = MutableStateFlow<GameUiState?>(null)
@@ -107,7 +107,7 @@ class OnlineGameAdapter(
      * the turn already advanced is silently dropped rather than rejected by the server.
      *
      * Routes a plain reaction-window [com.kursi.engine.Intent.Pass] through the client's fast-path
-     * [OnlineKursiClient.pass]; everything else through [OnlineKursiClient.submit] with the wire intent.
+     * [OnlineGaddiClient.pass]; everything else through [OnlineGaddiClient.submit] with the wire intent.
      */
     private fun submit(action: GameAction.Submit) {
         val shown = _state.value ?: return
@@ -133,7 +133,7 @@ class OnlineGameAdapter(
 
     /**
      * Fold one [OnlineUiState] into [state] + [status]. The single inbound projection point — mirrors
-     * how [OnlineKursiClient.onServerMessage] is the single fold for the wire layer.
+     * how [OnlineGaddiClient.onServerMessage] is the single fold for the wire layer.
      */
     private fun project(online: OnlineUiState) {
         _status.value = online.toConnectionStatus()

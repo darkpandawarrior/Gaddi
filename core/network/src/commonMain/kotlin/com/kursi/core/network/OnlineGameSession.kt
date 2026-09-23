@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
- * High-level online game session that wraps a [KursiSession].
+ * High-level online game session that wraps a [GaddiSession].
  *
  * Drives the [playerView] StateFlow from incoming [ServerMessage.StateUpdate] frames and
  * exposes a [submit] function that converts an engine [Intent] to a [ClientMessage.SubmitIntent]
@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
  *
  * Example (inside a ViewModel):
  * ```
- * val session = OnlineGameSession(kursiSession, viewModelScope, mySeatIndex)
+ * val session = OnlineGameSession(gaddiSession, viewModelScope, mySeatIndex)
  * session.start()
  * // playerView updates arrive as StateUpdate frames:
  * session.playerView.collectAsStateWithLifecycle()
@@ -32,12 +32,12 @@ import kotlinx.coroutines.launch
  * session.submit(Intent.DeclareAction(PlayerId(seat), Action.Tax))
  * ```
  *
- * @param session    The underlying [KursiSession] (already connected and JoinRoom sent).
+ * @param session    The underlying [GaddiSession] (already connected and JoinRoom sent).
  * @param scope      [CoroutineScope] that owns the collection job (typically viewModelScope).
  * @param mySeat     The seat index assigned to this client (received in [ServerMessage.RoomJoined]).
  */
 class OnlineGameSession(
-    private val session: KursiSession,
+    private val session: GaddiSession,
     private val scope: CoroutineScope,
     private val mySeat: Int,
 ) {
@@ -64,7 +64,7 @@ class OnlineGameSession(
     private var seqCounter: Long = 0L
 
     /**
-     * Starts collecting [ServerMessage]s from the underlying [KursiSession] inside [scope].
+     * Starts collecting [ServerMessage]s from the underlying [GaddiSession] inside [scope].
      * Returns the [Job] so the caller can cancel/join if needed.
      */
     fun start(): Job =

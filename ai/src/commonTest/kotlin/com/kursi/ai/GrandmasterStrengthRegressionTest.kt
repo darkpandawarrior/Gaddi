@@ -21,7 +21,7 @@ import kotlin.test.assertTrue
  * guard, because it is the part that holds unconditionally, even against an opponent we have no read on.
  * The exploitation layer is covered separately by [GrandmasterExploitTest] (it is strictly additive).
  *
- * Budgets are sized to stay within the configured 4g JVM test heap (see KursiKmpPureConventionPlugin):
+ * Budgets are sized to stay within the configured 4g JVM test heap (see GaddiKmpPureConventionPlugin):
  * Grandmaster gets a strictly deeper iteration/horizon budget than the Expert opponent, both bounded by
  * the iteration cap (not the wall clock) so the result is deterministic across machines.
  */

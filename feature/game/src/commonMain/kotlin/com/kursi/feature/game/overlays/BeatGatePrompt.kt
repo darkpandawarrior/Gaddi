@@ -39,11 +39,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kursi.designsystem.BrandTokens
-import com.kursi.designsystem.KursiDimens
-import com.kursi.designsystem.KursiRadii
-import com.kursi.designsystem.KursiType
+import com.kursi.designsystem.GaddiDimens
+import com.kursi.designsystem.GaddiRadii
+import com.kursi.designsystem.GaddiType
 import com.kursi.designsystem.Squircle
-import com.kursi.feature.game.LocalKursiVoice
+import com.kursi.feature.game.LocalGaddiVoice
 
 /**
  * BEAT GATE tap-to-continue affordance (spec §5) — rendered whenever [com.kursi.feature.game.PendingBeat]
@@ -58,7 +58,7 @@ internal fun ContinueBeatPrompt(
     modifier: Modifier = Modifier,
     reducedMotion: Boolean = false,
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
@@ -80,9 +80,9 @@ internal fun ContinueBeatPrompt(
         modifier =
             modifier
                 .wrapContentWidth()
-                .clip(Squircle(KursiRadii.md))
+                .clip(Squircle(GaddiRadii.md))
                 .background(BrandTokens.TeakDark.copy(alpha = 0.92f))
-                .border(1.5.dp, BrandTokens.GoldAntique.copy(alpha = pulse), Squircle(KursiRadii.md))
+                .border(1.5.dp, BrandTokens.GoldAntique.copy(alpha = pulse), Squircle(GaddiRadii.md))
                 .onKeyEvent { event ->
                     if (event.type == KeyEventType.KeyUp && event.key == Key.Spacebar) {
                         onContinue()
@@ -102,11 +102,11 @@ internal fun ContinueBeatPrompt(
                     contentDescription = voice.continuePrompt
                 }.padding(horizontal = 20.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_sm),
+        horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm),
     ) {
         Text(
             text = voice.continuePrompt,
-            style = KursiType.label_sm.copy(letterSpacing = 1.sp),
+            style = GaddiType.label_sm.copy(letterSpacing = 1.sp),
             color = BrandTokens.GoldAntique.copy(alpha = pulse),
         )
     }

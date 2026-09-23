@@ -45,11 +45,11 @@ private const val RECKLESS_EV_LOST_PCT = 12
  * lifetime decision-quality read shows real competence (a large-enough sample — [decisions] — that
  * doesn't read RECKLESS by [accuracyPct]/[avgEvLostPct], the same thresholds core/prefs' DecisionGrade
  * uses). Takes primitives rather than a core/prefs type so feature/game stays free of a core:prefs
- * dependency (the same seam the DensityLayer String↔enum mapping already uses — see KursiApp.kt).
+ * dependency (the same seam the DensityLayer String↔enum mapping already uses — see GaddiApp.kt).
  * Never advances a player who has [manuallySet] their density layer themselves — a manual choice
  * (Settings, or any future in-game override) always wins; this function only ever proposes moving
  * FOCUS → GUIDED → ANALYST, never sideways or backward, and never past ANALYST. Callers persist the
- * result only when it differs from [current] (see [com.kursi.shared.KursiApp]).
+ * result only when it differs from [current] (see [com.kursi.shared.GaddiApp]).
  */
 fun evaluateDensityGraduation(
     current: DensityLayer,

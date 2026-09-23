@@ -57,7 +57,7 @@ internal fun DarbarPanel(
             else ->
                 state.opponentPersonas[PlayerId(senderSeat)]
                     ?.let { Color(it.seatColorArgb) }
-                    ?: if (senderSeat >= 0) KursiSeatColors[senderSeat] else BrandTokens.BrassAged
+                    ?: if (senderSeat >= 0) GaddiSeatColors[senderSeat] else BrandTokens.BrassAged
         }
 
     fun monogramForSeat(
@@ -114,7 +114,7 @@ internal fun DarbarPanel(
                     .clip(panelShape)
                     .background(
                         Brush.verticalGradient(
-                            listOf(KursiFeltColors.Surface3.copy(alpha = 0.96f), KursiFeltColors.Surface2, BrandTokens.TeakDark),
+                            listOf(GaddiFeltColors.Surface3.copy(alpha = 0.96f), GaddiFeltColors.Surface2, BrandTokens.TeakDark),
                         ),
                     ).embossEdge(18.dp)
                     // Prevent tap-through to the scrim when tapping inside the panel.
@@ -140,13 +140,13 @@ internal fun DarbarPanel(
                 ) {
                     Text(
                         text = "DARBAR",
-                        style = KursiType.display.copy(fontSize = 14.sp, letterSpacing = 3.sp).rozha(),
+                        style = GaddiType.display.copy(fontSize = 14.sp, letterSpacing = 3.sp).rozha(),
                         color = BrandTokens.GoldAntique,
                     )
                     Text(
                         text = "· Mehfil",
-                        style = KursiType.caption.copy(fontSize = 11.sp, fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
-                        color = KursiNeutrals.TextMuted,
+                        style = GaddiType.caption.copy(fontSize = 11.sp, fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
+                        color = GaddiNeutrals.TextMuted,
                         modifier = Modifier.weight(1f),
                     )
                     // Live kissa / arc indicator — a small brass-hairline pip, not a filled box.
@@ -162,12 +162,12 @@ internal fun DarbarPanel(
                             Text(
                                 text = "live kissa",
                                 style =
-                                    KursiType.caption.copy(
+                                    GaddiType.caption.copy(
                                         fontSize = 8.sp,
                                         letterSpacing = 0.8.sp,
                                         fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                                     ),
-                                color = KursiNeutrals.Cream,
+                                color = GaddiNeutrals.Cream,
                             )
                         }
                     }
@@ -184,7 +184,7 @@ internal fun DarbarPanel(
                     ) {
                         Text(
                             text = "✕",
-                            style = KursiType.label_sm.copy(fontSize = 13.sp),
+                            style = GaddiType.label_sm.copy(fontSize = 13.sp),
                             color = BrandTokens.BrassAged,
                         )
                     }
@@ -219,11 +219,11 @@ internal fun DarbarPanel(
                             Text(
                                 text = "Koi baat nahin abhi tak...",
                                 style =
-                                    KursiType.caption.copy(
+                                    GaddiType.caption.copy(
                                         fontSize = 12.sp,
                                         fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
                                     ),
-                                color = KursiNeutrals.TextMuted,
+                                color = GaddiNeutrals.TextMuted,
                                 modifier =
                                     Modifier
                                         .fillMaxWidth()

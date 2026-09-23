@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Registers KursiAiContextProvider: the no-op ContentProvider that captures the process-wide
+<!-- Registers GaddiAiContextProvider: the no-op ContentProvider that captures the process-wide
      Application Context for OnDeviceAiProvider.android.kt (see that file for why). android:authorities
      is namespaced with ${applicationId} so the Gms/NoGms flavors (and any future app) never collide. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
         <provider
-            android:name="com.kursi.ai.provider.KursiAiContextProvider"
-            android:authorities="${applicationId}.kursiaicontextprovider"
+            android:name="com.kursi.ai.provider.GaddiAiContextProvider"
+            android:authorities="${applicationId}.gaddiaicontextprovider"
             android:exported="false" />
     </application>
 

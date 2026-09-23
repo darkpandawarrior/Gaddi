@@ -138,7 +138,7 @@ it always was. `4p_focus.png` is the **same table, same state**, rendered throug
 
 ![The same mid-game table at ANALYST density (left) vs FOCUS density (right), same GameState, different disclosure](docs/screenshots/4p_mid_claim.png)
 
-**Graduation is earned, not forced.** `evaluateDensityGraduation` (pure function, unit-tested) advances a player FOCUS → GUIDED → ANALYST purely off `StatsLedger.games` and the same `DecisionGrade` competence read the career dossier already computes, faster if their accuracy/EV-bled numbers show real competence, never sideways or backward, and **never** overriding a manual choice from Settings. First-run funnel routing pins a brand-new player at FOCUS the moment they finish the tutorial (`KursiApp.kt`); everyone who played before the overhaul keeps ANALYST, since nothing forces an existing player back down a density they were already reading fine.
+**Graduation is earned, not forced.** `evaluateDensityGraduation` (pure function, unit-tested) advances a player FOCUS → GUIDED → ANALYST purely off `StatsLedger.games` and the same `DecisionGrade` competence read the career dossier already computes, faster if their accuracy/EV-bled numbers show real competence, never sideways or backward, and **never** overriding a manual choice from Settings. First-run funnel routing pins a brand-new player at FOCUS the moment they finish the tutorial (`GaddiApp.kt`); everyone who played before the overhaul keeps ANALYST, since nothing forces an existing player back down a density they were already reading fine.
 
 **Beat-gate pacing** ties into the same FOCUS/GUIDED path: instead of the event log scrolling past what just happened, the table holds on a meaningful beat and shows a tap-to-continue prompt (`BeatGatePrompt.kt`), tap, click, or Space on desktop, so a new player actually sees the reveal before the next claim buries it.
 
@@ -367,7 +367,7 @@ DARBAR's chat feed and the coach's odds are structured data. The **Munshi** (`ai
 
 1. **On-device**: auto-detected, zero setup for the player (Gemini Nano on Android, Apple FoundationModels on iOS 26 — see the on-device honesty note below).
 2. **BYOK cloud**: any provider (Anthropic/OpenAI/Gemini) the player has explicitly opted into with their own key, entered in a Settings-screen key editor (consent toggle + per-provider key storage/tester); a null key simply never enters the chain (`buildProviderChain`), so it's inert by default, not a hidden network call.
-3. **Templated floor**: the copy already used everywhere else in the game (`KursiVoice.recap`). The Munshi reports this tier back to its caller as an empty flow rather than synthetic text, so the templated line at the call site is always the truthful fallback, never a stand-in the narrator pretends to have written.
+3. **Templated floor**: the copy already used everywhere else in the game (`GaddiVoice.recap`). The Munshi reports this tier back to its caller as an empty flow rather than synthetic text, so the templated line at the call site is always the truthful fallback, never a stand-in the narrator pretends to have written.
 
 **Streaming and cancellation (spec §8.6):** `narrate()` returns `Flow<String>`, each emission the accumulated line so far, riding `AiProvider.completeStream`. Cancelling the collector — a fresh beat starting — tears down the in-flight generation itself, not just the wait for it, locked in by `narrate_cancellingTheCollector_stopsTheGenerationItself` (proven against a fake provider; not yet exercised against a real on-device or cloud backend). It never blocks a beat, since the templated line has already rendered synchronously by the time the Munshi is collected; it never sees hidden cards (inputs are already redacted/public-only), never mutates `GameState`, never gates a legal action, and is never persisted into the replay record, display-only, always regenerable.
 
@@ -513,7 +513,7 @@ Three more beats teach the mechanics FOCUS/GUIDED players would otherwise never 
 
 ![Tutorial, the KHELA/Coup teaching beat, unblockable and mandatory at 10 coins](docs/screenshots/tutorial_coup.png)
 
-Finishing the tutorial for the first time pins a brand-new player at **FOCUS** density (`KursiApp.kt`'s first-run funnel routing), the three-layer table above starts everyone at the calmest view, not the full instrument panel.
+Finishing the tutorial for the first time pins a brand-new player at **FOCUS** density (`GaddiApp.kt`'s first-run funnel routing), the three-layer table above starts everyone at the calmest view, not the full instrument panel.
 
 ---
 
@@ -535,7 +535,7 @@ Pull up mid-game without leaving the table. Three tabs: roles and their powers, 
 
 *The Niyam Gazette (roles / actions / arcs) → the reduced-motion static-frame gallery → Settings.*
 
-Every game moment (income, coin steal, role reveal, influence loss, elimination, coup, win) has a **tailored static end-frame** when reduced motion is on, not a generic fade. GHOTALA shows a held stamp. SUPARI shows the tipped chair. KHELA shows the KURSI crest. Okabe-Ito CVD-safe palette for all role colours. Full VoiceOver/TalkBack support with semantic properties and traversal order.
+Every game moment (income, coin steal, role reveal, influence loss, elimination, coup, win) has a **tailored static end-frame** when reduced motion is on, not a generic fade. GHOTALA shows a held stamp. SUPARI shows the tipped chair. KHELA shows the GADDI crest. Okabe-Ito CVD-safe palette for all role colours. Full VoiceOver/TalkBack support with semantic properties and traversal order.
 
 ---
 
@@ -587,7 +587,7 @@ Gaddi/
 ├── server/           # Ktor/Netty authoritative server
 ├── shared-protocol/  # Wire types (server ↔ client)
 ├── core/
-│   ├── designsystem/ # KursiTheme, RoleGlyph, all UI primitives
+│   ├── designsystem/ # GaddiTheme, RoleGlyph, all UI primitives
 │   ├── prefs/        # Career stats, gauntlet progress, resume snapshot, API key store
 │   └── network/      # Ktor WS client + LAN discovery
 ├── feature/game/     # GameScreen, GameViewModel, GameSession, DARBAR narrative engine

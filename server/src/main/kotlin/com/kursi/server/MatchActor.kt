@@ -16,7 +16,7 @@ import kotlinx.serialization.encodeToString
 private const val BOT_SEED_STRIDE = 37L
 
 /**
- * Hard ceiling on bot moves auto-driven in one `advanceAndBroadcast` run. A Kursi hand resolves in
+ * Hard ceiling on bot moves auto-driven in one `advanceAndBroadcast` run. A Gaddi hand resolves in
  * tens of moves, so this is a runaway guard, not a game rule: it only trips if the engine ever
  * stops handing the turn on.
  */
@@ -454,7 +454,7 @@ class MatchActor(
         msg: ServerMessage,
     ) {
         try {
-            val json = KursiJson.encodeToString(msg)
+            val json = GaddiJson.encodeToString(msg)
             session.send(Frame.Text(json))
         } catch (_: Exception) {
             // Session closed or errored — ignore; PlayerLeft will clean up

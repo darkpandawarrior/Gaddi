@@ -11,12 +11,12 @@ import java.io.File
 //
 // Needs an application Context (for the cache dir) — install it once from the app shell, mirroring
 // the sibling com.siddharth.kmp.feedback.FeedbackAndroid pattern:
-//     KursiSoundAndroid.install(applicationContext)
+//     GaddiSoundAndroid.install(applicationContext)
 // Sound is a silent no-op until installed.
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /** Install hook for the application Context; see file header. */
-object KursiSoundAndroid {
+object GaddiSoundAndroid {
     @Volatile
     internal var appContext: Context? = null
 
@@ -42,20 +42,20 @@ private class AndroidSoundPlayer : SoundPlayer {
                 ).build()
         }.getOrNull()
 
-    private val soundIds = mutableMapOf<KursiSound, Int>()
+    private val soundIds = mutableMapOf<GaddiSound, Int>()
 
-    /** False until [KursiSoundAndroid.install] has run (or if SoundPool would not build). */
+    /** False until [GaddiSoundAndroid.install] has run (or if SoundPool would not build). */
     override val isAvailable: Boolean
-        get() = pool != null && KursiSoundAndroid.appContext != null
+        get() = pool != null && GaddiSoundAndroid.appContext != null
 
-    override suspend fun play(sound: KursiSound) {
+    override suspend fun play(sound: GaddiSound) {
         val pool = pool ?: return
-        val ctx = KursiSoundAndroid.appContext ?: return
+        val ctx = GaddiSoundAndroid.appContext ?: return
         runCatching {
             var id = soundIds[sound]
             if (id == null) {
-                val bytes = loadKursiSoundBytes(sound) ?: return@runCatching
-                val tmp = File.createTempFile("kursi_${sound.name}", ".wav", ctx.cacheDir)
+                val bytes = loadGaddiSoundBytes(sound) ?: return@runCatching
+                val tmp = File.createTempFile("gaddi_${sound.name}", ".wav", ctx.cacheDir)
                 tmp.deleteOnExit()
                 tmp.writeBytes(bytes)
                 id = pool.load(tmp.absolutePath, 1)

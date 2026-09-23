@@ -17,7 +17,7 @@ dependencies {
     compileOnly(libs.android.gradlePlugin)
     // compose-gradlePlugin is compileOnly here: build-logic itself doesn't apply the Compose plugin — it is
     // applied directly by modules (e.g. :core:designsystem) via alias(libs.plugins.composeMultiplatform).
-    // We only need it in dependencies so that if we ever write a KursiKmpComposeConventionPlugin the class
+    // We only need it in dependencies so that if we ever write a GaddiKmpComposeConventionPlugin the class
     // is available at compile time. No ClassLoader conflict risk since no module also pulls it transitively.
     compileOnly(libs.compose.gradlePlugin)
 }
@@ -26,7 +26,7 @@ gradlePlugin {
     plugins {
         register("kmpPure") {
             id = "kursi.kmp.pure"
-            implementationClass = "KursiKmpPureConventionPlugin"
+            implementationClass = "GaddiKmpPureConventionPlugin"
         }
     }
 }

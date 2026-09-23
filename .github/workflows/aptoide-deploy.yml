@@ -62,9 +62,9 @@ jobs:
           set -euo pipefail
           mkdir -p secrets
           if [ -n "${KEYSTORE_B64:-}" ]; then
-            echo "$KEYSTORE_B64" | base64 -d > secrets/kursi-release.keystore
+            echo "$KEYSTORE_B64" | base64 -d > secrets/gaddi-release.keystore
             {
-              echo "RELEASE_STORE_FILE=$PWD/secrets/kursi-release.keystore"
+              echo "RELEASE_STORE_FILE=$PWD/secrets/gaddi-release.keystore"
               echo "RELEASE_STORE_PASSWORD=${KEYSTORE_PASSWORD:-}"
               echo "RELEASE_KEY_ALIAS=${KEY_ALIAS:-kursi}"
               echo "RELEASE_KEY_PASSWORD=${KEY_PASSWORD:-}"

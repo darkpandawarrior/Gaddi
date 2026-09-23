@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // ActionMomentOverlay.kt — the single overlay composable + FIFO queue host.
-// Design: kursi-plan/docs/15c_action_moments.md §1.2
+// Design: gaddi-plan/docs/15c_action_moments.md §1.2
 //
 // API usage (screen wiring):
 //
@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 //
 //     // Fire a moment anywhere in your presentation logic:
 //     LaunchedEffect(engineEvent) {
-//         host.play(KursiMoment.Tax(actorSeat = 0, roleHue = KursiRoleHues.Neta))
+//         host.play(GaddiMoment.Tax(actorSeat = 0, roleHue = GaddiRoleHues.Neta))
 //     }
 //
 // The overlay fills its parent Box but does NOT intercept input behind it
@@ -54,15 +54,15 @@ import androidx.compose.ui.unit.dp
  */
 @Stable
 class MomentHost {
-    internal val queue = mutableStateListOf<KursiMoment>()
+    internal val queue = mutableStateListOf<GaddiMoment>()
 
     /** Enqueue a moment. Thread-safe from the composition context. */
-    fun play(moment: KursiMoment) {
+    fun play(moment: GaddiMoment) {
         queue.add(moment)
     }
 
     /** Enqueue multiple moments in order (e.g. Reveal → InfluenceLoss chain). */
-    fun playAll(vararg moments: KursiMoment) {
+    fun playAll(vararg moments: GaddiMoment) {
         moments.forEach { queue.add(it) }
     }
 
@@ -84,7 +84,7 @@ class MomentHost {
  * ```kotlin
  * val host = rememberMomentHost()
  * // fire a moment:
- * host.play(KursiMoment.Income(actorSeat = 2))
+ * host.play(GaddiMoment.Income(actorSeat = 2))
  * ```
  */
 @Composable
@@ -97,19 +97,19 @@ fun rememberMomentHost(): MomentHost = remember { MomentHost() }
  * Most moments use a simple tween; heroes use a keyframes-like tween with
  * the same durationMs baked in from the sealed type.
  */
-private fun momentSpec(m: KursiMoment) = tween<Float>(durationMillis = m.durationMs, easing = androidx.compose.animation.core.LinearEasing)
+private fun momentSpec(m: GaddiMoment) = tween<Float>(durationMillis = m.durationMs, easing = androidx.compose.animation.core.LinearEasing)
 
 // ─────────────────────────── Static variant ──────────────────────────────────
 
 /**
  * Reduced-motion static variant (TENET 6): renders a TAILORED static end-frame per
- * moment — a held stamp, a JHOOTH/SACH verdict card, a tipped chair, a KURSI crest,
+ * moment — a held stamp, a JHOOTH/SACH verdict card, a tipped chair, a GADDI crest,
  * a coin-row, etc. (see [MomentStaticFrame]). A TickerSlip is also laid in the corner
  * as the permanent accessible record, so the slip floor is never lost.
  */
 @Composable
 private fun StaticMomentFrame(
-    moment: KursiMoment,
+    moment: GaddiMoment,
     anchors: TableAnchors,
 ) {
     // The characterful, beat-specific frozen frame.
@@ -131,39 +131,39 @@ private fun StaticMomentFrame(
 }
 
 /** Maps a moment to a ticker-slip glyph + effect label. */
-private fun momentToSlipContent(m: KursiMoment): Pair<String, String> =
+private fun momentToSlipContent(m: GaddiMoment): Pair<String, String> =
     when (m) {
-        is KursiMoment.Income -> "INC" to "+1"
-        is KursiMoment.ForeignAid -> "FDI" to "+2"
-        is KursiMoment.Tax -> "TAX" to "+3"
-        is KursiMoment.Steal -> "STL" to "steal 2"
-        is KursiMoment.Assassinate -> "SUP" to "supari"
-        is KursiMoment.Exchange -> "EXC" to "exchange"
-        is KursiMoment.Coup -> "KHL" to "KHELA!"
-        is KursiMoment.Block -> "BLK" to "blocked"
-        is KursiMoment.Challenge -> "CHK" to "challenge!"
-        is KursiMoment.Reveal -> "REV" to if (m.truthful) "SACH" else "JHOOTH"
-        is KursiMoment.InfluenceLoss -> "EXP" to "EXPOSED"
-        is KursiMoment.Elimination -> "OUT" to "KURSI GAYI"
-        is KursiMoment.TurnHandoff -> "→" to "seat ${m.nextSeat}"
-        is KursiMoment.Win -> "WIN" to "Kursi aapki!"
+        is GaddiMoment.Income -> "INC" to "+1"
+        is GaddiMoment.ForeignAid -> "FDI" to "+2"
+        is GaddiMoment.Tax -> "TAX" to "+3"
+        is GaddiMoment.Steal -> "STL" to "steal 2"
+        is GaddiMoment.Assassinate -> "SUP" to "supari"
+        is GaddiMoment.Exchange -> "EXC" to "exchange"
+        is GaddiMoment.Coup -> "KHL" to "KHELA!"
+        is GaddiMoment.Block -> "BLK" to "blocked"
+        is GaddiMoment.Challenge -> "CHK" to "challenge!"
+        is GaddiMoment.Reveal -> "REV" to if (m.truthful) "SACH" else "JHOOTH"
+        is GaddiMoment.InfluenceLoss -> "EXP" to "EXPOSED"
+        is GaddiMoment.Elimination -> "OUT" to "GADDI GAYI"
+        is GaddiMoment.TurnHandoff -> "→" to "seat ${m.nextSeat}"
+        is GaddiMoment.Win -> "WIN" to "Gaddi aapki!"
     }
 
 /** Returns the tint color for a moment's ticker slip and static variant. */
-private fun momentTint(m: KursiMoment): androidx.compose.ui.graphics.Color =
+private fun momentTint(m: GaddiMoment): androidx.compose.ui.graphics.Color =
     when (m) {
-        is KursiMoment.Tax -> m.roleHue
-        is KursiMoment.Steal -> m.roleHue
-        is KursiMoment.Assassinate -> m.roleHue
-        is KursiMoment.Exchange -> m.roleHue
-        is KursiMoment.Block -> m.roleHue
-        is KursiMoment.Reveal -> m.roleHue
-        is KursiMoment.InfluenceLoss -> m.roleHue
-        is KursiMoment.Coup,
-        is KursiMoment.Elimination,
-        is KursiMoment.Win,
+        is GaddiMoment.Tax -> m.roleHue
+        is GaddiMoment.Steal -> m.roleHue
+        is GaddiMoment.Assassinate -> m.roleHue
+        is GaddiMoment.Exchange -> m.roleHue
+        is GaddiMoment.Block -> m.roleHue
+        is GaddiMoment.Reveal -> m.roleHue
+        is GaddiMoment.InfluenceLoss -> m.roleHue
+        is GaddiMoment.Coup,
+        is GaddiMoment.Elimination,
+        is GaddiMoment.Win,
         -> com.kursi.designsystem.BrandTokens.GoldAntique
-        is KursiMoment.Challenge -> com.kursi.designsystem.BrandTokens.StampRed
+        is GaddiMoment.Challenge -> com.kursi.designsystem.BrandTokens.StampRed
         else -> com.kursi.designsystem.BrandTokens.BrassAged
     }
 
@@ -197,11 +197,11 @@ fun ActionMomentOverlay(
     reducedMotion: Boolean = false,
     soundEnabled: Boolean = false,
     soundPlayer: com.siddharth.kmp.feedback.SoundPlayer? = null,
-    onMomentDone: (KursiMoment) -> Unit = {},
+    onMomentDone: (GaddiMoment) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     // Peek at the head of the queue
-    val current: KursiMoment? = host.queue.firstOrNull()
+    val current: GaddiMoment? = host.queue.firstOrNull()
 
     current?.let { m ->
         // One Animatable progress 0→1 drives the WHOLE moment.
@@ -268,28 +268,28 @@ fun ActionMomentOverlay(
 
 /**
  * Dispatches to the correct beat composable for the given [m].
- * This is the when-on-type that maps KursiMoment variants to their beat composables.
+ * This is the when-on-type that maps GaddiMoment variants to their beat composables.
  */
 @Composable
 private fun MomentBeatContent(
-    m: KursiMoment,
+    m: GaddiMoment,
     progress: Float,
     anchors: TableAnchors,
 ) {
     when (m) {
-        is KursiMoment.Income -> IncomeBeat(m, progress, anchors)
-        is KursiMoment.ForeignAid -> ForeignAidBeat(m, progress, anchors)
-        is KursiMoment.Tax -> TaxBeat(m, progress, anchors)
-        is KursiMoment.Steal -> StealBeat(m, progress, anchors)
-        is KursiMoment.Assassinate -> AssassinateBeat(m, progress, anchors)
-        is KursiMoment.Exchange -> ExchangeBeat(m, progress, anchors)
-        is KursiMoment.Coup -> CoupBeat(m, progress, anchors)
-        is KursiMoment.Block -> BlockBeat(m, progress, anchors)
-        is KursiMoment.Challenge -> ChallengeBeat(m, progress, anchors)
-        is KursiMoment.Reveal -> RevealBeat(m, progress, anchors)
-        is KursiMoment.InfluenceLoss -> InfluenceLossBeat(m, progress, anchors)
-        is KursiMoment.Elimination -> EliminationBeat(m, progress, anchors)
-        is KursiMoment.TurnHandoff -> TurnHandoffBeat(m, progress, anchors)
-        is KursiMoment.Win -> WinBeat(m, progress, anchors)
+        is GaddiMoment.Income -> IncomeBeat(m, progress, anchors)
+        is GaddiMoment.ForeignAid -> ForeignAidBeat(m, progress, anchors)
+        is GaddiMoment.Tax -> TaxBeat(m, progress, anchors)
+        is GaddiMoment.Steal -> StealBeat(m, progress, anchors)
+        is GaddiMoment.Assassinate -> AssassinateBeat(m, progress, anchors)
+        is GaddiMoment.Exchange -> ExchangeBeat(m, progress, anchors)
+        is GaddiMoment.Coup -> CoupBeat(m, progress, anchors)
+        is GaddiMoment.Block -> BlockBeat(m, progress, anchors)
+        is GaddiMoment.Challenge -> ChallengeBeat(m, progress, anchors)
+        is GaddiMoment.Reveal -> RevealBeat(m, progress, anchors)
+        is GaddiMoment.InfluenceLoss -> InfluenceLossBeat(m, progress, anchors)
+        is GaddiMoment.Elimination -> EliminationBeat(m, progress, anchors)
+        is GaddiMoment.TurnHandoff -> TurnHandoffBeat(m, progress, anchors)
+        is GaddiMoment.Win -> WinBeat(m, progress, anchors)
     }
 }

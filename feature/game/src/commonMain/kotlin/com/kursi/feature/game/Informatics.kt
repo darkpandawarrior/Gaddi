@@ -1,7 +1,7 @@
 package com.kursi.feature.game
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// Informatics.kt — KURSI Help / Onboarding layer (Steps 5–7 of refine spec)
+// Informatics.kt — GADDI Help / Onboarding layer (Steps 5–7 of refine spec)
 //
 // Delivers:
 //   A. NiyamGazette — full-screen 4-tab rules reference (DARBAR/DHANDHA/DASTUR/HISAAB)
@@ -106,8 +106,8 @@ private fun BrassParchmentSurface(
         Column(
             modifier =
                 Modifier
-                    .decoPopoverPaper(KursiRadii.md)
-                    .padding(KursiDimens.space_md)
+                    .decoPopoverPaper(GaddiRadii.md)
+                    .padding(GaddiDimens.space_md)
                     // Reserve room so content never collides with the wax seal.
                     .padding(top = 6.dp, end = 10.dp),
             content = content,
@@ -130,7 +130,7 @@ private fun RoleSealDot(
     role: Role,
     size: androidx.compose.ui.unit.Dp = 12.dp,
 ) {
-    val color = KursiColors.forRole(role).color
+    val color = GaddiColors.forRole(role).color
     Box(
         modifier =
             Modifier
@@ -506,27 +506,27 @@ private fun CaretTriangle(
 
 @Composable
 private fun IdentityChitContent(c: ChitContent.Identity) {
-    val voice = LocalKursiVoice.current
-    val visual = KursiColors.forRole(c.role)
+    val voice = LocalGaddiVoice.current
+    val visual = GaddiColors.forRole(c.role)
     BrassParchmentSurface(modifier = Modifier.widthIn(max = 300.dp), sealMark = c.role.name.take(1)) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_sm)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm)) {
             RoleSealDot(c.role, 18.dp)
             Text(
                 text = "${c.role.name} · ${visual.title}",
-                style = KursiType.title_sm,
+                style = GaddiType.title_sm,
                 color = BrandTokens.CreamInk,
             )
         }
-        Spacer(Modifier.height(KursiDimens.space_sm))
+        Spacer(Modifier.height(GaddiDimens.space_sm))
         BrassDivider()
-        Spacer(Modifier.height(KursiDimens.space_sm))
+        Spacer(Modifier.height(GaddiDimens.space_sm))
         ChitLine(label = "Claims:", text = visual.actionLine)
         ChitLine(label = "Defends:", text = visual.blockLine)
         ChitLine(label = "Vulnerable to:", text = "A challenge — if you don't hold ${c.role.name}, you lose a card.")
-        Spacer(Modifier.height(KursiDimens.space_xs))
+        Spacer(Modifier.height(GaddiDimens.space_xs))
         Text(
             text = "\"${voice.roleTagline(c.role)}\"",
-            style = KursiType.label_sm.copy(fontStyle = FontStyle.Italic),
+            style = GaddiType.label_sm.copy(fontStyle = FontStyle.Italic),
             color = BrandTokens.BrassDark,
         )
     }
@@ -534,7 +534,7 @@ private fun IdentityChitContent(c: ChitContent.Identity) {
 
 @Composable
 private fun RiskChitContent(c: ChitContent.RiskAction) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val action = c.action
     val claimedRole = Rules.claimedRole(action)
     val challengeable = Rules.isChallengeable(action)
@@ -543,12 +543,12 @@ private fun RiskChitContent(c: ChitContent.RiskAction) {
     BrassParchmentSurface(modifier = Modifier.widthIn(max = 320.dp)) {
         Text(
             text = "${actionHindiName(action)} · ${actionCostSummary(action)}",
-            style = KursiType.title_sm,
+            style = GaddiType.title_sm,
             color = BrandTokens.CreamInk,
         )
-        Spacer(Modifier.height(KursiDimens.space_sm))
+        Spacer(Modifier.height(GaddiDimens.space_sm))
         BrassDivider()
-        Spacer(Modifier.height(KursiDimens.space_sm))
+        Spacer(Modifier.height(GaddiDimens.space_sm))
 
         if (claimedRole != null) {
             ChitLine(label = "Claims:", text = "You're declaring you hold ${claimedRole.name}.")
@@ -573,16 +573,16 @@ private fun RiskChitContent(c: ChitContent.RiskAction) {
         // Live bluff odds
         val conf = c.bluffConf
         if (conf != null) {
-            Spacer(Modifier.height(KursiDimens.space_xs))
+            Spacer(Modifier.height(GaddiDimens.space_xs))
             BrassDivider()
-            Spacer(Modifier.height(KursiDimens.space_xs))
+            Spacer(Modifier.height(GaddiDimens.space_xs))
             OddsChip(conf = conf, compact = false)
         }
 
-        Spacer(Modifier.height(KursiDimens.space_xs))
+        Spacer(Modifier.height(GaddiDimens.space_xs))
         Text(
             text = voice.actionBark(action),
-            style = KursiType.label_sm.copy(fontStyle = FontStyle.Italic),
+            style = GaddiType.label_sm.copy(fontStyle = FontStyle.Italic),
             color = BrandTokens.BrassDark,
         )
     }
@@ -592,10 +592,10 @@ private fun RiskChitContent(c: ChitContent.RiskAction) {
 private fun DossierChitContent(c: ChitContent.Dossier) {
     BrassParchmentSurface(modifier = Modifier.widthIn(max = 340.dp)) {
         // ── Header: name + a one-line headline READ (lead with intel) ──────────
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs)) {
             Text(
                 text = c.opponentName,
-                style = KursiType.title_sm,
+                style = GaddiType.title_sm,
                 color = BrandTokens.CreamInk,
                 modifier = Modifier.weight(1f),
             )
@@ -608,11 +608,11 @@ private fun DossierChitContent(c: ChitContent.Dossier) {
 
         val intel = c.intel
         if (intel != null) {
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
             // ── THE READ: posterior bar over likely roles ──────────────────────
             Text(
                 text = "LIKELY HOLDING",
-                style = KursiType.label_micro.copy(letterSpacing = 1.sp),
+                style = GaddiType.label_micro.copy(letterSpacing = 1.sp),
                 color = BrandTokens.BrassDark,
             )
             Spacer(Modifier.height(2.dp))
@@ -621,35 +621,35 @@ private fun DossierChitContent(c: ChitContent.Dossier) {
                 Spacer(Modifier.height(2.dp))
                 Text(
                     text = "Most likely ${intel.topRole.name} (~${(intel.topRoleProb * 100).toInt()}%)",
-                    style = KursiType.label_micro,
+                    style = GaddiType.label_micro,
                     color = BrandTokens.BrassDark,
                 )
             }
 
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
             BrassDivider()
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
 
             // ── Claim record: per-role claim counts + bluff-caught ─────────────
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs)) {
                 Text(
                     text = "CLAIM RECORD",
-                    style = KursiType.label_micro.copy(letterSpacing = 1.sp),
+                    style = GaddiType.label_micro.copy(letterSpacing = 1.sp),
                     color = BrandTokens.BrassDark,
                     modifier = Modifier.weight(1f),
                 )
                 // bluff-rate inferred read
                 Text(
                     text = "bluffs ${(intel.bluffRate * 100).toInt()}% of the time",
-                    style = KursiType.label_micro.copy(fontStyle = FontStyle.Italic),
-                    color = if (intel.bluffPips >= 4) KursiSemantics.Danger else BrandTokens.BrassDark,
+                    style = GaddiType.label_micro.copy(fontStyle = FontStyle.Italic),
+                    color = if (intel.bluffPips >= 4) GaddiSemantics.Danger else BrandTokens.BrassDark,
                 )
             }
             Spacer(Modifier.height(2.dp))
             if (intel.claimRows.isEmpty()) {
                 Text(
                     text = "No claims on record yet — a blank slate.",
-                    style = KursiType.label_sm.copy(fontStyle = FontStyle.Italic),
+                    style = GaddiType.label_sm.copy(fontStyle = FontStyle.Italic),
                     color = BrandTokens.BrassDark,
                 )
             } else {
@@ -660,16 +660,16 @@ private fun DossierChitContent(c: ChitContent.Dossier) {
                     Spacer(Modifier.height(2.dp))
                     Text(
                         text = "Caught bluffing ${intel.bluffsCaught}× across ${intel.totalClaims} claims.",
-                        style = KursiType.label_micro,
-                        color = KursiSemantics.Danger,
+                        style = GaddiType.label_micro,
+                        color = GaddiSemantics.Danger,
                     )
                 }
             }
         }
 
-        Spacer(Modifier.height(KursiDimens.space_sm))
+        Spacer(Modifier.height(GaddiDimens.space_sm))
         BrassDivider()
-        Spacer(Modifier.height(KursiDimens.space_sm))
+        Spacer(Modifier.height(GaddiDimens.space_sm))
 
         // Cards / influence
         val cardsText =
@@ -701,36 +701,36 @@ private fun DossierChitContent(c: ChitContent.Dossier) {
 
         // ── Persona flavour — kept, but now a closing garnish under the read ──
         if (c.personaDossierLine.isNotEmpty()) {
-            Spacer(Modifier.height(KursiDimens.space_xs))
+            Spacer(Modifier.height(GaddiDimens.space_xs))
             Text(
                 text = "\"${c.personaDossierLine}\"",
-                style = KursiType.label_micro.copy(fontStyle = FontStyle.Italic),
+                style = GaddiType.label_micro.copy(fontStyle = FontStyle.Italic),
                 color = BrandTokens.BrassDark.copy(alpha = 0.9f),
             )
         }
         if (c.personaRivalryLine.isNotEmpty()) {
             Text(
                 text = c.personaRivalryLine,
-                style = KursiType.label_micro.copy(fontStyle = FontStyle.Italic),
+                style = GaddiType.label_micro.copy(fontStyle = FontStyle.Italic),
                 color = BrandTokens.BrassDark.copy(alpha = 0.75f),
             )
         }
 
         // Legal moves against this opponent
         if (c.legalMovesAgainst.isNotEmpty()) {
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
             BrassDivider()
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
             Text(
                 text = "WHAT YOU CAN DO",
-                style = KursiType.label_sm.copy(letterSpacing = 1.sp),
+                style = GaddiType.label_sm.copy(letterSpacing = 1.sp),
                 color = BrandTokens.BrassDark,
             )
             c.legalMovesAgainst.forEach { move ->
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 1.dp)) {
                     Box(Modifier.size(4.dp).clip(CircleShape).background(BrandTokens.BrassAged))
-                    Spacer(Modifier.width(KursiDimens.space_xs))
-                    Text(text = move, style = KursiType.label_sm, color = BrandTokens.CreamInk)
+                    Spacer(Modifier.width(GaddiDimens.space_xs))
+                    Text(text = move, style = GaddiType.label_sm, color = BrandTokens.CreamInk)
                 }
             }
         }
@@ -750,13 +750,13 @@ private fun PosteriorBar(posterior: List<Pair<Role, Double>>) {
             Modifier
                 .fillMaxWidth()
                 .height(20.dp)
-                .clip(Squircle(KursiRadii.sm))
-                .border(KursiDimens.stroke_hairline, BrandTokens.BrassDark.copy(alpha = 0.5f), Squircle(KursiRadii.sm)),
+                .clip(Squircle(GaddiRadii.sm))
+                .border(GaddiDimens.stroke_hairline, BrandTokens.BrassDark.copy(alpha = 0.5f), Squircle(GaddiRadii.sm)),
     ) {
         posterior.forEach { (role, p) ->
             val frac = (p / total).toFloat()
             if (frac <= 0.001f) return@forEach
-            val hue = KursiColors.forRole(role).color
+            val hue = GaddiColors.forRole(role).color
             Box(
                 modifier =
                     Modifier
@@ -771,7 +771,7 @@ private fun PosteriorBar(posterior: List<Pair<Role, Double>>) {
                 if (frac >= 0.18f) {
                     Text(
                         text = "${role.name.take(4)} ${(p * 100).toInt()}",
-                        style = KursiType.label_micro.copy(fontSize = 9.5.sp),
+                        style = GaddiType.label_micro.copy(fontSize = 9.5.sp),
                         color = BrandTokens.CreamInk,
                         maxLines = 1,
                         softWrap = false,
@@ -792,18 +792,18 @@ private fun ClaimRecordRow(
     Row(
         modifier = Modifier.fillMaxWidth().padding(vertical = 1.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs),
+        horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs),
     ) {
         RoleSealDot(role, 10.dp)
         Text(
             text = role.name,
-            style = KursiType.label_sm,
+            style = GaddiType.label_sm,
             color = BrandTokens.CreamInk,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = "claimed ×$claims",
-            style = KursiType.label_micro,
+            style = GaddiType.label_micro,
             color = BrandTokens.BrassDark,
         )
         if (caught > 0) {
@@ -811,15 +811,15 @@ private fun ClaimRecordRow(
             Box(
                 modifier =
                     Modifier
-                        .clip(Squircle(KursiRadii.sm))
-                        .background(KursiSemantics.Danger.copy(alpha = 0.18f))
-                        .border(KursiDimens.stroke_hairline, KursiSemantics.Danger.copy(alpha = 0.7f), Squircle(KursiRadii.sm))
+                        .clip(Squircle(GaddiRadii.sm))
+                        .background(GaddiSemantics.Danger.copy(alpha = 0.18f))
+                        .border(GaddiDimens.stroke_hairline, GaddiSemantics.Danger.copy(alpha = 0.7f), Squircle(GaddiRadii.sm))
                         .padding(horizontal = 4.dp, vertical = 1.dp),
             ) {
                 Text(
                     text = "✗ caught ×$caught",
-                    style = KursiType.label_micro,
-                    color = KursiSemantics.Danger,
+                    style = GaddiType.label_micro,
+                    color = GaddiSemantics.Danger,
                     maxLines = 1,
                     softWrap = false,
                 )
@@ -837,17 +837,17 @@ private fun ShadyMeter(
     val clamped = pips.coerceIn(1, 5)
     val pipColor =
         when (clamped) {
-            1, 2 -> KursiSemantics.Success
+            1, 2 -> GaddiSemantics.Success
             3 -> BrandTokens.PendingAmber
-            else -> KursiSemantics.Danger
+            else -> GaddiSemantics.Danger
         }
     Row(
         modifier =
             Modifier
-                .clip(Squircle(KursiRadii.sm))
+                .clip(Squircle(GaddiRadii.sm))
                 .background(BrandTokens.TeakDark.copy(alpha = 0.92f))
-                .border(KursiDimens.stroke_hairline, pipColor.copy(alpha = 0.6f), Squircle(KursiRadii.sm))
-                .padding(horizontal = KursiDimens.space_xs, vertical = 2.dp),
+                .border(GaddiDimens.stroke_hairline, pipColor.copy(alpha = 0.6f), Squircle(GaddiRadii.sm))
+                .padding(horizontal = GaddiDimens.space_xs, vertical = 2.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(3.dp),
     ) {
@@ -857,13 +857,13 @@ private fun ShadyMeter(
                     Modifier
                         .size(5.dp)
                         .clip(CircleShape)
-                        .background(if (idx < clamped) pipColor else KursiNeutrals.TextDisabled),
+                        .background(if (idx < clamped) pipColor else GaddiNeutrals.TextDisabled),
             )
         }
         Spacer(Modifier.width(2.dp))
         Text(
             text = label,
-            style = KursiType.label_micro,
+            style = GaddiType.label_micro,
             color = pipColor,
             maxLines = 1,
             softWrap = false,
@@ -873,46 +873,46 @@ private fun ShadyMeter(
 
 @Composable
 private fun ClaimDetailChitContent(c: ChitContent.ClaimDetail) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     BrassParchmentSurface(modifier = Modifier.widthIn(max = 320.dp)) {
         if (c.claimedRole != null) {
-            val visual = KursiColors.forRole(c.claimedRole)
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_sm)) {
+            val visual = GaddiColors.forRole(c.claimedRole)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm)) {
                 RoleSealDot(c.claimedRole, 18.dp)
                 Text(
                     text = voice.claimDetailTitle(c.actorName ?: "Someone", c.claimedRole.name),
-                    style = KursiType.title_sm,
+                    style = GaddiType.title_sm,
                     color = BrandTokens.CreamInk,
                 )
             }
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
             BrassDivider()
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
             ChitLine(label = "On the table:", text = visual.actionLine)
             ChitLine(label = "If it holds:", text = "The claim stands and the action resolves.")
             ChitLine(label = "If challenged:", text = "They must prove ${c.claimedRole.name} — or lose a card.")
-            Spacer(Modifier.height(KursiDimens.space_xs))
+            Spacer(Modifier.height(GaddiDimens.space_xs))
             Text(
                 text = "\"${voice.claimDetailWhisper(c.claimedRole)}\"",
-                style = KursiType.label_sm.copy(fontStyle = FontStyle.Italic),
+                style = GaddiType.label_sm.copy(fontStyle = FontStyle.Italic),
                 color = BrandTokens.BrassDark,
             )
         } else {
             Text(
                 text = voice.tableHeartTitle,
-                style = KursiType.title_sm,
+                style = GaddiType.title_sm,
                 color = BrandTokens.CreamInk,
             )
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
             BrassDivider()
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
             ChitLine(label = "Turn:", text = c.turnNumber.toString())
             ChitLine(label = "Deck:", text = "${c.deckCount} cards left to draw.")
             ChitLine(label = "Treasury:", text = "${c.treasuryCoins} Khokhas in the till.")
-            Spacer(Modifier.height(KursiDimens.space_xs))
+            Spacer(Modifier.height(GaddiDimens.space_xs))
             Text(
                 text = "\"${voice.tableHeartWhisper}\"",
-                style = KursiType.label_sm.copy(fontStyle = FontStyle.Italic),
+                style = GaddiType.label_sm.copy(fontStyle = FontStyle.Italic),
                 color = BrandTokens.BrassDark,
             )
         }
@@ -922,20 +922,20 @@ private fun ClaimDetailChitContent(c: ChitContent.ClaimDetail) {
 @Composable
 private fun LogEventChitContent(c: ChitContent.LogEvent) {
     BrassParchmentSurface(modifier = Modifier.widthIn(max = 320.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_sm)) {
-            Text(text = c.icon, style = KursiType.title_sm)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm)) {
+            Text(text = c.icon, style = GaddiType.title_sm)
             Text(
                 text = c.title,
-                style = KursiType.title_sm,
+                style = GaddiType.title_sm,
                 color = BrandTokens.CreamInk,
             )
         }
-        Spacer(Modifier.height(KursiDimens.space_sm))
+        Spacer(Modifier.height(GaddiDimens.space_sm))
         BrassDivider()
-        Spacer(Modifier.height(KursiDimens.space_sm))
+        Spacer(Modifier.height(GaddiDimens.space_sm))
         Text(
             text = c.narration,
-            style = KursiType.label_sm.copy(fontStyle = FontStyle.Italic),
+            style = GaddiType.label_sm.copy(fontStyle = FontStyle.Italic),
             color = BrandTokens.BrassDark,
         )
     }
@@ -948,15 +948,15 @@ private fun ChitLine(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
-        horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs),
+        horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs),
     ) {
         Text(
             text = label,
-            style = KursiType.label_sm.copy(fontStyle = FontStyle.Normal),
+            style = GaddiType.label_sm.copy(fontStyle = FontStyle.Normal),
             color = BrandTokens.BrassDark,
             modifier = Modifier.widthIn(min = 72.dp),
         )
-        Text(text = text, style = KursiType.label_sm, color = BrandTokens.CreamInk, modifier = Modifier.weight(1f))
+        Text(text = text, style = GaddiType.label_sm, color = BrandTokens.CreamInk, modifier = Modifier.weight(1f))
     }
 }
 
@@ -965,15 +965,15 @@ private fun RiskLine(
     positive: Boolean,
     text: String,
 ) {
-    val color = if (positive) KursiSemantics.Success else KursiSemantics.Danger
+    val color = if (positive) GaddiSemantics.Success else GaddiSemantics.Danger
     val prefix = if (positive) "✓" else "✗"
     Row(
         modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
-        horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs),
+        horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs),
         verticalAlignment = Alignment.Top,
     ) {
-        Text(text = prefix, style = KursiType.label_sm, color = color)
-        Text(text = text, style = KursiType.label_sm, color = BrandTokens.CreamInk, modifier = Modifier.weight(1f))
+        Text(text = prefix, style = GaddiType.label_sm, color = color)
+        Text(text = text, style = GaddiType.label_sm, color = BrandTokens.CreamInk, modifier = Modifier.weight(1f))
     }
 }
 
@@ -986,19 +986,19 @@ fun OddsChip(
 ) {
     val pipColor =
         when (conf.pips) {
-            1, 2 -> KursiSemantics.Success
+            1, 2 -> GaddiSemantics.Success
             3 -> BrandTokens.PendingAmber
-            else -> KursiSemantics.Danger
+            else -> GaddiSemantics.Danger
         }
     Row(
         modifier =
             Modifier
-                .clip(Squircle(KursiRadii.sm))
+                .clip(Squircle(GaddiRadii.sm))
                 .background(BrandTokens.TeakDark.copy(alpha = 0.90f))
-                .border(KursiDimens.stroke_hairline, BrandTokens.BrassAged.copy(alpha = 0.5f), Squircle(KursiRadii.sm))
-                .padding(horizontal = KursiDimens.space_sm, vertical = KursiDimens.space_xs),
+                .border(GaddiDimens.stroke_hairline, BrandTokens.BrassAged.copy(alpha = 0.5f), Squircle(GaddiRadii.sm))
+                .padding(horizontal = GaddiDimens.space_sm, vertical = GaddiDimens.space_xs),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs),
+        horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs),
     ) {
         // Pip row
         repeat(5) { idx ->
@@ -1007,21 +1007,21 @@ fun OddsChip(
                     Modifier
                         .size(6.dp)
                         .clip(CircleShape)
-                        .background(if (idx < conf.pips) pipColor else KursiNeutrals.TextDisabled),
+                        .background(if (idx < conf.pips) pipColor else GaddiNeutrals.TextDisabled),
             )
         }
         Spacer(Modifier.width(2.dp))
         if (compact) {
             Text(
                 text = conf.label,
-                style = KursiType.label_micro,
-                color = KursiNeutrals.TextSecondary,
+                style = GaddiType.label_micro,
+                color = GaddiNeutrals.TextSecondary,
                 maxLines = 1,
             )
         } else {
             Column {
-                Text(text = conf.label, style = KursiType.label_sm, color = KursiNeutrals.TextPrimary)
-                Text(text = conf.whisper, style = KursiType.label_micro, color = KursiNeutrals.TextSecondary)
+                Text(text = conf.label, style = GaddiType.label_sm, color = GaddiNeutrals.TextPrimary)
+                Text(text = conf.whisper, style = GaddiType.label_micro, color = GaddiNeutrals.TextSecondary)
             }
         }
     }
@@ -1057,7 +1057,7 @@ internal fun coachTone(
 /** Accent colour for a coach tone, used for chip tints + badge fills. */
 internal fun coachAccent(tone: CoachTone): Color =
     when (tone) {
-        CoachTone.Truthful -> KursiSemantics.Success
+        CoachTone.Truthful -> GaddiSemantics.Success
         CoachTone.Bluff -> CoachOxblood
         CoachTone.Neutral -> BrandTokens.BrassAged
     }
@@ -1098,17 +1098,17 @@ internal fun CoachBadge(
     Row(
         modifier =
             modifier
-                .clip(Squircle(KursiRadii.sm))
+                .clip(Squircle(GaddiRadii.sm))
                 .background(accent.copy(alpha = 0.18f))
-                .border(KursiDimens.stroke_hairline, accent.copy(alpha = 0.75f), Squircle(KursiRadii.sm))
+                .border(GaddiDimens.stroke_hairline, accent.copy(alpha = 0.75f), Squircle(GaddiRadii.sm))
                 .padding(horizontal = 5.dp, vertical = 1.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(3.dp),
     ) {
-        Text(text = icon, style = KursiType.label_micro, color = accent, maxLines = 1)
+        Text(text = icon, style = GaddiType.label_micro, color = accent, maxLines = 1)
         Text(
             text = text,
-            style = KursiType.label_micro.copy(letterSpacing = 0.5.sp),
+            style = GaddiType.label_micro.copy(letterSpacing = 0.5.sp),
             color = accent,
             maxLines = 1,
             softWrap = false,
@@ -1129,22 +1129,22 @@ internal fun CoachOddsPill(
     val mid = pct in 40..54
     val tint =
         when {
-            good -> KursiSemantics.Success
+            good -> GaddiSemantics.Success
             mid -> CoachAmber
             else -> CoachOxblood
         }
     Row(
         modifier =
             modifier
-                .clip(Squircle(KursiRadii.sm))
+                .clip(Squircle(GaddiRadii.sm))
                 .background(BrandTokens.TeakDark.copy(alpha = 0.92f))
-                .border(KursiDimens.stroke_hairline, tint.copy(alpha = 0.6f), Squircle(KursiRadii.sm))
+                .border(GaddiDimens.stroke_hairline, tint.copy(alpha = 0.6f), Squircle(GaddiRadii.sm))
                 .padding(horizontal = 5.dp, vertical = 1.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = coachOddsText(isChallenge, successOdds),
-            style = KursiType.label_micro,
+            style = GaddiType.label_micro,
             color = tint,
             maxLines = 1,
             softWrap = false,
@@ -1164,12 +1164,12 @@ internal fun RecommendedStar(modifier: Modifier = Modifier) {
                     Brush.radialGradient(
                         listOf(BrandTokens.GoldAntique, BrandTokens.BrassAged),
                     ),
-                ).border(KursiDimens.stroke_hairline, BrandTokens.GoldAntique, CircleShape),
+                ).border(GaddiDimens.stroke_hairline, BrandTokens.GoldAntique, CircleShape),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "★",
-            style = KursiType.label_micro.copy(fontSize = 9.sp),
+            style = GaddiType.label_micro.copy(fontSize = 9.sp),
             color = BrandTokens.CreamInk,
             maxLines = 1,
         )
@@ -1186,13 +1186,13 @@ private fun CoachChitContent(c: ChitContent.Coach) {
     val accent = coachAccent(tone)
     val isChallenge = c.successOdds != null && c.truthful == null && !c.bluff
     BrassParchmentSurface(modifier = Modifier.widthIn(max = 320.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_sm)) {
-            Text(text = c.moveLabel, style = KursiType.title_sm, color = BrandTokens.CreamInk, modifier = Modifier.weight(1f))
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm)) {
+            Text(text = c.moveLabel, style = GaddiType.title_sm, color = BrandTokens.CreamInk, modifier = Modifier.weight(1f))
             if (c.recommended) RecommendedStar()
         }
-        Spacer(Modifier.height(KursiDimens.space_sm))
+        Spacer(Modifier.height(GaddiDimens.space_sm))
         BrassDivider()
-        Spacer(Modifier.height(KursiDimens.space_sm))
+        Spacer(Modifier.height(GaddiDimens.space_sm))
 
         // Verdict line — the safety read.
         when (tone) {
@@ -1211,21 +1211,21 @@ private fun CoachChitContent(c: ChitContent.Coach) {
 
         // The READ — a belief-grounded line the coach leads with (card-accounting, not just a bare %).
         if (c.beliefLine != null) {
-            Spacer(Modifier.height(KursiDimens.space_xs))
+            Spacer(Modifier.height(GaddiDimens.space_xs))
             Box(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .clip(Squircle(KursiRadii.sm))
+                        .clip(Squircle(GaddiRadii.sm))
                         .background(BrandTokens.GoldAntique.copy(alpha = 0.16f))
-                        .border(KursiDimens.stroke_hairline, BrandTokens.GoldAntique.copy(alpha = 0.5f), Squircle(KursiRadii.sm))
-                        .padding(horizontal = KursiDimens.space_sm, vertical = KursiDimens.space_xs),
+                        .border(GaddiDimens.stroke_hairline, BrandTokens.GoldAntique.copy(alpha = 0.5f), Squircle(GaddiRadii.sm))
+                        .padding(horizontal = GaddiDimens.space_sm, vertical = GaddiDimens.space_xs),
             ) {
                 Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(text = "🔎", style = KursiType.label_sm)
+                    Text(text = "🔎", style = GaddiType.label_sm)
                     Text(
                         text = c.beliefLine,
-                        style = KursiType.label_sm,
+                        style = GaddiType.label_sm,
                         color = BrandTokens.CreamInk,
                     )
                 }
@@ -1233,23 +1233,23 @@ private fun CoachChitContent(c: ChitContent.Coach) {
         }
 
         if (c.recommended) {
-            Spacer(Modifier.height(KursiDimens.space_xs))
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs)) {
+            Spacer(Modifier.height(GaddiDimens.space_xs))
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs)) {
                 RecommendedStar()
                 Text(
                     text = "The advisor's pick.",
-                    style = KursiType.label_sm.copy(letterSpacing = 0.5.sp),
+                    style = GaddiType.label_sm.copy(letterSpacing = 0.5.sp),
                     color = BrandTokens.BrassDark,
                 )
             }
         }
 
-        Spacer(Modifier.height(KursiDimens.space_xs))
+        Spacer(Modifier.height(GaddiDimens.space_xs))
         BrassDivider()
-        Spacer(Modifier.height(KursiDimens.space_xs))
+        Spacer(Modifier.height(GaddiDimens.space_xs))
         Text(
             text = "\"${c.rationale}\"",
-            style = KursiType.label_sm.copy(fontStyle = FontStyle.Italic),
+            style = GaddiType.label_sm.copy(fontStyle = FontStyle.Italic),
             color = accent,
         )
     }
@@ -1266,25 +1266,25 @@ private fun CoachChitContent(c: ChitContent.Coach) {
  */
 @Composable
 private fun PlayBestMoveChip(onClick: () -> Unit) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     Box(
         modifier =
             Modifier
                 .height(24.dp)
                 .widthIn(min = 72.dp)
-                .clip(Squircle(KursiDimens.r_sm))
+                .clip(Squircle(GaddiDimens.r_sm))
                 .background(BrandTokens.GoldAntique.copy(alpha = 0.20f))
-                .border(KursiDimens.stroke_hairline, BrandTokens.GoldAntique, Squircle(KursiDimens.r_sm))
+                .border(GaddiDimens.stroke_hairline, BrandTokens.GoldAntique, Squircle(GaddiDimens.r_sm))
                 .semantics(mergeDescendants = true) {
                     role = androidx.compose.ui.semantics.Role.Button
                     contentDescription = voice.playBestMove
                 }.clickable(onClick = onClick)
-                .padding(horizontal = KursiDimens.space_sm, vertical = 2.dp),
+                .padding(horizontal = GaddiDimens.space_sm, vertical = 2.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "★ ${voice.playBestMove}",
-            style = KursiType.label_micro.copy(letterSpacing = 0.8.sp),
+            style = GaddiType.label_micro.copy(letterSpacing = 0.8.sp),
             color = BrandTokens.GoldAntique,
             maxLines = 1,
         )
@@ -1305,9 +1305,9 @@ private fun CoachToggleChip(
             Modifier
                 .height(24.dp)
                 .widthIn(min = 72.dp)
-                .clip(Squircle(KursiDimens.r_sm))
+                .clip(Squircle(GaddiDimens.r_sm))
                 .background(bgColor)
-                .border(KursiDimens.stroke_hairline, accentColor, Squircle(KursiDimens.r_sm))
+                .border(GaddiDimens.stroke_hairline, accentColor, Squircle(GaddiDimens.r_sm))
                 // A11y: a toggle — role Switch, on/off state spoken, single merged node.
                 .semantics(mergeDescendants = true) {
                     role = androidx.compose.ui.semantics.Role.Switch
@@ -1315,12 +1315,12 @@ private fun CoachToggleChip(
                     stateDescription = if (coachEnabled) "On" else "Off"
                     contentDescription = toggleDesc
                 }.clickable(onClick = onToggle)
-                .padding(horizontal = KursiDimens.space_sm, vertical = 2.dp),
+                .padding(horizontal = GaddiDimens.space_sm, vertical = 2.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = label,
-            style = KursiType.label_micro.copy(letterSpacing = 0.8.sp),
+            style = GaddiType.label_micro.copy(letterSpacing = 0.8.sp),
             color = accentColor,
             maxLines = 1,
         )
@@ -1338,7 +1338,7 @@ fun HintRail(
     // decision. Null in the render harness / when not wired.
     onPlayBestMove: (() -> Unit)? = null,
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val (hintText, hintTone) = deriveHintText(gamePhase, state, voice)
 
     // Derive bluff odds if in a reaction window with a claimed role
@@ -1368,7 +1368,7 @@ fun HintRail(
 
     val borderColor =
         when (hintTone) {
-            HintTone.Warning -> KursiSemantics.Danger
+            HintTone.Warning -> GaddiSemantics.Danger
             HintTone.Gold -> BrandTokens.GoldAntique
             else -> BrandTokens.BrassAged
         }
@@ -1378,27 +1378,27 @@ fun HintRail(
             modifier
                 .fillMaxWidth()
                 .height(32.dp)
-                .clip(Squircle(KursiRadii.sm))
+                .clip(Squircle(GaddiRadii.sm))
                 .background(BrandTokens.TeakDark.copy(alpha = 0.92f))
                 .border(
-                    KursiDimens.stroke_hairline,
+                    GaddiDimens.stroke_hairline,
                     Brush.horizontalGradient(
                         listOf(borderColor.copy(alpha = 0.6f), borderColor.copy(alpha = 0.4f), borderColor.copy(alpha = 0.6f)),
                     ),
-                    Squircle(KursiRadii.sm),
-                ).padding(horizontal = KursiDimens.space_sm),
+                    Squircle(GaddiRadii.sm),
+                ).padding(horizontal = GaddiDimens.space_sm),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_sm),
+        horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm),
     ) {
         // Hint text
         Text(
             text = hintText,
-            style = KursiType.label_micro,
+            style = GaddiType.label_micro,
             color =
                 when (hintTone) {
-                    HintTone.Warning -> KursiSemantics.Danger
+                    HintTone.Warning -> GaddiSemantics.Danger
                     HintTone.Gold -> BrandTokens.GoldAntique
-                    else -> KursiNeutrals.TextSecondary
+                    else -> GaddiNeutrals.TextSecondary
                 },
             modifier = Modifier.weight(1f),
             maxLines = 1,
@@ -1430,7 +1430,7 @@ private enum class HintTone { Normal, Gold, Warning }
 private fun deriveHintText(
     gamePhase: GamePhase,
     state: GameUiState,
-    voice: KursiVoice,
+    voice: GaddiVoice,
 ): Pair<String, HintTone> =
     when (gamePhase) {
         is GamePhase.PickAction -> {
@@ -1499,10 +1499,10 @@ fun NiyamButton(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Text(text = "?", style = KursiType.label_md, color = BrandTokens.TeakDark, textAlign = TextAlign.Center)
+        Text(text = "?", style = GaddiType.label_md, color = BrandTokens.TeakDark, textAlign = TextAlign.Center)
         Text(
             text = stringResource(Res.string.game_niyam_label),
-            style = KursiType.label_micro.copy(letterSpacing = 0.5.sp),
+            style = GaddiType.label_micro.copy(letterSpacing = 0.5.sp),
             color = BrandTokens.TeakDark.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
             maxLines = 1,
@@ -1542,7 +1542,7 @@ fun NiyamGazette(
             // sweep-gradient-border card is gone. The gazette now sits on the same warm lit
             // ground every screen shares, lifted off the scrim by a real cast shadow — no
             // outline framing the document. Stops click propagation to the scrim.
-            val cardShape = Squircle(KursiRadii.xl)
+            val cardShape = Squircle(GaddiRadii.xl)
             Column(
                 modifier =
                     Modifier
@@ -1583,21 +1583,21 @@ private fun GazetteContent(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = KursiDimens.space_lg, vertical = KursiDimens.space_md),
+                    .padding(horizontal = GaddiDimens.space_lg, vertical = GaddiDimens.space_md),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top,
         ) {
             Column {
                 Text(
                     text = stringResource(Res.string.game_gazette_title),
-                    style = KursiType.display.copy(letterSpacing = 1.sp).rozha(),
+                    style = GaddiType.display.copy(letterSpacing = 1.sp).rozha(),
                     color = BrandTokens.GoldAntique,
                 )
                 Spacer(Modifier.height(2.dp))
                 Text(
                     text = stringResource(Res.string.game_gazette_subtitle),
-                    style = KursiType.label_micro.copy(fontStyle = FontStyle.Italic),
-                    color = KursiNeutrals.TextMuted,
+                    style = GaddiType.label_micro.copy(fontStyle = FontStyle.Italic),
+                    color = GaddiNeutrals.TextMuted,
                 )
             }
             // Close affordance — a soft radial ghost circle, same idiom as EngravedTurnHeader's
@@ -1613,7 +1613,7 @@ private fun GazetteContent(
                         .semantics { contentDescription = closeGazetteDesc },
                 contentAlignment = Alignment.Center,
             ) {
-                Text("✕", style = KursiType.label_md, color = BrandTokens.BrassAged)
+                Text("✕", style = GaddiType.label_md, color = BrandTokens.BrassAged)
             }
         }
         HairlineRule()
@@ -1623,8 +1623,8 @@ private fun GazetteContent(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = KursiDimens.space_lg, vertical = KursiDimens.space_sm),
-            horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_lg),
+                    .padding(horizontal = GaddiDimens.space_lg, vertical = GaddiDimens.space_sm),
+            horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_lg),
         ) {
             tabs.forEachIndexed { idx, tab ->
                 val active = idx == selectedTab
@@ -1639,13 +1639,13 @@ private fun GazetteContent(
                                             .MutableInteractionSource()
                                     },
                             ) { selectedTab = idx }
-                            .padding(vertical = KursiDimens.space_xs),
+                            .padding(vertical = GaddiDimens.space_xs),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
                         text = tab,
-                        style = KursiType.label_sm.dmMono().copy(letterSpacing = 1.5.sp),
-                        color = if (active) BrandTokens.GoldAntique else KursiNeutrals.TextMuted,
+                        style = GaddiType.label_sm.dmMono().copy(letterSpacing = 1.5.sp),
+                        color = if (active) BrandTokens.GoldAntique else GaddiNeutrals.TextMuted,
                     )
                     Spacer(Modifier.height(5.dp))
                     Box(
@@ -1676,18 +1676,18 @@ private fun GazetteContent(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = KursiDimens.space_lg, vertical = KursiDimens.space_sm),
+                    .padding(horizontal = GaddiDimens.space_lg, vertical = GaddiDimens.space_sm),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = stringResource(Res.string.game_gazette_footer_quote),
-                style = KursiType.label_micro.copy(fontStyle = FontStyle.Italic),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.label_micro.copy(fontStyle = FontStyle.Italic),
+                color = GaddiNeutrals.TextMuted,
             )
             Text(
                 text = stringResource(Res.string.game_replay_primer),
-                style = KursiType.label_sm,
+                style = GaddiType.label_sm,
                 color = BrandTokens.BrassAged,
                 modifier = Modifier.clickable(onClick = onReplayPrimer),
             )
@@ -1700,18 +1700,18 @@ private fun GazetteContent(
 @Composable
 private fun DarbarTab() {
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(horizontal = KursiDimens.space_lg),
+        modifier = Modifier.fillMaxSize().padding(horizontal = GaddiDimens.space_lg),
     ) {
         items(Role.entries) { role ->
             RoleReferenceCard(role = role)
         }
         item {
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
             Text(
                 text = stringResource(Res.string.game_darbar_tab_footnote),
-                style = KursiType.label_sm.copy(fontStyle = FontStyle.Italic),
+                style = GaddiType.label_sm.copy(fontStyle = FontStyle.Italic),
                 color = BrandTokens.BrassAged,
-                modifier = Modifier.fillMaxWidth().padding(vertical = KursiDimens.space_sm),
+                modifier = Modifier.fillMaxWidth().padding(vertical = GaddiDimens.space_sm),
                 textAlign = TextAlign.Center,
             )
         }
@@ -1724,8 +1724,8 @@ private fun DarbarTab() {
  */
 @Composable
 private fun RoleReferenceCard(role: Role) {
-    val voice = LocalKursiVoice.current
-    val visual = KursiColors.forRole(role)
+    val voice = LocalGaddiVoice.current
+    val visual = GaddiColors.forRole(role)
     HairlineRow(verticalPadding = 12.dp) {
         // Seal — a brass-rimmed, role-hued disc (the same token material as OpponentSeatToken).
         Box(
@@ -1740,7 +1740,7 @@ private fun RoleReferenceCard(role: Role) {
         ) {
             com.kursi.designsystem.RoleGlyph(
                 role = role,
-                tint = KursiNeutrals.Cream,
+                tint = GaddiNeutrals.Cream,
                 deboss = false,
                 modifier = Modifier.size(22.dp),
             )
@@ -1748,15 +1748,15 @@ private fun RoleReferenceCard(role: Role) {
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(
                 text = "${role.name} · ${visual.title}",
-                style = KursiType.label_md,
-                color = KursiNeutrals.TextPrimary,
+                style = GaddiType.label_md,
+                color = GaddiNeutrals.TextPrimary,
             )
-            Text(text = visual.actionLine, style = KursiType.label_sm, color = BrandTokens.BrassAged)
-            Text(text = visual.blockLine, style = KursiType.label_sm, color = KursiNeutrals.TextSecondary)
+            Text(text = visual.actionLine, style = GaddiType.label_sm, color = BrandTokens.BrassAged)
+            Text(text = visual.blockLine, style = GaddiType.label_sm, color = GaddiNeutrals.TextSecondary)
             Text(
                 text = voice.roleBlurb(role),
-                style = KursiType.label_micro,
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.label_micro,
+                color = GaddiNeutrals.TextMuted,
             )
         }
     }
@@ -1783,29 +1783,29 @@ private fun DhandhaTab() {
         )
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(horizontal = KursiDimens.space_lg),
+        modifier = Modifier.fillMaxSize().padding(horizontal = GaddiDimens.space_lg),
     ) {
         item { LedgerHeaderRow(listOf("ACTION" to 1.2f, "EFFECT" to 0.6f, "RULES" to 2f)) }
         items(actions) { (action, name, rules) ->
             HairlineRow(verticalPadding = 10.dp) {
-                Text(name, style = KursiType.label_sm, color = KursiNeutrals.TextPrimary, modifier = Modifier.weight(1.2f))
+                Text(name, style = GaddiType.label_sm, color = GaddiNeutrals.TextPrimary, modifier = Modifier.weight(1.2f))
                 Text(
                     actionCostSummary(action),
-                    style = KursiType.label_sm,
+                    style = GaddiType.label_sm,
                     color = BrandTokens.GoldAntique,
                     modifier = Modifier.weight(0.6f),
                 )
-                Text(rules, style = KursiType.label_micro, color = KursiNeutrals.TextSecondary, modifier = Modifier.weight(2f))
+                Text(rules, style = GaddiType.label_micro, color = GaddiNeutrals.TextSecondary, modifier = Modifier.weight(2f))
             }
         }
         item {
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
             Text(
                 text = stringResource(Res.string.game_dhandha_tab_footnote),
-                style = KursiType.label_sm.copy(fontStyle = FontStyle.Italic),
+                style = GaddiType.label_sm.copy(fontStyle = FontStyle.Italic),
                 color = BrandTokens.BrassAged,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(vertical = KursiDimens.space_sm),
+                modifier = Modifier.fillMaxWidth().padding(vertical = GaddiDimens.space_sm),
             )
         }
     }
@@ -1832,32 +1832,32 @@ private fun DasturTab() {
             ),
             Triple(
                 "3. RESOLVE — Hisaab Baraabar",
-                "Cards lost are flipped face-up forever (your secrets, exposed). Last player with a card standing takes the KURSI.",
-                KursiSemantics.Success,
+                "Cards lost are flipped face-up forever (your secrets, exposed). Last player with a card standing takes the GADDI.",
+                GaddiSemantics.Success,
             ),
         )
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(horizontal = KursiDimens.space_lg),
+        modifier = Modifier.fillMaxSize().padding(horizontal = GaddiDimens.space_lg),
     ) {
         itemsIndexed(steps) { idx, (title, body, accent) ->
             Column(
-                modifier = Modifier.fillMaxWidth().padding(vertical = KursiDimens.space_sm),
-                verticalArrangement = Arrangement.spacedBy(KursiDimens.space_xs),
+                modifier = Modifier.fillMaxWidth().padding(vertical = GaddiDimens.space_sm),
+                verticalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs),
             ) {
-                Text(text = title, style = KursiType.title_sm, color = accent)
-                Text(text = body, style = KursiType.label_sm, color = KursiNeutrals.TextSecondary)
+                Text(text = title, style = GaddiType.title_sm, color = accent)
+                Text(text = body, style = GaddiType.label_sm, color = GaddiNeutrals.TextSecondary)
             }
             if (idx < steps.lastIndex) HairlineRule(alpha = 0.25f)
         }
         item {
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
             Text(
                 text = stringResource(Res.string.game_dastur_tab_footnote),
-                style = KursiType.label_sm.copy(fontStyle = FontStyle.Italic),
+                style = GaddiType.label_sm.copy(fontStyle = FontStyle.Italic),
                 color = BrandTokens.BrassAged,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(vertical = KursiDimens.space_sm),
+                modifier = Modifier.fillMaxWidth().padding(vertical = GaddiDimens.space_sm),
             )
         }
     }
@@ -1887,7 +1887,7 @@ private fun HisaabTab() {
         )
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(horizontal = KursiDimens.space_lg),
+        modifier = Modifier.fillMaxSize().padding(horizontal = GaddiDimens.space_lg),
     ) {
         item {
             LedgerHeaderRow(
@@ -1899,33 +1899,33 @@ private fun HisaabTab() {
             val isSafe = row.challengeNote == "safe"
             val isUnstoppable = row.blockedBy.startsWith("—")
             HairlineRow(verticalPadding = 10.dp) {
-                Text(row.actionName, style = KursiType.label_sm, color = KursiNeutrals.TextPrimary, modifier = Modifier.weight(1.2f))
-                Text(row.effect, style = KursiType.numeral_sm, color = BrandTokens.GoldAntique, modifier = Modifier.weight(0.6f))
+                Text(row.actionName, style = GaddiType.label_sm, color = GaddiNeutrals.TextPrimary, modifier = Modifier.weight(1.2f))
+                Text(row.effect, style = GaddiType.numeral_sm, color = BrandTokens.GoldAntique, modifier = Modifier.weight(0.6f))
                 Text(
                     text = row.challengeNote,
-                    style = KursiType.label_micro,
-                    color = if (isSafe) KursiSemantics.Success else BrandTokens.PendingAmber,
+                    style = GaddiType.label_micro,
+                    color = if (isSafe) GaddiSemantics.Success else BrandTokens.PendingAmber,
                     modifier = Modifier.weight(1.3f),
                 )
                 Text(
                     text = row.blockedBy,
-                    style = KursiType.label_micro,
-                    color = if (isUnstoppable) KursiNeutrals.TextDisabled else KursiSemantics.Block,
+                    style = GaddiType.label_micro,
+                    color = if (isUnstoppable) GaddiNeutrals.TextDisabled else GaddiSemantics.Block,
                     modifier = Modifier.weight(1.5f),
                 )
             }
         }
 
         item {
-            Spacer(Modifier.height(KursiDimens.space_md))
+            Spacer(Modifier.height(GaddiDimens.space_md))
             // Block-chain quick-read — plain ground + hairline header, no bordered box.
             Column(
-                modifier = Modifier.fillMaxWidth().padding(vertical = KursiDimens.space_sm),
-                verticalArrangement = Arrangement.spacedBy(KursiDimens.space_xs),
+                modifier = Modifier.fillMaxWidth().padding(vertical = GaddiDimens.space_sm),
+                verticalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs),
             ) {
                 Text(
                     text = stringResource(Res.string.game_block_chain_header),
-                    style = KursiType.label_sm.dmMono().copy(letterSpacing = 1.sp),
+                    style = GaddiType.label_sm.dmMono().copy(letterSpacing = 1.sp),
                     color = BrandTokens.GoldAntique,
                 )
                 HairlineRule(alpha = 0.3f)
@@ -1938,19 +1938,19 @@ private fun HisaabTab() {
                         "A block is also a claim — and any claim can be challenged.",
                     )
                 items.forEach { line ->
-                    Row(horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs), verticalAlignment = Alignment.Top) {
-                        Text("▸", style = KursiType.label_micro, color = BrandTokens.BrassAged)
-                        Text(line, style = KursiType.label_micro, color = KursiNeutrals.TextSecondary, modifier = Modifier.weight(1f))
+                    Row(horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs), verticalAlignment = Alignment.Top) {
+                        Text("▸", style = GaddiType.label_micro, color = BrandTokens.BrassAged)
+                        Text(line, style = GaddiType.label_micro, color = GaddiNeutrals.TextSecondary, modifier = Modifier.weight(1f))
                     }
                 }
             }
         }
 
         item {
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
             Text(
                 text = stringResource(Res.string.game_hisaab_tab_footnote),
-                style = KursiType.label_sm.copy(fontStyle = FontStyle.Italic),
+                style = GaddiType.label_sm.copy(fontStyle = FontStyle.Italic),
                 color = BrandTokens.BrassAged,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
@@ -2024,18 +2024,18 @@ fun SwearingInPrimer(onDone: () -> Unit) {
                 Modifier
                     .align(Alignment.Center)
                     .widthIn(max = 360.dp)
-                    .clip(Squircle(KursiRadii.xl))
+                    .clip(Squircle(GaddiRadii.xl))
                     .background(
                         Brush.verticalGradient(listOf(BrandTokens.GoldAntique, BrandTokens.BrassAged, BrandTokens.BrassDark)),
                     ).border(
                         2.dp,
                         Brush.sweepGradient(listOf(BrandTokens.GoldAntique, BrandTokens.BrassDark, BrandTokens.GoldAntique)),
-                        Squircle(KursiRadii.xl),
+                        Squircle(GaddiRadii.xl),
                     ).padding(2.dp)
-                    .clip(Squircle(KursiRadii.xl))
+                    .clip(Squircle(GaddiRadii.xl))
                     .background(BrandTokens.PaperCream)
-                    .padding(KursiDimens.space_xl),
-            verticalArrangement = Arrangement.spacedBy(KursiDimens.space_md),
+                    .padding(GaddiDimens.space_xl),
+            verticalArrangement = Arrangement.spacedBy(GaddiDimens.space_md),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             // Step indicator
@@ -2055,32 +2055,32 @@ fun SwearingInPrimer(onDone: () -> Unit) {
             Box(
                 modifier =
                     Modifier
-                        .clip(Squircle(KursiRadii.sm))
+                        .clip(Squircle(GaddiRadii.sm))
                         .background(BrandTokens.BrassDark.copy(alpha = 0.15f))
-                        .border(KursiDimens.stroke_hairline, BrandTokens.BrassDark, Squircle(KursiRadii.sm))
-                        .padding(horizontal = KursiDimens.space_md, vertical = KursiDimens.space_xs),
+                        .border(GaddiDimens.stroke_hairline, BrandTokens.BrassDark, Squircle(GaddiRadii.sm))
+                        .padding(horizontal = GaddiDimens.space_md, vertical = GaddiDimens.space_xs),
             ) {
                 Text(
                     text = "▸ ${current.highlightLabel}",
-                    style = KursiType.label_sm.copy(letterSpacing = 1.sp),
+                    style = GaddiType.label_sm.copy(letterSpacing = 1.sp),
                     color = BrandTokens.BrassDark,
                 )
             }
 
             Text(
                 text = current.title,
-                style = KursiType.title_md,
+                style = GaddiType.title_md,
                 color = BrandTokens.CreamInk,
                 textAlign = TextAlign.Center,
             )
             Text(
                 text = current.body,
-                style = KursiType.body,
+                style = GaddiType.body,
                 color = BrandTokens.CreamInk.copy(alpha = 0.85f),
                 textAlign = TextAlign.Center,
             )
 
-            Spacer(Modifier.height(KursiDimens.space_sm))
+            Spacer(Modifier.height(GaddiDimens.space_sm))
 
             // Buttons row
             Row(
@@ -2091,7 +2091,7 @@ fun SwearingInPrimer(onDone: () -> Unit) {
                 // Skip
                 Text(
                     text = stringResource(Res.string.game_primer_skip),
-                    style = KursiType.label_sm,
+                    style = GaddiType.label_sm,
                     color = BrandTokens.BrassDark.copy(alpha = 0.7f),
                     modifier =
                         Modifier.clickable {
@@ -2104,10 +2104,10 @@ fun SwearingInPrimer(onDone: () -> Unit) {
                 Box(
                     modifier =
                         Modifier
-                            .clip(Squircle(KursiRadii.md))
+                            .clip(Squircle(GaddiRadii.md))
                             .background(
                                 Brush.horizontalGradient(listOf(BrandTokens.GoldAntique, BrandTokens.BrassAged)),
-                            ).border(1.dp, BrandTokens.BrassDark, Squircle(KursiRadii.md))
+                            ).border(1.dp, BrandTokens.BrassDark, Squircle(GaddiRadii.md))
                             .clickable {
                                 if (isLast) {
                                     PrimerPrefs.markSeen()
@@ -2115,11 +2115,11 @@ fun SwearingInPrimer(onDone: () -> Unit) {
                                 } else {
                                     step += 1
                                 }
-                            }.padding(horizontal = KursiDimens.space_lg, vertical = KursiDimens.space_sm),
+                            }.padding(horizontal = GaddiDimens.space_lg, vertical = GaddiDimens.space_sm),
                 ) {
                     Text(
                         text = if (isLast) stringResource(Res.string.game_primer_done) else "Next",
-                        style = KursiType.label_md,
+                        style = GaddiType.label_md,
                         color = BrandTokens.TeakDark,
                     )
                 }

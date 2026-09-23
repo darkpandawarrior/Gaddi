@@ -21,8 +21,8 @@ hand-typed:
 
 Implementation:
 - `gradle/versioning.gradle.kts` — shared script plugin, applied by `cmp-android`, `cmp-desktop`,
-  `server` (`apply(from = "$rootDir/gradle/versioning.gradle.kts")`), exposing `kursiFingerprint` /
-  `kursiMarketing` / `kursiBuildCode` as `extra` properties.
+  `server` (`apply(from = "$rootDir/gradle/versioning.gradle.kts")`), exposing `gaddiFingerprint` /
+  `gaddiMarketing` / `gaddiBuildCode` as `extra` properties.
 - `cmp-android/build.gradle.kts` — `versionCode = BUILDCODE`, `versionName = MARKETING` (release) /
   `MARKETING-FINGERPRINT` (debug suffix), `BuildConfig.FINGERPRINT`.
 - `cmp-desktop/build.gradle.kts` — all `packageVersion` variants = MARKETING.
@@ -59,7 +59,7 @@ names** — GitHub → Settings → Secrets and variables → Actions:
 
 | Secret | Contents |
 |---|---|
-| `ANDROID_KEYSTORE_B64` | base64 of the release keystore (`base64 -i kursi-release.keystore \| pbcopy`) |
+| `ANDROID_KEYSTORE_B64` | base64 of the release keystore (`base64 -i gaddi-release.keystore \| pbcopy`) |
 | `ANDROID_KEYSTORE_PASSWORD` | keystore password |
 | `ANDROID_KEY_ALIAS` | key alias (`kursi` unless you generated a different one) |
 | `ANDROID_KEY_PASSWORD` | key password |

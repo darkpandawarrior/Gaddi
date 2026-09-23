@@ -26,7 +26,7 @@ import com.kursi.core.prefs.AppPrefs
 import com.kursi.core.prefs.TurnSpeed
 import com.kursi.designsystem.*
 import com.kursi.feature.game.Difficulty
-import com.kursi.shared.strings.LocalKursiStrings
+import com.kursi.shared.strings.LocalGaddiStrings
 import com.siddharth.kmp.ai.NoModelManager
 import com.siddharth.kmp.ai.UnavailableOnDeviceLlm
 import com.siddharth.kmp.designsystem.ai.AiConsentStore
@@ -62,7 +62,7 @@ fun SettingsScreen(
     onEditProfile: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val scrollState = rememberScrollState()
 
     // Read prefs into local state
@@ -145,16 +145,16 @@ fun SettingsScreen(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = prefs.displayName,
-                                    style = KursiType.name.copy(fontSize = 15.sp),
-                                    color = KursiNeutrals.TextPrimary,
+                                    style = GaddiType.name.copy(fontSize = 15.sp),
+                                    color = GaddiNeutrals.TextPrimary,
                                 )
                                 Text(
                                     text = stringResource(Res.string.settings_edit_profile_label),
-                                    style = KursiType.label_micro.copy(letterSpacing = 0.8.sp, fontSize = 10.sp),
+                                    style = GaddiType.label_micro.copy(letterSpacing = 0.8.sp, fontSize = 10.sp),
                                     color = BrandTokens.BrassAged.copy(alpha = 0.7f),
                                 )
                             }
-                            Text("›", style = KursiType.title.copy(fontSize = 18.sp), color = BrandTokens.BrassAged)
+                            Text("›", style = GaddiType.title.copy(fontSize = 18.sp), color = BrandTokens.BrassAged)
                         }
                     }
                 }
@@ -212,8 +212,8 @@ fun SettingsScreen(
                     EngravedHeader(eyebrow = s.settingsAutoSection)
                     Text(
                         s.settingsTurnSpeedLabel,
-                        style = KursiType.body.copy(fontSize = 12.sp),
-                        color = KursiNeutrals.TextSecondary,
+                        style = GaddiType.body.copy(fontSize = 12.sp),
+                        color = GaddiNeutrals.TextSecondary,
                     )
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         listOf(
@@ -275,8 +275,8 @@ fun SettingsScreen(
                     EngravedHeader(eyebrow = s.settingsDefaultsSection)
                     Text(
                         s.settingsDefaultDiffLabel,
-                        style = KursiType.body.copy(fontSize = 12.sp),
-                        color = KursiNeutrals.TextSecondary,
+                        style = GaddiType.body.copy(fontSize = 12.sp),
+                        color = GaddiNeutrals.TextSecondary,
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
@@ -297,8 +297,8 @@ fun SettingsScreen(
 
                     Text(
                         s.settingsDefaultPlayersLabel(defaultPlayers),
-                        style = KursiType.body.copy(fontSize = 12.sp),
-                        color = KursiNeutrals.TextSecondary,
+                        style = GaddiType.body.copy(fontSize = 12.sp),
+                        color = GaddiNeutrals.TextSecondary,
                         modifier = Modifier.padding(top = 4.dp),
                     )
                     Row(
@@ -335,7 +335,7 @@ fun SettingsScreen(
                 }
 
                 // ── MUNSHI (AI narration BYOK) ──────────────────────────────────────
-                // ponytail: hardcoded English label, no LocalKursiStrings entry — the toolkit
+                // ponytail: hardcoded English label, no LocalGaddiStrings entry — the toolkit
                 // AiSettingsSection card below is itself all hardcoded English (no bilingual support
                 // yet), so a localized eyebrow here would be a language mismatch with its own body.
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -361,18 +361,18 @@ fun SettingsScreen(
                     EngravedHeader(eyebrow = s.settingsAboutSection)
                     Text(
                         s.settingsAboutTitle,
-                        style = KursiType.body.copy(fontSize = 13.sp),
-                        color = KursiNeutrals.TextPrimary,
+                        style = GaddiType.body.copy(fontSize = 13.sp),
+                        color = GaddiNeutrals.TextPrimary,
                     )
                     Text(
                         s.settingsAboutDisclaimer,
-                        style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                        color = KursiNeutrals.TextMuted,
+                        style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                        color = GaddiNeutrals.TextMuted,
                     )
                     Text(
                         s.settingsAboutFooter,
-                        style = KursiType.caption.copy(fontSize = 9.sp),
-                        color = KursiNeutrals.TextDisabled,
+                        style = GaddiType.caption.copy(fontSize = 9.sp),
+                        color = GaddiNeutrals.TextDisabled,
                         modifier = Modifier.padding(top = 4.dp),
                     )
                 }
@@ -397,13 +397,13 @@ private fun SettingsToggleRow(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 label,
-                style = KursiType.name.copy(fontSize = 13.sp),
-                color = KursiNeutrals.TextPrimary,
+                style = GaddiType.name.copy(fontSize = 13.sp),
+                color = GaddiNeutrals.TextPrimary,
             )
             Text(
                 sublabel,
-                style = KursiType.caption.copy(fontSize = 10.sp),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 10.sp),
+                color = GaddiNeutrals.TextMuted,
             )
         }
         Switch(
@@ -431,19 +431,19 @@ private fun SettingsLinkRow(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 label,
-                style = KursiType.name.copy(fontSize = 13.sp),
-                color = KursiNeutrals.TextPrimary,
+                style = GaddiType.name.copy(fontSize = 13.sp),
+                color = GaddiNeutrals.TextPrimary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
                 sublabel,
-                style = KursiType.caption.copy(fontSize = 10.sp),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 10.sp),
+                color = GaddiNeutrals.TextMuted,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        Text("›", style = KursiType.title.copy(fontSize = 18.sp), color = BrandTokens.BrassAged)
+        Text("›", style = GaddiType.title.copy(fontSize = 18.sp), color = BrandTokens.BrassAged)
     }
 }

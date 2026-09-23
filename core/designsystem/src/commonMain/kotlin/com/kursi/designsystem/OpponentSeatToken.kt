@@ -138,8 +138,8 @@ fun OpponentSeatToken(
         )
         AutoSizeText(
             text = name,
-            style = KursiType.label_md,
-            color = KursiNeutrals.TextPrimary.copy(alpha = if (eliminated) 0.45f else 1f),
+            style = GaddiType.label_md,
+            color = GaddiNeutrals.TextPrimary.copy(alpha = if (eliminated) 0.45f else 1f),
             maxLines = 1,
             minSize = 9.sp,
             modifier = Modifier.widthIn(max = 136.dp),
@@ -211,11 +211,11 @@ private fun SeatTokenCircle(
         contentAlignment = Alignment.Center,
     ) {
         if (eliminated) {
-            Text("✕", style = KursiType.title_sm, color = KursiNeutrals.Cream)
+            Text("✕", style = GaddiType.title_sm, color = GaddiNeutrals.Cream)
         } else if (role != null) {
-            RoleGlyph(role = role, tint = KursiNeutrals.Cream, deboss = false, modifier = Modifier.size(tokenSize * 0.42f))
+            RoleGlyph(role = role, tint = GaddiNeutrals.Cream, deboss = false, modifier = Modifier.size(tokenSize * 0.42f))
         } else {
-            Text(monogram, style = KursiType.title_sm.rozha(), color = Color(0xFF120C06))
+            Text(monogram, style = GaddiType.title_sm.rozha(), color = Color(0xFF120C06))
         }
     }
 }
@@ -266,8 +266,8 @@ private fun SeatTokenFooter(
         val borderColor = (if (claimCaught) Color(0xFFC1272D) else brassColor).copy(alpha = if (claimCaught) 0.5f else 0.32f)
         Text(
             text = standingText + suffix,
-            style = KursiType.label_micro,
-            color = if (claimCaught) Color(0xFFF0C0B8) else KursiNeutrals.TextSecondary,
+            style = GaddiType.label_micro,
+            color = if (claimCaught) Color(0xFFF0C0B8) else GaddiNeutrals.TextSecondary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier =

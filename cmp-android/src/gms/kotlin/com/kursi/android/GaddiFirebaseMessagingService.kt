@@ -8,15 +8,15 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
-class KursiFirebaseMessagingService : FirebaseMessagingService() {
+class GaddiFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         val title = message.notification?.title ?: message.data["title"] ?: return
         val body = message.notification?.body ?: message.data["body"] ?: ""
 
         val channelId =
             when (message.data["type"]) {
-                "game_invite" -> KursiNotificationChannels.GAME_INVITES
-                else -> KursiNotificationChannels.SYSTEM
+                "game_invite" -> GaddiNotificationChannels.GAME_INVITES
+                else -> GaddiNotificationChannels.SYSTEM
             }
 
         val pendingIntent =

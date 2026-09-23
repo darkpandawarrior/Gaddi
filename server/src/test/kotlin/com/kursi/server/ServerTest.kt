@@ -20,11 +20,11 @@ class ServerTest {
 
     private suspend fun DefaultClientWebSocketSession.nextServerMsg(): ServerMessage {
         val frame = incoming.receive() as Frame.Text
-        return KursiJson.decodeFromString(frame.readText())
+        return GaddiJson.decodeFromString(frame.readText())
     }
 
     private suspend fun DefaultClientWebSocketSession.sendMsg(msg: ClientMessage) {
-        send(Frame.Text(KursiJson.encodeToString(msg)))
+        send(Frame.Text(GaddiJson.encodeToString(msg)))
     }
 
     // ── Test 1: Health endpoint ───────────────────────────────────────────────
@@ -84,7 +84,7 @@ class ServerTest {
                             // Receive the second StateUpdate that the actor sends after both join
                             val update2 = incoming.tryReceive().getOrNull()
                             if (update2 is Frame.Text) {
-                                val msg: ServerMessage = KursiJson.decodeFromString(update2.readText())
+                                val msg: ServerMessage = GaddiJson.decodeFromString(update2.readText())
                                 synchronized(results) { results.add(msg) }
                             }
                         }

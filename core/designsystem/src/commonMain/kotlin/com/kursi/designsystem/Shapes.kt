@@ -28,10 +28,10 @@ import androidx.compose.ui.unit.dp
 @Suppress("ktlint:standard:function-naming")
 fun Squircle(radius: Dp): Shape = RoundedCornerShape(radius)
 
-// ─────────────────────────── KursiRadii token object ───────────────────────────
+// ─────────────────────────── GaddiRadii token object ───────────────────────────
 // spec §8 token table — exact dp values, do not change.
 
-object KursiRadii {
+object GaddiRadii {
     /** 6 dp — influence-pip backplates, small tags. */
     val xs: Dp = 6.dp
 

@@ -28,7 +28,7 @@
 	     iOS 14+ silently finds and publishes NOTHING unless BOTH of these are present:
 	     the usage string gates the local-network permission prompt, and NSBonjourServices
 	     must name every DNS-SD type the app browses or advertises. The service type is
-	     KURSI_LAN_SERVICE_TYPE in feature/game/.../OnlineHubController.kt. -->
+	     GADDI_LAN_SERVICE_TYPE in feature/game/.../OnlineHubController.kt. -->
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Gaddi uses your local network to find and host games on nearby devices. No data leaves your network.</string>
 	<key>NSBonjourServices</key>

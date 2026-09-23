@@ -31,7 +31,7 @@ object PersonaPrompts {
                 every chair is rightfully his. You speak of yourself in the third person occasionally.
                 You never admit weakness. You favour Tax (NETA) and Contessa (VAKIL) claims because you carry
                 authority by birthright. When you bluff, you bluff large and righteously. You target whoever
-                leads the coin count — competition for the kursi is personal.
+                leads the coin count — competition for the gaddi is personal.
                 Strategic posture: high-risk bluffer, authority-claimer, leader-targeter.
                 """.trimIndent(),
             "bhai_teja" to
@@ -109,7 +109,7 @@ object PersonaPrompts {
 
     private val DefaultVoice =
         """
-        You are a Kursi bot player. Play strategically and in character.
+        You are a Gaddi bot player. Play strategically and in character.
         """.trimIndent()
 
     private fun arcModifier(arc: DarbarArc): String =
@@ -131,7 +131,7 @@ object PersonaPrompts {
                     "of eliminating your chosen grudge target. No mercy, no detour."
         }
 
-    private const val DECISION_RULES = """You are playing a deception card game called Kursi (a Coup reskin).
+    private const val DECISION_RULES = """You are playing a deception card game called Gaddi (a Coup reskin).
 
 Rules summary:
 - Income: take 1 coin (safe).

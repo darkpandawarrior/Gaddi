@@ -6,11 +6,11 @@ import com.kursi.engine.GameEvent
 import com.kursi.engine.Role
 
 /**
- * KursiVoice — all satirical copy for the Kursi game.
+ * GaddiVoice — all satirical copy for the Gaddi game.
  * Supports HINGLISH (deadpan sarkari/filmi) and ENGLISH.
- * Source: kursi-plan/docs/16b_voice_copy.md.
+ * Source: gaddi-plan/docs/16b_voice_copy.md.
  */
-class KursiVoice(
+class GaddiVoice(
     private val language: Language = Language.HINGLISH,
 ) {
     // ── Action bark ────────────────────────────────────────────────────────
@@ -114,14 +114,14 @@ class KursiVoice(
         when (language) {
             Language.HINGLISH ->
                 when (personaId) {
-                    "netaji_vachan" -> "Bees saal se kursi pe. Aaj bhi 'system se lad raha hai.'"
+                    "netaji_vachan" -> "Bees saal se gaddi pe. Aaj bhi 'system se lad raha hai.'"
                     "bhai_teja" -> "Awaaz kabhi nahi uthata. Uthane ki zaroorat hi nahi padti."
                     "babu_filewala" -> "Aapki file chal rahi hai. Dheere. Jaan-boojh ke."
                     "jugaadu_chhotu" -> "Na paisa, na degree, na problem. Bas jugaad."
                     "vakil_loophole" -> "Aaj tak koi case haara nahi. Jeeta bhi nahi."
                     "inspector_damaad" -> "Sahi khaandaan mein shaadi ki. Galat logon ki policing karta hai."
                     "seth_khokhawala" -> "Chalees companies ka maalik. Ek bhi exist nahi karti."
-                    "madam_sarpanch" -> "Kursi uske paas. Cheque pati sign karta hai."
+                    "madam_sarpanch" -> "Gaddi uske paas. Cheque pati sign karta hai."
                     "dalla_tiwari" -> "Ek aadmi ko jaanta hai. Woh aadmi ek aur aadmi ko."
                     "maaji_anna" -> "Bhrashtachaar se ladta hai. Usi ke paise pe."
                     else -> ""
@@ -162,7 +162,7 @@ class KursiVoice(
                     "act" -> "Janta ka paisa, janta ke liye... mere through."
                     "bluff" -> "Main toh sirf samaj sevak hoon. Trust me."
                     "challenged" -> "Mujh par ungli? Defamation case ready rakho."
-                    "win" -> "Yeh kursi nahi, janta ka pyaar hai."
+                    "win" -> "Yeh gaddi nahi, janta ka pyaar hai."
                     "lose" -> "Main wapas aaunga. Election ke baad."
                     else -> "Yeh toh protocol hai."
                 }
@@ -189,7 +189,7 @@ class KursiVoice(
                     "act" -> "Setting ho gaya bhai. Tension nahi lene ka."
                     "bluff" -> "Card? Kaunsa card? Mere paas toh kuch nahi."
                     "challenged" -> "Arre ruko ruko, ek minute, sun toh lo—"
-                    "win" -> "Bina paise ke kursi. Asli jugaad yeh hai."
+                    "win" -> "Bina paise ke gaddi. Asli jugaad yeh hai."
                     "lose" -> "Koi baat nahi. Naya scene dhoondte hain."
                     else -> "Jugaad nikalte hain."
                 }
@@ -234,7 +234,7 @@ class KursiVoice(
                     "act" -> "Commission fix hai. Dono taraf se. Standard."
                     "bluff" -> "Main toh bas introduce karaata hoon, bhai."
                     "challenged" -> "Mera naam mat lo deal mein. Main beech mein nahi."
-                    "win" -> "Sauda ho gaya. Cut sabka, kursi meri."
+                    "win" -> "Sauda ho gaya. Cut sabka, gaddi meri."
                     "lose" -> "Network rehta hai. Aadmi aate jaate hain."
                     else -> "Deal pakki? Deal pakki."
                 }
@@ -399,7 +399,7 @@ class KursiVoice(
         }
     val forcedCoup: String get() =
         when (language) {
-            Language.HINGLISH -> "Itne paise? Ab toh kursi giraani padegi."
+            Language.HINGLISH -> "Itne paise? Ab toh gaddi giraani padegi."
             Language.ENGLISH -> "That much coin? Time to topple the chair."
         }
     val forcedCoupSub: String get() =
@@ -475,7 +475,7 @@ class KursiVoice(
 
     val youWin: String get() =
         when (language) {
-            Language.HINGLISH -> "Kursi aapki. Taj pehno, sarkar."
+            Language.HINGLISH -> "Gaddi aapki. Taj pehno, sarkar."
             Language.ENGLISH -> "The chair is yours. Wear the crown."
         }
     val gameEndSub: String get() =
@@ -485,7 +485,7 @@ class KursiVoice(
         }
     val loading: String get() =
         when (language) {
-            Language.HINGLISH -> "Kursi garam ki ja rahi hai..."
+            Language.HINGLISH -> "Gaddi garam ki ja rahi hai..."
             Language.ENGLISH -> "Warming up the chair..."
         }
     val logEmpty: String get() =
@@ -518,7 +518,7 @@ class KursiVoice(
 
     fun opponentWins(personaName: String): String =
         when (language) {
-            Language.HINGLISH -> "$personaName ne kursi pakad li. Baaki sab dhobi ka kutta."
+            Language.HINGLISH -> "$personaName ne gaddi pakad li. Baaki sab dhobi ka kutta."
             Language.ENGLISH -> "$personaName has taken the chair. The rest are irrelevant."
         }
 
@@ -530,7 +530,7 @@ class KursiVoice(
 
     fun playerOut(personaName: String): String =
         when (language) {
-            Language.HINGLISH -> "$personaName out. Kursi se door, hamesha ke liye."
+            Language.HINGLISH -> "$personaName out. Gaddi se door, hamesha ke liye."
             Language.ENGLISH -> "$personaName is out. Gone for good."
         }
 
@@ -682,7 +682,7 @@ class KursiVoice(
         }
     val cantAffordKhela: String get() =
         when (language) {
-            Language.HINGLISH -> "Kursi giraane ke paise toh laao."
+            Language.HINGLISH -> "Gaddi giraane ke paise toh laao."
             Language.ENGLISH -> "Bring the coin to topple the chair."
         }
     val khelaForced: String get() =
@@ -773,7 +773,7 @@ class KursiVoice(
                     "vakil_loophole" -> "Sabka case ladta hai. Kisi ka jeet ki guarantee nahi."
                     "inspector_damaad" -> "Bhai Teja ko pakad nahi sakta — sasur ne mana kiya hai."
                     "seth_khokhawala" -> "Vakil Loophole uska personal lawyer. Bill kabhi nahi chukta."
-                    "madam_sarpanch" -> "Kursi uski, dastkhat pati ke. Gaon dono se darta hai."
+                    "madam_sarpanch" -> "Gaddi uski, dastkhat pati ke. Gaon dono se darta hai."
                     "dalla_tiwari" -> "Sabko sabse milata hai. Cut har taraf se leta hai."
                     "maaji_anna" -> "Netaji ka purana saathi. Ab uska sabse bada 'aalochak'."
                     else -> ""
@@ -870,7 +870,7 @@ class KursiVoice(
                 }
             is GameEvent.Blocked -> "$actor beech mein kood gaya — '$other? Yeh nahi chalega.' Block laga diya."
             is GameEvent.InfluenceLost -> "$actor ko ek pehchaan kurbaan karni padi. Raaz ab sabke saamne."
-            is GameEvent.PlayerEliminated -> "$actor ka aakhri card bhi gaya. Kursi se hamesha ke liye door. RIP."
+            is GameEvent.PlayerEliminated -> "$actor ka aakhri card bhi gaya. Gaddi se hamesha ke liye door. RIP."
             is GameEvent.CoinsTransferred -> "$actor ki jeb se ${other ?: "kisi"} ki jeb mein — 'processing fee' kehte hain ise."
             is GameEvent.Exchanged -> "$actor ne deck se setting ki. Naye patte, wahi purana khel."
             is GameEvent.Investigated ->
@@ -879,7 +879,7 @@ class KursiVoice(
             is GameEvent.InvestigateRedraw ->
                 "Exposé chhapa — ${other ?: "us"} ka patta deck mein wapas, naya uthana pada. Reputation " +
                     "reset."
-            is GameEvent.GameEnded -> "$actor ne kursi pakad li. Baaki sab tamashbeen, opinion ke saath."
+            is GameEvent.GameEnded -> "$actor ne gaddi pakad li. Baaki sab tamashbeen, opinion ke saath."
             else -> "$actor ne kuch kiya. Roznamcha mein darj, samajh se pare."
         }
 
@@ -949,7 +949,7 @@ class KursiVoice(
                     PhaseHint.Exchange -> "Kaunse card rakhne hain chunein. Deck mein aapke liye do extra hain."
                     PhaseHint.InvestigatePeek -> "Patta dekh liya. Deck mein wapas bhejna hai (naya patta) ya rehne dena hai?"
                     is PhaseHint.Thinking -> "${hint.actor ?: "Koi"} soch raha hai..."
-                    PhaseHint.GameOver -> "Khel khatam. Jo kursi le gaya, uski jai ho."
+                    PhaseHint.GameOver -> "Khel khatam. Jo gaddi le gaya, uski jai ho."
                 }
             Language.ENGLISH ->
                 when (hint) {
@@ -964,7 +964,7 @@ class KursiVoice(
                     PhaseHint.Exchange -> "Pick which cards to keep. The deck has two extras for you."
                     PhaseHint.InvestigatePeek -> "You've seen the card. Spike it back into the deck (forces a redraw) or leave it?"
                     is PhaseHint.Thinking -> "${hint.actor ?: "Someone"} is thinking..."
-                    PhaseHint.GameOver -> "Game over. Long live whoever grabbed the Kursi."
+                    PhaseHint.GameOver -> "Game over. Long live whoever grabbed the Gaddi."
                 }
         }
 
@@ -1085,12 +1085,12 @@ class KursiVoice(
                             "$actor ka bluff pakda gaya. Card gaya."
                         }
                     is GameEvent.InfluenceLost -> "$actor ne ${roleLabelOf(event.role)} card khoya."
-                    is GameEvent.PlayerEliminated -> "$actor out. Kursi se door."
+                    is GameEvent.PlayerEliminated -> "$actor out. Gaddi se door."
                     is GameEvent.CoinsTransferred -> "$actor → ${other ?: "kisi"}: ${event.amount} sikke gaye."
                     is GameEvent.Exchanged -> "$actor ne patte badle."
                     is GameEvent.Investigated -> "$actor ne ${other ?: "kisi"} ka patta dekha (Jaanch)."
                     is GameEvent.InvestigateRedraw -> "${other ?: "Us"} ka patta deck mein wapas — naya patta."
-                    is GameEvent.GameEnded -> "$actor ne kursi jeet li."
+                    is GameEvent.GameEnded -> "$actor ne gaddi jeet li."
                     else -> null
                 }
             Language.ENGLISH ->
@@ -1123,7 +1123,7 @@ class KursiVoice(
         }
 }
 
-/** Phase-hint variants for [KursiVoice.phaseHint] — the subtitle band beneath the banner. */
+/** Phase-hint variants for [GaddiVoice.phaseHint] — the subtitle band beneath the banner. */
 sealed interface PhaseHint {
     data object CoinCapKhela : PhaseHint
 
@@ -1160,7 +1160,7 @@ sealed interface PhaseHint {
     data object GameOver : PhaseHint
 }
 
-/** Centre-screen imperative prompt variants for [KursiVoice.centerPrompt]. */
+/** Centre-screen imperative prompt variants for [GaddiVoice.centerPrompt]. */
 sealed interface CenterPrompt {
     data object PickTarget : CenterPrompt
 
@@ -1169,4 +1169,4 @@ sealed interface CenterPrompt {
     data object Exchange : CenterPrompt
 }
 
-val LocalKursiVoice = staticCompositionLocalOf { KursiVoice(Language.HINGLISH) }
+val LocalGaddiVoice = staticCompositionLocalOf { GaddiVoice(Language.HINGLISH) }

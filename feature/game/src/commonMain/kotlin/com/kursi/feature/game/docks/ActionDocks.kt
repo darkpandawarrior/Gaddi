@@ -43,7 +43,7 @@ internal fun ActionSectionLabel(
     Text(
         text = label.uppercase(),
         style =
-            KursiType.label_micro.copy(
+            GaddiType.label_micro.copy(
                 letterSpacing = 1.2.sp,
                 fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
             ),
@@ -287,9 +287,9 @@ internal fun PickActionDock(
                 modifier =
                     Modifier
                         .widthIn(max = 560.dp)
-                        .padding(vertical = KursiDimens.space_xs),
-                horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_sm, Alignment.CenterHorizontally),
-                verticalArrangement = Arrangement.spacedBy(KursiDimens.space_sm),
+                        .padding(vertical = GaddiDimens.space_xs),
+                horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm, Alignment.CenterHorizontally),
+                verticalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm),
             ) {
                 CompactActionChip(
                     icon = "🪙",
@@ -465,7 +465,7 @@ internal fun CompactActionChip(
             coachAccentColor != null -> coachAccentColor.copy(alpha = 0.7f)
             else -> familyColor.copy(alpha = 0.6f)
         }
-    val borderWidth = if (recommended) 2.dp else KursiDimens.stroke_ring_idle
+    val borderWidth = if (recommended) 2.dp else GaddiDimens.stroke_ring_idle
 
     // Capture the chip's bounds so the inspect chit anchors with a caret to the chip.
     var chipBounds by remember { mutableStateOf<androidx.compose.ui.geometry.Rect?>(null) }
@@ -494,7 +494,7 @@ internal fun CompactActionChip(
                     // flat panel. Dims for disabled/unaffordable chips (they sit flush, not raised).
                     .shadow(
                         if (enabled) (if (recommended) 8.dp else 4.dp) else 1.dp,
-                        Squircle(KursiDimens.r_md),
+                        Squircle(GaddiDimens.r_md),
                         clip = false,
                         ambientColor = Color.Black.copy(alpha = 0.55f),
                         spotColor = if (recommended) BrandTokens.GoldAntique else BrandTokens.TeakInk,
@@ -503,15 +503,15 @@ internal fun CompactActionChip(
                             Modifier.holoRimLight(
                                 accent = BrandTokens.GoldAntique,
                                 phase = recHolo,
-                                cornerRadius = KursiDimens.r_md,
+                                cornerRadius = GaddiDimens.r_md,
                                 intensity = 0.6f,
                             )
                         } else {
                             Modifier
                         },
-                    ).clip(Squircle(KursiDimens.r_md))
+                    ).clip(Squircle(GaddiDimens.r_md))
                     .background(bgBrush)
-                    .border(borderWidth, borderColor, Squircle(KursiDimens.r_md))
+                    .border(borderWidth, borderColor, Squircle(GaddiDimens.r_md))
                     .actionChipSemantics(
                         name = name,
                         cost = cost,
@@ -532,8 +532,8 @@ internal fun CompactActionChip(
                                 onInspect(action, chipBounds)
                             }
                         },
-                        pressShape = Squircle(KursiDimens.r_md),
-                    ).padding(horizontal = KursiDimens.space_sm, vertical = KursiDimens.space_xs),
+                        pressShape = Squircle(GaddiDimens.r_md),
+                    ).padding(horizontal = GaddiDimens.space_sm, vertical = GaddiDimens.space_xs),
             contentAlignment = Alignment.Center,
         ) {
             Row(
@@ -544,19 +544,19 @@ internal fun CompactActionChip(
                 // Icon (text emoji as icon — 15sp)
                 Text(
                     text = icon,
-                    style = KursiType.label_sm.copy(fontSize = 15.sp),
-                    color = if (recommended || forced) KursiNeutrals.Cream.copy(alpha = chipAlpha) else familyColor.copy(alpha = chipAlpha),
+                    style = GaddiType.label_sm.copy(fontSize = 15.sp),
+                    color = if (recommended || forced) GaddiNeutrals.Cream.copy(alpha = chipAlpha) else familyColor.copy(alpha = chipAlpha),
                     maxLines = 1,
                 )
                 // Name — fit-to-width CAPS so labels never clip across languages
                 AutoSizeText(
                     text = name,
-                    style = KursiType.label_sm,
+                    style = GaddiType.label_sm,
                     color =
                         when {
                             recommended -> BrandTokens.TeakDark.copy(alpha = chipAlpha)
-                            forced -> KursiNeutrals.Cream.copy(alpha = chipAlpha)
-                            else -> KursiNeutrals.TextPrimary.copy(alpha = chipAlpha)
+                            forced -> GaddiNeutrals.Cream.copy(alpha = chipAlpha)
+                            else -> GaddiNeutrals.TextPrimary.copy(alpha = chipAlpha)
                         },
                     maxLines = 1,
                     minSize = 8.sp,
@@ -568,14 +568,14 @@ internal fun CompactActionChip(
                 // the action's identity; the cost pill stays a bare value.
                 Text(
                     text = cost,
-                    style = KursiType.numeral_sm,
+                    style = GaddiType.numeral_sm,
                     color =
                         if (!enabled) {
                             alertRed.copy(alpha = chipAlpha)
                         } else if (recommended) {
                             BrandTokens.TeakDark.copy(alpha = chipAlpha)
                         } else if (forced) {
-                            KursiNeutrals.Cream.copy(alpha = chipAlpha)
+                            GaddiNeutrals.Cream.copy(alpha = chipAlpha)
                         } else {
                             familyColor.copy(alpha = chipAlpha)
                         },
@@ -593,11 +593,11 @@ internal fun CompactActionChip(
         // Suppressed on phone (compact=true): the HintRail above the dock covers context,
         // and hiding per-chip text reduces the dock's height significantly.
         if (showConsequence && action != null) {
-            val voice = LocalKursiVoice.current
+            val voice = LocalGaddiVoice.current
             Text(
                 text = voice.actionConsequence(action),
-                style = KursiType.label_micro,
-                color = KursiNeutrals.TextMuted.copy(alpha = if (enabled) 1f else 0.55f),
+                style = GaddiType.label_micro,
+                color = GaddiNeutrals.TextMuted.copy(alpha = if (enabled) 1f else 0.55f),
                 textAlign = TextAlign.Center,
                 maxLines = 2,
                 modifier = Modifier.widthIn(max = 168.dp),
@@ -612,7 +612,7 @@ internal fun PickTargetDock(
     state: GameUiState,
     onLocalPhase: (GamePhase?) -> Unit,
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     // The explicit weakest/most-suspicious recommendation — so the player isn't left to read the
     // per-plate suspicion pips unaided. PUBLIC-info only (coach's pick, else weakest public seat).
     // Only shown when coach guidance is visible (coach ON, and not FOCUS — spec §3).
@@ -635,29 +635,29 @@ internal fun PickTargetDock(
             Row(
                 modifier =
                     Modifier
-                        .clip(Squircle(KursiRadii.sm))
+                        .clip(Squircle(GaddiRadii.sm))
                         .background(BrandTokens.GoldAntique.copy(alpha = 0.14f))
-                        .border(KursiDimens.stroke_hairline, BrandTokens.GoldAntique.copy(alpha = 0.55f), Squircle(KursiRadii.sm))
-                        .padding(horizontal = KursiDimens.space_sm, vertical = KursiDimens.space_xs),
+                        .border(GaddiDimens.stroke_hairline, BrandTokens.GoldAntique.copy(alpha = 0.55f), Squircle(GaddiRadii.sm))
+                        .padding(horizontal = GaddiDimens.space_sm, vertical = GaddiDimens.space_xs),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
             ) {
                 RecommendedStar()
                 Text(
                     text = stringResource(Res.string.game_recommended_target, targetName, reason),
-                    style = KursiType.label_sm,
-                    color = KursiNeutrals.TextPrimary,
+                    style = GaddiType.label_sm,
+                    color = GaddiNeutrals.TextPrimary,
                     maxLines = 1,
                 )
             }
         }
         Text(
             text = voice.centerPrompt(CenterPrompt.PickTarget),
-            style = KursiType.body,
-            color = KursiNeutrals.TextSecondary,
+            style = GaddiType.body,
+            color = GaddiNeutrals.TextSecondary,
             textAlign = TextAlign.Center,
         )
-        KursiActionButton(
+        GaddiActionButton(
             label = stringResource(Res.string.game_cancel),
             enabled = true,
             onClick = { onLocalPhase(GamePhase.PickAction) },
@@ -674,7 +674,7 @@ internal fun ConfirmDock(
     onLocalPhase: (GamePhase?) -> Unit,
     onAction: (GameAction) -> Unit,
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val role = Rules.claimedRole(action)
     val roleStr = role?.let { "${roleLabel(it)} → " } ?: ""
     val targetStr = target?.let { "from ${personaNameOrDefault(it, state, voice.selfName)}" } ?: ""
@@ -703,14 +703,14 @@ internal fun ConfirmDock(
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs),
+            horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs),
         ) {
             // Recommended star only shown when coach is ON.
             if (recommended) RecommendedStar()
             Text(
                 text = summary,
-                style = KursiType.title,
-                color = KursiNeutrals.TextPrimary,
+                style = GaddiType.title,
+                color = GaddiNeutrals.TextPrimary,
             )
         }
         // The exposure read strip — truthful/bluff badge + odds pill — only for claim-bearing moves.
@@ -730,15 +730,15 @@ internal fun ConfirmDock(
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            KursiActionButton(
+            GaddiActionButton(
                 label = "Cancel",
                 enabled = true,
                 modifier = Modifier.weight(1f),
                 onClick = { onLocalPhase(GamePhase.PickAction) },
             )
-            KursiActionButton(
+            GaddiActionButton(
                 label = stringResource(Res.string.game_declare),
-                roleAccent = KursiSemantics.Success,
+                roleAccent = GaddiSemantics.Success,
                 enabled = true,
                 modifier = Modifier.weight(1f),
                 onClick = {
@@ -763,7 +763,7 @@ internal fun buildActionWithTarget(
 
 @Composable
 internal fun IdleDock(state: GameUiState) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val actorName = actorName(state)
 
     // Resolve the acting seat's color so the card is visually tied to that player.
@@ -774,7 +774,7 @@ internal fun IdleDock(state: GameUiState) {
             is PhaseView.InfluenceLoss -> p.loser
             else -> null
         }
-    val actorColor = actorId?.let { KursiSeatColors[it.raw] } ?: BrandTokens.BrassAged
+    val actorColor = actorId?.let { GaddiSeatColors[it.raw] } ?: BrandTokens.BrassAged
 
     // Last 3 meaningful events, oldest first — shows the full chain (e.g.
     // "Babu used Tax → Netaji challenged → Babu revealed → Netaji lost").
@@ -795,7 +795,7 @@ internal fun IdleDock(state: GameUiState) {
     // AAA rebuild (design-language.md #1): a shadow-depth raised surface tinted by the
     // acting seat's color, not a bordered box — same tableDepth + embossEdge material as
     // decoPanel, so the "what's happening" summary reads as an instrument on the table.
-    val idleShape = Squircle(KursiRadii.sm)
+    val idleShape = Squircle(GaddiRadii.sm)
     Column(
         modifier =
             Modifier
@@ -806,7 +806,7 @@ internal fun IdleDock(state: GameUiState) {
                     Brush.verticalGradient(
                         listOf(actorColor.copy(alpha = 0.14f), BrandTokens.TeakDark.copy(alpha = 0.92f)),
                     ),
-                ).embossEdge(KursiRadii.sm, highlight = actorColor.copy(alpha = 0.4f))
+                ).embossEdge(GaddiRadii.sm, highlight = actorColor.copy(alpha = 0.4f))
                 .padding(horizontal = 14.dp, vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
@@ -824,7 +824,7 @@ internal fun IdleDock(state: GameUiState) {
             )
             Text(
                 text = voice.opponentActing(actorName),
-                style = KursiType.label_sm.copy(fontSize = 13.sp, letterSpacing = 0.5.sp),
+                style = GaddiType.label_sm.copy(fontSize = 13.sp, letterSpacing = 0.5.sp),
                 color = actorColor,
             )
         }
@@ -857,8 +857,8 @@ internal fun IdleDock(state: GameUiState) {
                 val textSize = if (idx == count - 1) 13.sp else 12.sp
                 Text(
                     text = line,
-                    style = KursiType.body.copy(fontSize = textSize),
-                    color = KursiNeutrals.TextPrimary.copy(alpha = alpha),
+                    style = GaddiType.body.copy(fontSize = textSize),
+                    color = GaddiNeutrals.TextPrimary.copy(alpha = alpha),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     modifier =
@@ -893,7 +893,7 @@ internal fun IdleDock(state: GameUiState) {
                 val senderName = senderPlayer?.let { state.opponentPersonas[it.id]?.name } ?: actorName
                 Text(
                     text = "💬 $senderName: \"${actorChatLine.body}\"",
-                    style = KursiType.body.copy(fontSize = 12.sp),
+                    style = GaddiType.body.copy(fontSize = 12.sp),
                     color = BrandTokens.GoldAntique.copy(alpha = 0.75f),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,

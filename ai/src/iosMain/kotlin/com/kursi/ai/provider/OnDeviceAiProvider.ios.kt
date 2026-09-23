@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.map
 /**
  * iOS on-device LLM tier (consolidation #7): routes through toolkit `:ai`'s Foundation Models →
  * MediaPipe chain. Both backends are stubs pending a Swift bridge (see toolkit's own KDoc on
- * FoundationModelsOnDeviceLlm/MediaPipeOnDeviceLlm) — same always-unavailable behavior as Kursi's old
+ * FoundationModelsOnDeviceLlm/MediaPipeOnDeviceLlm) — same always-unavailable behavior as Gaddi's old
  * local stub, now sourced from the shared toolkit instead of a duplicate.
  *
  * ktlint:standard:function-naming — a constructor-like factory. Kotlin's own convention

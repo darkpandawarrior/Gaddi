@@ -1,4 +1,4 @@
-# Kursi — platform build targets
+# Gaddi — platform build targets
 # Usage:  make <target>
 #   make all        — build all platforms
 #   make desktop    — macOS DMG (run on Windows for .exe, Linux for .deb)
@@ -33,16 +33,16 @@ android:
 	@echo "==> Building Android APK (debug)..."
 	./gradlew :cmp-android:assembleDebug
 	mkdir -p $(OUTPUTS)/android
-	cp cmp-android/build/outputs/apk/debug/cmp-android-debug.apk $(OUTPUTS)/android/kursi-debug.apk
-	@echo "Android APK done → $(OUTPUTS)/android/kursi-debug.apk"
-	@echo "Install: adb install -r $(OUTPUTS)/android/kursi-debug.apk"
+	cp cmp-android/build/outputs/apk/debug/cmp-android-debug.apk $(OUTPUTS)/android/gaddi-debug.apk
+	@echo "Android APK done → $(OUTPUTS)/android/gaddi-debug.apk"
+	@echo "Install: adb install -r $(OUTPUTS)/android/gaddi-debug.apk"
 
 android-release:
 	@echo "==> Building Android APK (release, unsigned)..."
 	./gradlew :cmp-android:assembleRelease
 	mkdir -p $(OUTPUTS)/android
-	cp cmp-android/build/outputs/apk/release/cmp-android-release-unsigned.apk $(OUTPUTS)/android/kursi-release-unsigned.apk
-	@echo "Release APK (unsigned) → $(OUTPUTS)/android/kursi-release-unsigned.apk"
+	cp cmp-android/build/outputs/apk/release/cmp-android-release-unsigned.apk $(OUTPUTS)/android/gaddi-release-unsigned.apk
+	@echo "Release APK (unsigned) → $(OUTPUTS)/android/gaddi-release-unsigned.apk"
 
 web:
 	@echo "==> Building Web (Kotlin/WASM)..."
@@ -73,7 +73,7 @@ server:
 	@echo "Or:    PORT=8080 $(OUTPUTS)/server/bin/server"
 
 run-server:
-	@echo "==> Starting Kursi server on port 8080..."
+	@echo "==> Starting Gaddi server on port 8080..."
 	./gradlew :server:run
 
 clean:

@@ -53,7 +53,7 @@ object DarbarChatGenerator {
     ): String {
         val arcNote = arc?.let { " Current arc: ${it.name.lowercase()}." } ?: ""
         return buildString {
-            append("You are ${persona.name} (${persona.title}) in a political card game called Kursi.")
+            append("You are ${persona.name} (${persona.title}) in a political card game called Gaddi.")
             append(arcNote)
             append(" Speak in Hinglish (mix Hindi and English) in character, max 10 words.")
             append(" No game rules — just a sharp in-character quip about the current situation.")

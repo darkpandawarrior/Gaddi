@@ -1,4 +1,4 @@
-# Kursi — R8/ProGuard rules
+# Gaddi — R8/ProGuard rules
 
 # Keep Compose runtime internals that R8 would otherwise strip
 -keepclassmembers class androidx.compose.** { *; }

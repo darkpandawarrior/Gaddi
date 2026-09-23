@@ -73,7 +73,7 @@ private const val UNIT = 100f
 // ─────────────────────────── Path builders (per role) ─────────────────────────
 
 private fun netaSpec(): GlyphSpec {
-    // Speaker's chair seated on a stepped dais — the "kursi" itself.
+    // Speaker's chair seated on a stepped dais — the "gaddi" itself.
     val seatBack =
         Path().apply {
             // tall ornamented back
@@ -455,7 +455,7 @@ private fun specFor(role: Role): GlyphSpec =
  */
 fun DrawScope.drawRoleGlyph(
     role: Role,
-    inkColor: Color = KursiColors.forRole(role).color,
+    inkColor: Color = GaddiColors.forRole(role).color,
     weight: Float = 1f,
     deboss: Boolean = true,
 ) {
@@ -540,7 +540,7 @@ private fun DrawScope.paintSpec(
 fun RoleGlyph(
     role: Role,
     modifier: Modifier = Modifier,
-    tint: Color = KursiColors.forRole(role).color,
+    tint: Color = GaddiColors.forRole(role).color,
     weight: Float = 1f,
     deboss: Boolean = true,
 ) {

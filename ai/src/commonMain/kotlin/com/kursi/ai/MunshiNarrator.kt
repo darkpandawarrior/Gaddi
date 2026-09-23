@@ -114,7 +114,7 @@ class MunshiNarrator(
         const val MAX_TOKENS = 60
         const val TEMPERATURE = 0.8f
         const val SYSTEM_PROMPT =
-            "You are the Munshi, a court scribe narrating a political card game called Kursi. Write ONE short, " +
+            "You are the Munshi, a court scribe narrating a political card game called Gaddi. Write ONE short, " +
                 "grounded, in-character sentence (max 20 words) describing the most recent event from the facts " +
                 "given. Hinglish flavor. Never invent facts, names, or hidden cards beyond what is given."
     }

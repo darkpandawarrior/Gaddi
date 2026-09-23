@@ -31,7 +31,7 @@ import com.kursi.core.prefs.DailyStanding
 import com.kursi.core.prefs.RankedStanding
 import com.kursi.core.prefs.SarkariRank
 import com.kursi.designsystem.*
-import com.kursi.shared.strings.LocalKursiStrings
+import com.kursi.shared.strings.LocalGaddiStrings
 import com.kursi.shared.strings.rankName
 import kursi.core.designsystem.generated.resources.Res
 import kursi.core.designsystem.generated.resources.a11y_rank_plaque
@@ -62,7 +62,7 @@ fun LeaderboardScreen(
      */
     onlineStandings: OnlineStandings? = null,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val scroll = rememberScrollState()
     Column(modifier = modifier.fillMaxSize().litGround()) {
         EngravedNavHeader(
@@ -100,8 +100,8 @@ fun LeaderboardScreen(
                 } else {
                     Text(
                         s.leaderboardServerPending,
-                        style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                        color = KursiNeutrals.TextMuted,
+                        style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                        color = GaddiNeutrals.TextMuted,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth(),
                     )
@@ -113,11 +113,11 @@ fun LeaderboardScreen(
 
 @Composable
 private fun LeaderboardEmpty() {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     Text(
         s.leaderboardEmpty,
-        style = KursiType.body.copy(fontSize = 12.sp),
-        color = KursiNeutrals.TextSecondary,
+        style = GaddiType.body.copy(fontSize = 12.sp),
+        color = GaddiNeutrals.TextSecondary,
         textAlign = TextAlign.Center,
         modifier =
             Modifier
@@ -131,7 +131,7 @@ private fun LeaderboardEmpty() {
  *  rank name + a tier-progress bar. Real cast shadow, no outline framing the block. */
 @Composable
 private fun RankPlaque(ranked: RankedStanding) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val rank = ranked.rank
     val rankColor = rankColor(rank)
     val rankPlaqueDesc = stringResource(Res.string.a11y_rank_plaque, s.rankName(rank), ranked.rating, ranked.peak, ranked.games)
@@ -139,8 +139,8 @@ private fun RankPlaque(ranked: RankedStanding) {
         modifier =
             Modifier
                 .fillMaxWidth()
-                .shadow(10.dp, Squircle(KursiRadii.md), clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
-                .clip(Squircle(KursiRadii.md))
+                .shadow(10.dp, Squircle(GaddiRadii.md), clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
+                .clip(Squircle(GaddiRadii.md))
                 .background(
                     Brush.verticalGradient(
                         listOf(rankColor.copy(alpha = 0.22f), BrandTokens.BrassDark.copy(alpha = 0.32f)),
@@ -153,7 +153,7 @@ private fun RankPlaque(ranked: RankedStanding) {
     ) {
         Text(
             s.leaderboardRankSection,
-            style = KursiType.label_sm.dmMono().copy(fontSize = 11.sp, letterSpacing = 2.sp),
+            style = GaddiType.label_sm.dmMono().copy(fontSize = 11.sp, letterSpacing = 2.sp),
             color = BrandTokens.BrassAged,
         )
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(18.dp)) {
@@ -167,13 +167,13 @@ private fun RankPlaque(ranked: RankedStanding) {
                         .border(2.dp, rankColor, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
-                Text("${ranked.rating}", style = KursiType.display.copy(fontSize = 20.sp), color = rankColor)
+                Text("${ranked.rating}", style = GaddiType.display.copy(fontSize = 20.sp), color = rankColor)
             }
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     s.rankName(rank),
-                    style = KursiType.display.rozha().copy(fontSize = 20.sp),
-                    color = KursiNeutrals.TextPrimary,
+                    style = GaddiType.display.rozha().copy(fontSize = 20.sp),
+                    color = GaddiNeutrals.TextPrimary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -183,8 +183,8 @@ private fun RankPlaque(ranked: RankedStanding) {
                     } ?: s.rankedTopTier
                 Text(
                     nextHint,
-                    style = KursiType.body.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
-                    color = KursiNeutrals.TextSecondary,
+                    style = GaddiType.body.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
+                    color = GaddiNeutrals.TextSecondary,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -232,23 +232,23 @@ private fun MiniStat(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.semantics { contentDescription = "$label $value" }) {
-        Text(value, style = KursiType.numeric.copy(fontSize = 18.sp), color = BrandTokens.GoldAntique)
-        Text(label, style = KursiType.caption.copy(fontSize = 9.sp), color = KursiNeutrals.TextMuted)
+        Text(value, style = GaddiType.numeric.copy(fontSize = 18.sp), color = BrandTokens.GoldAntique)
+        Text(label, style = GaddiType.caption.copy(fontSize = 9.sp), color = GaddiNeutrals.TextMuted)
     }
 }
 
 /** Rating spark-line over the retained history window. */
 @Composable
 private fun RatingHistoryCard(ranked: RankedStanding) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         EngravedHeader(eyebrow = s.leaderboardHistorySection)
         val pts = ranked.history
         if (pts.size < 2) {
             Text(
                 s.leaderboardHistoryEmpty,
-                style = KursiType.body.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
-                color = KursiNeutrals.TextSecondary,
+                style = GaddiType.body.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
+                color = GaddiNeutrals.TextSecondary,
             )
         } else {
             val ratingHistoryDesc = stringResource(Res.string.a11y_rating_history, pts.size, pts.first(), pts.last())
@@ -263,8 +263,8 @@ private fun RatingHistoryCard(ranked: RankedStanding) {
                         },
             )
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("${pts.min()}", style = KursiType.caption.copy(fontSize = 9.sp), color = KursiNeutrals.TextMuted)
-                Text("${pts.max()}", style = KursiType.caption.copy(fontSize = 9.sp), color = BrandTokens.GoldAntique)
+                Text("${pts.min()}", style = GaddiType.caption.copy(fontSize = 9.sp), color = GaddiNeutrals.TextMuted)
+                Text("${pts.max()}", style = GaddiType.caption.copy(fontSize = 9.sp), color = BrandTokens.GoldAntique)
             }
         }
     }
@@ -321,7 +321,7 @@ private fun RatingSparkline(
 /** The daily-challenge standing card: streak + best streak + lifetime daily wins. */
 @Composable
 private fun DailyStandingCard(daily: DailyStanding) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         EngravedHeader(eyebrow = s.leaderboardDailySection)
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(28.dp)) {
@@ -335,7 +335,7 @@ private fun DailyStandingCard(daily: DailyStanding) {
 // ─────────────────────────── M7 online standings seam ─────────────────────────
 
 /**
- * The server-backed online standings, surfaced when the app is connected to a Kursi server. This is the
+ * The server-backed online standings, surfaced when the app is connected to a Gaddi server. This is the
  * clean SEAM the M6d footer promised: the screen reads these rows when present and otherwise stays the
  * local-only standings. The server today has no standings endpoint, so the app supplies [rows] from the
  * live ranked ladder (the player's own standing) and flips [connected] off when no server is reachable —
@@ -360,7 +360,7 @@ data class OnlineStandingRow(
 
 @Composable
 private fun OnlineStandingsCard(standings: OnlineStandings) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     Column(
         modifier =
             Modifier
@@ -376,13 +376,13 @@ private fun OnlineStandingsCard(standings: OnlineStandings) {
                 Modifier
                     .size(8.dp)
                     .clip(CircleShape)
-                    .background(if (standings.connected) KursiSemantics.Success else BrandTokens.BrassDark),
+                    .background(if (standings.connected) GaddiSemantics.Success else BrandTokens.BrassDark),
             )
         }
         Text(
             if (standings.connected) s.leaderboardOnlineConnectedSub else s.leaderboardOnlineOfflineSub,
-            style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-            color = KursiNeutrals.TextSecondary,
+            style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+            color = GaddiNeutrals.TextSecondary,
         )
         if (standings.rows.isNotEmpty()) {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -410,13 +410,13 @@ private fun OnlineStandingRowView(
         )
         Text(
             row.name,
-            style = KursiType.name.copy(fontSize = 13.sp),
-            color = if (row.isMe) BrandTokens.GoldAntique else KursiNeutrals.TextPrimary,
+            style = GaddiType.name.copy(fontSize = 13.sp),
+            color = if (row.isMe) BrandTokens.GoldAntique else GaddiNeutrals.TextPrimary,
             modifier = Modifier.weight(1f),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        Text("${row.rating}", style = KursiType.numeric.copy(fontSize = 13.sp), color = BrandTokens.GoldAntique)
+        Text("${row.rating}", style = GaddiType.numeric.copy(fontSize = 13.sp), color = BrandTokens.GoldAntique)
     }
 }
 
@@ -428,8 +428,8 @@ private fun rankColor(rank: SarkariRank): Color =
         SarkariRank.UNDER_SECRETARY -> BrandTokens.GoldAntique
         SarkariRank.DEPUTY_SECRETARY -> BrandTokens.GoldAntique
         SarkariRank.JOINT_SECRETARY -> BrandTokens.GoldAntique
-        SarkariRank.SECRETARY -> KursiSemantics.Success
-        SarkariRank.CABINET_SECRETARY -> KursiSemantics.Success
+        SarkariRank.SECRETARY -> GaddiSemantics.Success
+        SarkariRank.CABINET_SECRETARY -> GaddiSemantics.Success
     }
 
 // ─────────────────────────── Home strip + daily entry (reused) ────────────────
@@ -444,7 +444,7 @@ fun RankedStrip(
     onOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val rank = ranked.rank
     val rankColor = rankColor(rank)
     val rankedStripDesc = stringResource(Res.string.a11y_ranked_strip, s.rankName(rank), ranked.rating)
@@ -466,19 +466,19 @@ fun RankedStrip(
                     .border(1.5.dp, rankColor, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            Text("${ranked.rating}", style = KursiType.numeric.copy(fontSize = 11.sp), color = rankColor)
+            Text("${ranked.rating}", style = GaddiType.numeric.copy(fontSize = 11.sp), color = rankColor)
         }
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(
                     s.rankedStripTag,
-                    style = KursiType.caption.copy(fontSize = 8.sp, letterSpacing = 1.2.sp, fontWeight = FontWeight.Bold),
+                    style = GaddiType.caption.copy(fontSize = 8.sp, letterSpacing = 1.2.sp, fontWeight = FontWeight.Bold),
                     color = BrandTokens.BrassAged,
                 )
                 Text(
                     s.rankName(rank),
-                    style = KursiType.title.copy(fontSize = 13.sp),
-                    color = KursiNeutrals.TextPrimary,
+                    style = GaddiType.title.copy(fontSize = 13.sp),
+                    color = GaddiNeutrals.TextPrimary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -493,13 +493,13 @@ fun RankedStrip(
                 }
             Text(
                 sub,
-                style = KursiType.caption.copy(fontSize = 9.sp, fontStyle = FontStyle.Italic),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 9.sp, fontStyle = FontStyle.Italic),
+                color = GaddiNeutrals.TextMuted,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        Text("›", style = KursiType.title.copy(fontSize = 16.sp), color = KursiNeutrals.TextMuted)
+        Text("›", style = GaddiType.title.copy(fontSize = 16.sp), color = GaddiNeutrals.TextMuted)
     }
 }
 
@@ -514,7 +514,7 @@ fun DailyChallengeStrip(
     onStart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val accent = if (todayDone) BrandTokens.BrassAged else BrandTokens.StampRed
     HairlineRow(
         onClick = onStart,
@@ -525,20 +525,20 @@ fun DailyChallengeStrip(
                     if (todayDone) "${s.dailyCta}. ${s.dailyDoneSub}" else "${s.dailyCta}. ${s.dailyCtaSub}"
             },
     ) {
-        Text("✦", style = KursiType.title.copy(fontSize = 16.sp), color = accent)
+        Text("✦", style = GaddiType.title.copy(fontSize = 16.sp), color = accent)
         Column(modifier = Modifier.weight(1f)) {
-            Text(s.dailyCta, style = KursiType.title.copy(fontSize = 14.sp), color = KursiNeutrals.TextPrimary)
+            Text(s.dailyCta, style = GaddiType.title.copy(fontSize = 14.sp), color = GaddiNeutrals.TextPrimary)
             Text(
                 if (todayDone) s.dailyDoneSub else s.dailyCtaSub,
-                style = KursiType.caption.copy(fontSize = 9.sp, fontStyle = FontStyle.Italic),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 9.sp, fontStyle = FontStyle.Italic),
+                color = GaddiNeutrals.TextMuted,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             if (daily.streak > 0) {
                 Text(
                     s.dailyStreakLabel(daily.streak),
-                    style = KursiType.caption.copy(fontSize = 9.sp),
+                    style = GaddiType.caption.copy(fontSize = 9.sp),
                     color = BrandTokens.GoldAntique,
                 )
             }
@@ -554,7 +554,7 @@ fun DailyChallengeStrip(
         ) {
             Text(
                 if (todayDone) s.dailyDoneBadge else s.dailyOpenBadge,
-                style = KursiType.caption.copy(fontSize = 8.sp, letterSpacing = 0.8.sp, fontWeight = FontWeight.Bold),
+                style = GaddiType.caption.copy(fontSize = 8.sp, letterSpacing = 0.8.sp, fontWeight = FontWeight.Bold),
                 color = accent,
             )
         }

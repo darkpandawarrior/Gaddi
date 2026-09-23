@@ -32,7 +32,7 @@ actual fun SoundPlayer(): SoundPlayer = IosSoundPlayer()
 
 @OptIn(ExperimentalForeignApi::class)
 private class IosSoundPlayer : SoundPlayer {
-    private val players = mutableMapOf<KursiSound, AVAudioPlayer>()
+    private val players = mutableMapOf<GaddiSound, AVAudioPlayer>()
 
     /** False when the audio session could not be configured, i.e. play() is a silent no-op. */
     override val isAvailable: Boolean =
@@ -42,11 +42,11 @@ private class IosSoundPlayer : SoundPlayer {
             session.setActive(true, null)
         }.isSuccess
 
-    override suspend fun play(sound: KursiSound) {
+    override suspend fun play(sound: GaddiSound) {
         runCatching {
             val player =
                 players.getOrPut(sound) {
-                    val bytes = loadKursiSoundBytes(sound) ?: return@runCatching
+                    val bytes = loadGaddiSoundBytes(sound) ?: return@runCatching
                     AVAudioPlayer(data = bytes.toNSData(), fileTypeHint = "com.microsoft.waveform-audio", error = null)
                         .also { it.prepareToPlay() }
                 }

@@ -43,7 +43,7 @@ internal fun CollapsibleLogDrawer(
     onShowChit: (ChitContent, androidx.compose.ui.geometry.Rect?) -> Unit = { _, _ -> },
     onAction: (GameAction) -> Unit = {},
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     var expanded by remember { mutableStateOf(false) }
     // 0 = ROZNAMCHA, 1 = DARBAR
     var activeTab by remember { mutableStateOf(0) }
@@ -66,12 +66,12 @@ internal fun CollapsibleLogDrawer(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .clip(Squircle(KursiRadii.sm))
+                    .clip(Squircle(GaddiRadii.sm))
                     .background(Color(0xFF120D07))
                     .border(
                         1.dp,
                         (if (unread > 0 && !expanded) BrandTokens.StampRed else BrandTokens.GoldAntique).copy(alpha = 0.6f),
-                        Squircle(KursiRadii.sm),
+                        Squircle(GaddiRadii.sm),
                     ).inspectable(onClick = { expanded = !expanded }, onLongClick = {})
                     .padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -82,13 +82,13 @@ internal fun CollapsibleLogDrawer(
                     Modifier
                         .size(6.dp)
                         .clip(androidx.compose.foundation.shape.CircleShape)
-                        .background(KursiSemantics.Success),
+                        .background(GaddiSemantics.Success),
             )
             // ROZNAMCHA label
             Text(
                 text = voice.logPanelHeader,
                 style =
-                    KursiType.label_sm.copy(
+                    GaddiType.label_sm.copy(
                         fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                         letterSpacing = 2.sp,
                     ),
@@ -99,14 +99,14 @@ internal fun CollapsibleLogDrawer(
                 Text(
                     text = "·",
                     color = BrandTokens.BrassDark,
-                    style = KursiType.label_sm,
+                    style = GaddiType.label_sm,
                 )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     modifier =
                         Modifier
-                            .clip(Squircle(KursiRadii.xs))
+                            .clip(Squircle(GaddiRadii.xs))
                             .clickable(
                                 indication = null,
                                 interactionSource =
@@ -123,7 +123,7 @@ internal fun CollapsibleLogDrawer(
                     Text(
                         text = "DARBAR",
                         style =
-                            KursiType.label_sm.copy(
+                            GaddiType.label_sm.copy(
                                 fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                                 letterSpacing = 2.sp,
                             ),
@@ -148,8 +148,8 @@ internal fun CollapsibleLogDrawer(
                         ) {
                             Text(
                                 text = if (unread > 9) "9+" else unread.toString(),
-                                style = KursiType.label_micro.copy(fontSize = 7.sp),
-                                color = KursiNeutrals.Cream,
+                                style = GaddiType.label_micro.copy(fontSize = 7.sp),
+                                color = GaddiNeutrals.Cream,
                             )
                         }
                     }
@@ -159,7 +159,7 @@ internal fun CollapsibleLogDrawer(
             Text(
                 text = if (expanded) "▾" else "▴ $eventCount",
                 style =
-                    KursiType.label_micro.copy(
+                    GaddiType.label_micro.copy(
                         fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                     ),
                 color = BrandTokens.BrassAged,
@@ -176,7 +176,7 @@ internal fun CollapsibleLogDrawer(
                             Modifier
                                 .fillMaxWidth()
                                 .padding(top = 6.dp, start = 4.dp, end = 4.dp)
-                                .clip(Squircle(KursiRadii.xs))
+                                .clip(Squircle(GaddiRadii.xs))
                                 .background(Color(0xFF120D07).copy(alpha = 0.7f)),
                     ) {
                         listOf("ROZNAMCHA" to 0, "DARBAR" to 1).forEach { (label, idx) ->
@@ -206,7 +206,7 @@ internal fun CollapsibleLogDrawer(
                                 Text(
                                     text = label,
                                     style =
-                                        KursiType.label_micro.copy(
+                                        GaddiType.label_micro.copy(
                                             letterSpacing = 1.5.sp,
                                             fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                                         ),
@@ -265,7 +265,7 @@ internal fun DarbarLogInline(state: GameUiState) {
             else ->
                 state.opponentPersonas[PlayerId(senderSeat)]
                     ?.let { Color(it.seatColorArgb) }
-                    ?: if (senderSeat >= 0) KursiSeatColors[senderSeat] else BrandTokens.BrassAged
+                    ?: if (senderSeat >= 0) GaddiSeatColors[senderSeat] else BrandTokens.BrassAged
         }
 
     val listState = rememberLazyListState()
@@ -279,11 +279,11 @@ internal fun DarbarLogInline(state: GameUiState) {
             Text(
                 text = stringResource(Res.string.game_darbar_empty),
                 style =
-                    KursiType.caption.copy(
+                    GaddiType.caption.copy(
                         fontSize = 12.sp,
                         fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
                     ),
-                color = KursiNeutrals.TextMuted,
+                color = GaddiNeutrals.TextMuted,
             )
         }
         return
@@ -338,7 +338,7 @@ internal fun GameLog(
     onShowChit: (ChitContent, androidx.compose.ui.geometry.Rect?) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier,
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val listState = rememberLazyListState()
     val groups =
         remember(state.recentEvents) {
@@ -386,11 +386,11 @@ internal fun GameLog(
                         Text(
                             text = voice.logEmpty,
                             style =
-                                KursiType.caption.copy(
+                                GaddiType.caption.copy(
                                     fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                                     fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
                                 ),
-                            color = KursiNeutrals.TextMuted,
+                            color = GaddiNeutrals.TextMuted,
                             textAlign = TextAlign.Center,
                         )
                     }
@@ -454,7 +454,7 @@ internal fun LogTerminalShell(
 ) {
     val shape =
         androidx.compose.foundation.shape
-            .RoundedCornerShape(KursiRadii.sm)
+            .RoundedCornerShape(GaddiRadii.sm)
     Box(
         modifier =
             modifier
@@ -470,7 +470,7 @@ internal fun LogTerminalShell(
                         ),
                     ),
                 ).drawBehind { drawTeleprinterTexture() }
-                .embossEdge(KursiRadii.sm, highlight = BrandTokens.GoldAntique.copy(alpha = 0.5f)),
+                .embossEdge(GaddiRadii.sm, highlight = BrandTokens.GoldAntique.copy(alpha = 0.5f)),
     ) {
         content()
     }
@@ -512,7 +512,7 @@ internal fun DrawScope.drawTeleprinterTexture() {
 
 /** Masthead: ROZNAMCHA wordmark + a sarkari live-feed tag and a blinking phosphor cursor dot. */
 @Composable
-internal fun LogMasthead(voice: KursiVoice) {
+internal fun LogMasthead(voice: GaddiVoice) {
     val pulse = rememberInfiniteTransition(label = "logCursor")
     val dotAlpha by pulse.animateFloat(
         initialValue = 0.25f,
@@ -527,13 +527,13 @@ internal fun LogMasthead(voice: KursiVoice) {
                     Modifier
                         .size(6.dp)
                         .clip(androidx.compose.foundation.shape.CircleShape)
-                        .background(KursiSemantics.Success.copy(alpha = dotAlpha)),
+                        .background(GaddiSemantics.Success.copy(alpha = dotAlpha)),
             )
             Spacer(Modifier.width(7.dp))
             Text(
                 text = voice.logPanelHeader,
                 style =
-                    KursiType.label_sm.copy(
+                    GaddiType.label_sm.copy(
                         fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                         letterSpacing = 3.sp,
                     ),
@@ -543,7 +543,7 @@ internal fun LogMasthead(voice: KursiVoice) {
         Text(
             text = voice.logTeleprinterTag,
             style =
-                KursiType.label_micro.copy(
+                GaddiType.label_micro.copy(
                     fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                     letterSpacing = 1.5.sp,
                     fontSize = 8.sp,
@@ -575,7 +575,7 @@ internal fun LogActiveFileHeader(
             Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 3.dp)
-                .clip(Squircle(KursiRadii.xs))
+                .clip(Squircle(GaddiRadii.xs))
                 .background(
                     Brush.horizontalGradient(
                         listOf(accent.copy(alpha = 0.22f), accent.copy(alpha = 0.05f)),
@@ -583,13 +583,13 @@ internal fun LogActiveFileHeader(
                 ).border(
                     0.5.dp,
                     accent.copy(alpha = 0.5f),
-                    Squircle(KursiRadii.xs),
+                    Squircle(GaddiRadii.xs),
                 ).padding(horizontal = 8.dp, vertical = 4.dp),
     ) {
         Text(
             text = text,
             style =
-                KursiType.label_micro.copy(
+                GaddiType.label_micro.copy(
                     fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                     letterSpacing = 1.sp,
                     fontSize = 9.sp,
@@ -622,7 +622,7 @@ internal fun LogFileBanner(
         Text(
             text = text,
             style =
-                KursiType.label_micro.copy(
+                GaddiType.label_micro.copy(
                     fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                     letterSpacing = 1.sp,
                     fontSize = 8.5.sp,
@@ -671,7 +671,7 @@ internal fun JumpToLatestPill(
         Text(
             text = label,
             style =
-                KursiType.label_micro.copy(
+                GaddiType.label_micro.copy(
                     fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                     letterSpacing = 0.5.sp,
                     fontSize = 9.sp,
@@ -805,7 +805,7 @@ internal fun collapseLogEvents(
 internal fun personaColorOrDefault(
     id: PlayerId,
     state: GameUiState,
-): Color = state.opponentPersonas[id]?.let { Color(it.seatColorArgb) } ?: KursiNeutrals.TextSecondary
+): Color = state.opponentPersonas[id]?.let { Color(it.seatColorArgb) } ?: GaddiNeutrals.TextSecondary
 
 @Composable
 internal fun CollapsedLogEntry(
@@ -813,7 +813,7 @@ internal fun CollapsedLogEntry(
     state: GameUiState,
     onShowChit: (ChitContent, androidx.compose.ui.geometry.Rect?) -> Unit = { _, _ -> },
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     when (entry) {
         is LogEntry.SafeAction -> {
             val actorName = personaNameOrDefault(entry.actor, state)
@@ -859,12 +859,12 @@ internal fun CollapsedLogEntry(
                 Box(
                     modifier =
                         Modifier
-                            .background(KursiFeltColors.Surface1.copy(alpha = 0.90f))
+                            .background(GaddiFeltColors.Surface1.copy(alpha = 0.90f))
                             .padding(horizontal = 6.dp),
                 ) {
                     Text(
                         text = voice.logRoundDivider(entry.turn, entry.actorName),
-                        style = KursiType.caption,
+                        style = GaddiType.caption,
                         color = BrandTokens.BrassAged.copy(alpha = 0.70f),
                     )
                 }
@@ -912,12 +912,12 @@ internal fun LogRow(
     ) {
         Text(
             text = icon,
-            style = KursiType.caption,
+            style = GaddiType.caption,
             modifier = Modifier.padding(top = 1.dp),
         )
         Text(
             text = text,
-            style = KursiType.caption.copy(lineHeight = 13.sp),
+            style = GaddiType.caption.copy(lineHeight = 13.sp),
             color = textColor,
             modifier = Modifier.weight(1f).padding(top = 1.dp),
             maxLines = 2,
@@ -935,7 +935,7 @@ internal fun GameLogEntry(
     state: GameUiState,
     onShowChit: (ChitContent, androidx.compose.ui.geometry.Rect?) -> Unit = { _, _ -> },
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
 
     // Build the long-press inspect lambda for a row: opens a LogEvent chit with this
     // event's deadpan narration. [actor]/[other] feed the narrator the right names.
@@ -983,7 +983,7 @@ internal fun GameLogEntry(
             LogRow(
                 icon = actionIcon(event.action),
                 text = txt,
-                textColor = KursiNeutrals.TextPrimary,
+                textColor = GaddiNeutrals.TextPrimary,
                 outcome = OutcomeKind.Success,
                 onInspect = inspect(txt, actionIcon(event.action), actorName),
             )
@@ -994,7 +994,7 @@ internal fun GameLogEntry(
             LogRow(
                 icon = "🚫",
                 text = txt,
-                textColor = KursiNeutrals.TextMuted,
+                textColor = GaddiNeutrals.TextMuted,
                 outcome = OutcomeKind.Block,
                 onInspect = inspect(txt, "🚫", actorName),
             )
@@ -1006,7 +1006,7 @@ internal fun GameLogEntry(
             LogRow(
                 icon = "⚡",
                 text = txt,
-                textColor = KursiSemantics.Danger,
+                textColor = GaddiSemantics.Danger,
                 onInspect = inspect(txt, "⚡", targetName, challengerName),
             )
         }
@@ -1021,7 +1021,7 @@ internal fun GameLogEntry(
             LogRow(
                 icon = if (event.hadRole) "✓" else "✗",
                 text = voicedText,
-                textColor = KursiNeutrals.TextSecondary,
+                textColor = GaddiNeutrals.TextSecondary,
                 outcome = if (event.hadRole) OutcomeKind.ChallengeFail else OutcomeKind.BluffCaught,
                 onInspect = inspect(voicedText, if (event.hadRole) "✓" else "✗", playerName),
             )
@@ -1043,7 +1043,7 @@ internal fun GameLogEntry(
             LogRow(
                 icon = "💀",
                 text = txt,
-                textColor = KursiSemantics.Danger,
+                textColor = GaddiSemantics.Danger,
                 outcome = OutcomeKind.Eliminated,
                 onInspect = inspect(txt, "💀", playerName),
             )
@@ -1054,7 +1054,7 @@ internal fun GameLogEntry(
             LogRow(
                 icon = "🪦",
                 text = txt,
-                textColor = KursiSemantics.Danger,
+                textColor = GaddiSemantics.Danger,
                 outcome = OutcomeKind.Eliminated,
                 onInspect = inspect(txt, "🪦", playerName),
             )
@@ -1069,7 +1069,7 @@ internal fun GameLogEntry(
             LogRow(
                 icon = "🪙",
                 text = txt,
-                textColor = KursiNeutrals.TextMuted,
+                textColor = GaddiNeutrals.TextMuted,
                 onInspect = inspect(txt, "🪙", fromName, toName),
             )
         }
@@ -1080,8 +1080,8 @@ internal fun GameLogEntry(
             val winnerName = personaNameOrDefault(event.winner, state)
             Text(
                 text = voice.opponentWins(winnerName),
-                style = KursiType.title,
-                color = KursiFeltColors.GoldCoin,
+                style = GaddiType.title,
+                color = GaddiFeltColors.GoldCoin,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                 textAlign = TextAlign.Center,
             )
@@ -1092,7 +1092,7 @@ internal fun GameLogEntry(
             LogRow(
                 icon = "🔄",
                 text = txt,
-                textColor = KursiNeutrals.TextMuted,
+                textColor = GaddiNeutrals.TextMuted,
                 onInspect = inspect(txt, "🔄", actorName),
             )
         }
@@ -1133,7 +1133,7 @@ internal fun actorName(
         is PhaseView.Over -> personaNameOrDefault(phase.winner, state, self)
     }
 
-/** Fallback self-label used by non-composable helpers that have no [KursiVoice] in scope. */
+/** Fallback self-label used by non-composable helpers that have no [GaddiVoice] in scope. */
 internal const val DEFAULT_SELF_NAME = "Aap"
 
 /**

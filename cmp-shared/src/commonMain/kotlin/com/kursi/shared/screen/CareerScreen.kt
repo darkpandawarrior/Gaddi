@@ -31,8 +31,8 @@ import com.kursi.core.prefs.DecisionLedger
 import com.kursi.core.prefs.PersonaRecord
 import com.kursi.core.prefs.StatsLedger
 import com.kursi.designsystem.*
-import com.kursi.shared.strings.KursiStrings
-import com.kursi.shared.strings.LocalKursiStrings
+import com.kursi.shared.strings.GaddiStrings
+import com.kursi.shared.strings.LocalGaddiStrings
 import kursi.core.designsystem.generated.resources.Res
 import kursi.core.designsystem.generated.resources.a11y_avg_ev_lost_suffix
 import kursi.core.designsystem.generated.resources.a11y_best_move_match_suffix
@@ -84,7 +84,7 @@ fun CareerScreen(
     /** M6d — open the local leaderboard / standings screen. */
     onLeaderboard: () -> Unit = {},
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val scroll = rememberScrollState()
     Column(modifier = modifier.fillMaxSize().litGround()) {
         EngravedNavHeader(
@@ -95,8 +95,8 @@ fun CareerScreen(
             trailing = {
                 Text(
                     stringResource(Res.string.career_register_badge),
-                    style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp),
-                    color = KursiNeutrals.TextMuted,
+                    style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp),
+                    color = GaddiNeutrals.TextMuted,
                 )
             },
         )
@@ -149,13 +149,13 @@ private fun CareerEmpty() {
     ) {
         Text(
             stringResource(Res.string.career_empty_title),
-            style = KursiType.display.rozha().copy(fontSize = 20.sp),
+            style = GaddiType.display.rozha().copy(fontSize = 20.sp),
             color = BrandTokens.GoldAntique,
         )
         Text(
             stringResource(Res.string.career_empty_body),
-            style = KursiType.body.copy(fontSize = 12.sp),
-            color = KursiNeutrals.TextSecondary,
+            style = GaddiType.body.copy(fontSize = 12.sp),
+            color = GaddiNeutrals.TextSecondary,
             textAlign = TextAlign.Center,
         )
     }
@@ -171,8 +171,8 @@ private fun CareerHeadline(ledger: StatsLedger) {
         modifier =
             Modifier
                 .fillMaxWidth()
-                .shadow(10.dp, Squircle(KursiRadii.md), clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
-                .clip(Squircle(KursiRadii.md))
+                .shadow(10.dp, Squircle(GaddiRadii.md), clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
+                .clip(Squircle(GaddiRadii.md))
                 .background(
                     Brush.verticalGradient(
                         listOf(BrandTokens.GoldAntique.copy(alpha = 0.22f), BrandTokens.BrassDark.copy(alpha = 0.32f)),
@@ -194,18 +194,18 @@ private fun CareerHeadline(ledger: StatsLedger) {
                     .border(2.dp, BrandTokens.GoldAntique, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            Text("$winPct%", style = KursiType.display.copy(fontSize = 20.sp), color = BrandTokens.GoldAntique)
+            Text("$winPct%", style = GaddiType.display.copy(fontSize = 20.sp), color = BrandTokens.GoldAntique)
         }
         Column {
             Text(
                 stringResource(Res.string.career_wins_stamp, ledger.wins),
-                style = KursiType.display.rozha().copy(fontSize = 22.sp),
-                color = KursiNeutrals.TextPrimary,
+                style = GaddiType.display.rozha().copy(fontSize = 22.sp),
+                color = GaddiNeutrals.TextPrimary,
             )
             Text(
                 stringResource(Res.string.career_games_losses, ledger.games, ledger.losses),
-                style = KursiType.body.copy(fontSize = 12.sp, fontStyle = FontStyle.Italic),
-                color = KursiNeutrals.TextSecondary,
+                style = GaddiType.body.copy(fontSize = 12.sp, fontStyle = FontStyle.Italic),
+                color = GaddiNeutrals.TextSecondary,
             )
         }
     }
@@ -239,8 +239,8 @@ private fun StatReadout(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.semantics { contentDescription = "$value $a11y" }) {
-        Text(value, style = KursiType.numeric.copy(fontSize = 24.sp), color = BrandTokens.GoldAntique)
-        Text(label, style = KursiType.caption.copy(fontSize = 10.sp, letterSpacing = 0.5.sp), color = KursiNeutrals.TextMuted)
+        Text(value, style = GaddiType.numeric.copy(fontSize = 24.sp), color = BrandTokens.GoldAntique)
+        Text(label, style = GaddiType.caption.copy(fontSize = 10.sp, letterSpacing = 0.5.sp), color = GaddiNeutrals.TextMuted)
     }
 }
 
@@ -250,16 +250,16 @@ private fun StatReadout(
  * M6b — the decision-quality dossier: an engraved section eyebrow, a stamped grade chip (Sharp Babu /
  * Steady / Reckless) with a sub-line naming the sample size, then the four headline readouts — best-move
  * match %, avg win-probability bled, challenge discipline, and bluff survival. Bilingual via
- * [LocalKursiStrings].
+ * [LocalGaddiStrings].
  */
 @Composable
 private fun DecisionDossier(dl: DecisionLedger) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val grade = dl.grade
     val (gradeName, gradeSub) = gradeStrings(grade, s)
     val gradeColor =
         when (grade) {
-            DecisionGrade.SHARP -> KursiSemantics.Success
+            DecisionGrade.SHARP -> GaddiSemantics.Success
             DecisionGrade.STEADY -> BrandTokens.GoldAntique
             DecisionGrade.RECKLESS -> BrandTokens.StampRed
             DecisionGrade.UNRATED -> BrandTokens.BrassAged
@@ -289,17 +289,17 @@ private fun DecisionDossier(dl: DecisionLedger) {
             ) {
                 Text(
                     gradeName,
-                    style = KursiType.title.copy(fontSize = 15.sp, letterSpacing = 1.sp, fontWeight = FontWeight.Bold),
+                    style = GaddiType.title.copy(fontSize = 15.sp, letterSpacing = 1.sp, fontWeight = FontWeight.Bold),
                     color = gradeColor,
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     gradeSub,
-                    style = KursiType.body.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
-                    color = KursiNeutrals.TextSecondary,
+                    style = GaddiType.body.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
+                    color = GaddiNeutrals.TextSecondary,
                 )
-                Text(s.dqSampleSub(dl.decisions), style = KursiType.caption.copy(fontSize = 9.sp), color = KursiNeutrals.TextMuted)
+                Text(s.dqSampleSub(dl.decisions), style = GaddiType.caption.copy(fontSize = 9.sp), color = GaddiNeutrals.TextMuted)
             }
         }
         // 2×2 readouts — bare DM Mono numerals on the ground, no boxes.
@@ -337,7 +337,7 @@ private fun DecisionDossier(dl: DecisionLedger) {
 /** Resolve the bilingual grade name + flavour sub-line for [grade]. */
 private fun gradeStrings(
     grade: DecisionGrade,
-    s: KursiStrings,
+    s: GaddiStrings,
 ): Pair<String, String> =
     when (grade) {
         DecisionGrade.SHARP -> s.dqGradeSharp to s.dqGradeSharpSub
@@ -383,16 +383,16 @@ private fun H2HRow(
         BrassToken(monogram = persona?.monogram ?: "?", fill = color, size = 32.dp)
         Text(
             name,
-            style = KursiType.body.copy(fontSize = 13.sp),
-            color = KursiNeutrals.TextPrimary,
+            style = GaddiType.body.copy(fontSize = 13.sp),
+            color = GaddiNeutrals.TextPrimary,
             modifier = Modifier.weight(1f),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
         Text(
             "${record.wins}/${record.played}  ($pct%)",
-            style = KursiType.numeric.copy(fontSize = 12.sp),
-            color = if (pct >= 50) KursiSemantics.Success else KursiNeutrals.TextSecondary,
+            style = GaddiType.numeric.copy(fontSize = 12.sp),
+            color = if (pct >= 50) GaddiSemantics.Success else GaddiNeutrals.TextSecondary,
         )
     }
 }
@@ -428,20 +428,20 @@ fun CareerStrip(
                     .border(1.5.dp, BrandTokens.GoldAntique, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            Text("$winPct", style = KursiType.numeric.copy(fontSize = 11.sp), color = BrandTokens.GoldAntique)
+            Text("$winPct", style = GaddiType.numeric.copy(fontSize = 11.sp), color = BrandTokens.GoldAntique)
         }
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 "ROZNAMCHA",
-                style = KursiType.caption.copy(fontSize = 8.sp, letterSpacing = 1.2.sp, fontWeight = FontWeight.Bold),
+                style = GaddiType.caption.copy(fontSize = 8.sp, letterSpacing = 1.2.sp, fontWeight = FontWeight.Bold),
                 color = BrandTokens.BrassAged,
             )
             Text(
                 stringResource(Res.string.career_strip_summary, ledger.wins, ledger.losses, winPct),
-                style = KursiType.numeric.copy(fontSize = 13.sp),
+                style = GaddiType.numeric.copy(fontSize = 13.sp),
                 color = BrandTokens.GoldAntique,
             )
         }
-        Text("›", style = KursiType.title.copy(fontSize = 16.sp), color = KursiNeutrals.TextMuted)
+        Text("›", style = GaddiType.title.copy(fontSize = 16.sp), color = GaddiNeutrals.TextMuted)
     }
 }

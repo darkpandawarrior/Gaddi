@@ -1,7 +1,7 @@
 package com.kursi.core.network
 
 import com.kursi.protocol.wire.ClientMessage
-import com.kursi.protocol.wire.KursiJson
+import com.kursi.protocol.wire.GaddiJson
 import com.kursi.protocol.wire.ServerMessage
 import com.siddharth.kmp.network.httpClientEngine
 import io.ktor.client.HttpClient
@@ -20,11 +20,11 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 
 /**
- * Ktor WebSocket client for the Kursi protocol.
+ * Ktor WebSocket client for the Gaddi protocol.
  *
  * Usage:
  * ```
- * val client = KursiClient()
+ * val client = GaddiClient()
  * // connect returns a cold Flow of ServerMessages:
  * val session = client.connect(host = "localhost", port = 8080, roomCode = "ABCD")
  * // collect incoming messages while sending outgoing ones:
@@ -35,24 +35,24 @@ import kotlinx.serialization.encodeToString
  * The [HttpClient] is created lazily using the platform-appropriate engine
  * supplied by [httpClientEngine].
  */
-class KursiClient : AutoCloseable {
+class GaddiClient : AutoCloseable {
     private val http: HttpClient =
         HttpClient(httpClientEngine()) {
             install(WebSockets)
             install(ContentNegotiation) {
-                json(KursiJson)
+                json(GaddiJson)
             }
         }
 
     /**
-     * Opens a WebSocket connection to the Kursi server and returns a [KursiSession].
+     * Opens a WebSocket connection to the Gaddi server and returns a [GaddiSession].
      *
      * The caller must:
-     * 1. Collect [KursiSession.incoming] to receive [ServerMessage]s (the [ClientMessage.JoinRoom]
+     * 1. Collect [GaddiSession.incoming] to receive [ServerMessage]s (the [ClientMessage.JoinRoom]
      *    handshake is sent internally as the first frame).
-     * 2. Call [KursiSession.send] to submit [ClientMessage]s.
+     * 2. Call [GaddiSession.send] to submit [ClientMessage]s.
      *
-     * The session terminates when [KursiSession.incoming] completes (server closes) or
+     * The session terminates when [GaddiSession.incoming] completes (server closes) or
      * the caller cancels the collecting coroutine. The underlying socket is then closed.
      *
      * IMPLEMENTATION NOTE — concurrent duplex pump:
@@ -63,7 +63,7 @@ class KursiClient : AutoCloseable {
      * independent children of the [channelFlow]'s producer scope, so outbound frames flush
      * immediately regardless of inbound traffic.
      *
-     * @param host          Hostname or IP of the Kursi server (e.g. "localhost", "10.0.0.1").
+     * @param host          Hostname or IP of the Gaddi server (e.g. "localhost", "10.0.0.1").
      * @param port          Port the server listens on (default 8080 per :server/App.kt).
      * @param roomCode      Short room code to join (e.g. "ABCD"). Matched case-insensitively by the server.
      * @param matchId       Stable match identifier to embed in every [ClientMessage]. Defaults to [roomCode].
@@ -76,7 +76,7 @@ class KursiClient : AutoCloseable {
         roomCode: String,
         matchId: String = roomCode,
         reconnectSeat: Int? = null,
-    ): KursiSession {
+    ): GaddiSession {
         // Outgoing channel: caller pushes ClientMessages here; the WS send loop drains it.
         val outgoing = Channel<ClientMessage>(capacity = Channel.BUFFERED)
 
@@ -92,7 +92,7 @@ class KursiClient : AutoCloseable {
                             roomCode = roomCode,
                             reconnectSeat = reconnectSeat,
                         )
-                    send(Frame.Text(KursiJson.encodeToString<ClientMessage>(joinMsg)))
+                    send(Frame.Text(GaddiJson.encodeToString<ClientMessage>(joinMsg)))
 
                     // 2. Send loop — drains the outgoing channel into the socket as fast as the caller
                     //    enqueues, independent of inbound traffic.
@@ -100,7 +100,7 @@ class KursiClient : AutoCloseable {
                         launch {
                             for (msg in outgoing) {
                                 if (!isActive) break
-                                send(Frame.Text(KursiJson.encodeToString<ClientMessage>(msg)))
+                                send(Frame.Text(GaddiJson.encodeToString<ClientMessage>(msg)))
                             }
                         }
 
@@ -111,7 +111,7 @@ class KursiClient : AutoCloseable {
                             val text = frame.readText()
                             val serverMsg: ServerMessage =
                                 try {
-                                    KursiJson.decodeFromString(text)
+                                    GaddiJson.decodeFromString(text)
                                 } catch (_: Exception) {
                                     // Malformed frame: skip (server may have sent a future schema version).
                                     continue
@@ -126,7 +126,7 @@ class KursiClient : AutoCloseable {
                 }
             }
 
-        return KursiSession(incoming = incoming, outgoing = outgoing)
+        return GaddiSession(incoming = incoming, outgoing = outgoing)
     }
 
     override fun close() {
@@ -135,7 +135,7 @@ class KursiClient : AutoCloseable {
 }
 
 /**
- * A live Kursi WebSocket session returned by [KursiClient.connect].
+ * A live Gaddi WebSocket session returned by [GaddiClient.connect].
  *
  * @property incoming Cold [Flow] of [ServerMessage]s received from the server.
  *                    Completes when the WebSocket is closed (normally or abnormally).
@@ -143,7 +143,7 @@ class KursiClient : AutoCloseable {
  * @property outgoing The internal [SendChannel] used by [send]. Exposed as [SendChannel] so
  *                    callers use the type-safe [send] function rather than pushing raw frames.
  */
-class KursiSession internal constructor(
+class GaddiSession internal constructor(
     val incoming: Flow<ServerMessage>,
     private val outgoing: SendChannel<ClientMessage>,
 ) {

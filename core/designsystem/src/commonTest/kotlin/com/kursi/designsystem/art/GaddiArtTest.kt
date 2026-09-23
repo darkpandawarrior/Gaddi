@@ -8,15 +8,15 @@ import kotlin.test.assertNotEquals
 
 /**
  * The loading seam's pure resolution logic (§7.4): a slot resolves to [ArtResolution.Asset]
- * only when it is both globally enabled ([KursiArtPolicy.assetsEnabled]) and present in the
+ * only when it is both globally enabled ([GaddiArtPolicy.assetsEnabled]) and present in the
  * ready-set; otherwise it falls back. [resolveArt] takes the ready-set as a parameter
- * (defaulting to the real, empty-until-art-lands [KursiArtRegistry]) precisely so both branches
+ * (defaulting to the real, empty-until-art-lands [GaddiArtRegistry]) precisely so both branches
  * are testable without mutating production state.
  */
-class KursiArtTest {
+class GaddiArtTest {
     @AfterTest
     fun resetPolicy() {
-        KursiArtPolicy.assetsEnabled = true
+        GaddiArtPolicy.assetsEnabled = true
     }
 
     @Test
@@ -28,7 +28,7 @@ class KursiArtTest {
 
     @Test
     fun shippedRegistry_isEmpty_soEveryPersonaPortraitFallsBack() {
-        KursiPersonaIds.all.forEach { id ->
+        GaddiPersonaIds.all.forEach { id ->
             assertEquals(ArtResolution.Fallback, resolveArt(ArtSlot.PersonaPortrait(id)))
         }
     }
@@ -60,7 +60,7 @@ class KursiArtTest {
     @Test
     fun assetsDisabledGlobally_forcesFallback_evenWhenPresentInReadySet() {
         val slot = ArtSlot.Moment(HeroMoment.CREST)
-        KursiArtPolicy.assetsEnabled = false
+        GaddiArtPolicy.assetsEnabled = false
         assertEquals(ArtResolution.Fallback, resolveArt(slot, readySlots = setOf(slot)))
     }
 

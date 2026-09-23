@@ -4,10 +4,10 @@ import android.app.NotificationManager
 import com.siddharth.kmp.feedback.NotificationChannelSpec
 
 /**
- * Kursi's notification channels. Ids stay stable — they are referenced by the FCM service and created
+ * Gaddi's notification channels. Ids stay stable — they are referenced by the FCM service and created
  * at launch. Since :feedback was genericized (backlog #13), the app owns these specs, not the toolkit.
  */
-object KursiNotificationChannels {
+object GaddiNotificationChannels {
     const val GAME_INVITES = "game_invites"
     const val SYSTEM = "system"
 

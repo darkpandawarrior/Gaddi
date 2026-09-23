@@ -14,10 +14,10 @@ import io.ktor.http.isSuccess
  *  - `POST /quickmatch/{playerCount}` → returns the code of a WAITING public room of that size,
  *                                       creating one if none is open (public matchmaking pairing).
  *
- * The WebSocket `/play` join (and the whole match lifecycle) is owned by [OnlineKursiClient]; this is
+ * The WebSocket `/play` join (and the whole match lifecycle) is owned by [OnlineGaddiClient]; this is
  * only the pre-match handshake that turns a player's intent ("host a private room" / "find a public
  * game") into a room code the client can then connect to. Joining a private room BY code needs no REST
- * call at all — the code is shared out-of-band and passed straight to [OnlineKursiClient.connect].
+ * call at all — the code is shared out-of-band and passed straight to [OnlineGaddiClient.connect].
  *
  * Errors are surfaced as a sealed [RoomResult] rather than thrown, so the UI can render an honest,
  * in-identity failure banner (the server unreachable, an invalid size) without a try/catch at every
@@ -46,7 +46,7 @@ class RoomApi(
     /**
      * Joins the public quick-match queue for [playerCount]-seat games: returns the code of a waiting
      * public room (a fresh one if none is open). Two callers asking for the same size land in the same
-     * room, so connecting to this code with [OnlineKursiClient.connect] pairs them.
+     * room, so connecting to this code with [OnlineGaddiClient.connect] pairs them.
      */
     suspend fun quickMatch(playerCount: Int): RoomResult = postForCode("/quickmatch/$playerCount")
 
@@ -74,7 +74,7 @@ class RoomApi(
     }
 
     companion object {
-        /** Default Kursi server port (matches :server `App.kt`). */
+        /** Default Gaddi server port (matches :server `App.kt`). */
         const val DEFAULT_PORT: Int = 8080
     }
 }

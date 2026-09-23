@@ -233,7 +233,7 @@ fun GameScreen(
 
             // M6e TAMASHA — a watch-only banner pinned to the top while the demo auto-plays.
             if (spectator) {
-                val voice = LocalKursiVoice.current
+                val voice = LocalGaddiVoice.current
                 Box(
                     modifier =
                         Modifier
@@ -247,12 +247,12 @@ fun GameScreen(
                     Text(
                         text = voice.spectatorBanner,
                         style =
-                            KursiType.caption.copy(
+                            GaddiType.caption.copy(
                                 fontSize = 10.sp,
                                 letterSpacing = 1.sp,
                                 fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                             ),
-                        color = KursiNeutrals.Cream,
+                        color = GaddiNeutrals.Cream,
                     )
                 }
             }
@@ -301,7 +301,7 @@ fun GameScreen(
                 ) {
                     Text(
                         text = "💬",
-                        style = KursiType.label_sm.copy(fontSize = 18.sp),
+                        style = GaddiType.label_sm.copy(fontSize = 18.sp),
                     )
                     // Unread badge
                     if (state.unreadChat > 0 && !showDarbar) {
@@ -317,8 +317,8 @@ fun GameScreen(
                         ) {
                             Text(
                                 text = if (state.unreadChat > 9) "9+" else state.unreadChat.toString(),
-                                style = KursiType.caption.copy(fontSize = 8.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
-                                color = KursiNeutrals.Cream,
+                                style = GaddiType.caption.copy(fontSize = 8.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
+                                color = GaddiNeutrals.Cream,
                             )
                         }
                     }
@@ -387,7 +387,7 @@ fun GameScreen(
                 val seatName =
                     state.activeSeat
                         ?.let { state.opponentPersonas[PlayerId(it)]?.name }
-                        ?: LocalKursiVoice.current.selfName
+                        ?: LocalGaddiVoice.current.selfName
                 HandoffGuard(
                     nextSeatName = seatName,
                     onReady = { revealedSeat = state.activeSeat },
@@ -419,7 +419,7 @@ internal fun DesktopLayout(
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(KursiFeltColors.Ink),
+                .background(GaddiFeltColors.Ink),
     ) {
         Column(
             modifier =
@@ -629,7 +629,7 @@ internal fun DesktopLayout(
 
 @Composable
 internal fun Modifier.decoPanel(
-    radius: androidx.compose.ui.unit.Dp = KursiRadii.md,
+    radius: androidx.compose.ui.unit.Dp = GaddiRadii.md,
     lifted: Boolean = false,
 ): Modifier {
     val shape =
@@ -641,8 +641,8 @@ internal fun Modifier.decoPanel(
         .background(
             Brush.verticalGradient(
                 listOf(
-                    KursiFeltColors.Surface3.copy(alpha = 0.96f),
-                    KursiFeltColors.Surface2,
+                    GaddiFeltColors.Surface3.copy(alpha = 0.96f),
+                    GaddiFeltColors.Surface2,
                     BrandTokens.TeakDark,
                 ),
             ),
@@ -654,13 +654,13 @@ internal fun WinnerBanner(
     gamePhase: GamePhase.GameOver,
     state: GameUiState,
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val winnerPersona = state.opponentPersonas[com.kursi.engine.PlayerId(gamePhase.winnerSeat)]
     val winnerColor =
         if (winnerPersona != null) {
             Color(winnerPersona.seatColorArgb)
         } else {
-            KursiSeatColors[gamePhase.winnerSeat]
+            GaddiSeatColors[gamePhase.winnerSeat]
         }
     val winnerLabel = personaNameOrDefault(com.kursi.engine.PlayerId(gamePhase.winnerSeat), state, voice.selfName)
     Column(
@@ -682,7 +682,7 @@ internal fun WinnerBanner(
         ) {
             Text(
                 text = "I",
-                style = KursiType.display.copy(fontSize = 36.sp).rozha(),
+                style = GaddiType.display.copy(fontSize = 36.sp).rozha(),
                 color = BrandTokens.TeakDark,
                 textAlign = TextAlign.Center,
             )
@@ -690,24 +690,24 @@ internal fun WinnerBanner(
         val isHumanWinner = gamePhase.winnerSeat == state.view.viewer.raw
         Text(
             text = if (isHumanWinner) voice.youWin else voice.opponentWins(winnerLabel),
-            style = KursiType.display.copy(fontSize = 28.sp).rozha(),
+            style = GaddiType.display.copy(fontSize = 28.sp).rozha(),
             color = winnerColor,
             textAlign = TextAlign.Center,
         )
         Box(
             modifier =
                 Modifier
-                    .clip(Squircle(KursiRadii.md))
+                    .clip(Squircle(GaddiRadii.md))
                     .background(BrandTokens.BrassDark.copy(alpha = 0.70f))
                     .border(
                         1.5.dp,
                         Brush.horizontalGradient(listOf(BrandTokens.GoldAntique, BrandTokens.BrassAged)),
-                        Squircle(KursiRadii.md),
+                        Squircle(GaddiRadii.md),
                     ).padding(horizontal = 24.dp, vertical = 8.dp),
         ) {
             Text(
                 text = voice.gameEndSub,
-                style = KursiType.title.copy(letterSpacing = 2.sp),
+                style = GaddiType.title.copy(letterSpacing = 2.sp),
                 color = BrandTokens.GoldAntique,
                 textAlign = TextAlign.Center,
             )
@@ -738,7 +738,7 @@ internal fun ReactionSpotlight(
     // a debossed brass disc behind the claimed certificate, lit by a role-hued glow,
     // framed like a stamp about to be ruled on. (Coordinates with, does not duplicate,
     // the moment overlay's Challenge/Reveal beats.)
-    val roleHue = claimedRole?.let { KursiColors.forRole(it).color } ?: BrandTokens.GoldAntique
+    val roleHue = claimedRole?.let { GaddiColors.forRole(it).color } ?: BrandTokens.GoldAntique
     Box(contentAlignment = Alignment.Center) {
         // Focal backdrop disc — brass medallion staging
         Box(
@@ -789,8 +789,8 @@ internal fun ReactionSpotlight(
         ) {
             Text(
                 text = stringResource(Res.string.game_actor_claims, actorName),
-                style = KursiType.label,
-                color = KursiNeutrals.TextSecondary,
+                style = GaddiType.label,
+                color = GaddiNeutrals.TextSecondary,
             )
             if (claimedRole != null) {
                 // RETRO-FUTURIST §2 — the live claim medallion gets a holographic
@@ -809,11 +809,11 @@ internal fun ReactionSpotlight(
                             .holoRimLight(
                                 accent = roleHue,
                                 phase = holoPhase,
-                                cornerRadius = KursiRadii.xl,
+                                cornerRadius = GaddiRadii.xl,
                                 intensity = 0.55f + 0.45f * pulseAlpha,
                             ).shadow(
                                 16.dp,
-                                Squircle(KursiRadii.xl),
+                                Squircle(GaddiRadii.xl),
                                 clip = false,
                                 ambientColor = roleHue,
                                 spotColor = roleHue.copy(alpha = 0.7f),
@@ -824,8 +824,8 @@ internal fun ReactionSpotlight(
                 }
                 Text(
                     text = roleLabel(claimedRole),
-                    style = KursiType.cardRole.rozha(),
-                    color = KursiColors.forRole(claimedRole).color,
+                    style = GaddiType.cardRole.rozha(),
+                    color = GaddiColors.forRole(claimedRole).color,
                 )
             }
         }

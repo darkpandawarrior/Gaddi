@@ -8,13 +8,13 @@ plugins {
  * iOS umbrella module: produces the single `KursiKit.framework` the Xcode app links against.
  *
  * This module sits ABOVE :cmp-shared (and transitively above :feature:game, :core:designsystem,
- * :engine, :ai) — mirroring the Mileway :shared pattern exactly. It must never be depended upon
+ * :engine, :ai) — mirroring the Doori :shared pattern exactly. It must never be depended upon
  * by any feature or core module (that would introduce a cycle). Adding more iOS-facing entry
  * points in the future means adding api()/export() here, never making a feature depend on
  * its siblings.
  *
  * Exported API surfaced to Swift:
- *  - :cmp-shared → KursiApp() composable, via MainViewController() entry point defined below.
+ *  - :cmp-shared → GaddiApp() composable, via MainViewController() entry point defined below.
  */
 kotlin {
     listOf(

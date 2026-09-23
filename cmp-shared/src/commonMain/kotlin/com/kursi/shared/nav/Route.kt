@@ -3,10 +3,10 @@ package com.kursi.shared.nav
 import kotlinx.serialization.Serializable
 
 /**
- * All app destinations for Kursi — type-safe sealed hierarchy.
+ * All app destinations for Gaddi — type-safe sealed hierarchy.
  * All routes are @Serializable so navigation-compose can encode them in the back stack.
  *
- * §2 nav model from kursi-plan/docs/17_app_plan.md
+ * §2 nav model from gaddi-plan/docs/17_app_plan.md
  */
 sealed interface Route {
     /** S0 — Brass-door splash: reads hasSeenPrimer, routes to Primer or Home. */

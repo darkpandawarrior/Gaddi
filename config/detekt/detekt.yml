@@ -1,5 +1,5 @@
 # =============================================================================
-# config/detekt/detekt.yml — the family standard, applied to Kursi.
+# config/detekt/detekt.yml — the family standard, applied to Gaddi.
 #
 # Toolchain: dev.detekt 2.0.0-alpha.6 (NOT io.gitlab.arturbosch.detekt 1.x).
 # Every option name below was checked against default-detekt-config.yml inside
@@ -22,12 +22,12 @@
 #   everywhere. SnakeYAML expands these before detekt's config validation runs, so
 #   `config.validation: true` stays on.
 #
-# KURSI-SPECIFIC MEASUREMENT, recorded because it contradicts the family brief:
-#   Kursi has ZERO generated-code findings. `grep -c _Impl` over all eleven baselines
+# GADDI-SPECIFIC MEASUREMENT, recorded because it contradicts the family brief:
+#   Gaddi has ZERO generated-code findings. `grep -c _Impl` over all eleven baselines
 #   returns 0, and the root build already sets detekt's `source` to `src` only, so
 #   build/generated is never scanned here. The `**/build/generated/**` glob below is
 #   belt-and-braces for the day a Room/KSP module lands, not a number-reducer. All 336
-#   of Kursi's baselined findings are hand-written code.
+#   of Gaddi's baselined findings are hand-written code.
 # =============================================================================
 
 config:
@@ -50,7 +50,7 @@ complexity:
     # The full glob list lives here once and is aliased as *notOurs below.
     excludes: &notOurs
       - '**/build/generated/**'   # KSP/Room/Compose-resources output. Machine-written,
-                                  # rewritten on every build, unformattable. Kursi has none
+                                  # rewritten on every build, unformattable. Gaddi has none
                                   # today; this is here so the exclusion exists before the
                                   # first generated module arrives, not after.
       # --- detekt 2.0's own defaults, restored verbatim. Do not drop any of these. ---
@@ -73,7 +73,7 @@ complexity:
       - '**/iosArm64Test/**'
       - '**/iosSimulatorArm64Test/**'
       - '**/*.kts'                # Gradle scripts are configuration, not application logic.
-    allowedComplexity: 20         # Kursi/PaymentsLab/toolkit already at 20; Mileway was 15.
+    allowedComplexity: 20         # Gaddi/PaymentsLab-KMP/toolkit already at 20; Doori was 15.
                                   # 20 is the family number: game-rule and payment-orchestration
                                   # state machines are legitimately branchy.
     ignoreSimpleWhenEntries: true # A `when` over a sealed UiState is ONE decision expressed in
@@ -106,8 +106,8 @@ complexity:
       # previews is a preview sheet. Neither is a god class, and the metric measures the
       # wrong thing on them. Prescribed by detekt's own Compose guide:
       # https://detekt.dev/docs/introduction/compose/
-      # This does NOT rubber-stamp the rule: Kursi's hits (AppPrefs, GameSession, Engine,
-      # SocialDirector, KursiVoice) are real classes and survive. They are debt.
+      # This does NOT rubber-stamp the rule: Gaddi's hits (AppPrefs, GameSession, Engine,
+      # SocialDirector, GaddiVoice) are real classes and survive. They are debt.
       - 'Composable'
       - 'Preview'
       - 'androidx.compose.ui.tooling.preview.Preview'
@@ -147,9 +147,9 @@ exceptions:
   TooGenericExceptionCaught:
     excludes: *notOurs
     active: true
-    # Mileway's and PaymentsLab's recorded reason for `active: false` ("runCatching { } is
+    # Doori's and PaymentsLab-KMP's recorded reason for `active: false` ("runCatching { } is
     # idiomatic") does not hold: this rule fires on `catch` clauses and runCatching {} has
-    # none. Kursi runs it on and the surviving sites are genuine.
+    # none. Gaddi runs it on and the surviving sites are genuine.
     exceptionNames:
       - 'ArrayIndexOutOfBoundsException'
       - 'Error'
@@ -182,7 +182,7 @@ naming:
     excludes: *notOurs
     ignoreAnnotated: *composable
     functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    # Belt AND braces, on purpose, and a REAL TIGHTENING for Kursi: this rule was
+    # Belt AND braces, on purpose, and a REAL TIGHTENING for Gaddi: this rule was
     # `active: false` here, which stopped detekt checking the naming of every ordinary
     # function in the repo, not just the composables. `ignoreAnnotated` is the precise
     # instrument; the permissive pattern is the fallback if the annotation fails to match
@@ -193,7 +193,7 @@ naming:
     constantPattern: '[A-Z][A-Za-z0-9]*|[A-Z][_A-Z0-9]*'
     # DELIBERATE DEVIATION from the family standard's PascalCase-only
     # '[A-Z][A-Za-z0-9]*', with the measurement that forced it:
-    #   Kursi has 22 top-level `const val`s and all 22 are SCREAMING_SNAKE
+    #   Gaddi has 22 top-level `const val`s and all 22 are SCREAMING_SNAKE
     #   (ADVICE_BUDGET, CHAIR_LEG_LENGTH, KEY_LIGHT_GLOW_ALPHA, RECKLESS_EV_LOST_PCT...),
     #   nearly all in :engine and :ai — non-Compose Kotlin where SCREAMING_SNAKE is the
     #   language's own convention. PascalCase-only would manufacture 22 findings whose
@@ -245,7 +245,7 @@ style:
       - 'Composable'
       - 'androidx.compose.runtime.Composable'
       # 16.dp / 0.6f alpha / 1f weight are Compose's vocabulary inside a @Composable tree.
-      # HONEST LIMIT, measured: Kursi already carried this and still holds UI-file findings,
+      # HONEST LIMIT, measured: Gaddi already carried this and still holds UI-file findings,
       # because the survivors live in `DrawScope` extension functions and Canvas draw lambdas,
       # which carry no annotation for any ignore to match (TutorialScreen.kt drawFeltGuilloche,
       # HomeScreen.kt Canvas lambdas). Those are NOT artefacts — a named
@@ -253,14 +253,14 @@ style:
       - 'Preview'
       # BOTH Preview FQNs listed deliberately. androidx.compose.ui.tooling.preview.Preview IS
       # the multiplatform annotation from Compose Multiplatform 1.10.0 onward and works in
-      # commonMain -- verified in this family: Mileway has 7 commonMain files importing the
+      # commonMain -- verified in this family: Doori has 7 commonMain files importing the
       # androidx FQN and zero importing the org.jetbrains one, and they compile green.
       # org.jetbrains.compose.ui.tooling.preview.Preview is the LEGACY path, kept here only so
       # older or vendored code still matches. Do not "correct" androidx out of this list.
       - 'androidx.compose.ui.tooling.preview.Preview'
       - 'org.jetbrains.compose.ui.tooling.preview.Preview'
     ignoreNumbers:
-      # Keep this list SHORT. Kursi previously listed 0 through 10 inclusive plus 1000, which
+      # Keep this list SHORT. Gaddi previously listed 0 through 10 inclusive plus 1000, which
       # silently exempted `if (retries > 5)`, `grade >= 7` and a 1000ms debounce.
       # -1/0/1/2 are detekt's defaults (identity, empty, off-by-one, halving); 100 is
       # percentage conversion; 360 is degrees. This is a REAL TIGHTENING.

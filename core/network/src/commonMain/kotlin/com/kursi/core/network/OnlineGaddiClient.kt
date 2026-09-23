@@ -29,20 +29,20 @@ import kotlinx.coroutines.launch
  * Threading: everything runs inside [scope] (typically a ViewModel scope). [uiState] is a hot
  * [StateFlow] safe to `collectAsStateWithLifecycle()`.
  *
- * This class builds ONLY on the public client API ([KursiClient] / [KursiSession]) and the wire
+ * This class builds ONLY on the public client API ([GaddiClient] / [GaddiSession]) and the wire
  * protocol — it does not touch the engine, the AI, or any UI module.
  *
- * @param transportFactory Creates a fresh low-level [KursiClient] for EACH connection attempt. A factory
+ * @param transportFactory Creates a fresh low-level [GaddiClient] for EACH connection attempt. A factory
  *                         (not a single shared instance) is required because a dropped connection's
  *                         transport may be unusable for redialing — every reconnect needs a clean client,
- *                         and the old one is closed. Defaults to `::KursiClient`.
+ *                         and the old one is closed. Defaults to `::GaddiClient`.
  * @param scope            The coroutine scope owning the connection loop.
  * @param config           Reconnect tuning (attempts, backoff). Defaults suit mobile networks.
  */
-class OnlineKursiClient(
+class OnlineGaddiClient(
     private val scope: CoroutineScope,
     private val config: ReconnectConfig = ReconnectConfig(),
-    private val transportFactory: () -> KursiClient = ::KursiClient,
+    private val transportFactory: () -> GaddiClient = ::GaddiClient,
 ) {
     /** Reconnect tuning. */
     data class ReconnectConfig(
@@ -73,10 +73,10 @@ class OnlineKursiClient(
     private var seqCounter: Long = 0L
 
     // The currently-live session (null between connections). send() routes through it.
-    private var liveSession: KursiSession? = null
+    private var liveSession: GaddiSession? = null
 
     // The transport backing the currently-live session — closed when the connection ends or close() runs.
-    private var liveTransport: KursiClient? = null
+    private var liveTransport: GaddiClient? = null
 
     // True once the current socket lifetime reached Connected — used to reset the reconnect backoff budget.
     private var connectedThisAttempt: Boolean = false

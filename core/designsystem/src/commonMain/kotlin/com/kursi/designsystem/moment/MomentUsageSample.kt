@@ -4,7 +4,7 @@ package com.kursi.designsystem.moment
 // MomentSamples.kt — KDoc usage examples for screen wiring.
 // For integration reference only. No @Preview (requires no UI dependency).
 //
-// Design: kursi-plan/docs/15c_action_moments.md §3
+// Design: gaddi-plan/docs/15c_action_moments.md §3
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /**
@@ -42,19 +42,19 @@ package com.kursi.designsystem.moment
  *     // Example: chain Reveal → InfluenceLoss → Elimination in one call
  *     LaunchedEffect(revealResult) {
  *         host.playAll(
- *             KursiMoment.Reveal(
+ *             GaddiMoment.Reveal(
  *                 actorSeat = 1,
  *                 claimant = 1,
  *                 claimedRole = "NETA",
  *                 truthful = false,
- *                 roleHue = KursiRoleHues.Neta,
+ *                 roleHue = GaddiRoleHues.Neta,
  *             ),
- *             KursiMoment.InfluenceLoss(
+ *             GaddiMoment.InfluenceLoss(
  *                 actorSeat = 1,
  *                 lostRole = "NETA",
- *                 roleHue = KursiRoleHues.Neta,
+ *                 roleHue = GaddiRoleHues.Neta,
  *             ),
- *             KursiMoment.Elimination(actorSeat = 1),
+ *             GaddiMoment.Elimination(actorSeat = 1),
  *         )
  *     }
  *
@@ -88,58 +88,58 @@ package com.kursi.designsystem.moment
  * ### Mapping engine events to moments (sketch)
  *
  * ```kotlin
- * fun EngineEvent.toMoment(): KursiMoment = when (this) {
- *     is EngineEvent.IncomeResolved       -> KursiMoment.Income(actorSeat = actorSeatId)
- *     is EngineEvent.ForeignAidResolved   -> KursiMoment.ForeignAid(actorSeat = actorSeatId)
- *     is EngineEvent.TaxResolved          -> KursiMoment.Tax(
+ * fun EngineEvent.toMoment(): GaddiMoment = when (this) {
+ *     is EngineEvent.IncomeResolved       -> GaddiMoment.Income(actorSeat = actorSeatId)
+ *     is EngineEvent.ForeignAidResolved   -> GaddiMoment.ForeignAid(actorSeat = actorSeatId)
+ *     is EngineEvent.TaxResolved          -> GaddiMoment.Tax(
  *                                               actorSeat = actorSeatId,
- *                                               roleHue = KursiRoleHues.Neta,
+ *                                               roleHue = GaddiRoleHues.Neta,
  *                                           )
- *     is EngineEvent.StealResolved        -> KursiMoment.Steal(
+ *     is EngineEvent.StealResolved        -> GaddiMoment.Steal(
  *                                               actorSeat = actorSeatId,
  *                                               victim = victimSeatId,
- *                                               roleHue = KursiRoleHues.Babu,
+ *                                               roleHue = GaddiRoleHues.Babu,
  *                                           )
- *     is EngineEvent.AssassinateResolved  -> KursiMoment.Assassinate(
+ *     is EngineEvent.AssassinateResolved  -> GaddiMoment.Assassinate(
  *                                               actorSeat = actorSeatId,
  *                                               target = targetSeatId,
- *                                               roleHue = KursiRoleHues.Bhai,
+ *                                               roleHue = GaddiRoleHues.Bhai,
  *                                           )
- *     is EngineEvent.ExchangeResolved     -> KursiMoment.Exchange(
+ *     is EngineEvent.ExchangeResolved     -> GaddiMoment.Exchange(
  *                                               actorSeat = actorSeatId,
- *                                               roleHue = KursiRoleHues.Jugaadu,
+ *                                               roleHue = GaddiRoleHues.Jugaadu,
  *                                           )
- *     is EngineEvent.CoupResolved         -> KursiMoment.Coup(
+ *     is EngineEvent.CoupResolved         -> GaddiMoment.Coup(
  *                                               actorSeat = actorSeatId,
  *                                               target = targetSeatId,
  *                                           )
- *     is EngineEvent.BlockResolved        -> KursiMoment.Block(
+ *     is EngineEvent.BlockResolved        -> GaddiMoment.Block(
  *                                               actorSeat = blockerSeatId,
  *                                               blockedSeat = actorSeatId,
  *                                               roleHue = blockerRoleHue,
  *                                           )
- *     is EngineEvent.ChallengeThrown      -> KursiMoment.Challenge(
+ *     is EngineEvent.ChallengeThrown      -> GaddiMoment.Challenge(
  *                                               actorSeat = challengerSeatId,
  *                                               claimant = claimantSeatId,
  *                                           )
- *     is EngineEvent.ChallengeRevealDone  -> KursiMoment.Reveal(
+ *     is EngineEvent.ChallengeRevealDone  -> GaddiMoment.Reveal(
  *                                               actorSeat = challengerSeatId,
  *                                               claimant = claimantSeatId,
  *                                               claimedRole = claimedRoleName,
  *                                               truthful = wasTruthful,
  *                                               roleHue = roleHue,
  *                                           )
- *     is EngineEvent.InfluenceLost        -> KursiMoment.InfluenceLoss(
+ *     is EngineEvent.InfluenceLost        -> GaddiMoment.InfluenceLoss(
  *                                               actorSeat = losingSeatId,
  *                                               lostRole = lostRoleName,
  *                                               roleHue = lostRoleHue,
  *                                           )
- *     is EngineEvent.PlayerEliminated     -> KursiMoment.Elimination(actorSeat = eliminatedSeatId)
- *     is EngineEvent.TurnChanged          -> KursiMoment.TurnHandoff(
+ *     is EngineEvent.PlayerEliminated     -> GaddiMoment.Elimination(actorSeat = eliminatedSeatId)
+ *     is EngineEvent.TurnChanged          -> GaddiMoment.TurnHandoff(
  *                                               actorSeat = prevSeatId,
  *                                               nextSeat = nextSeatId,
  *                                           )
- *     is EngineEvent.GameWon              -> KursiMoment.Win(actorSeat = winnerSeatId)
+ *     is EngineEvent.GameWon              -> GaddiMoment.Win(actorSeat = winnerSeatId)
  * }
  * ```
  *
@@ -147,20 +147,20 @@ package com.kursi.designsystem.moment
  *
  * ```kotlin
  * // Single economic action:
- * host.play(KursiMoment.Tax(actorSeat = 0, roleHue = KursiRoleHues.Neta))
+ * host.play(GaddiMoment.Tax(actorSeat = 0, roleHue = GaddiRoleHues.Neta))
  *
  * // The hero:
- * host.play(KursiMoment.Coup(actorSeat = 0, target = 2))
+ * host.play(GaddiMoment.Coup(actorSeat = 0, target = 2))
  *
  * // Chained reaction sequence (FIFO — each plays after the previous):
  * host.playAll(
- *     KursiMoment.Reveal(
+ *     GaddiMoment.Reveal(
  *         actorSeat = 1, claimant = 1,
  *         claimedRole = "BHAI", truthful = false,
- *         roleHue = KursiRoleHues.Bhai,
+ *         roleHue = GaddiRoleHues.Bhai,
  *     ),
- *     KursiMoment.InfluenceLoss(
- *         actorSeat = 1, lostRole = "BHAI", roleHue = KursiRoleHues.Bhai
+ *     GaddiMoment.InfluenceLoss(
+ *         actorSeat = 1, lostRole = "BHAI", roleHue = GaddiRoleHues.Bhai
  *     ),
  * )
  *

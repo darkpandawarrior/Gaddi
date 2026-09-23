@@ -7,8 +7,8 @@ in-style → style-lock QA gate → asset track. Rejected pieces regenerate;
 nothing ships unreviewed."*
 
 This gate governs the 18 asset-track slots wired through
-`core/designsystem/src/commonMain/kotlin/com/kursi/designsystem/art/KursiArt.kt`
-(`KursiArtRegistry.readySlots`):
+`core/designsystem/src/commonMain/kotlin/com/kursi/designsystem/art/GaddiArt.kt`
+(`GaddiArtRegistry.readySlots`):
 
 | Slot kind | Count | Resource names |
 |---|---|---|
@@ -17,14 +17,14 @@ This gate governs the 18 asset-track slots wired through
 | Hero moment | 2 | `moment_crest`, `moment_tipped_chair` |
 
 A piece **fails** this gate if it misses any item below. Failures regenerate;
-nothing merges into `KursiArtRegistry.readySlots` unreviewed. A piece only
+nothing merges into `GaddiArtRegistry.readySlots` unreviewed. A piece only
 needs to be re-run through the checklist once per submission, not per pixel —
 this is a acceptance gate, not a style guide to redesign from.
 
 ## 1. Palette adherence
 
 Every color used in the piece must be traceable to a token in
-`core/designsystem/src/commonMain/kotlin/com/kursi/designsystem/KursiTheme.kt`.
+`core/designsystem/src/commonMain/kotlin/com/kursi/designsystem/GaddiTheme.kt`.
 No off-palette hues — the "teak-and-brass council chamber" identity depends on
 a closed set:
 
@@ -47,7 +47,7 @@ a closed set:
 | `CivicBlue` | `#1B4F72` | Block (semantic) |
 | `PendingAmber` | `#D4A017` | Pending (semantic) |
 
-**Role hues (`KursiRoleHues` — Okabe-Ito, CVD-safe, locked, MUST NOT change):**
+**Role hues (`GaddiRoleHues` — Okabe-Ito, CVD-safe, locked, MUST NOT change):**
 
 | Role | Token | Hex |
 |---|---|---|
@@ -92,7 +92,7 @@ read as the same weight of mark at the same viewing size:
 
 Every role-associated asset must carry its non-color discriminant so the game
 stays readable under deuteranopia/protanopia — color alone is never the only
-signal. Per `KursiTheme.kt` (`RoleFramePattern`, `KursiColors.roles[role].framePattern`):
+signal. Per `GaddiTheme.kt` (`RoleFramePattern`, `GaddiColors.roles[role].framePattern`):
 
 | Role | Pattern | Description |
 |---|---|---|
@@ -141,6 +141,6 @@ signal. Per `KursiTheme.kt` (`RoleFramePattern`, `KursiColors.roles[role].frameP
 ## Sign-off
 
 A piece that passes every box above is added to
-`KursiArtRegistry.readySlots` in `KursiArt.kt` (the single line that flips a
+`GaddiArtRegistry.readySlots` in `GaddiArt.kt` (the single line that flips a
 slot from fallback to asset) and its placeholder file is replaced in place.
 Record the pass in the PR/commit description; no separate log file required.

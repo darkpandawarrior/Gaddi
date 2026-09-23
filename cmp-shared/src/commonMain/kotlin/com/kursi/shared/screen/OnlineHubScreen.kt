@@ -32,7 +32,7 @@ import com.kursi.designsystem.*
 import com.kursi.feature.game.HubPhase
 import com.kursi.feature.game.LobbyState
 import com.kursi.feature.game.OnlineHubUiState
-import com.kursi.shared.strings.LocalKursiStrings
+import com.kursi.shared.strings.LocalGaddiStrings
 import com.siddharth.kmp.network.LanHost
 import kursi.core.designsystem.generated.resources.Res
 import kursi.core.designsystem.generated.resources.a11y_lan_host_row
@@ -68,7 +68,7 @@ fun OnlineHubScreen(
     initialHost: String = "localhost",
     initialPort: Int = 8080,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
 
     var serverField by remember { mutableStateOf(if (initialPort == 8080) initialHost else "$initialHost:$initialPort") }
     var joinCode by remember { mutableStateOf("") }
@@ -118,8 +118,8 @@ fun OnlineHubScreen(
                         EngravedHeader(eyebrow = s.onlineHubServerLabel)
                         Text(
                             s.onlineHubServerHint,
-                            style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                            color = KursiNeutrals.TextSecondary,
+                            style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                            color = GaddiNeutrals.TextSecondary,
                         )
                         EngravedField(
                             value = serverField,
@@ -137,13 +137,13 @@ fun OnlineHubScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Text("2", style = KursiType.caption, color = KursiNeutrals.TextMuted)
+                            Text("2", style = GaddiType.caption, color = GaddiNeutrals.TextMuted)
                             Text(
                                 "⊙ $playerCount",
-                                style = KursiType.display.rozha().copy(fontSize = 20.sp),
+                                style = GaddiType.display.rozha().copy(fontSize = 20.sp),
                                 color = BrandTokens.GoldAntique,
                             )
-                            Text("10", style = KursiType.caption, color = KursiNeutrals.TextMuted)
+                            Text("10", style = GaddiType.caption, color = GaddiNeutrals.TextMuted)
                         }
                         Slider(
                             value = playerCount.toFloat(),
@@ -176,8 +176,8 @@ fun OnlineHubScreen(
                         EngravedHeader(eyebrow = s.onlineJoinLabel)
                         Text(
                             s.onlineJoinSub,
-                            style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                            color = KursiNeutrals.TextSecondary,
+                            style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                            color = GaddiNeutrals.TextSecondary,
                         )
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -244,7 +244,7 @@ private fun WaitingRoom(
     onLeave: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val statusText =
         when {
             lobby.isLost -> s.onlineLobbyLost
@@ -254,7 +254,7 @@ private fun WaitingRoom(
     val statusColor =
         when {
             lobby.isLost -> BrandTokens.StampRed
-            lobby.isWaiting -> KursiSemantics.Success
+            lobby.isWaiting -> GaddiSemantics.Success
             else -> BrandTokens.PendingAmber
         }
     Column(
@@ -268,7 +268,7 @@ private fun WaitingRoom(
         ) {
             Text(
                 s.onlineLobbyHeader,
-                style = KursiType.display.rozha().copy(fontSize = 20.sp, letterSpacing = 1.sp),
+                style = GaddiType.display.rozha().copy(fontSize = 20.sp, letterSpacing = 1.sp),
                 color = BrandTokens.GoldAntique,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
@@ -283,8 +283,8 @@ private fun WaitingRoom(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .shadow(14.dp, Squircle(KursiRadii.lg), clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
-                        .clip(Squircle(KursiRadii.lg))
+                        .shadow(14.dp, Squircle(GaddiRadii.lg), clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
+                        .clip(Squircle(GaddiRadii.lg))
                         .background(
                             Brush.verticalGradient(
                                 listOf(BrandTokens.BrassAged.copy(alpha = 0.9f), BrandTokens.TeakDark),
@@ -296,17 +296,17 @@ private fun WaitingRoom(
             ) {
                 Text(
                     s.onlineLobbyShareLabel,
-                    style = KursiType.label_sm.dmMono().copy(letterSpacing = 2.sp, fontWeight = FontWeight.Bold),
+                    style = GaddiType.label_sm.dmMono().copy(letterSpacing = 2.sp, fontWeight = FontWeight.Bold),
                     color = BrandTokens.TeakInk,
                 )
                 Text(
                     lobby.code,
-                    style = KursiType.numeric.copy(fontSize = 38.sp, letterSpacing = 9.sp),
+                    style = GaddiType.numeric.copy(fontSize = 38.sp, letterSpacing = 9.sp),
                     color = BrandTokens.TeakInk,
                 )
                 Text(
                     "${lobby.host}:${lobby.port}",
-                    style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                    style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
                     color = BrandTokens.TeakInk.copy(alpha = 0.7f),
                 )
             }
@@ -315,13 +315,13 @@ private fun WaitingRoom(
             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
                     s.onlineLobbyRoster(lobby.joinedSeats, lobby.seatCount),
-                    style = KursiType.title.copy(fontSize = 15.sp),
-                    color = KursiNeutrals.TextPrimary,
+                    style = GaddiType.title.copy(fontSize = 15.sp),
+                    color = GaddiNeutrals.TextPrimary,
                 )
                 lobby.mySeat?.let { seat ->
                     Text(
                         s.onlineLobbySeated(seat),
-                        style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                        style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
                         color = BrandTokens.GoldAntique,
                     )
                 }
@@ -396,13 +396,13 @@ private fun LanBrowseSection(
     onJoin: (LanHost) -> Unit,
     enabled: Boolean,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         EngravedHeader(eyebrow = s.onlineLanLabel)
         Text(
             s.onlineLanSub,
-            style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-            color = KursiNeutrals.TextSecondary,
+            style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+            color = GaddiNeutrals.TextSecondary,
         )
         StampButton(
             label = if (browsing) s.onlineLanSearching else s.onlineLanBrowseCta,
@@ -414,8 +414,8 @@ private fun LanBrowseSection(
         if (hosts.isEmpty()) {
             Text(
                 if (browsing) s.onlineLanSearching else s.onlineLanEmpty,
-                style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                color = GaddiNeutrals.TextMuted,
                 modifier = Modifier.padding(top = 2.dp),
             )
         } else {
@@ -448,22 +448,22 @@ private fun LanHostRow(
         Column(Modifier.weight(1f)) {
             Text(
                 host.name,
-                style = KursiType.name.copy(fontSize = 13.sp),
-                color = KursiNeutrals.TextPrimary,
+                style = GaddiType.name.copy(fontSize = 13.sp),
+                color = GaddiNeutrals.TextPrimary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
                 "${host.host}:${host.port} · ${host.payload}",
-                style = KursiType.caption.copy(fontSize = 9.sp),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 9.sp),
+                color = GaddiNeutrals.TextMuted,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
         Text(
             stringResource(Res.string.cta_join_short),
-            style = KursiType.label_sm.dmMono().copy(fontSize = 11.sp, fontWeight = FontWeight.Bold),
+            style = GaddiType.label_sm.dmMono().copy(fontSize = 11.sp, fontWeight = FontWeight.Bold),
             color = BrandTokens.GoldAntique,
         )
     }
@@ -480,13 +480,13 @@ private fun StampTag(
     Box(
         modifier =
             Modifier
-                .clip(Squircle(KursiRadii.xs))
+                .clip(Squircle(GaddiRadii.xs))
                 .background(if (dark) BrandTokens.TeakInk.copy(alpha = 0.18f) else BrandTokens.BrassAged.copy(alpha = 0.2f))
                 .padding(horizontal = 8.dp, vertical = 4.dp),
     ) {
         Text(
             text,
-            style = KursiType.label_micro.dmMono().copy(letterSpacing = 1.sp, fontSize = 9.sp, fontWeight = FontWeight.Bold),
+            style = GaddiType.label_micro.dmMono().copy(letterSpacing = 1.sp, fontSize = 9.sp, fontWeight = FontWeight.Bold),
             color = if (dark) BrandTokens.TeakInk else BrandTokens.GoldAntique,
         )
     }
@@ -514,7 +514,7 @@ private fun StatusPip(
         Box(Modifier.size(9.dp).clip(CircleShape).background(color))
         Text(
             text,
-            style = KursiType.body.copy(fontSize = 12.sp, fontStyle = if (italic) FontStyle.Italic else FontStyle.Normal),
+            style = GaddiType.body.copy(fontSize = 12.sp, fontStyle = if (italic) FontStyle.Italic else FontStyle.Normal),
             color = color,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,

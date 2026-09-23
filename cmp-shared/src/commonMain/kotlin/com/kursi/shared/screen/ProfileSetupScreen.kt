@@ -58,7 +58,7 @@ import org.jetbrains.compose.resources.stringResource
 // The player fills out three fields:
 //   1. Display name (text field, max 18 chars, defaults to "Khiladi")
 //   2. Avatar emoji (12-option grid from AVATAR_ROSTER)
-//   3. Seat accent color (10 swatches from KursiSeatColors)
+//   3. Seat accent color (10 swatches from GaddiSeatColors)
 //
 // onDone() is called once the player taps MUHAR LAGAO (confirm stamp).
 // ══════════════════════════════════════════════════════════════════════════════
@@ -163,7 +163,7 @@ fun ProfileSetupScreen(
                 }
                 Text(
                     text = previewMonogram,
-                    style = KursiType.label_sm.dmMono().copy(letterSpacing = 2.sp),
+                    style = GaddiType.label_sm.dmMono().copy(letterSpacing = 2.sp),
                     color = BrandTokens.BrassAged.copy(alpha = 0.75f),
                 )
             }
@@ -182,8 +182,8 @@ fun ProfileSetupScreen(
                 )
                 Text(
                     text = "${name.length}/18",
-                    style = KursiType.label_micro.dmMono().copy(fontSize = 10.sp),
-                    color = KursiNeutrals.TextMuted,
+                    style = GaddiType.label_micro.dmMono().copy(fontSize = 10.sp),
+                    color = GaddiNeutrals.TextMuted,
                     modifier = Modifier.align(Alignment.End),
                 )
             }
@@ -243,7 +243,7 @@ fun ProfileSetupScreen(
                 EngravedHeader(eyebrow = stringResource(Res.string.profile_seat_color_label))
                 val seatColorDesc = stringResource(Res.string.a11y_seat_color)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                    KursiSeatColors.all.forEach { swatch ->
+                    GaddiSeatColors.all.forEach { swatch ->
                         val swatchArgb = swatch.value.toLong()
                         val selected = swatchArgb == colorArgb
                         val ringColor by animateColorAsState(
@@ -298,7 +298,7 @@ fun ProfileSetupScreen(
             if (!fromSettings) {
                 Text(
                     text = stringResource(Res.string.profile_skip_link),
-                    style = KursiType.label_sm.dmMono().copy(letterSpacing = 1.sp),
+                    style = GaddiType.label_sm.dmMono().copy(letterSpacing = 1.sp),
                     color = BrandTokens.BrassAged.copy(alpha = 0.6f),
                     textAlign = TextAlign.Center,
                     modifier =

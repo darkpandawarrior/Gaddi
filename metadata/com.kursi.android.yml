@@ -36,9 +36,9 @@ AllowedAPKSigningKeys: e3cd9ed25baaa6db5501621a2a7399edc0878022f9b64b5d95446db03
 
 # Binaries lets F-Droid verify its from-source build byte-for-byte against the developer's own
 # signed artifact instead of trusting the build alone. Asset name comes straight from
-# .github/workflows/publish-fdroid.yml's `gh release upload`: "Kursi-${tag}.apk" where ${tag} is
+# .github/workflows/publish-fdroid.yml's `gh release upload`: "Gaddi-${tag}.apk" where ${tag} is
 # the pushed tag verbatim (the tag already carries the leading "v").
-Binaries: https://github.com/darkpandawarrior/Gaddi/releases/download/%v/Kursi-%v.apk
+Binaries: https://github.com/darkpandawarrior/Gaddi/releases/download/%v/Gaddi-%v.apk
 
 # Tags follow the fingerprint versioning scheme (docs/RELEASE.md / gradle/versioning.gradle.kts):
 # v<YYYY>.<0M>.<0W>.<MILESTONE>.<commitCount>, e.g. v2026.07.30.1.190. AutoUpdateMode: Version

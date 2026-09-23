@@ -40,7 +40,7 @@ internal fun ReactionDock(
     onAction: (GameAction) -> Unit,
     onShowChit: (ChitContent, androidx.compose.ui.geometry.Rect?) -> Unit = { _, _ -> },
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val alertRed = Color(0xFF8E2B22)
     val brassColor = BrandTokens.BrassAged
     val verdigris = Color(0xFF3F6B5E)
@@ -75,23 +75,23 @@ internal fun ReactionDock(
         // so the player sees WHY a challenge is favourable (or a gamble) before they even long-press.
         if (challengeBelief != null) {
             val favourable = challengeBelief.contains("favourable") || challengeBelief.contains("real odds")
-            val readAccent = if (favourable) KursiSemantics.Success else BrandTokens.GoldAntique
+            val readAccent = if (favourable) GaddiSemantics.Success else BrandTokens.GoldAntique
             Row(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .clip(Squircle(KursiRadii.sm))
+                        .clip(Squircle(GaddiRadii.sm))
                         .background(readAccent.copy(alpha = 0.14f))
-                        .border(KursiDimens.stroke_hairline, readAccent.copy(alpha = 0.55f), Squircle(KursiRadii.sm))
-                        .padding(horizontal = KursiDimens.space_sm, vertical = KursiDimens.space_xs),
+                        .border(GaddiDimens.stroke_hairline, readAccent.copy(alpha = 0.55f), Squircle(GaddiRadii.sm))
+                        .padding(horizontal = GaddiDimens.space_sm, vertical = GaddiDimens.space_xs),
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
             ) {
-                Text(text = "🔎", style = KursiType.label_sm)
+                Text(text = "🔎", style = GaddiType.label_sm)
                 Text(
                     text = challengeBelief,
-                    style = KursiType.label_sm,
-                    color = KursiNeutrals.TextPrimary,
+                    style = GaddiType.label_sm,
+                    color = GaddiNeutrals.TextPrimary,
                     modifier = Modifier.weight(1f),
                 )
             }
@@ -99,7 +99,7 @@ internal fun ReactionDock(
         when (reactionWindow.step) {
             ReactionStep.CHALLENGE_ACTION -> {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_sm, Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm, Alignment.CenterHorizontally),
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.Top,
                 ) {
@@ -123,8 +123,8 @@ internal fun ReactionDock(
                 }
                 Text(
                     text = voice.reactionHintChallenge,
-                    style = KursiType.caption.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
-                    color = KursiNeutrals.TextMuted,
+                    style = GaddiType.caption.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
+                    color = GaddiNeutrals.TextMuted,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -132,7 +132,7 @@ internal fun ReactionDock(
             ReactionStep.BLOCK -> {
                 val blockRoles = Rules.rolesThatBlock(reactionWindow.action)
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_sm, Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm, Alignment.CenterHorizontally),
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.Top,
                 ) {
@@ -168,15 +168,15 @@ internal fun ReactionDock(
                 }
                 Text(
                     text = voice.reactionHintBlock,
-                    style = KursiType.caption.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
-                    color = KursiNeutrals.TextMuted,
+                    style = GaddiType.caption.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
+                    color = GaddiNeutrals.TextMuted,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
             ReactionStep.CHALLENGE_BLOCK -> {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_sm, Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm, Alignment.CenterHorizontally),
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.Top,
                 ) {
@@ -200,8 +200,8 @@ internal fun ReactionDock(
                 }
                 Text(
                     text = voice.reactionHintChallengeBlock,
-                    style = KursiType.caption.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
-                    color = KursiNeutrals.TextMuted,
+                    style = GaddiType.caption.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
+                    color = GaddiNeutrals.TextMuted,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -235,7 +235,7 @@ internal fun ReactionChip(
     // Tint the chip by coaching tone when the move makes a role claim; otherwise keep familyColor.
     val chipColor = if (advice != null && tone != CoachTone.Neutral) coachAccent(tone) else familyColor
     val ringColor = if (recommended) BrandTokens.GoldAntique else chipColor.copy(alpha = 0.6f)
-    val ringWidth = if (recommended) 2.dp else KursiDimens.stroke_ring_idle
+    val ringWidth = if (recommended) 2.dp else GaddiDimens.stroke_ring_idle
 
     // Is this a challenge (odds = P(opponent bluffing)) or a bluff move (odds = P(safe))?
     val isChallenge = advice?.intent is Intent.Challenge
@@ -249,23 +249,23 @@ internal fun ReactionChip(
                     .onGloballyPositioned { chipBounds = it.boundsInRoot() }
                     .heightIn(min = 52.dp)
                     .widthIn(min = 96.dp, max = 200.dp)
-                    .clip(Squircle(KursiDimens.r_md))
+                    .clip(Squircle(GaddiDimens.r_md))
                     .background(chipColor.copy(alpha = 0.15f))
-                    .border(ringWidth, ringColor, Squircle(KursiDimens.r_md))
+                    .border(ringWidth, ringColor, Squircle(GaddiDimens.r_md))
                     .reactionChipSemantics(label = label, recommended = recommended)
                     .inspectable(
                         onClick = onClick,
                         onLongClick = { if (advice != null) onShowChit(coachChitOf(advice, beliefLine), chipBounds) },
-                        pressShape = Squircle(KursiDimens.r_md),
-                    ).padding(horizontal = KursiDimens.space_sm, vertical = KursiDimens.space_xs),
+                        pressShape = Squircle(GaddiDimens.r_md),
+                    ).padding(horizontal = GaddiDimens.space_sm, vertical = GaddiDimens.space_xs),
             contentAlignment = Alignment.Center,
         ) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 if (recommended) RecommendedStar()
                 AutoSizeText(
                     text = label,
-                    style = KursiType.label_sm,
-                    color = KursiNeutrals.TextPrimary,
+                    style = GaddiType.label_sm,
+                    color = GaddiNeutrals.TextPrimary,
                     textAlign = TextAlign.Center,
                     maxLines = 1,
                     minSize = 8.sp,
@@ -293,8 +293,8 @@ internal fun ReactionChip(
         if (consequence != null) {
             Text(
                 text = consequence,
-                style = KursiType.label_micro,
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.label_micro,
+                color = GaddiNeutrals.TextMuted,
                 textAlign = TextAlign.Center,
                 maxLines = 2,
                 modifier = Modifier.widthIn(max = 200.dp),
@@ -305,7 +305,7 @@ internal fun ReactionChip(
 
 @Composable
 internal fun LoseInfluenceDock(state: GameUiState) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val cause = loseInfluenceCause(state)
     Column(
         modifier = Modifier.fillMaxWidth().padding(8.dp),
@@ -316,25 +316,25 @@ internal fun LoseInfluenceDock(state: GameUiState) {
         Box(
             modifier =
                 Modifier
-                    .clip(Squircle(KursiRadii.sm))
-                    .background(KursiSemantics.Danger.copy(alpha = 0.14f))
-                    .border(KursiDimens.stroke_hairline, KursiSemantics.Danger.copy(alpha = 0.6f), Squircle(KursiRadii.sm))
-                    .padding(horizontal = KursiDimens.space_sm, vertical = KursiDimens.space_xs),
+                    .clip(Squircle(GaddiRadii.sm))
+                    .background(GaddiSemantics.Danger.copy(alpha = 0.14f))
+                    .border(GaddiDimens.stroke_hairline, GaddiSemantics.Danger.copy(alpha = 0.6f), Squircle(GaddiRadii.sm))
+                    .padding(horizontal = GaddiDimens.space_sm, vertical = GaddiDimens.space_xs),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                Text(text = "💀", style = KursiType.label_sm)
+                Text(text = "💀", style = GaddiType.label_sm)
                 Text(
                     text = cause,
-                    style = KursiType.label_md,
-                    color = KursiSemantics.Danger,
+                    style = GaddiType.label_md,
+                    color = GaddiSemantics.Danger,
                     textAlign = TextAlign.Center,
                 )
             }
         }
         Text(
             text = voice.centerPrompt(CenterPrompt.LoseInfluence),
-            style = KursiType.body,
-            color = KursiNeutrals.TextSecondary,
+            style = GaddiType.body,
+            color = GaddiNeutrals.TextSecondary,
             textAlign = TextAlign.Center,
         )
     }
@@ -396,7 +396,7 @@ internal fun ExchangeDock(
     state: GameUiState,
     onAction: (GameAction) -> Unit,
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val exchangeIntents = state.legalIntents.filterIsInstance<Intent.ChooseExchange>()
 
     // Resolve every CardId the human can see during the exchange to its real role.
@@ -421,8 +421,8 @@ internal fun ExchangeDock(
     ) {
         Text(
             text = voice.centerPrompt(CenterPrompt.Exchange),
-            style = KursiType.body,
-            color = KursiNeutrals.TextSecondary,
+            style = GaddiType.body,
+            color = GaddiNeutrals.TextSecondary,
         )
         // Lay the keep-options out in a 2-wide wrapping grid so they fill the wide dock
         // panel instead of crowding a thin left column with a large empty void to the right.
@@ -466,17 +466,17 @@ internal fun ExchangeKeepOption(
         } else {
             stringResource(Res.string.game_keep_roles_label, keepCards.joinToString(" + ") { roleLabel(it.role) })
         }
-    val accent = if (recommended) KursiSemantics.Success else BrandTokens.BrassAged
+    val accent = if (recommended) GaddiSemantics.Success else BrandTokens.BrassAged
 
     Column(
         modifier =
             modifier
-                .clip(Squircle(KursiRadii.md))
-                .background(KursiFeltColors.Surface3)
+                .clip(Squircle(GaddiRadii.md))
+                .background(GaddiFeltColors.Surface3)
                 .border(
                     width = if (recommended) 2.dp else 1.dp,
                     color = accent.copy(alpha = if (recommended) 1f else 0.5f),
-                    shape = Squircle(KursiRadii.md),
+                    shape = Squircle(GaddiRadii.md),
                 ).keepOptionSemantics(
                     roleNames = keepCards.map { roleLabelA11y(it.role) },
                     recommended = recommended,
@@ -493,8 +493,8 @@ internal fun ExchangeKeepOption(
             if (recommended) RecommendedStar()
             Text(
                 text = label,
-                style = KursiType.label_sm,
-                color = if (recommended) KursiSemantics.Success else KursiNeutrals.TextPrimary,
+                style = GaddiType.label_sm,
+                color = if (recommended) GaddiSemantics.Success else GaddiNeutrals.TextPrimary,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
             )
@@ -511,8 +511,8 @@ internal fun ExchangeKeepOption(
                     RoleCard(role = card.role, size = CardSize.Small)
                     Text(
                         text = if (card.id in drawnIds) "DRAWN" else "HAND",
-                        style = KursiType.label_sm.copy(letterSpacing = 1.sp),
-                        color = if (card.id in drawnIds) BrandTokens.GoldAntique else KursiNeutrals.TextMuted,
+                        style = GaddiType.label_sm.copy(letterSpacing = 1.sp),
+                        color = if (card.id in drawnIds) BrandTokens.GoldAntique else GaddiNeutrals.TextMuted,
                     )
                 }
             }
@@ -550,22 +550,22 @@ internal fun InvestigatePeekDock(
     ) {
         Text(
             text = stringResource(Res.string.game_jaanch_target_header, targetName),
-            style = KursiType.label_sm.copy(letterSpacing = 1.sp),
+            style = GaddiType.label_sm.copy(letterSpacing = 1.sp),
             color = BrandTokens.GoldAntique,
         )
         if (phase.peekedRole != null) {
             RoleCard(role = phase.peekedRole, size = CardSize.Small)
             Text(
                 text = stringResource(Res.string.game_jaanch_peeked_prompt, roleLabel(phase.peekedRole)),
-                style = KursiType.body,
-                color = KursiNeutrals.TextSecondary,
+                style = GaddiType.body,
+                color = GaddiNeutrals.TextSecondary,
                 textAlign = TextAlign.Center,
             )
         } else {
             Text(
                 text = stringResource(Res.string.game_jaanch_decide_redraw, targetName),
-                style = KursiType.body,
-                color = KursiNeutrals.TextSecondary,
+                style = GaddiType.body,
+                color = GaddiNeutrals.TextSecondary,
                 textAlign = TextAlign.Center,
             )
         }
@@ -603,17 +603,17 @@ internal fun InvestigateChoice(
     Box(
         modifier =
             modifier
-                .clip(Squircle(KursiRadii.md))
+                .clip(Squircle(GaddiRadii.md))
                 .background(accent.copy(alpha = 0.15f))
-                .border(1.dp, accent.copy(alpha = 0.6f), Squircle(KursiRadii.md))
+                .border(1.dp, accent.copy(alpha = 0.6f), Squircle(GaddiRadii.md))
                 .clickable(onClick = onClick)
                 .padding(vertical = 12.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = label,
-            style = KursiType.label_sm.copy(letterSpacing = 1.sp),
-            color = KursiNeutrals.TextPrimary,
+            style = GaddiType.label_sm.copy(letterSpacing = 1.sp),
+            color = GaddiNeutrals.TextPrimary,
             textAlign = TextAlign.Center,
         )
     }
@@ -625,19 +625,19 @@ internal fun GameOverDock(
     onAction: (GameAction) -> Unit,
 ) {
     val winnerSeat = state.winnerSeat ?: 0
-    val winnerColor = KursiSeatColors[winnerSeat]
+    val winnerColor = GaddiSeatColors[winnerSeat]
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        KursiActionButton(
+        GaddiActionButton(
             label = stringResource(Res.string.game_play_again),
             sublabel = stringResource(Res.string.game_players_count, state.view.config.seatCount),
-            roleAccent = KursiSemantics.Success,
+            roleAccent = GaddiSemantics.Success,
             enabled = true,
             onClick = { onAction(GameAction.NewGame(playerCount = state.view.config.seatCount)) },
         )
-        KursiActionButton(
+        GaddiActionButton(
             label = stringResource(Res.string.game_new_game_4p),
             enabled = true,
             onClick = { onAction(GameAction.NewGame(playerCount = 4)) },

@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.map
 // zero-arg constructor. `expect class OnDeviceAiProvider()` is shared with jvm/ios/wasmJs actuals, so
 // it can't grow a Context parameter just for Android. Registered once in AndroidManifest.xml below;
 // android auto-instantiates it (and calls onCreate()) before Application.onCreate() runs.
-internal class KursiAiContextProvider : ContentProvider() {
+internal class GaddiAiContextProvider : ContentProvider() {
     override fun onCreate(): Boolean {
         context?.applicationContext?.let { appContext = it }
         return true
@@ -78,7 +78,7 @@ private class AndroidOnDeviceAiProvider : AiProvider {
     override val displayName = "On-device AI (Gemini Nano / Gemma)"
 
     private val llm: OnDeviceLlm by lazy {
-        val context = KursiAiContextProvider.appContext
+        val context = GaddiAiContextProvider.appContext
         CompositeOnDeviceLlm(
             listOf(
                 MlKitGenAiOnDeviceLlm(context),

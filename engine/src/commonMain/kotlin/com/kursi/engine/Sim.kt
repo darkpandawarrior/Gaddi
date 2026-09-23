@@ -7,7 +7,7 @@ package com.kursi.engine
  *
  * Renamed from the former engine-hosted `Policy` (ai→engine inversion, kmp-toolkit-family bots-policy
  * lane): the app-facing bot-policy abstraction now lives as a generic `Policy<View, Move>` in the
- * `com.siddharth.kmp:bots-policy` toolkit module (aliased to `com.kursi.ai.Policy` for Kursi's
+ * `com.siddharth.kmp:bots-policy` toolkit module (aliased to `com.kursi.ai.Policy` for Gaddi's
  * concrete shape). [SimPolicy] stays engine-local — it only serves [SimHarness]'s own tests, never
  * consumed by `:ai`.
  */
