@@ -69,8 +69,8 @@ fun EngravedHeader(
         if (title != null) {
             Text(
                 text = title,
-                style = KursiType.display.rozha(),
-                color = KursiNeutrals.TextPrimary,
+                style = GaddiType.display.rozha(),
+                color = GaddiNeutrals.TextPrimary,
             )
             Spacer(Modifier.height(6.dp))
         }
@@ -81,7 +81,7 @@ fun EngravedHeader(
         ) {
             Text(
                 text = eyebrow.uppercase(),
-                style = KursiType.label_sm.dmMono().copy(letterSpacing = 2.5.sp),
+                style = GaddiType.label_sm.dmMono().copy(letterSpacing = 2.5.sp),
                 color = BrandTokens.BrassAged,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -136,12 +136,12 @@ fun EngravedNavHeader(
                         .padding(horizontal = 20.dp),
                 contentAlignment = Alignment.CenterStart,
             ) {
-                Text("← $backLabel".uppercase(), style = KursiType.label_sm.dmMono(), color = BrandTokens.BrassAged)
+                Text("← $backLabel".uppercase(), style = GaddiType.label_sm.dmMono(), color = BrandTokens.BrassAged)
             }
             Text(
                 text = title.uppercase(),
-                style = KursiType.label.dmMono().copy(letterSpacing = 2.sp),
-                color = KursiNeutrals.TextPrimary,
+                style = GaddiType.label.dmMono().copy(letterSpacing = 2.sp),
+                color = GaddiNeutrals.TextPrimary,
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 maxLines = 1,
@@ -211,7 +211,7 @@ fun StampButton(
     leading: (@Composable () -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null,
 ) {
-    val shape = Squircle(KursiRadii.md)
+    val shape = Squircle(GaddiRadii.md)
     val contentAlpha = if (enabled) 1f else 0.4f
     val bg: Brush
     val textColor: Color
@@ -221,10 +221,10 @@ fun StampButton(
     when {
         !enabled -> {
             bg = Brush.verticalGradient(listOf(BrandTokens.TeakDark, BrandTokens.TeakInk))
-            textColor = KursiNeutrals.TextDisabled
-            subColor = KursiNeutrals.TextDisabled
+            textColor = GaddiNeutrals.TextDisabled
+            subColor = GaddiNeutrals.TextDisabled
             borderBrush = Brush.linearGradient(listOf(BrandTokens.BrassDark.copy(alpha = 0.3f), BrandTokens.BrassDark.copy(alpha = 0.3f)))
-            borderWidth = KursiDimens.stroke_hairline
+            borderWidth = GaddiDimens.stroke_hairline
         }
         style == StampStyle.Primary -> {
             bg = Brush.verticalGradient(listOf(BrandTokens.GoldAntique, BrandTokens.BrassAged))
@@ -235,19 +235,19 @@ fun StampButton(
         }
         style == StampStyle.Ghost -> {
             bg = Brush.verticalGradient(listOf(Color.Transparent, Color.Transparent))
-            textColor = KursiNeutrals.TextSecondary
-            subColor = KursiNeutrals.TextMuted
+            textColor = GaddiNeutrals.TextSecondary
+            subColor = GaddiNeutrals.TextMuted
             borderBrush =
                 Brush.horizontalGradient(listOf(BrandTokens.BrassDark.copy(alpha = 0.5f), BrandTokens.BrassDark.copy(alpha = 0.5f)))
-            borderWidth = KursiDimens.stroke_hairline
+            borderWidth = GaddiDimens.stroke_hairline
         }
         else -> {
             bg = Brush.verticalGradient(listOf(BrandTokens.TeakMid, BrandTokens.TeakDark))
-            textColor = KursiNeutrals.TextPrimary
-            subColor = KursiNeutrals.TextSecondary
+            textColor = GaddiNeutrals.TextPrimary
+            subColor = GaddiNeutrals.TextSecondary
             borderBrush =
                 Brush.horizontalGradient(listOf(BrandTokens.GoldAntique.copy(alpha = 0.55f), BrandTokens.BrassDark.copy(alpha = 0.55f)))
-            borderWidth = KursiDimens.stroke_ring_idle
+            borderWidth = GaddiDimens.stroke_ring_idle
         }
     }
     val elevation =
@@ -286,7 +286,7 @@ fun StampButton(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = label,
-                    style = KursiType.title.copy(fontSize = 15.sp),
+                    style = GaddiType.title.copy(fontSize = 15.sp),
                     color = textColor.copy(alpha = contentAlpha),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -294,7 +294,7 @@ fun StampButton(
                 if (sublabel != null) {
                     Text(
                         text = sublabel,
-                        style = KursiType.caption,
+                        style = GaddiType.caption,
                         color = subColor.copy(alpha = contentAlpha),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -374,8 +374,8 @@ fun BrassToken(
     ) {
         Text(
             text = monogram.take(2).uppercase(),
-            style = KursiType.name.copy(fontSize = (size.value * 0.3f).sp),
-            color = KursiNeutrals.Cream,
+            style = GaddiType.name.copy(fontSize = (size.value * 0.3f).sp),
+            color = GaddiNeutrals.Cream,
         )
     }
 }
@@ -413,7 +413,7 @@ fun LedgerHeaderRow(columns: List<Pair<String, Float>>) {
         columns.forEach { (label, weight) ->
             Text(
                 text = label,
-                style = KursiType.label_sm.dmMono().copy(letterSpacing = 1.sp),
+                style = GaddiType.label_sm.dmMono().copy(letterSpacing = 1.sp),
                 color = BrandTokens.GoldAntique,
                 modifier = Modifier.weight(weight),
             )
@@ -442,9 +442,9 @@ fun EngravedField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
     val textStyle =
-        (if (monospace) KursiType.numeric else KursiType.body).copy(
+        (if (monospace) GaddiType.numeric else GaddiType.body).copy(
             fontSize = if (monospace) 18.sp else 15.sp,
-            color = KursiNeutrals.TextPrimary,
+            color = GaddiNeutrals.TextPrimary,
             letterSpacing = if (monospace) 4.sp else 0.sp,
         )
     val interactionSource = remember { MutableInteractionSource() }
@@ -468,7 +468,7 @@ fun EngravedField(
                 if (value.isEmpty()) {
                     Text(
                         placeholder,
-                        style = textStyle.copy(color = KursiNeutrals.TextMuted, letterSpacing = 0.sp, fontStyle = FontStyle.Italic),
+                        style = textStyle.copy(color = GaddiNeutrals.TextMuted, letterSpacing = 0.sp, fontStyle = FontStyle.Italic),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )

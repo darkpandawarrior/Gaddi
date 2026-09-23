@@ -20,7 +20,7 @@ actual fun SoundPlayer(): SoundPlayer = WasmSoundPlayer()
 
 @OptIn(ExperimentalEncodingApi::class, kotlin.js.ExperimentalWasmJsInterop::class)
 private class WasmSoundPlayer : SoundPlayer {
-    private val dataUrls = mutableMapOf<KursiSound, String>()
+    private val dataUrls = mutableMapOf<GaddiSound, String>()
 
     // ponytail: every browser engine ships an Audio element and a PCM WAV decoder, so the only
     // real gate here is the autoplay policy — and that cannot be queried synchronously, it only
@@ -28,11 +28,11 @@ private class WasmSoundPlayer : SoundPlayer {
     // flag can actually know.
     override val isAvailable: Boolean = true
 
-    override suspend fun play(sound: KursiSound) {
+    override suspend fun play(sound: GaddiSound) {
         runCatching {
             val url =
                 dataUrls.getOrPut(sound) {
-                    val bytes = loadKursiSoundBytes(sound) ?: return@runCatching
+                    val bytes = loadGaddiSoundBytes(sound) ?: return@runCatching
                     "data:audio/wav;base64,${Base64.encode(bytes)}"
                 }
             Audio(url).play()

@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kursi.designsystem.BrandTokens
-import com.kursi.designsystem.KursiNeutrals
-import com.kursi.designsystem.KursiType
+import com.kursi.designsystem.GaddiNeutrals
+import com.kursi.designsystem.GaddiType
 import kotlin.math.roundToInt
 
 /**
@@ -43,9 +43,9 @@ private val FrameCentreFallback = Offset(500f, 400f)
 // MomentStaticFrames.kt — TENET 6: per-moment reduced-motion static end-frames.
 //
 // Reduced motion must NOT collapse every beat to a uniform TickerSlip. Each
-// KursiMoment gets a TAILORED, characterful frozen frame that still reads the beat
+// GaddiMoment gets a TAILORED, characterful frozen frame that still reads the beat
 // at a glance — held STAMP for declared actions, a JHOOTH/SACH verdict card for
-// reveals, a tipped chair for elimination, a frozen KURSI crest for the win, a
+// reveals, a tipped chair for elimination, a frozen GADDI crest for the win, a
 // coin-row for income/steal, etc. Every primitive is rendered at its terminal
 // (progress = 1f) so motion is gone but the meaning is intact.
 //
@@ -60,27 +60,27 @@ private val FrameCentreFallback = Offset(500f, 400f)
  */
 @Composable
 internal fun MomentStaticFrame(
-    moment: KursiMoment,
+    moment: GaddiMoment,
     anchors: TableAnchors,
 ) {
     when (moment) {
-        is KursiMoment.Income -> CoinFrame(anchors.seat(moment.actorSeat), "+1", "DEHAADI", BrandTokens.BrassAged, count = 1)
-        is KursiMoment.ForeignAid -> CoinFrame(anchors.seat(moment.actorSeat), "+2", "FDI", BrandTokens.BrassAged, count = 2)
-        is KursiMoment.Tax -> StampFrame(anchors.seat(moment.actorSeat), "GHOTALA", moment.roleHue, caption = "+3 · claims NETA")
-        is KursiMoment.Steal -> StealFrame(anchors, moment)
-        is KursiMoment.Assassinate -> StampFrame(anchors.seat(moment.target), "SUPARI", moment.roleHue, caption = "−3 · target hit")
-        is KursiMoment.Exchange -> StampFrame(anchors.seat(moment.actorSeat), "SETTING", moment.roleHue, caption = "cards swapped")
-        is KursiMoment.Coup ->
+        is GaddiMoment.Income -> CoinFrame(anchors.seat(moment.actorSeat), "+1", "DEHAADI", BrandTokens.BrassAged, count = 1)
+        is GaddiMoment.ForeignAid -> CoinFrame(anchors.seat(moment.actorSeat), "+2", "FDI", BrandTokens.BrassAged, count = 2)
+        is GaddiMoment.Tax -> StampFrame(anchors.seat(moment.actorSeat), "GHOTALA", moment.roleHue, caption = "+3 · claims NETA")
+        is GaddiMoment.Steal -> StealFrame(anchors, moment)
+        is GaddiMoment.Assassinate -> StampFrame(anchors.seat(moment.target), "SUPARI", moment.roleHue, caption = "−3 · target hit")
+        is GaddiMoment.Exchange -> StampFrame(anchors.seat(moment.actorSeat), "SETTING", moment.roleHue, caption = "cards swapped")
+        is GaddiMoment.Coup ->
             CrestFrame(
                 anchors.seat(moment.target),
                 word = "KHELA",
                 caption = "−7 · chair toppled",
                 tint = BrandTokens.GoldAntique,
             )
-        is KursiMoment.Block -> StampFrame(anchors.seat(moment.actorSeat), "ROKA!", moment.roleHue, caption = "action blocked")
-        is KursiMoment.Challenge -> ChallengeFrame(anchors, moment)
-        is KursiMoment.Reveal -> VerdictFrame(anchors.seat(moment.claimant), moment)
-        is KursiMoment.InfluenceLoss ->
+        is GaddiMoment.Block -> StampFrame(anchors.seat(moment.actorSeat), "ROKA!", moment.roleHue, caption = "action blocked")
+        is GaddiMoment.Challenge -> ChallengeFrame(anchors, moment)
+        is GaddiMoment.Reveal -> VerdictFrame(anchors.seat(moment.claimant), moment)
+        is GaddiMoment.InfluenceLoss ->
             StampFrame(
                 anchors.seat(moment.actorSeat),
                 "EXPOSED",
@@ -88,13 +88,13 @@ internal fun MomentStaticFrame(
                 caption = "card lost",
                 rotationDeg = -12f,
             )
-        is KursiMoment.Elimination -> TippedChairFrame(anchors.seat(moment.actorSeat))
-        is KursiMoment.TurnHandoff -> HandoffFrame(anchors, moment)
-        is KursiMoment.Win ->
+        is GaddiMoment.Elimination -> TippedChairFrame(anchors.seat(moment.actorSeat))
+        is GaddiMoment.TurnHandoff -> HandoffFrame(anchors, moment)
+        is GaddiMoment.Win ->
             CrestFrame(
                 centerOf(anchors),
-                word = "KURSI",
-                caption = "Kursi aapki!",
+                word = "GADDI",
+                caption = "Gaddi aapki!",
                 tint = BrandTokens.GoldAntique,
                 big = true,
             )
@@ -140,8 +140,8 @@ private fun CaptionPill(
         ) {
             Text(
                 text = text,
-                style = KursiType.label_sm.copy(fontWeight = FontWeight.SemiBold),
-                color = KursiNeutrals.TextPrimary,
+                style = GaddiType.label_sm.copy(fontWeight = FontWeight.SemiBold),
+                color = GaddiNeutrals.TextPrimary,
                 maxLines = 1,
             )
         }
@@ -241,7 +241,7 @@ private fun CoinFrame(
 @Composable
 private fun StealFrame(
     anchors: TableAnchors,
-    m: KursiMoment.Steal,
+    m: GaddiMoment.Steal,
 ) {
     val victim = anchors.seat(m.victim)
     val actor = anchors.seat(m.actorSeat)
@@ -286,7 +286,7 @@ private fun StealFrame(
 @Composable
 private fun VerdictFrame(
     seatCenter: Offset,
-    m: KursiMoment.Reveal,
+    m: GaddiMoment.Reveal,
 ) {
     val (word, color) = if (m.truthful) "SACH!" to m.roleHue else "JHOOTH!" to BrandTokens.StampRed
     // The revealed card — cream face with the role name, greyed when a bluff.
@@ -357,7 +357,7 @@ private fun VerdictFrame(
 @Composable
 private fun ChallengeFrame(
     anchors: TableAnchors,
-    m: KursiMoment.Challenge,
+    m: GaddiMoment.Challenge,
 ) {
     val from = anchors.seat(m.actorSeat)
     val to = anchors.seat(m.claimant)
@@ -389,7 +389,7 @@ private fun ChallengeFrame(
 // ─────────────────────────── Tipped-chair frame (Elimination) ────────────────
 
 /**
- * Elimination, frozen: the chair already tipped past 90°, greyed seat, "KURSI GAYI"
+ * Elimination, frozen: the chair already tipped past 90°, greyed seat, "GADDI GAYI"
  * band. Wistful, never mocking.
  */
 @Composable
@@ -408,7 +408,7 @@ private fun TippedChairFrame(seatCenter: Offset) {
             }
         }
     }
-    CaptionPill(seatCenter, "out — kursi gayi", KursiNeutrals.TextSecondary, yPadDp = 50f)
+    CaptionPill(seatCenter, "out — gaddi gayi", GaddiNeutrals.TextSecondary, yPadDp = 50f)
 }
 
 // ─────────────────────────── Turn handoff frame ──────────────────────────────
@@ -420,7 +420,7 @@ private fun TippedChairFrame(seatCenter: Offset) {
 @Composable
 private fun HandoffFrame(
     anchors: TableAnchors,
-    m: KursiMoment.TurnHandoff,
+    m: GaddiMoment.TurnHandoff,
 ) {
     val from = anchors.seat(m.actorSeat)
     val to = anchors.seat(m.nextSeat)
@@ -434,7 +434,7 @@ private fun HandoffFrame(
 // ─────────────────────────── Crest frame (Coup / Win) ────────────────────────
 
 /**
- * Coup and Win: a frozen KURSI/KHELA crest — the wordmark stamped dead-centre over
+ * Coup and Win: a frozen GADDI/KHELA crest — the wordmark stamped dead-centre over
  * a gold ring, with the celebratory/decisive caption. [big] enlarges for the win.
  */
 @Composable

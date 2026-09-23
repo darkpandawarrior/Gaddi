@@ -5,10 +5,10 @@ import com.kursi.protocol.wire.WireIntent
 import com.kursi.protocol.wire.WirePlayerView
 
 /**
- * The connection lifecycle of an [OnlineKursiClient], surfaced so the UI can show a banner
+ * The connection lifecycle of an [OnlineGaddiClient], surfaced so the UI can show a banner
  * ("Reconnecting…"), disable inputs while dropped, etc.
  *
- * Transitions (driven by [OnlineKursiClient]):
+ * Transitions (driven by [OnlineGaddiClient]):
  * ```
  *   Idle ──connect()──▶ Connecting ──socket open + RoomJoined──▶ Connected
  *     ▲                     │                                        │

@@ -64,7 +64,7 @@ internal fun FeltTableSurface(
                     if (bordered) {
                         Modifier.shadow(
                             26.dp,
-                            Squircle(KursiRadii.xxl),
+                            Squircle(GaddiRadii.xxl),
                             clip = false,
                             ambientColor = Color.Black,
                             spotColor = BrandTokens.TeakInk,
@@ -72,7 +72,7 @@ internal fun FeltTableSurface(
                     } else {
                         Modifier
                     },
-                ).clip(if (bordered) Squircle(KursiRadii.xxl) else androidx.compose.ui.graphics.RectangleShape)
+                ).clip(if (bordered) Squircle(GaddiRadii.xxl) else androidx.compose.ui.graphics.RectangleShape)
                 .background(
                     brush =
                         Brush.radialGradient(
@@ -112,7 +112,7 @@ internal fun FeltTableSurface(
                                         BrandTokens.GoldAntique,
                                     ),
                                 ),
-                            shape = Squircle(KursiRadii.xxl),
+                            shape = Squircle(GaddiRadii.xxl),
                         )
                     } else {
                         Modifier
@@ -299,7 +299,7 @@ internal fun FeltCenterTokens(
             } else {
                 flipAngle.snapTo(0f)
                 // Spring-physics reveal (spec §7 juice) — a card landing face-up, not a linear rotate.
-                flipAngle.animateTo(targetValue = 180f, animationSpec = KursiMotion.settle())
+                flipAngle.animateTo(targetValue = 180f, animationSpec = GaddiMotion.settle())
             }
         }
     }
@@ -396,16 +396,16 @@ internal fun FeltCenterTokens(
                                 modifier =
                                     Modifier
                                         .fillMaxSize()
-                                        .clip(Squircle(KursiDimens.r_md))
+                                        .clip(Squircle(GaddiDimens.r_md))
                                         .background(flashColor.copy(alpha = 0.2f))
                                         .border(
-                                            KursiDimens.stroke_ring_idle,
+                                            GaddiDimens.stroke_ring_idle,
                                             BrandTokens.BrassAged.copy(alpha = 0.6f),
-                                            Squircle(KursiDimens.r_md),
+                                            Squircle(GaddiDimens.r_md),
                                         ),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                Text("?", style = KursiType.display.rozha(), color = KursiNeutrals.TextPrimary)
+                                Text("?", style = GaddiType.display.rozha(), color = GaddiNeutrals.TextPrimary)
                             }
                         } else {
                             // Back face — counter-rotate 180° so text reads left-to-right
@@ -414,24 +414,24 @@ internal fun FeltCenterTokens(
                                     Modifier
                                         .fillMaxSize()
                                         .graphicsLayer { rotationY = 180f } // THE FIX
-                                        .clip(Squircle(KursiDimens.r_md))
+                                        .clip(Squircle(GaddiDimens.r_md))
                                         .background(flashColor.copy(alpha = 0.2f))
                                         .border(
-                                            KursiDimens.stroke_ring_idle,
+                                            GaddiDimens.stroke_ring_idle,
                                             BrandTokens.BrassAged.copy(alpha = 0.6f),
-                                            Squircle(KursiDimens.r_md),
+                                            Squircle(GaddiDimens.r_md),
                                         ),
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(KursiDimens.space_sm),
+                                    verticalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm),
                                 ) {
                                     RoleCard(role = result.role, size = CardSize.Medium)
                                     Text(
                                         text = if (result.hadRole) "✓ TRUE" else "✗ BLUFF",
-                                        style = KursiType.title_sm.rozha(),
-                                        color = if (result.hadRole) KursiSemantics.Success else KursiSemantics.Danger,
+                                        style = GaddiType.title_sm.rozha(),
+                                        color = if (result.hadRole) GaddiSemantics.Success else GaddiSemantics.Danger,
                                         textAlign = TextAlign.Center,
                                     )
                                 }

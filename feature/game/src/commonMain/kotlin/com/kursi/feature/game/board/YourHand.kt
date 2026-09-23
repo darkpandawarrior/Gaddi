@@ -101,8 +101,8 @@ internal fun YourHandPanel(
                 ) {
                     Text(
                         text = stringResource(Res.string.game_your_hand_label),
-                        style = KursiType.caption,
-                        color = KursiNeutrals.TextMuted,
+                        style = GaddiType.caption,
+                        color = GaddiNeutrals.TextMuted,
                     )
                     CoinPill(count = state.view.myCoins)
                 }
@@ -168,7 +168,7 @@ private fun HandCardsRow(
             // place like a physically held card, not a linear tween. Reduced motion
             // collapses to an instant snap (no time-critical info hides behind motion).
             val reducedMotion = LocalReducedMotion.current
-            val fanSpec: AnimationSpec<Float> = if (reducedMotion) tween(0) else KursiMotion.settle()
+            val fanSpec: AnimationSpec<Float> = if (reducedMotion) tween(0) else GaddiMotion.settle()
             val fanTarget by animateFloatAsState(
                 targetValue = if (relevant) 0f else fanZ,
                 animationSpec = fanSpec,
@@ -195,13 +195,13 @@ private fun HandCardsRow(
                     baseGraphics
                         .clip(
                             androidx.compose.foundation.shape
-                                .RoundedCornerShape(KursiRadii.sm),
+                                .RoundedCornerShape(GaddiRadii.sm),
                         ).border(
                             width = 2.dp,
-                            color = KursiSemantics.Danger,
+                            color = GaddiSemantics.Danger,
                             shape =
                                 androidx.compose.foundation.shape
-                                    .RoundedCornerShape(KursiRadii.sm),
+                                    .RoundedCornerShape(GaddiRadii.sm),
                         ).loseInfluenceCardSemantics(role)
                 } else {
                     baseGraphics.handCardSemantics(role = role, faceUp = false)

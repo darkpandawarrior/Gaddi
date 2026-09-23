@@ -3,7 +3,7 @@ package com.kursi.engine
 // ─────────────────────────── Roles & actions ───────────────────────────
 
 /**
- * The Kursi influence cards. Mapping to Coup: NETA=Duke, BHAI=Assassin, BABU=Captain, JUGAADU=Ambassador,
+ * The Gaddi influence cards. Mapping to Coup: NETA=Duke, BHAI=Assassin, BABU=Captain, JUGAADU=Ambassador,
  * VAKIL=Contessa, PATRAKAAR=Inquisitor (the 6th role, Reformation/Inquisitor pattern — see §2 scaling doc).
  *
  * ORDER IS LOAD-BEARING: PATRAKAAR is declared LAST so that [baseRoles] (the first five) is a stable prefix.

@@ -5,8 +5,8 @@ import FirebaseCore
 import FirebaseMessaging
 
 @main
-struct KursiApp: App {
-    @UIApplicationDelegateAdaptor(KursiAppDelegate.self) var delegate
+struct GaddiApp: App {
+    @UIApplicationDelegateAdaptor(GaddiAppDelegate.self) var delegate
 
     var body: some Scene {
         WindowGroup {
@@ -16,7 +16,7 @@ struct KursiApp: App {
     }
 }
 
-class KursiAppDelegate: NSObject, UIApplicationDelegate {
+class GaddiAppDelegate: NSObject, UIApplicationDelegate {
 
     func application(
         _ application: UIApplication,

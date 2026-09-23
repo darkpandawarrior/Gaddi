@@ -89,7 +89,7 @@ fun ChatAvatar(
     ) {
         Text(
             text = monogram.take(2).uppercase(),
-            style = KursiType.label_micro.copy(fontSize = (size.value * 0.38f).sp),
+            style = GaddiType.label_micro.copy(fontSize = (size.value * 0.38f).sp),
             color = BrandTokens.PaperCream,
             textAlign = TextAlign.Center,
             maxLines = 1,
@@ -144,7 +144,7 @@ fun SpeechBubble(
             Modifier.holoRimLight(
                 accent = accent,
                 phase = 0.25f,
-                cornerRadius = KursiRadii.md,
+                cornerRadius = GaddiRadii.md,
                 intensity = 0.65f,
             )
         } else {
@@ -172,7 +172,7 @@ fun SpeechBubble(
                 Modifier
                     .widthIn(min = 80.dp, max = 300.dp)
                     .then(emphaticMod)
-                    .decoPopoverPaper(radius = KursiRadii.md)
+                    .decoPopoverPaper(radius = GaddiRadii.md)
                     .then(
                         // Player bubble: warm gold wash behind the cream paper
                         if (fromPlayer) {
@@ -201,7 +201,7 @@ fun SpeechBubble(
                             modifier =
                                 Modifier
                                     .size(width = 3.dp, height = 10.dp)
-                                    .clip(Squircle(KursiRadii.xs))
+                                    .clip(Squircle(GaddiRadii.xs))
                                     .background(accent.copy(alpha = 0.85f)),
                         )
                         Spacer(Modifier.width(5.dp))
@@ -209,7 +209,7 @@ fun SpeechBubble(
                     Text(
                         text = displayName,
                         style =
-                            KursiType.label_micro
+                            GaddiType.label_micro
                                 .copy(
                                     fontSize = 9.sp,
                                     letterSpacing = 0.5.sp,
@@ -224,7 +224,7 @@ fun SpeechBubble(
                 Text(
                     text = text,
                     style =
-                        KursiType.body
+                        GaddiType.body
                             .copy(
                                 fontSize = 12.sp,
                                 lineHeight = 16.sp,

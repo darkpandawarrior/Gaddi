@@ -28,7 +28,7 @@ import org.jetbrains.compose.resources.stringResource
 // ─────────────────────────── WHAT-JUST-HAPPENED recap (Clarity, Tenet 1) ──────
 // A compact, plain-language recap of the most-recent resolved beat, shown near the
 // spine on EVERY phase. ALWAYS shown — NOT gated under the coach (this is
-// comprehension, not advice). Routes all copy through KursiVoice (bilingual).
+// comprehension, not advice). Routes all copy through GaddiVoice (bilingual).
 
 /** Returns true for events that merit a plain-language recap line. */
 internal fun isRecapWorthy(ev: GameEvent): Boolean =
@@ -86,7 +86,7 @@ internal fun RecapRail(
     gamePhase: GamePhase,
     modifier: Modifier = Modifier,
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val isPickAction = gamePhase is GamePhase.PickAction
 
     // During the player's action phase in narrative mode, surface the last bot chat first —
@@ -106,38 +106,38 @@ internal fun RecapRail(
             modifier =
                 modifier
                     .fillMaxWidth()
-                    .clip(Squircle(KursiRadii.sm))
+                    .clip(Squircle(GaddiRadii.sm))
                     .background(BrandTokens.TeakDark.copy(alpha = 0.85f))
                     .border(
-                        KursiDimens.stroke_hairline,
-                        KursiNeutrals.TextMuted.copy(alpha = 0.6f),
-                        Squircle(KursiRadii.sm),
-                    ).padding(horizontal = KursiDimens.space_sm, vertical = 5.dp)
+                        GaddiDimens.stroke_hairline,
+                        GaddiNeutrals.TextMuted.copy(alpha = 0.6f),
+                        Squircle(GaddiRadii.sm),
+                    ).padding(horizontal = GaddiDimens.space_sm, vertical = 5.dp)
                     .semantics(mergeDescendants = true) {
                         liveRegion = LiveRegionMode.Polite
                         contentDescription = "Darbar — $senderName: ${lastBotMsg.body}"
                     },
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_sm),
+            horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm),
         ) {
             Box(
                 modifier =
                     Modifier
-                        .clip(Squircle(KursiRadii.xs))
-                        .background(KursiNeutrals.TextMuted.copy(alpha = 0.25f))
+                        .clip(Squircle(GaddiRadii.xs))
+                        .background(GaddiNeutrals.TextMuted.copy(alpha = 0.25f))
                         .padding(horizontal = 6.dp, vertical = 2.dp),
             ) {
                 Text(
                     text = "💬 $senderName",
-                    style = KursiType.label_micro.copy(letterSpacing = 0.6.sp),
+                    style = GaddiType.label_micro.copy(letterSpacing = 0.6.sp),
                     color = BrandTokens.GoldAntique,
                     maxLines = 1,
                 )
             }
             Text(
                 text = chatLine,
-                style = KursiType.label_sm,
-                color = KursiNeutrals.TextSecondary,
+                style = GaddiType.label_sm,
+                color = GaddiNeutrals.TextSecondary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
@@ -156,38 +156,38 @@ internal fun RecapRail(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clip(Squircle(KursiRadii.sm))
+                .clip(Squircle(GaddiRadii.sm))
                 .background(BrandTokens.TeakDark.copy(alpha = 0.85f))
                 .border(
-                    KursiDimens.stroke_hairline,
+                    GaddiDimens.stroke_hairline,
                     BrandTokens.BrassDark.copy(alpha = 0.5f),
-                    Squircle(KursiRadii.sm),
-                ).padding(horizontal = KursiDimens.space_sm, vertical = 5.dp)
+                    Squircle(GaddiRadii.sm),
+                ).padding(horizontal = GaddiDimens.space_sm, vertical = 5.dp)
                 .semantics(mergeDescendants = true) {
                     liveRegion = LiveRegionMode.Polite
                     contentDescription = "$label: $line"
                 },
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_sm),
+        horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_sm),
     ) {
         Box(
             modifier =
                 Modifier
-                    .clip(Squircle(KursiRadii.xs))
+                    .clip(Squircle(GaddiRadii.xs))
                     .background(BrandTokens.BrassDark.copy(alpha = 0.5f))
                     .padding(horizontal = 6.dp, vertical = 2.dp),
         ) {
             Text(
                 text = label,
-                style = KursiType.label_micro.copy(letterSpacing = 0.6.sp),
+                style = GaddiType.label_micro.copy(letterSpacing = 0.6.sp),
                 color = BrandTokens.GoldAntique,
                 maxLines = 1,
             )
         }
         Text(
             text = line,
-            style = KursiType.label_sm,
-            color = KursiNeutrals.TextSecondary,
+            style = GaddiType.label_sm,
+            color = GaddiNeutrals.TextSecondary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f),
@@ -204,7 +204,7 @@ internal fun StatusSpineBar(
     modifier: Modifier = Modifier,
 ) {
     val humanSeat = state.view.viewer
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val (text, tone) = deriveSpineTextAndTone(state, gamePhase, humanSeat, voice)
     // A11y (M3 §1): the spine is the running narration of the table — whose turn it is and what
     // just happened. Mark it a polite live region so a screen reader announces each change without
@@ -234,7 +234,7 @@ internal fun EngravedTurnHeader(
     modifier: Modifier = Modifier,
 ) {
     val humanSeat = state.view.viewer
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     val (text, tone) = deriveSpineTextAndTone(state, gamePhase, humanSeat, voice)
     val accent =
         when (tone) {
@@ -259,7 +259,7 @@ internal fun EngravedTurnHeader(
             Text(
                 text = text.uppercase(),
                 style =
-                    KursiType.numeral_sm.dmMono().copy(
+                    GaddiType.numeral_sm.dmMono().copy(
                         letterSpacing = 2.5.sp,
                         fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
                     ),
@@ -275,7 +275,7 @@ internal fun EngravedTurnHeader(
                 // Player's own treasury — the one persistent number FOCUS still needs visible.
                 Text(
                     text = "${state.view.myCoins} ◈",
-                    style = KursiType.numeral_sm,
+                    style = GaddiType.numeral_sm,
                     color = BrandTokens.GoldAntique.copy(alpha = 0.85f),
                     maxLines = 1,
                 )
@@ -299,7 +299,7 @@ internal fun EngravedTurnHeader(
                             ).semantics { contentDescription = niyamGazetteDesc },
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text("☰", style = KursiType.label_sm.copy(fontSize = 13.sp), color = BrandTokens.BrassAged)
+                    Text("☰", style = GaddiType.label_sm.copy(fontSize = 13.sp), color = BrandTokens.BrassAged)
                 }
             }
         }
@@ -322,7 +322,7 @@ internal fun deriveSpineTextAndTone(
     state: GameUiState,
     gamePhase: GamePhase,
     humanSeat: PlayerId,
-    voice: KursiVoice,
+    voice: GaddiVoice,
 ): Pair<String, SpineTone> =
     when (gamePhase) {
         is GamePhase.Idle -> {

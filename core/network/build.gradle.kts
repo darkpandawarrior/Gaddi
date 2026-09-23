@@ -27,7 +27,7 @@ kotlin {
 
         // Per-platform engine deps (okhttp/darwin/js) now come transitively via :network's
         // httpClientEngine() — jvm moves OkHttp -> CIO via :network's jvmMain (both support
-        // WebSockets, so KursiClient/RemoteStanding are unaffected).
+        // WebSockets, so GaddiClient/RemoteStanding are unaffected).
 
         commonTest.dependencies {
             implementation(kotlin("test"))

@@ -20,11 +20,11 @@ plugins {
 // scripts/bump_version.sh --milestone.
 apply(from = "$rootDir/gradle/versioning.gradle.kts")
 
-fun readVersionName(): String = extra["kursiMarketing"] as String
+fun readVersionName(): String = extra["gaddiMarketing"] as String
 
-fun readFingerprint(): String = extra["kursiFingerprint"] as String
+fun readFingerprint(): String = extra["gaddiFingerprint"] as String
 
-fun readBuildCode(): Int = extra["kursiBuildCode"] as Int
+fun readBuildCode(): Int = extra["gaddiBuildCode"] as Int
 
 // ── Release signing ────────────────────────────────────────────────────────────
 // Reads from keystore.properties (copy keystore.properties.template and fill in).
@@ -220,7 +220,7 @@ dependencies {
     testImplementation(libs.junit)
 
     // Non-free, gms-flavor only — F-Droid's noGms flavor ships without these (PlayFeatures.kt
-    // and KursiFirebaseMessagingService.kt have a noGms no-op counterpart under src/noGms).
+    // and GaddiFirebaseMessagingService.kt have a noGms no-op counterpart under src/noGms).
     add("gmsImplementation", platform(libs.firebase.bom))
     add("gmsImplementation", libs.firebase.messaging)
     add("gmsImplementation", libs.play.review.ktx)

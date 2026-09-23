@@ -3,10 +3,10 @@ package com.kursi.shared.strings
 import androidx.compose.runtime.staticCompositionLocalOf
 
 /**
- * All user-facing screen copy for Kursi.
+ * All user-facing screen copy for Gaddi.
  * Two flavors: Hinglish (branded default) and English.
  */
-sealed class KursiStrings {
+sealed class GaddiStrings {
     // ── Common ────────────────────────────────────────────────────────────
     abstract val back: String
 
@@ -483,10 +483,10 @@ sealed class KursiStrings {
     ): String
 
     // ─────────────────────────────────────────────────────────────────────
-    object Hinglish : KursiStrings() {
+    object Hinglish : GaddiStrings() {
         override val back = "← Wapas"
         override val homeRosterHeader = "AAJ KI HAAZRI"
-        override val homeTagline = "sab kuch kursi ka khel hai."
+        override val homeTagline = "sab kuch gaddi ka khel hai."
         override val homeCtaNewGame = "TAKE THE CHAIR"
         override val homeCtaNewGameSub = "Single Player · vs. the Cabinet"
         override val homeCtaRules = "PADHIYE NIYAM"
@@ -506,7 +506,7 @@ sealed class KursiStrings {
         override val setupModeLabel = "FORM 1-A: SAMPARK KA TARIKA"
         override val setupModeSublabel = "How will you govern today?"
 
-        override fun setupPlayerSublabel(count: Int) = "Aaj $count kursiyaan: aap + ${count - 1} babu."
+        override fun setupPlayerSublabel(count: Int) = "Aaj $count gaddiyaan: aap + ${count - 1} babu."
 
         override val setupPlayerSectionLabel = "FORM 1-B: KITNE LOG MEZ PAR"
         override val setupDifficultyLabel = "FORM 1-C: BABU KA TAJURBA"
@@ -536,7 +536,7 @@ sealed class KursiStrings {
         override val diffEasyName = "NAYA BHARTI"
         override val diffEasyVoice = "Abhi training mein hai. Form bhar deta hai, bina padhe."
         override val diffMediumName = "PERMANENT BABU"
-        override val diffMediumVoice = "10 saal se isi kursi pe. Rulebook ratta hai."
+        override val diffMediumVoice = "10 saal se isi gaddi pe. Rulebook ratta hai."
         override val diffHardName = "SECTION OFFICER"
         override val diffHardVoice = "Jhooth sungh leta hai."
         override val diffExpertName = "HEAD CLERK SAAB"
@@ -561,9 +561,9 @@ sealed class KursiStrings {
         override val resultsRecapBluffsLanded = "Jhooth jo chal gaya"
         override val resultsRecapBluffsCaught = "Rangey haath pakde gaye"
         override val resultsRecapStandings = "Antim Suchi — Final Standings:"
-        override val resultsRecapWinnerSuffix = " ← KURSI HAASIL"
+        override val resultsRecapWinnerSuffix = " ← GADDI HAASIL"
         override val resultsRecapSeal = "✦ FAISLA MUHAR · दर्ज ✦"
-        override val resultsWinStamp = "KURSI HAASIL"
+        override val resultsWinStamp = "GADDI HAASIL"
         override val resultsRematch = "DUBARA — REMATCH"
         override val resultsRematchSub = "Same roster · new seed · next round"
         override val resultsNewGame = "NAYA KHEL"
@@ -611,7 +611,7 @@ sealed class KursiStrings {
         override val settingsRulesLabel = "NIYAM GAZETTE"
         override val settingsRulesSub = "Full rules and who-beats-whom matrix"
         override val settingsAboutSection = "BAARE MEIN — About"
-        override val settingsAboutTitle = "Kursi — a satirical bluffing game"
+        override val settingsAboutTitle = "Gaddi — a satirical bluffing game"
         override val settingsAboutDisclaimer =
             "\"Saare paatra kaalpanik hain — All characters are fictional. Any resemblance to actual babus, netas, or " +
                 "inspectors is purely coincidental and deeply regrettable.\""
@@ -637,7 +637,7 @@ sealed class KursiStrings {
         override val homeCtaTutorialSub = "Tutorial — seekhiye karke, ek hi baari mein"
         override val tutorialOfferTitle = "Pehli Hazri darj karein?"
         override val tutorialOfferBody =
-            "Nayi naukri, nayi kursi. Ek chhoti training baari — Salahkaar saath chalega, ek jhooth pakda jaayega. Dekh ke " +
+            "Nayi naukri, nayi gaddi. Ek chhoti training baari — Salahkaar saath chalega, ek jhooth pakda jaayega. Dekh ke " +
                 "seekhiye."
         override val tutorialOfferAccept = "HAAN, SIKHAO"
         override val tutorialOfferDecline = "Nahi, seedha khel"
@@ -654,7 +654,7 @@ sealed class KursiStrings {
         override val tutorialDoCoup = "KHELA STAMP KARO"
         override val tutorialDoExchange = "SETTING KARO"
         override val tut1Title = "Do Certificate, Do Jaan"
-        override val tut1Body = "Ye do gupt parchiyaan aapki asli pehchaan hain. Dono gayi, toh aap kursi se bahar. Inhe chhupa ke rakhiye."
+        override val tut1Body = "Ye do gupt parchiyaan aapki asli pehchaan hain. Dono gayi, toh aap gaddi se bahar. Inhe chhupa ke rakhiye."
         override val tut2Title = "Khokha Hi Taqat Hai"
         override val tut2Body = "Sikke = power. 7 pe Khela (hit) khareeda jaata hai, 10 pe majboori. Ginti par nazar rakhiye."
         override val tut3Title = "Daava Karo — Sach Ho Ya Na Ho"
@@ -687,7 +687,7 @@ sealed class KursiStrings {
                 "badla."
         override val tut8Title = "Hazri Poori, Sarkar"
         override val tut8Body =
-            "Ab aap sab jaante hain — daava, challenge, block, khela, aur setting. Kursi pe baithne ka waqt aa gaya."
+            "Ab aap sab jaante hain — daava, challenge, block, khela, aur setting. Gaddi pe baithne ka waqt aa gaya."
 
         // ── M5 ONBOARD — Presets / quick-match ──
         override val setupQuickMatchLabel = "TURANT KHEL"
@@ -713,7 +713,7 @@ sealed class KursiStrings {
 
         override val gauntletHeader = "TARAKKI KI SEEDHI"
         override val gauntletBadge = "PADONNATI FILE"
-        override val gauntletTagline = "Probationer se Cabinet tak. Har paaydaan jeeto, agli kursi paao."
+        override val gauntletTagline = "Probationer se Cabinet tak. Har paaydaan jeeto, agli gaddi paao."
         override val gauntletStartCta = "AGLI PARIKSHA DO"
         override val gauntletStartCtaSub = "Is paaydaan ki mez ko harao"
         override val gauntletReplayCta = "PHIR SE KHELO"
@@ -722,7 +722,7 @@ sealed class KursiStrings {
         override val gauntletCurrentTag = "ABHI YAHIN"
         override val gauntletConqueredTitle = "POORI SEEDHI FATEH"
         override val gauntletConqueredBody =
-            "Cabinet Secretary saab. Sabse oonchi kursi aapki. Phir bhi koi paaydaan dobara khel sakte " +
+            "Cabinet Secretary saab. Sabse oonchi gaddi aapki. Phir bhi koi paaydaan dobara khel sakte " +
                 "hain."
         override val gauntletRung0Name = "PROBATIONER"
         override val gauntletRung1Name = "BABU"
@@ -809,7 +809,7 @@ sealed class KursiStrings {
             nextRank: String,
         ) = "$nextRank tak $points ank"
 
-        override val rankedTopTier = "Sabse oonchi kursi — Cabinet Secretary."
+        override val rankedTopTier = "Sabse oonchi gaddi — Cabinet Secretary."
 
         // ── M6d DAILY CHALLENGE (Hinglish) ──
         override val dailyCta = "AAJ KI CHUNAUTI"
@@ -867,7 +867,7 @@ sealed class KursiStrings {
         override val onlineLobbyLost = "Rabta toot gaya."
         override val onlineLobbyLeave = "KAMRA CHHODO"
 
-        override fun onlineLobbySeated(seat: Int) = "Aapki kursi #${seat + 1} pakki."
+        override fun onlineLobbySeated(seat: Int) = "Aapki gaddi #${seat + 1} pakki."
 
         override fun onlineLobbyRoster(
             joined: Int,
@@ -891,7 +891,7 @@ sealed class KursiStrings {
         override val setupDraftSub = "Koi ek deck-draft preset chuniye — ya seedha khelo (CLASSIC)."
     }
 
-    object English : KursiStrings() {
+    object English : GaddiStrings() {
         override val back = "← Back"
         override val homeRosterHeader = "ON DUTY TODAY"
         override val homeTagline = "everything is a game of chairs."
@@ -1019,7 +1019,7 @@ sealed class KursiStrings {
         override val settingsRulesLabel = "RULES GAZETTE"
         override val settingsRulesSub = "Full rules and who-beats-whom matrix"
         override val settingsAboutSection = "ABOUT"
-        override val settingsAboutTitle = "Kursi — a satirical bluffing game"
+        override val settingsAboutTitle = "Gaddi — a satirical bluffing game"
         override val settingsAboutDisclaimer =
             "\"All characters are fictional. Any resemblance to actual bureaucrats, politicians, or inspectors is purely " +
                 "coincidental and deeply regrettable.\""
@@ -1292,7 +1292,7 @@ sealed class KursiStrings {
 }
 
 /** Bilingual sarkari rank-tier name for a [SarkariRank], in the active language. */
-fun KursiStrings.rankName(rank: com.kursi.core.prefs.SarkariRank): String =
+fun GaddiStrings.rankName(rank: com.kursi.core.prefs.SarkariRank): String =
     when (rank) {
         com.kursi.core.prefs.SarkariRank.CLERK -> rankClerk
         com.kursi.core.prefs.SarkariRank.SECTION_OFFICER -> rankSectionOfficer
@@ -1303,4 +1303,4 @@ fun KursiStrings.rankName(rank: com.kursi.core.prefs.SarkariRank): String =
         com.kursi.core.prefs.SarkariRank.CABINET_SECRETARY -> rankCabinetSecretary
     }
 
-val LocalKursiStrings = staticCompositionLocalOf<KursiStrings> { KursiStrings.Hinglish }
+val LocalGaddiStrings = staticCompositionLocalOf<GaddiStrings> { GaddiStrings.Hinglish }

@@ -43,13 +43,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kursi.designsystem.BrandTokens
 import com.kursi.designsystem.BrassToken
-import com.kursi.designsystem.KursiNeutrals
-import com.kursi.designsystem.KursiRoleHues
-import com.kursi.designsystem.KursiType
+import com.kursi.designsystem.GaddiNeutrals
+import com.kursi.designsystem.GaddiRoleHues
+import com.kursi.designsystem.GaddiType
 import com.kursi.designsystem.RoleGlyph
 import com.kursi.designsystem.litGround
 import com.kursi.engine.Role
-import com.kursi.shared.strings.LocalKursiStrings
+import com.kursi.shared.strings.LocalGaddiStrings
 import kursi.core.designsystem.generated.resources.Res
 import kursi.core.designsystem.generated.resources.label_jhooth_stamp
 import kursi.core.designsystem.generated.resources.label_move_dehaadi_fdi
@@ -84,7 +84,7 @@ private enum class Mechanic { BLOCK, COUP, EXCHANGE }
  *
  * A guided "training round" that teaches by DOING rather than by reading. A seeded, scripted table
  * sits behind a coach chit; the Advisor (Salahkaar) narrates ten beats, bilingually, via
- * [LocalKursiStrings] + [LocalKursiVoice], one mechanic per screen. The spine of the lesson is a
+ * [LocalGaddiStrings] + [LocalGaddiVoice], one mechanic per screen. The spine of the lesson is a
  * GUARANTEED bluff-caught teaching beat: the learner stamps GHOTALA (claiming NETA without holding
  * it), a scripted rival (Babu Filewala) challenges, and the card flips to reveal JHOOTH — the learner
  * watches a bluff get caught and an influence lost, the single most important rule loop in the game
@@ -108,7 +108,7 @@ fun TutorialScreen(
      *  teaching moment without driving the UI. Defaults to 0 (the live entry). */
     initialStep: Int = 0,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
 
     // The ten beats, paired (title, body) from the localized string table. One concept per screen.
     val beats =
@@ -213,7 +213,7 @@ fun TutorialScreen(
 /** The primary-CTA label for a mechanic beat's un-acted (prompting) state. */
 private fun mechanicDoLabel(
     mechanic: Mechanic,
-    s: com.kursi.shared.strings.KursiStrings,
+    s: com.kursi.shared.strings.GaddiStrings,
 ): String =
     when (mechanic) {
         Mechanic.BLOCK -> s.tutorialDoBlock
@@ -236,7 +236,7 @@ fun TutorialOfferDialog(
     onAccept: () -> Unit,
     onDecline: () -> Unit,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     Box(
         modifier =
             Modifier
@@ -281,17 +281,17 @@ fun TutorialOfferDialog(
                         .border(1.5.dp, BrandTokens.BrassAged, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
-                Text("✦", style = KursiType.title.copy(fontSize = 20.sp), color = BrandTokens.TeakDark)
+                Text("✦", style = GaddiType.title.copy(fontSize = 20.sp), color = BrandTokens.TeakDark)
             }
             Text(
                 s.tutorialOfferTitle,
-                style = KursiType.title_md.copy(fontSize = 18.sp),
+                style = GaddiType.title_md.copy(fontSize = 18.sp),
                 color = BrandTokens.CreamInk,
                 textAlign = TextAlign.Center,
             )
             Text(
                 s.tutorialOfferBody,
-                style = KursiType.body.copy(fontSize = 13.sp),
+                style = GaddiType.body.copy(fontSize = 13.sp),
                 color = BrandTokens.CreamInk.copy(alpha = 0.85f),
                 textAlign = TextAlign.Center,
             )
@@ -313,13 +313,13 @@ fun TutorialOfferDialog(
             ) {
                 Text(
                     s.tutorialOfferAccept,
-                    style = KursiType.label.copy(fontSize = 13.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp),
+                    style = GaddiType.label.copy(fontSize = 13.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp),
                     color = BrandTokens.TeakDark,
                 )
             }
             Text(
                 s.tutorialOfferDecline,
-                style = KursiType.label.copy(fontSize = 11.sp),
+                style = GaddiType.label.copy(fontSize = 11.sp),
                 color = BrandTokens.BrassDark.copy(alpha = 0.8f),
                 modifier =
                     Modifier
@@ -351,7 +351,7 @@ private fun TutorialHeader(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(Modifier.weight(1f)) {
-                Text(header, style = KursiType.title.copy(fontSize = 15.sp, letterSpacing = 1.sp), color = KursiNeutrals.TextPrimary)
+                Text(header, style = GaddiType.title.copy(fontSize = 15.sp, letterSpacing = 1.sp), color = GaddiNeutrals.TextPrimary)
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Box(
                         modifier =
@@ -363,16 +363,16 @@ private fun TutorialHeader(
                     ) {
                         Text(
                             badge,
-                            style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.6.sp),
+                            style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.6.sp),
                             color = BrandTokens.StampRed.copy(alpha = 0.8f),
                         )
                     }
-                    Text("$stepLabel ${step + 1}/$total", style = KursiType.caption.copy(fontSize = 9.sp), color = KursiNeutrals.TextMuted)
+                    Text("$stepLabel ${step + 1}/$total", style = GaddiType.caption.copy(fontSize = 9.sp), color = GaddiNeutrals.TextMuted)
                 }
             }
             Text(
                 text = skipLabel,
-                style = KursiType.caption.copy(fontSize = 11.sp),
+                style = GaddiType.caption.copy(fontSize = 11.sp),
                 color = BrandTokens.BrassAged,
                 modifier =
                     Modifier
@@ -448,7 +448,7 @@ private fun CoachChit(
                             .border(0.8.dp, BrandTokens.BrassDark, RoundedCornerShape(4.dp))
                             .padding(horizontal = 8.dp, vertical = 3.dp),
                 ) {
-                    Text("▸ $coachTag", style = KursiType.label.copy(fontSize = 9.sp, letterSpacing = 1.sp), color = BrandTokens.BrassDark)
+                    Text("▸ $coachTag", style = GaddiType.label.copy(fontSize = 9.sp, letterSpacing = 1.sp), color = BrandTokens.BrassDark)
                 }
                 Spacer(Modifier.weight(1f))
                 Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -466,13 +466,13 @@ private fun CoachChit(
 
             Text(
                 text = title,
-                style = KursiType.title_md.copy(fontSize = 18.sp),
+                style = GaddiType.title_md.copy(fontSize = 18.sp),
                 color = BrandTokens.CreamInk,
             )
             // Live region so screen readers announce each new teaching beat.
             Text(
                 text = body,
-                style = KursiType.body.copy(fontSize = 13.sp),
+                style = GaddiType.body.copy(fontSize = 13.sp),
                 color = BrandTokens.CreamInk.copy(alpha = 0.86f),
                 modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
             )
@@ -498,7 +498,7 @@ private fun CoachChit(
                     ) {
                         Text(
                             text = backLabel,
-                            style = KursiType.label.copy(fontSize = 11.sp),
+                            style = GaddiType.label.copy(fontSize = 11.sp),
                             color = BrandTokens.BrassDark.copy(alpha = 0.8f),
                         )
                     }
@@ -520,7 +520,7 @@ private fun CoachChit(
                 ) {
                     Text(
                         primaryLabel,
-                        style = KursiType.label.copy(fontSize = 12.sp, fontWeight = FontWeight.Bold),
+                        style = GaddiType.label.copy(fontSize = 12.sp, fontWeight = FontWeight.Bold),
                         color = BrandTokens.TeakDark,
                     )
                 }
@@ -544,7 +544,7 @@ private fun ScriptedTable(
     promptingAction: Boolean,
     challengerName: String,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     Box(
         modifier =
             Modifier
@@ -567,21 +567,21 @@ private fun ScriptedTable(
                 RivalPlate(
                     name = challengerName,
                     monogram = "BF",
-                    hue = KursiRoleHues.Babu,
+                    hue = GaddiRoleHues.Babu,
                     active = challenged,
                     modifier = Modifier.weight(1f),
                 )
                 RivalPlate(
                     name = stringResource(Res.string.tutorial_persona_netaji_vachan),
                     monogram = "NV",
-                    hue = KursiRoleHues.Neta,
+                    hue = GaddiRoleHues.Neta,
                     active = false,
                     modifier = Modifier.weight(1f),
                 )
                 RivalPlate(
                     name = stringResource(Res.string.tutorial_persona_vakil_loophole),
                     monogram = "VL",
-                    hue = KursiRoleHues.Vakil,
+                    hue = GaddiRoleHues.Vakil,
                     active = false,
                     modifier = Modifier.weight(1f),
                 )
@@ -642,7 +642,7 @@ private fun RivalPlate(
             }
             BrassToken(monogram = monogram, fill = hue, size = 36.dp)
         }
-        Text(name, style = KursiType.name.copy(fontSize = 11.sp), color = KursiNeutrals.TextPrimary, maxLines = 1)
+        Text(name, style = GaddiType.name.copy(fontSize = 11.sp), color = GaddiNeutrals.TextPrimary, maxLines = 1)
         // Face-down influence pips — one fewer once this rival has lost an influence (COUP beat).
         Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
             repeat(if (pipsLost) 1 else 2) {
@@ -673,7 +673,7 @@ private fun ChallengeBanner(
     ) {
         Text(
             text = text,
-            style = KursiType.body.copy(fontSize = 13.sp, fontStyle = FontStyle.Italic),
+            style = GaddiType.body.copy(fontSize = 13.sp, fontStyle = FontStyle.Italic),
             color = if (revealed) BrandTokens.StampRed else BrandTokens.GoldAntique,
             textAlign = TextAlign.Center,
         )
@@ -734,7 +734,7 @@ private fun HandCard(
         if (faceUp) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 RoleGlyph(role = role, modifier = Modifier.size(40.dp), tint = hue)
-                Text(roleName(role), style = KursiType.label.copy(fontSize = 9.sp, letterSpacing = 1.sp), color = BrandTokens.CreamInk)
+                Text(roleName(role), style = GaddiType.label.copy(fontSize = 9.sp, letterSpacing = 1.sp), color = BrandTokens.CreamInk)
                 if (caught) {
                     Box(
                         modifier =
@@ -746,8 +746,8 @@ private fun HandCard(
                     ) {
                         Text(
                             stringResource(Res.string.label_jhooth_stamp),
-                            style = KursiType.caption.copy(fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp),
-                            color = KursiNeutrals.Cream,
+                            style = GaddiType.caption.copy(fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp),
+                            color = GaddiNeutrals.Cream,
                         )
                     }
                 }
@@ -766,7 +766,7 @@ private fun HandCard(
                         ).border(1.dp, BrandTokens.BrassDark, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
-                Text("✦", style = KursiType.title.copy(fontSize = 16.sp), color = BrandTokens.GoldAntique.copy(alpha = 0.7f))
+                Text("✦", style = GaddiType.title.copy(fontSize = 16.sp), color = BrandTokens.GoldAntique.copy(alpha = 0.7f))
             }
         }
     }
@@ -784,11 +784,11 @@ private fun CoinTally(coins: Int) {
                     .border(1.dp, BrandTokens.BrassAged, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            Text("₹", style = KursiType.caption.copy(fontSize = 11.sp, fontWeight = FontWeight.Bold), color = BrandTokens.TeakDark)
+            Text("₹", style = GaddiType.caption.copy(fontSize = 11.sp, fontWeight = FontWeight.Bold), color = BrandTokens.TeakDark)
         }
         Text(
             stringResource(Res.string.tutorial_coin_tally, coins),
-            style = KursiType.label.copy(fontSize = 12.sp, letterSpacing = 1.sp),
+            style = GaddiType.label.copy(fontSize = 12.sp, letterSpacing = 1.sp),
             color = BrandTokens.GoldAntique,
         )
     }
@@ -802,7 +802,7 @@ private fun ActionDock(
     spent: Boolean,
     /** The role glyph shown on the highlighted chip; null for a claim-free move (KHELA has no claim). */
     iconRole: Role? = Role.NETA,
-    iconTint: Color = KursiRoleHues.Neta,
+    iconTint: Color = GaddiRoleHues.Neta,
 ) {
     val infinite = rememberInfiniteTransition(label = "dockPulse")
     val glow by infinite.animateFloat(
@@ -848,11 +848,11 @@ private fun ActionDock(
                     RoleGlyph(role = iconRole, modifier = Modifier.size(26.dp), tint = iconTint)
                 } else {
                     // KHELA claims no role — a plain stamp mark stands in for the missing glyph.
-                    Text("✦", style = KursiType.title.copy(fontSize = 20.sp), color = BrandTokens.GoldAntique)
+                    Text("✦", style = GaddiType.title.copy(fontSize = 20.sp), color = BrandTokens.GoldAntique)
                 }
                 Column {
-                    Text(label, style = KursiType.name.copy(fontSize = 13.sp), color = KursiNeutrals.TextPrimary)
-                    Text(sub, style = KursiType.caption.copy(fontSize = 9.sp), color = KursiNeutrals.TextMuted)
+                    Text(label, style = GaddiType.name.copy(fontSize = 13.sp), color = GaddiNeutrals.TextPrimary)
+                    Text(sub, style = GaddiType.caption.copy(fontSize = 9.sp), color = GaddiNeutrals.TextMuted)
                 }
             }
         }
@@ -877,8 +877,8 @@ private fun ActionDock(
                     } else {
                         fdiLabel
                     },
-                    style = KursiType.name.copy(fontSize = 12.sp),
-                    color = KursiNeutrals.TextSecondary,
+                    style = GaddiType.name.copy(fontSize = 12.sp),
+                    color = GaddiNeutrals.TextSecondary,
                 )
             }
         }
@@ -911,21 +911,21 @@ private fun MechanicTable(
                 RivalPlate(
                     name = "Babu Filewala",
                     monogram = "BF",
-                    hue = KursiRoleHues.Babu,
+                    hue = GaddiRoleHues.Babu,
                     active = false,
                     modifier = Modifier.weight(1f),
                 )
                 RivalPlate(
                     name = "Netaji Vachan",
                     monogram = "NV",
-                    hue = KursiRoleHues.Neta,
+                    hue = GaddiRoleHues.Neta,
                     active = mechanic == Mechanic.BLOCK,
                     modifier = Modifier.weight(1f),
                 )
                 RivalPlate(
                     name = "Vakil Loophole",
                     monogram = "VL",
-                    hue = KursiRoleHues.Vakil,
+                    hue = GaddiRoleHues.Vakil,
                     active = mechanic == Mechanic.COUP,
                     pipsLost = mechanic == Mechanic.COUP && acted,
                     modifier = Modifier.weight(1f),
@@ -953,7 +953,7 @@ private fun MechanicTable(
                         pulse = !acted,
                         spent = acted,
                         iconRole = Role.VAKIL,
-                        iconTint = KursiRoleHues.Vakil,
+                        iconTint = GaddiRoleHues.Vakil,
                     )
                 }
                 Mechanic.COUP -> {
@@ -974,7 +974,7 @@ private fun MechanicTable(
                         pulse = !acted,
                         spent = acted,
                         iconRole = Role.JUGAADU,
-                        iconTint = KursiRoleHues.Jugaadu,
+                        iconTint = GaddiRoleHues.Jugaadu,
                     )
                 }
             }
@@ -1013,12 +1013,12 @@ private fun mechanicLine(
 
 private fun roleHue(role: Role): Color =
     when (role) {
-        Role.NETA -> KursiRoleHues.Neta
-        Role.BHAI -> KursiRoleHues.Bhai
-        Role.BABU -> KursiRoleHues.Babu
-        Role.JUGAADU -> KursiRoleHues.Jugaadu
-        Role.VAKIL -> KursiRoleHues.Vakil
-        Role.PATRAKAAR -> KursiRoleHues.Patrakaar
+        Role.NETA -> GaddiRoleHues.Neta
+        Role.BHAI -> GaddiRoleHues.Bhai
+        Role.BABU -> GaddiRoleHues.Babu
+        Role.JUGAADU -> GaddiRoleHues.Jugaadu
+        Role.VAKIL -> GaddiRoleHues.Vakil
+        Role.PATRAKAAR -> GaddiRoleHues.Patrakaar
     }
 
 private fun roleName(role: Role): String =

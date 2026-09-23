@@ -13,7 +13,7 @@ import com.siddharth.kmp.botspolicy.Outcome
 import com.siddharth.kmp.botspolicy.Policy as GenericPolicy
 
 /**
- * Kursi's concrete bot-policy shape: decide over the redacted [PlayerView] and legal [Intent]s. Every
+ * Gaddi's concrete bot-policy shape: decide over the redacted [PlayerView] and legal [Intent]s. Every
  * bot tier in this module (Easy/Medium/Hard/Expert/Grandmaster/Persona) implements this — it replaces
  * the old engine-hosted `com.kursi.engine.Policy` (removed as part of the ai→engine inversion,
  * kmp-toolkit-family bots-policy lane: PROGRESS.md).
@@ -22,7 +22,7 @@ typealias Policy = GenericPolicy<PlayerView, Intent>
 
 /**
  * Adapts the engine's free-function API (whoActsNext/legalIntents/applyIntent/redact) to the generic
- * [GameRules] contract, so [com.siddharth.kmp.botspolicy.Ismcts] can drive Kursi self-play without
+ * [GameRules] contract, so [com.siddharth.kmp.botspolicy.Ismcts] can drive Gaddi self-play without
  * importing `com.kursi.engine.*` itself.
  *
  * Lives in `:ai`, NOT `:engine` — the sketch that kicked off this inversion suggested `:engine` host
@@ -31,7 +31,7 @@ typealias Policy = GenericPolicy<PlayerView, Intent>
  * dependency on `:engine`. `:engine` itself is untouched by this step except for the `Policy` →
  * `SimPolicy` rename in `Sim.kt` (that rename is unrelated to this adapter — it just frees the name).
  */
-object KursiRules : GameRules<GameState, Intent, PlayerId, PlayerView> {
+object GaddiRules : GameRules<GameState, Intent, PlayerId, PlayerView> {
     override fun whoActsNext(state: GameState): PlayerId? = com.kursi.engine.whoActsNext(state)
 
     override fun legalMoves(

@@ -5,9 +5,9 @@ import androidx.compose.ui.graphics.Color
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Moment.kt — Pure data describing WHAT happened. No Compose, no timing.
-// Design: kursi-plan/docs/15c_action_moments.md §1.1
+// Design: gaddi-plan/docs/15c_action_moments.md §1.1
 //
-// The presentation layer maps each resolved engine event to one KursiMoment.
+// The presentation layer maps each resolved engine event to one GaddiMoment.
 // The overlay player owns all motion; this file carries only data.
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -45,7 +45,7 @@ enum class HapticBeat { None, Tick, Thud, DoubleBuzz, HeavyLong }
  * - [haptic]: HeavyLong reserved for Coup, Elimination, Win only.
  */
 @Immutable
-sealed interface KursiMoment {
+sealed interface GaddiMoment {
     val actorSeat: SeatId
     val durationMs: Int
     val barkKey: BarkKey?
@@ -62,7 +62,7 @@ sealed interface KursiMoment {
         override val actorSeat: SeatId,
         val actorName: String = "",
         override val barkKey: BarkKey? = null,
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val durationMs = 900
         override val haptic = HapticBeat.Tick
     }
@@ -76,7 +76,7 @@ sealed interface KursiMoment {
         override val actorSeat: SeatId,
         val actorName: String = "",
         override val barkKey: BarkKey? = null,
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val durationMs = 1000
         override val haptic = HapticBeat.Tick
     }
@@ -84,7 +84,7 @@ sealed interface KursiMoment {
     /**
      * Ghotala / Tax: +3 Khokhas, NETA claim.
      * Beat: RubberStamp("GHOTALA", Neta-blue) then 3× CoinTrail spill.
-     * [roleHue] is KursiRoleHues.Neta from the caller.
+     * [roleHue] is GaddiRoleHues.Neta from the caller.
      */
     @Immutable
     data class Tax(
@@ -92,7 +92,7 @@ sealed interface KursiMoment {
         val roleHue: Color,
         val actorName: String = "",
         override val barkKey: BarkKey? = null,
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val durationMs = 1100
         override val haptic = HapticBeat.Tick
     }
@@ -109,7 +109,7 @@ sealed interface KursiMoment {
         val actorName: String = "",
         val victimName: String = "",
         override val barkKey: BarkKey? = null,
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val durationMs = 1300
         override val haptic = HapticBeat.Thud
     }
@@ -127,7 +127,7 @@ sealed interface KursiMoment {
         val actorName: String = "",
         val targetName: String = "",
         override val barkKey: BarkKey? = null,
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val durationMs = 1500
         override val haptic = HapticBeat.Thud
     }
@@ -142,7 +142,7 @@ sealed interface KursiMoment {
         val roleHue: Color,
         val actorName: String = "",
         override val barkKey: BarkKey? = null,
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val durationMs = 1100
         override val haptic = HapticBeat.Tick
     }
@@ -160,7 +160,7 @@ sealed interface KursiMoment {
         val actorName: String = "",
         val targetName: String = "",
         override val barkKey: BarkKey? = null,
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val durationMs = 2000
         override val haptic = HapticBeat.HeavyLong
     }
@@ -180,7 +180,7 @@ sealed interface KursiMoment {
         val blockerName: String = "",
         val blockedName: String = "",
         override val barkKey: BarkKey? = null,
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val durationMs = 1200
         override val haptic = HapticBeat.Tick
     }
@@ -196,7 +196,7 @@ sealed interface KursiMoment {
         val challengerName: String = "",
         val claimantName: String = "",
         override val barkKey: BarkKey? = null,
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val durationMs = 1100
         override val haptic = HapticBeat.Tick
     }
@@ -217,7 +217,7 @@ sealed interface KursiMoment {
         val roleHue: Color,
         val playerName: String = "",
         override val barkKey: BarkKey? = null,
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val durationMs = 1800
         override val haptic = if (truthful) HapticBeat.Thud else HapticBeat.DoubleBuzz
     }
@@ -234,7 +234,7 @@ sealed interface KursiMoment {
         val roleHue: Color,
         val playerName: String = "",
         override val barkKey: BarkKey? = null,
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val durationMs = 1300
         override val haptic = HapticBeat.Thud
     }
@@ -242,7 +242,7 @@ sealed interface KursiMoment {
     /**
      * 0 influence — the chair tips. Wistful, never mocking.
      * Beat: ChairTip (logo wobble realized); seat-poster peels out of frame;
-     *        grayscale wipe; "KURSI GAYI" band. Consolation toast.
+     *        grayscale wipe; "GADDI GAYI" band. Consolation toast.
      * HeavyLong haptic: one of exactly three in the game.
      */
     @Immutable
@@ -250,7 +250,7 @@ sealed interface KursiMoment {
         override val actorSeat: SeatId,
         val playerName: String = "",
         override val barkKey: BarkKey? = null,
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val durationMs = 2000
         override val haptic = HapticBeat.HeavyLong
     }
@@ -265,16 +265,16 @@ sealed interface KursiMoment {
         override val actorSeat: SeatId,
         val nextSeat: SeatId,
         val nextName: String = "",
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val barkKey = null
         override val durationMs = 600
         override val haptic = HapticBeat.None
     }
 
     /**
-     * Last player seated — Kursi claimed!
+     * Last player seated — Gaddi claimed!
      * Beat: victor seat-poster ascends to composite throne; currency-marigold confetti falls;
-     *        KURSI wordmark RubberStamp dead-centre + "Kursi aapki!" press-in tagline.
+     *        GADDI wordmark RubberStamp dead-centre + "Gaddi aapki!" press-in tagline.
      * HeavyLong haptic: the last of the three reserved celebratory pulses.
      */
     @Immutable
@@ -282,7 +282,7 @@ sealed interface KursiMoment {
         override val actorSeat: SeatId,
         val winnerName: String = "",
         override val barkKey: BarkKey? = null,
-    ) : KursiMoment {
+    ) : GaddiMoment {
         override val durationMs = 2200
         override val haptic = HapticBeat.HeavyLong
     }

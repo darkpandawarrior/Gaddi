@@ -4,7 +4,7 @@ import com.kursi.engine.Action
 import com.kursi.engine.Intent
 import com.kursi.engine.PlayerId
 import com.kursi.protocol.wire.ClientMessage
-import com.kursi.protocol.wire.KursiJson
+import com.kursi.protocol.wire.GaddiJson
 import com.kursi.protocol.wire.ServerMessage
 import com.kursi.protocol.wire.WireGameConfig
 import com.kursi.protocol.wire.WireOpponentView
@@ -26,10 +26,10 @@ import kotlin.test.assertTrue
 /**
  * Unit tests for :core:network.
  *
- * These tests exercise the encode/decode round-trips that [KursiClient] performs,
+ * These tests exercise the encode/decode round-trips that [GaddiClient] performs,
  * plus the [OnlineGameSession] mapping logic — no live server required.
  */
-class KursiClientTest {
+class GaddiClientTest {
     // ─────────────────────────── helpers ───────────────────────────
 
     private fun sampleWireConfig() =
@@ -84,8 +84,8 @@ class KursiClientTest {
     @Test
     fun clientMessage_joinRoom_roundTrip() {
         val original: ClientMessage = ClientMessage.JoinRoom(matchId = "ABCD", roomCode = "ABCD")
-        val json = KursiJson.encodeToString<ClientMessage>(original)
-        val decoded: ClientMessage = KursiJson.decodeFromString(json)
+        val json = GaddiJson.encodeToString<ClientMessage>(original)
+        val decoded: ClientMessage = GaddiJson.decodeFromString(json)
         assertEquals(original, decoded)
         assertIs<ClientMessage.JoinRoom>(decoded)
     }
@@ -103,8 +103,8 @@ class KursiClientTest {
                 seq = 1L,
                 intent = intent,
             )
-        val json = KursiJson.encodeToString<ClientMessage>(original)
-        val decoded: ClientMessage = KursiJson.decodeFromString(json)
+        val json = GaddiJson.encodeToString<ClientMessage>(original)
+        val decoded: ClientMessage = GaddiJson.decodeFromString(json)
         assertEquals(original, decoded)
         val submitDecoded = assertIs<ClientMessage.SubmitIntent>(decoded)
         assertEquals(1L, submitDecoded.seq)
@@ -113,8 +113,8 @@ class KursiClientTest {
     @Test
     fun clientMessage_pass_roundTrip() {
         val original: ClientMessage = ClientMessage.Pass(matchId = "ABCD", seq = 5L)
-        val json = KursiJson.encodeToString<ClientMessage>(original)
-        val decoded: ClientMessage = KursiJson.decodeFromString(json)
+        val json = GaddiJson.encodeToString<ClientMessage>(original)
+        val decoded: ClientMessage = GaddiJson.decodeFromString(json)
         assertEquals(original, decoded)
     }
 
@@ -127,8 +127,8 @@ class KursiClientTest {
                 seq = 1L,
                 view = view,
             )
-        val json = KursiJson.encodeToString<ServerMessage>(original)
-        val decoded: ServerMessage = KursiJson.decodeFromString(json)
+        val json = GaddiJson.encodeToString<ServerMessage>(original)
+        val decoded: ServerMessage = GaddiJson.decodeFromString(json)
         assertEquals(original, decoded)
         val stateDecoded = assertIs<ServerMessage.StateUpdate>(decoded)
         assertEquals(0, stateDecoded.view.viewer)
@@ -143,8 +143,8 @@ class KursiClientTest {
                 seat = 1,
                 playerCount = 2,
             )
-        val json = KursiJson.encodeToString<ServerMessage>(original)
-        val decoded: ServerMessage = KursiJson.decodeFromString(json)
+        val json = GaddiJson.encodeToString<ServerMessage>(original)
+        val decoded: ServerMessage = GaddiJson.decodeFromString(json)
         assertEquals(original, decoded)
         assertIs<ServerMessage.RoomJoined>(decoded)
     }
@@ -158,8 +158,8 @@ class KursiClientTest {
                 clientSeq = 3L,
                 reason = "Out of turn",
             )
-        val json = KursiJson.encodeToString<ServerMessage>(original)
-        val decoded: ServerMessage = KursiJson.decodeFromString(json)
+        val json = GaddiJson.encodeToString<ServerMessage>(original)
+        val decoded: ServerMessage = GaddiJson.decodeFromString(json)
         assertEquals(original, decoded)
     }
 
@@ -171,8 +171,8 @@ class KursiClientTest {
                 seq = 42L,
                 winnerSeat = 1,
             )
-        val json = KursiJson.encodeToString<ServerMessage>(original)
-        val decoded: ServerMessage = KursiJson.decodeFromString(json)
+        val json = GaddiJson.encodeToString<ServerMessage>(original)
+        val decoded: ServerMessage = GaddiJson.decodeFromString(json)
         assertEquals(original, decoded)
         val gameOverDecoded = assertIs<ServerMessage.GameOver>(decoded)
         assertEquals(1, gameOverDecoded.winnerSeat)
@@ -207,7 +207,7 @@ class KursiClientTest {
 
             // Build a fake session that emits one StateUpdate then completes
             val fakeSession =
-                KursiSession(
+                GaddiSession(
                     incoming = flowOf(stateUpdate),
                     outgoing = kotlinx.coroutines.channels.Channel(),
                 )
@@ -239,7 +239,7 @@ class KursiClientTest {
             val roomJoined = ServerMessage.RoomJoined(matchId = "ABCD", seq = 0L, seat = 0, playerCount = 2)
 
             val fakeSession =
-                KursiSession(
+                GaddiSession(
                     incoming = flowOf(roomJoined),
                     outgoing = kotlinx.coroutines.channels.Channel(),
                 )
@@ -266,7 +266,7 @@ class KursiClientTest {
             val gameOver = ServerMessage.GameOver(matchId = "ABCD", seq = 99L, winnerSeat = 1)
 
             val fakeSession =
-                KursiSession(
+                GaddiSession(
                     incoming = flowOf(gameOver),
                     outgoing = kotlinx.coroutines.channels.Channel(),
                 )
@@ -292,7 +292,7 @@ class KursiClientTest {
             val error = ServerMessage.Error(matchId = "ABCD", seq = 0L, clientSeq = 1L, reason = "Illegal move")
 
             val fakeSession =
-                KursiSession(
+                GaddiSession(
                     incoming = flowOf(error),
                     outgoing = kotlinx.coroutines.channels.Channel(),
                 )
@@ -319,7 +319,7 @@ class KursiClientTest {
             val view2 = samplePlayerView(viewer = 0).copy(myCoins = 5)
 
             val fakeSession =
-                KursiSession(
+                GaddiSession(
                     incoming =
                         flowOf(
                             ServerMessage.StateUpdate(matchId = "ABCD", seq = 1L, view = view1),
@@ -347,8 +347,8 @@ class KursiClientTest {
     @Test
     fun wirePlayerView_schemaVersion_isPresentInJson() {
         val view = samplePlayerView()
-        val json = KursiJson.encodeToString(view)
-        // encodeDefaults = true on KursiJson ensures schemaVersion is always emitted
+        val json = GaddiJson.encodeToString(view)
+        // encodeDefaults = true on GaddiJson ensures schemaVersion is always emitted
         assertTrue(
             actual = json.contains("\"schemaVersion\""),
             message = "schemaVersion field must be present in serialized WirePlayerView. Got: $json",
@@ -384,7 +384,7 @@ class KursiClientTest {
             }
             """.trimIndent()
         // Should not throw — ignoreUnknownKeys = true
-        val decoded = KursiJson.decodeFromString<WirePlayerView>(jsonWithExtra)
+        val decoded = GaddiJson.decodeFromString<WirePlayerView>(jsonWithExtra)
         assertEquals(0, decoded.viewer)
         assertEquals(99, decoded.schemaVersion)
     }

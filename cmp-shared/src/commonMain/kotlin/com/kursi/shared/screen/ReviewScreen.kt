@@ -34,7 +34,7 @@ import com.kursi.feature.game.session.CompletedMatch
 import com.kursi.feature.game.session.MatchReplay
 import com.kursi.feature.game.session.ReplayAnnotation
 import com.kursi.feature.game.session.ReplaySession
-import com.kursi.shared.strings.LocalKursiStrings
+import com.kursi.shared.strings.LocalGaddiStrings
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kursi.core.designsystem.generated.resources.Res
@@ -82,7 +82,7 @@ fun ReviewScreen(
     /** Render-harness only: the step to open on (clamped). Null in the real app (opens at step 0). */
     initialStep: Int? = null,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
 
     // Reconstruct the replay off the main thread (heavy: one advisor read per human decision).
     var replay by remember(match, prebuilt) { mutableStateOf(prebuilt) }
@@ -102,7 +102,7 @@ fun ReviewScreen(
             ReviewHeader(onBack = onBack, modifier = Modifier.align(Alignment.TopCenter))
             Text(
                 "…",
-                style = KursiType.display.rozha().copy(fontSize = 28.sp),
+                style = GaddiType.display.rozha().copy(fontSize = 28.sp),
                 color = BrandTokens.BrassAged.copy(alpha = 0.5f),
                 modifier = Modifier.align(Alignment.Center),
             )
@@ -181,7 +181,7 @@ private fun ReviewHeader(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     EngravedNavHeader(
         title = s.reviewHeader,
         onBack = onBack,
@@ -198,7 +198,7 @@ private fun ReviewHeader(
             ) {
                 Text(
                     s.reviewBadge,
-                    style = KursiType.label_micro.copy(fontSize = 8.sp, letterSpacing = 1.sp),
+                    style = GaddiType.label_micro.copy(fontSize = 8.sp, letterSpacing = 1.sp),
                     color = BrandTokens.StampRed.copy(alpha = 0.85f),
                 )
             }
@@ -208,7 +208,7 @@ private fun ReviewHeader(
 
 @Composable
 private fun ReviewWatermark(modifier: Modifier = Modifier) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     Box(
         modifier =
             modifier
@@ -219,7 +219,7 @@ private fun ReviewWatermark(modifier: Modifier = Modifier) {
     ) {
         Text(
             s.reviewBadge,
-            style = KursiType.label_micro.copy(fontSize = 8.sp, letterSpacing = 1.5.sp),
+            style = GaddiType.label_micro.copy(fontSize = 8.sp, letterSpacing = 1.5.sp),
             color = BrandTokens.GoldAntique.copy(alpha = 0.8f),
         )
     }
@@ -232,7 +232,7 @@ private fun AnnotationPanel(
     a: ReplayAnnotation,
     language: Language,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val accent = verdictColor(a.verdict)
     val verdictWord =
         when (a.verdict) {
@@ -272,7 +272,7 @@ private fun AnnotationPanel(
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
                     s.reviewAdvisorHeader,
-                    style = KursiType.title.copy(fontSize = 12.sp, letterSpacing = 1.sp),
+                    style = GaddiType.title.copy(fontSize = 12.sp, letterSpacing = 1.sp),
                     color = BrandTokens.GoldAntique,
                 )
                 Box(
@@ -283,13 +283,13 @@ private fun AnnotationPanel(
                             .border(1.dp, accent.copy(alpha = 0.7f), RoundedCornerShape(4.dp))
                             .padding(horizontal = 8.dp, vertical = 2.dp),
                 ) {
-                    Text(verdictWord, style = KursiType.label_micro.copy(fontSize = 9.sp, letterSpacing = 1.sp), color = accent)
+                    Text(verdictWord, style = GaddiType.label_micro.copy(fontSize = 9.sp, letterSpacing = 1.sp), color = accent)
                 }
                 Spacer(Modifier.weight(1f))
                 Text(
                     s.reviewAdvisorSub,
-                    style = KursiType.caption.copy(fontSize = 9.sp, fontStyle = FontStyle.Italic),
-                    color = KursiNeutrals.TextMuted,
+                    style = GaddiType.caption.copy(fontSize = 9.sp, fontStyle = FontStyle.Italic),
+                    color = GaddiNeutrals.TextMuted,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -298,8 +298,8 @@ private fun AnnotationPanel(
             // The voiced belief read — the heart of the teach-by-review.
             Text(
                 "“$belief”",
-                style = KursiType.title.copy(fontSize = 14.sp, fontStyle = FontStyle.Italic),
-                color = KursiNeutrals.TextPrimary,
+                style = GaddiType.title.copy(fontSize = 14.sp, fontStyle = FontStyle.Italic),
+                color = GaddiNeutrals.TextPrimary,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -316,19 +316,19 @@ private fun AnnotationPanel(
             if (a.matchedBest) {
                 Text(
                     s.reviewMatchedBest,
-                    style = KursiType.caption.copy(fontSize = 11.sp),
+                    style = GaddiType.caption.copy(fontSize = 11.sp),
                     color = verdictColor(ReplayAnnotation.Verdict.SHARP),
                 )
             } else {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
                         s.reviewEvGapLabel + ":",
-                        style = KursiType.caption.copy(fontSize = 11.sp),
-                        color = KursiNeutrals.TextMuted,
+                        style = GaddiType.caption.copy(fontSize = 11.sp),
+                        color = GaddiNeutrals.TextMuted,
                     )
                     Text(
                         s.reviewEvGapValue(a.evGapPct),
-                        style = KursiType.title.copy(fontSize = 12.sp),
+                        style = GaddiType.title.copy(fontSize = 12.sp),
                         color = accent,
                     )
                 }
@@ -347,8 +347,8 @@ private fun MoveCell(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        Text(label, style = KursiType.label_micro.copy(fontSize = 8.sp, letterSpacing = 1.sp), color = KursiNeutrals.TextMuted)
-        Text(value, style = KursiType.title.copy(fontSize = 12.sp), color = accent, maxLines = 2, overflow = TextOverflow.Ellipsis)
+        Text(label, style = GaddiType.label_micro.copy(fontSize = 8.sp, letterSpacing = 1.sp), color = GaddiNeutrals.TextMuted)
+        Text(value, style = GaddiType.title.copy(fontSize = 12.sp), color = accent, maxLines = 2, overflow = TextOverflow.Ellipsis)
     }
 }
 
@@ -371,7 +371,7 @@ private fun Scrubber(
     onTogglePlay: () -> Unit,
     onStep: (Int) -> Unit,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val decisionIdx = replay.humanDecisionIndices
     val prevDecision = decisionIdx.lastOrNull { it < step }
     val nextDecision = decisionIdx.firstOrNull { it > step }
@@ -399,8 +399,8 @@ private fun Scrubber(
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
                         s.reviewTimeline,
-                        style = KursiType.label_micro.copy(fontSize = 8.sp, letterSpacing = 1.5.sp),
-                        color = KursiNeutrals.TextMuted,
+                        style = GaddiType.label_micro.copy(fontSize = 8.sp, letterSpacing = 1.5.sp),
+                        color = GaddiNeutrals.TextMuted,
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -455,7 +455,7 @@ private fun Scrubber(
                     ) {
                         Text(
                             if (playing) "❚❚" else "▶",
-                            style = KursiType.title.copy(fontSize = 16.sp),
+                            style = GaddiType.title.copy(fontSize = 16.sp),
                             color = BrandTokens.TeakInk,
                         )
                     }
@@ -467,8 +467,8 @@ private fun Scrubber(
                     // Step counter / terminal tag.
                     Text(
                         if (isTerminal) s.reviewTerminal else s.reviewStepCounter(step + 1, replay.stepCount),
-                        style = KursiType.caption.copy(fontSize = 11.sp),
-                        color = if (isTerminal) BrandTokens.StampRed.copy(alpha = 0.85f) else KursiNeutrals.TextMuted,
+                        style = GaddiType.caption.copy(fontSize = 11.sp),
+                        color = if (isTerminal) BrandTokens.StampRed.copy(alpha = 0.85f) else GaddiNeutrals.TextMuted,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -497,7 +497,7 @@ private fun TransportButton(
                 .semantics { contentDescription = label },
         contentAlignment = Alignment.Center,
     ) {
-        Text(glyph, style = KursiType.title.copy(fontSize = 14.sp), color = BrandTokens.GoldAntique)
+        Text(glyph, style = GaddiType.title.copy(fontSize = 14.sp), color = BrandTokens.GoldAntique)
     }
 }
 
@@ -514,20 +514,20 @@ fun RecentMatchesList(
     onReview: (index: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
         EngravedHeader(eyebrow = s.reviewRecentHeader)
         Text(
             s.reviewRecentSub,
-            style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-            color = KursiNeutrals.TextMuted,
+            style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+            color = GaddiNeutrals.TextMuted,
             modifier = Modifier.padding(top = 2.dp, bottom = 4.dp),
         )
         if (matches.isEmpty()) {
             Text(
                 s.reviewRecentEmpty,
-                style = KursiType.caption.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
+                color = GaddiNeutrals.TextMuted,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
             )
         } else {
@@ -546,7 +546,7 @@ private fun RecentMatchRow(
     onClick: () -> Unit,
     showDivider: Boolean,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val won = match.humanWon
     val tagColor = if (won) BrandTokens.GoldAntique else BrandTokens.StampRed
     val reviewRowDesc =
@@ -568,15 +568,15 @@ private fun RecentMatchRow(
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(
                 s.reviewMatchCaption(match.players, match.difficultyEnum.name, match.humanLog.size),
-                style = KursiType.title.copy(fontSize = 13.sp),
-                color = KursiNeutrals.TextPrimary,
+                style = GaddiType.title.copy(fontSize = 13.sp),
+                color = GaddiNeutrals.TextPrimary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             val winnerName = match.personas.firstOrNull { it.seat == match.winnerSeat }?.name
             Text(
                 (if (won) s.reviewMatchWon else s.reviewMatchLost) + (winnerName?.let { " · $it" } ?: ""),
-                style = KursiType.caption.copy(fontSize = 10.sp),
+                style = GaddiType.caption.copy(fontSize = 10.sp),
                 color = tagColor.copy(alpha = 0.85f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -584,7 +584,7 @@ private fun RecentMatchRow(
         }
         Text(
             s.reviewCta,
-            style = KursiType.label_micro.copy(fontSize = 8.sp, letterSpacing = 1.sp),
+            style = GaddiType.label_micro.copy(fontSize = 8.sp, letterSpacing = 1.sp),
             color = BrandTokens.GoldAntique.copy(alpha = 0.7f),
         )
     }

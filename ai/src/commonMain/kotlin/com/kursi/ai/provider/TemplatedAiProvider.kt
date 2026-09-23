@@ -11,7 +11,7 @@ import com.siddharth.kmp.result.Result
  * to. Deliberately returns a blank completion rather than any generated text: callers (e.g.
  * [com.kursi.ai.MunshiNarrator]) treat a blank/absent AI line as "no upgrade" and simply keep
  * showing their own deterministic templated string, which is what makes this tier truthful — the
- * actual templated copy lives at each call site (e.g. [com.kursi.feature.game] `KursiVoice`), not
+ * actual templated copy lives at each call site (e.g. [com.kursi.feature.game] `GaddiVoice`), not
  * here. This object exists only so `:ai` always has a non-null, always-[isAvailable] last resort to
  * plug into [com.siddharth.kmp.llmchat.buildProviderChain]'s `fallback` slot.
  */

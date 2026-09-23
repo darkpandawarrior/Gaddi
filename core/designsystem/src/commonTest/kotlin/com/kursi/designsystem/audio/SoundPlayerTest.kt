@@ -15,8 +15,8 @@ class SoundPlayerTest {
     @Test
     fun everyClipInTheManifest_resolvesToNonEmptyBytes() =
         runBlocking {
-            KursiSound.entries.forEach { sound ->
-                val bytes = loadKursiSoundBytes(sound)
+            GaddiSound.entries.forEach { sound ->
+                val bytes = loadGaddiSoundBytes(sound)
                 assertNotNull(bytes, "missing clip resource for $sound (${sound.fileName})")
                 assertTrue(bytes.isNotEmpty(), "empty clip resource for $sound (${sound.fileName})")
             }
@@ -32,8 +32,8 @@ class SoundPlayerTest {
     @Test
     fun everyClipIsStillRiffWave() =
         runBlocking {
-            KursiSound.entries.forEach { sound ->
-                val bytes = assertNotNull(loadKursiSoundBytes(sound), "missing clip for $sound")
+            GaddiSound.entries.forEach { sound ->
+                val bytes = assertNotNull(loadGaddiSoundBytes(sound), "missing clip for $sound")
                 assertTrue(bytes.size > 12, "truncated clip for $sound (${sound.fileName})")
                 assertEquals("RIFF", bytes.decodeAscii(0, 4), "not a RIFF container: ${sound.fileName}")
                 assertEquals("WAVE", bytes.decodeAscii(8, 4), "not a WAVE payload: ${sound.fileName}")
@@ -44,7 +44,7 @@ class SoundPlayerTest {
     fun soundPlayer_playsEveryClip_withoutThrowing() =
         runBlocking {
             val player = SoundPlayer()
-            KursiSound.entries.forEach { sound -> player.play(sound) }
+            GaddiSound.entries.forEach { sound -> player.play(sound) }
             player.release()
         }
 }

@@ -25,11 +25,11 @@ import com.kursi.ai.persona.BotPersona
 import com.kursi.ai.persona.PersonaAssigner
 import com.kursi.designsystem.*
 import com.kursi.designsystem.moment.ActionMomentOverlay
-import com.kursi.designsystem.moment.KursiMoment
+import com.kursi.designsystem.moment.GaddiMoment
 import com.kursi.designsystem.moment.TableAnchors
 import com.kursi.designsystem.moment.rememberMomentHost
 import com.kursi.feature.game.Difficulty
-import com.kursi.shared.strings.LocalKursiStrings
+import com.kursi.shared.strings.LocalGaddiStrings
 import kursi.core.designsystem.generated.resources.Res
 import kursi.core.designsystem.generated.resources.game_you_monogram
 import kursi.core.designsystem.generated.resources.lobby_bark_attribution
@@ -123,7 +123,7 @@ fun LobbyScreen(
                 Column(
                     modifier = Modifier.widthIn(max = 860.dp).fillMaxWidth(),
                 ) {
-                    val ls = LocalKursiStrings.current
+                    val ls = LocalGaddiStrings.current
                     // Register title — engraved chrome (eyebrow + hairline), not a filled bordered
                     // bar. A sparing Rozha title carries the one focal point at the top of the list.
                     val cabinetNo = (currentSeed % 9999).let { if (it < 0) it + 9999 else it }
@@ -133,8 +133,8 @@ fun LobbyScreen(
                     ) {
                         Text(
                             text = stringResource(Res.string.lobby_tap_hint),
-                            style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                            color = KursiNeutrals.TextSecondary,
+                            style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                            color = GaddiNeutrals.TextSecondary,
                         )
                     }
                     Spacer(Modifier.height(6.dp))
@@ -145,7 +145,7 @@ fun LobbyScreen(
                     if (teams) {
                         Text(
                             text = ls.lobbyTeamHeader,
-                            style = KursiType.label.copy(fontSize = 10.sp, letterSpacing = 1.sp, fontWeight = FontWeight.Bold),
+                            style = GaddiType.label.copy(fontSize = 10.sp, letterSpacing = 1.sp, fontWeight = FontWeight.Bold),
                             color = BrandTokens.GoldAntique,
                             modifier = Modifier.padding(top = 4.dp),
                         )
@@ -209,7 +209,7 @@ fun LobbyScreen(
                     modifier = Modifier.widthIn(max = 860.dp).fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    val lb = LocalKursiStrings.current
+                    val lb = LocalGaddiStrings.current
                     // Reroll — a raised secondary stamp, not a flat bordered box.
                     StampButton(
                         label = lb.lobbyReroll,
@@ -227,7 +227,7 @@ fun LobbyScreen(
                             if (!committing) {
                                 committing = true
                                 momentHost.play(
-                                    KursiMoment.Tax(actorSeat = 0, roleHue = BrandTokens.GoldAntique),
+                                    GaddiMoment.Tax(actorSeat = 0, roleHue = BrandTokens.GoldAntique),
                                 )
                             }
                         },
@@ -322,13 +322,13 @@ private fun PersonaRegisterRow(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     "\"$sampleBark\"",
-                    style = KursiType.body.copy(fontStyle = FontStyle.Italic, fontSize = 14.sp),
-                    color = KursiNeutrals.TextPrimary,
+                    style = GaddiType.body.copy(fontStyle = FontStyle.Italic, fontSize = 14.sp),
+                    color = GaddiNeutrals.TextPrimary,
                 )
                 Text(
                     stringResource(Res.string.lobby_bark_attribution, name),
-                    style = KursiType.caption.copy(fontSize = 10.sp),
-                    color = KursiNeutrals.TextMuted,
+                    style = GaddiType.caption.copy(fontSize = 10.sp),
+                    color = GaddiNeutrals.TextMuted,
                     modifier = Modifier.padding(top = 6.dp),
                 )
             }
@@ -342,8 +342,8 @@ private fun PersonaRegisterRow(
                 ) {
                     Text(
                         name,
-                        style = KursiType.name.copy(fontSize = 14.sp),
-                        color = if (isHuman) BrandTokens.GoldAntique else KursiNeutrals.TextPrimary,
+                        style = GaddiType.name.copy(fontSize = 14.sp),
+                        color = if (isHuman) BrandTokens.GoldAntique else GaddiNeutrals.TextPrimary,
                         fontWeight = if (isHuman) FontWeight.Bold else FontWeight.Normal,
                         modifier = Modifier.weight(1f, fill = false),
                     )
@@ -359,7 +359,7 @@ private fun PersonaRegisterRow(
                         ) {
                             Text(
                                 teamBadge,
-                                style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.5.sp, fontWeight = FontWeight.Bold),
+                                style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.5.sp, fontWeight = FontWeight.Bold),
                                 color = teamHue,
                             )
                         }
@@ -367,15 +367,15 @@ private fun PersonaRegisterRow(
                 }
                 Text(
                     "$title  ·  $archetype",
-                    style = KursiType.body.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                    color = KursiNeutrals.TextSecondary,
+                    style = GaddiType.body.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                    color = GaddiNeutrals.TextSecondary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     personalityLine,
-                    style = KursiType.caption.copy(fontSize = 9.sp),
-                    color = KursiNeutrals.TextMuted,
+                    style = GaddiType.caption.copy(fontSize = 9.sp),
+                    color = GaddiNeutrals.TextMuted,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -383,7 +383,7 @@ private fun PersonaRegisterRow(
 
             Text(
                 text = stringResource(Res.string.lobby_voice_hint),
-                style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.5.sp),
+                style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.5.sp),
                 color = BrandTokens.BrassAged.copy(alpha = 0.85f),
             )
         }
@@ -392,7 +392,7 @@ private fun PersonaRegisterRow(
 
 @Composable
 private fun LobbyHeader(onBack: () -> Unit) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     // Short nav breadcrumb — the full engraved title (with subtitle) is the register's own
     // focal EngravedHeader below; repeating it here would be a second, competing focal point.
     EngravedNavHeader(

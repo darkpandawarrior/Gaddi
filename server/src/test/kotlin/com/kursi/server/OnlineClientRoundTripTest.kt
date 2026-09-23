@@ -1,8 +1,8 @@
 package com.kursi.server
 
 import com.kursi.core.network.ConnectionState
-import com.kursi.core.network.KursiClient
-import com.kursi.core.network.OnlineKursiClient
+import com.kursi.core.network.GaddiClient
+import com.kursi.core.network.OnlineGaddiClient
 import com.kursi.protocol.wire.WireAction
 import com.kursi.protocol.wire.WireIntent
 import com.kursi.protocol.wire.WirePhaseView
@@ -27,7 +27,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
- * END-TO-END round-trip tests: the REAL [OnlineKursiClient] / [KursiClient] from :core:network plays
+ * END-TO-END round-trip tests: the REAL [OnlineGaddiClient] / [GaddiClient] from :core:network plays
  * through a REAL embedded Netty :server over a real loopback TCP socket (not the in-memory test
  * engine). This is the integration proof that the client API, the wire protocol, and the server's
  * authoritative redaction all line up.
@@ -71,8 +71,8 @@ class OnlineClientRoundTripTest {
         runBlocking {
             val h = Harness()
             val roomCode = h.createRoom(2)
-            val clientA = OnlineKursiClient(h.scope)
-            val clientB = OnlineKursiClient(h.scope)
+            val clientA = OnlineGaddiClient(h.scope)
+            val clientB = OnlineGaddiClient(h.scope)
             try {
                 clientA.connect(host = "localhost", port = h.port, roomCode = roomCode)
                 val joinedA =
@@ -102,8 +102,8 @@ class OnlineClientRoundTripTest {
         runBlocking {
             val h = Harness()
             val roomCode = h.createRoom(2)
-            val clientA = OnlineKursiClient(h.scope)
-            val clientB = OnlineKursiClient(h.scope)
+            val clientA = OnlineGaddiClient(h.scope)
+            val clientB = OnlineGaddiClient(h.scope)
             try {
                 clientA.connect("localhost", h.port, roomCode)
                 clientB.connect("localhost", h.port, roomCode)
@@ -156,15 +156,15 @@ class OnlineClientRoundTripTest {
 
             // A factory that records the latest transport so the test can KILL it to simulate a drop;
             // the NEXT factory call hands the reconnect loop a fresh, working client.
-            val transports = mutableListOf<KursiClient>()
-            val factory: () -> KursiClient = { KursiClient().also { synchronized(transports) { transports.add(it) } } }
+            val transports = mutableListOf<GaddiClient>()
+            val factory: () -> GaddiClient = { GaddiClient().also { synchronized(transports) { transports.add(it) } } }
             val clientA =
-                OnlineKursiClient(
+                OnlineGaddiClient(
                     scope = h.scope,
-                    config = OnlineKursiClient.ReconnectConfig(maxAttempts = 8, initialBackoffMs = 100),
+                    config = OnlineGaddiClient.ReconnectConfig(maxAttempts = 8, initialBackoffMs = 100),
                     transportFactory = factory,
                 )
-            val clientB = OnlineKursiClient(h.scope)
+            val clientB = OnlineGaddiClient(h.scope)
             try {
                 clientA.connect("localhost", h.port, roomCode)
                 val joinedA =

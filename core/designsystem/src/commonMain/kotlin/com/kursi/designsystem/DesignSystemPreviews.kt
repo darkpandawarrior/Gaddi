@@ -51,8 +51,8 @@ import androidx.compose.ui.unit.dp
 import com.kursi.engine.Role
 
 /**
- * Every preview renders through the real [KursiTheme], because these components read
- * `LocalKursiFonts` and the Deco colour scheme from it.
+ * Every preview renders through the real [GaddiTheme], because these components read
+ * `LocalGaddiFonts` and the Deco colour scheme from it.
  *
  * [LocalReducedMotion] is forced on, and that is load-bearing rather than polite: [CoinPill]'s
  * arrival spring, [CountdownBar] and the holo rims all settle to their resting frame instead of
@@ -61,7 +61,7 @@ import com.kursi.engine.Role
  */
 @Composable
 private fun PreviewShell(content: @Composable () -> Unit) {
-    KursiTheme {
+    GaddiTheme {
         CompositionLocalProvider(LocalReducedMotion provides true) {
             Column(
                 modifier =
@@ -133,8 +133,8 @@ private fun SeatTokensPreview() {
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            SeatAvatar(initial = "AP", color = KursiColors.forRole(Role.NETA).color)
-            SeatAvatar(initial = "RJ", color = KursiColors.forRole(Role.VAKIL).color)
+            SeatAvatar(initial = "AP", color = GaddiColors.forRole(Role.NETA).color)
+            SeatAvatar(initial = "RJ", color = GaddiColors.forRole(Role.VAKIL).color)
             ChatAvatar(monogram = "AP", color = BrandTokens.GoldAntique)
             WaxSeal()
         }
@@ -160,8 +160,8 @@ private fun SeatTokensPreview() {
 private fun ChipsPreview() {
     PreviewShell {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            ClaimChip(text = "VAKIL", color = KursiColors.forRole(Role.VAKIL).color, verified = true)
-            ClaimChip(text = "NETA", color = KursiColors.forRole(Role.NETA).color, verified = false)
+            ClaimChip(text = "VAKIL", color = GaddiColors.forRole(Role.VAKIL).color, verified = true)
+            ClaimChip(text = "NETA", color = GaddiColors.forRole(Role.NETA).color, verified = false)
         }
         // 1-2 green, 3 amber, 4-5 red: the whole colour ladder in one render.
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -189,15 +189,15 @@ private fun OutcomeTagAllKindsPreview() {
 
 @Preview(widthDp = 360, heightDp = 320)
 @Composable
-private fun KursiActionButtonPreview() {
+private fun GaddiActionButtonPreview() {
     PreviewShell {
-        KursiActionButton(label = "DEHAADI", sublabel = "+1 coin, unchallengeable")
-        KursiActionButton(
+        GaddiActionButton(label = "DEHAADI", sublabel = "+1 coin, unchallengeable")
+        GaddiActionButton(
             label = "LAGAAN",
             sublabel = "+3 coins",
-            roleAccent = KursiColors.forRole(Role.BABU).color,
+            roleAccent = GaddiColors.forRole(Role.BABU).color,
         )
-        KursiActionButton(
+        GaddiActionButton(
             label = "TAKHTAPALAT",
             sublabel = "costs 7",
             enabled = false,
@@ -228,13 +228,13 @@ private fun SpeechBubblePreview() {
             SpeechBubble(
                 speakerName = "Aap",
                 text = "Lagaan. Babu hoon main.",
-                accent = KursiColors.forRole(Role.BABU).color,
+                accent = GaddiColors.forRole(Role.BABU).color,
                 fromPlayer = true,
             )
             SpeechBubble(
                 speakerName = "Munshi",
                 text = "Jhooth! Patrakaar ke paas proof hai.",
-                accent = KursiColors.forRole(Role.PATRAKAAR).color,
+                accent = GaddiColors.forRole(Role.PATRAKAAR).color,
                 fromPlayer = false,
                 emphatic = true,
             )

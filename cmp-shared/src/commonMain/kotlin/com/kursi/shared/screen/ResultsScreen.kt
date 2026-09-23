@@ -31,12 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kursi.designsystem.*
 import com.kursi.designsystem.moment.ActionMomentOverlay
-import com.kursi.designsystem.moment.KursiMoment
+import com.kursi.designsystem.moment.GaddiMoment
 import com.kursi.designsystem.moment.TableAnchors
 import com.kursi.designsystem.moment.rememberMomentHost
-import com.kursi.feature.game.LocalKursiVoice
+import com.kursi.feature.game.LocalGaddiVoice
 import com.kursi.shared.nav.MatchSummary
-import com.kursi.shared.strings.LocalKursiStrings
+import com.kursi.shared.strings.LocalGaddiStrings
 import com.siddharth.kmp.designsystem.capturable
 import com.siddharth.kmp.designsystem.rememberCaptureController
 import kotlinx.coroutines.launch
@@ -77,7 +77,7 @@ private val ResultsScreenCentre = Offset(720f, 360f)
  * the ROZNAMCHA recap reads as bare stat lines + hairline standing rows (no bordered "certificate"
  * card), and every exit is a stamp — matching the Home/Setup/Gauntlet standard.
  *
- * - Verdict medallion: winner monogram + "KURSI HAASIL" stamp
+ * - Verdict medallion: winner monogram + "GADDI HAASIL" stamp
  * - ROZNAMCHA recap stats + final standings
  * - Exits: REMATCH / REVIEW / SHARE / NAYA KHEL / DAFTAR
  */
@@ -110,13 +110,13 @@ fun ResultsScreen(
         ResultsExpired(onNewGame = onNewGame, onHome = onHome, modifier = modifier)
         return
     }
-    val s = LocalKursiStrings.current
-    val voice = LocalKursiVoice.current
+    val s = LocalGaddiStrings.current
+    val voice = LocalGaddiVoice.current
     val scrollState = rememberScrollState()
     val winnerColor = Color(summary.winnerColor)
     val stampColor = if (summary.humanWon) BrandTokens.GoldAntique else BrandTokens.StampRed
 
-    // ── KURSI HAASIL win moment on entry ──────────────────────────────────────
+    // ── GADDI HAASIL win moment on entry ──────────────────────────────────────
     // The verdict certificate stamps itself in: a Win moment plays once when the
     // screen first composes, celebrating the result before the static card settles.
     val momentHost = rememberMomentHost()
@@ -127,7 +127,7 @@ fun ResultsScreen(
     val captureScope = rememberCoroutineScope()
     val tableAnchors = remember { resultsAnchors() }
     LaunchedEffect(summary.matchId) {
-        momentHost.play(KursiMoment.Win(actorSeat = summary.winnerSeat ?: 0))
+        momentHost.play(GaddiMoment.Win(actorSeat = summary.winnerSeat ?: 0))
     }
 
     Box(modifier = modifier.fillMaxSize().litGround()) {
@@ -174,15 +174,15 @@ fun ResultsScreen(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             "“$winBark”",
-                            style = KursiType.title.copy(fontSize = 15.sp, fontStyle = FontStyle.Italic),
-                            color = KursiNeutrals.TextPrimary,
+                            style = GaddiType.title.copy(fontSize = 15.sp, fontStyle = FontStyle.Italic),
+                            color = GaddiNeutrals.TextPrimary,
                             textAlign = TextAlign.Center,
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
                             s.resultsVerdictSub,
-                            style = KursiType.caption.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
-                            color = KursiNeutrals.TextMuted,
+                            style = GaddiType.caption.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
+                            color = GaddiNeutrals.TextMuted,
                             textAlign = TextAlign.Center,
                         )
                     }
@@ -271,7 +271,7 @@ fun ResultsScreen(
             }
         }
 
-        // ── Win moment overlay — KURSI HAASIL stamp on entry ────────────────────
+        // ── Win moment overlay — GADDI HAASIL stamp on entry ────────────────────
         ActionMomentOverlay(
             host = momentHost,
             anchors = tableAnchors,
@@ -338,15 +338,15 @@ private fun VerdictMedallion(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = summary.winnerMonogram ?: "?",
-                    style = KursiType.display.rozha().copy(fontSize = 32.sp),
+                    style = GaddiType.display.rozha().copy(fontSize = 32.sp),
                     color = winnerColor.copy(alpha = 0.95f),
                     textAlign = TextAlign.Center,
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = summary.winnerName ?: "Unknown",
-                    style = KursiType.name.copy(fontSize = 13.sp),
-                    color = KursiNeutrals.TextPrimary,
+                    style = GaddiType.name.copy(fontSize = 13.sp),
+                    color = GaddiNeutrals.TextPrimary,
                     textAlign = TextAlign.Center,
                 )
             }
@@ -358,15 +358,15 @@ private fun VerdictMedallion(
                 Modifier
                     .align(Alignment.BottomCenter)
                     .offset(y = 12.dp)
-                    .shadow(4.dp, Squircle(KursiRadii.xs), clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
-                    .clip(Squircle(KursiRadii.xs))
+                    .shadow(4.dp, Squircle(GaddiRadii.xs), clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
+                    .clip(Squircle(GaddiRadii.xs))
                     .background(stampColor)
                     .padding(horizontal = 16.dp, vertical = 5.dp),
         ) {
             Text(
-                LocalKursiStrings.current.resultsWinStamp,
-                style = KursiType.label_sm.dmMono().copy(fontSize = 11.sp, letterSpacing = 2.sp, fontWeight = FontWeight.Bold),
-                color = KursiNeutrals.Cream,
+                LocalGaddiStrings.current.resultsWinStamp,
+                style = GaddiType.label_sm.dmMono().copy(fontSize = 11.sp, letterSpacing = 2.sp, fontWeight = FontWeight.Bold),
+                color = GaddiNeutrals.Cream,
             )
         }
     }
@@ -379,7 +379,7 @@ private fun RoznamchaRecap(
     summary: MatchSummary,
     winnerColor: Color,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
         EngravedHeader(eyebrow = s.resultsRecapHeader)
         Spacer(Modifier.height(4.dp))
@@ -395,21 +395,21 @@ private fun RoznamchaRecap(
             Spacer(Modifier.height(10.dp))
             Text(
                 s.resultsRecapStandings,
-                style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                color = GaddiNeutrals.TextMuted,
             )
             Column {
                 summary.finalStandings.forEachIndexed { i, name ->
                     HairlineRow(showDivider = i != summary.finalStandings.lastIndex, verticalPadding = 10.dp) {
                         BrassToken(
                             monogram = name,
-                            fill = if (i == 0) winnerColor else KursiSeatColors[i],
+                            fill = if (i == 0) winnerColor else GaddiSeatColors[i],
                             size = 34.dp,
                         )
                         Text(
                             text = name,
-                            style = KursiType.body.copy(fontSize = 13.sp),
-                            color = if (i == 0) BrandTokens.GoldAntique else KursiNeutrals.TextSecondary,
+                            style = GaddiType.body.copy(fontSize = 13.sp),
+                            color = if (i == 0) BrandTokens.GoldAntique else GaddiNeutrals.TextSecondary,
                             modifier = Modifier.weight(1f),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
@@ -417,7 +417,7 @@ private fun RoznamchaRecap(
                         if (i == 0) {
                             Text(
                                 s.resultsRecapWinnerSuffix.removePrefix(" ←").trim(),
-                                style = KursiType.label_micro.dmMono().copy(letterSpacing = 0.8.sp, fontSize = 9.sp),
+                                style = GaddiType.label_micro.dmMono().copy(letterSpacing = 0.8.sp, fontSize = 9.sp),
                                 color = BrandTokens.GoldAntique,
                             )
                         }
@@ -429,7 +429,7 @@ private fun RoznamchaRecap(
         Spacer(Modifier.height(4.dp))
         Text(
             s.resultsRecapSeal,
-            style = KursiType.label_sm.dmMono().copy(fontSize = 10.sp, letterSpacing = 2.sp),
+            style = GaddiType.label_sm.dmMono().copy(fontSize = 10.sp, letterSpacing = 2.sp),
             color = BrandTokens.BrassAged.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
@@ -483,20 +483,20 @@ private fun ResultsExpired(
                 ) {
                     Text(
                         stringResource(Res.string.label_expired_stamp),
-                        style = KursiType.display.copy(fontSize = 20.sp, letterSpacing = 3.sp),
+                        style = GaddiType.display.copy(fontSize = 20.sp, letterSpacing = 3.sp),
                         color = BrandTokens.StampRed.copy(alpha = 0.7f),
                     )
                 }
                 Text(
                     stringResource(Res.string.results_expired_title),
-                    style = KursiType.display.rozha().copy(fontSize = 20.sp),
+                    style = GaddiType.display.rozha().copy(fontSize = 20.sp),
                     color = BrandTokens.GoldAntique,
                     textAlign = TextAlign.Center,
                 )
                 Text(
                     stringResource(Res.string.results_expired_body),
-                    style = KursiType.body.copy(fontSize = 13.sp),
-                    color = KursiNeutrals.TextSecondary,
+                    style = GaddiType.body.copy(fontSize = 13.sp),
+                    color = GaddiNeutrals.TextSecondary,
                     textAlign = TextAlign.Center,
                 )
                 Spacer(Modifier.height(6.dp))
@@ -530,15 +530,15 @@ private fun RecapRow(
     ) {
         Text(
             label,
-            style = KursiType.body.copy(fontSize = 12.sp),
-            color = KursiNeutrals.TextSecondary,
+            style = GaddiType.body.copy(fontSize = 12.sp),
+            color = GaddiNeutrals.TextSecondary,
             modifier = Modifier.weight(1f),
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
         Text(
             value,
-            style = KursiType.numeric.copy(fontSize = 12.sp),
+            style = GaddiType.numeric.copy(fontSize = 12.sp),
             color = BrandTokens.GoldAntique,
         )
     }

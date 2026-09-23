@@ -8,7 +8,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import com.kursi.engine.Action
-import com.kursi.engine.Role as KursiRole
+import com.kursi.engine.Role as GaddiRole
 
 /*
  * A11y (M3 §1) — accessibility semantics for the in-game surfaces.
@@ -73,7 +73,7 @@ fun Modifier.keepOptionSemantics(
     }
 
 /** Semantics for one of the human's own influence cards during a lose-influence choice. */
-fun Modifier.loseInfluenceCardSemantics(role: KursiRole): Modifier =
+fun Modifier.loseInfluenceCardSemantics(role: GaddiRole): Modifier =
     semantics(mergeDescendants = true) {
         this.role = Role.Button
         contentDescription = "Reveal and lose your ${roleLabelA11y(role)}"
@@ -81,7 +81,7 @@ fun Modifier.loseInfluenceCardSemantics(role: KursiRole): Modifier =
 
 /** Semantics for an inspectable own card (long-press identity), not a loss choice. */
 fun Modifier.handCardSemantics(
-    role: KursiRole,
+    role: GaddiRole,
     faceUp: Boolean,
 ): Modifier =
     semantics(mergeDescendants = true) {
@@ -120,12 +120,12 @@ fun Modifier.opponentPlateSemantics(
     }
 
 /** Plain-language role name for spoken output (avoids the glyph soup of the visual label). */
-fun roleLabelA11y(role: KursiRole): String =
+fun roleLabelA11y(role: GaddiRole): String =
     when (role) {
-        KursiRole.NETA -> "Neta"
-        KursiRole.BHAI -> "Bhai"
-        KursiRole.BABU -> "Babu"
-        KursiRole.JUGAADU -> "Jugaadu"
-        KursiRole.VAKIL -> "Vakil"
-        KursiRole.PATRAKAAR -> "Patrakaar"
+        GaddiRole.NETA -> "Neta"
+        GaddiRole.BHAI -> "Bhai"
+        GaddiRole.BABU -> "Babu"
+        GaddiRole.JUGAADU -> "Jugaadu"
+        GaddiRole.VAKIL -> "Vakil"
+        GaddiRole.PATRAKAAR -> "Patrakaar"
     }

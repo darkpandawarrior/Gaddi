@@ -18,7 +18,7 @@ data class RemoteStanding(
 )
 
 /**
- * Fetches the online leaderboard from the Kursi server.
+ * Fetches the online leaderboard from the Gaddi server.
  *
  * GETs `http://host:port/standings` and decodes the JSON array into a [List<RemoteStanding>]
  * sorted best-first (as the server delivers them).
@@ -27,7 +27,7 @@ data class RemoteStanding(
  * callers that are offline or talking to an older server simply see no standings rather than
  * crashing. The [HttpClient] is created and closed within this call.
  *
- * @param host Hostname or IP of the Kursi server (e.g. "localhost", "192.168.1.5").
+ * @param host Hostname or IP of the Gaddi server (e.g. "localhost", "192.168.1.5").
  * @param port Port the server listens on (default 8080 per :server/App.kt).
  * @return Standings sorted best-first, or an empty list on any failure.
  */

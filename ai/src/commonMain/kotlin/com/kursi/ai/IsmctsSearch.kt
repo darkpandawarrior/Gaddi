@@ -200,7 +200,7 @@ class IsmctsSearch(
 
         val engine =
             Ismcts<GameState, Intent, PlayerView, PlayerId>(
-                rules = KursiRules,
+                rules = GaddiRules,
                 // Fresh HardPolicy per rollout ply, seeded from the dedicated rolloutRng — reproduces
                 // the pre-inversion per-ply reseeding that the strength floors depend on.
                 rolloutPolicy = {
@@ -260,7 +260,7 @@ class IsmctsSearch(
         val coinTerm = myCoins / (myCoins + oppCoins + 1.0)
 
         // ── Information-asymmetry term ────────────────────────────────────────────
-        // Kursi is a deduction game, not just a material race. Two states with identical
+        // Gaddi is a deduction game, not just a material race. Two states with identical
         // influence+coins are NOT equal: the one where opponents have revealed cards (face-up,
         // forced by lost challenges / influence loss) leaks their roles, collapsing my uncertainty
         // about what they can block/challenge — that is a real, exploitable edge. Conversely, my own

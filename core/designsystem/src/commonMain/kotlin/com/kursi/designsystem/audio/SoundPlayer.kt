@@ -10,7 +10,7 @@ import kursi.core.designsystem.generated.resources.Res
 // shader layer's per-platform actuals (MaterialShader.kt) and rememberSoundPlayer() in the
 // moment-feedback layer (MomentFeedback.kt, which stays wired for haptics only — see that file).
 //
-// Every actual decodes lazily on first play() per KursiSound and caches the platform handle.
+// Every actual decodes lazily on first play() per GaddiSound and caches the platform handle.
 // load/decode/play are wrapped in runCatching PER ACTUAL so a missing clip, an unsupported codec
 // (e.g. no Ogg Vorbis decoder on stock javax.sound / Core Audio), or any other platform hiccup
 // degrades to a silent no-op — never a crash. Callers gate every play() call on their own
@@ -22,11 +22,11 @@ import kursi.core.designsystem.generated.resources.Res
  * Reads [sound]'s bundled clip bytes from composeResources (files/audio/), or null if missing /
  * unreadable. Shared by every platform actual so resource-path resolution lives in one place.
  */
-internal suspend fun loadKursiSoundBytes(sound: KursiSound): ByteArray? =
+internal suspend fun loadGaddiSoundBytes(sound: GaddiSound): ByteArray? =
     runCatching { Res.readBytes("files/audio/${sound.fileName}") }.getOrNull()
 
 /**
- * Plays the bundled CC0 SFX clips from the finalized manifest ([KursiSound]).
+ * Plays the bundled CC0 SFX clips from the finalized manifest ([GaddiSound]).
  *
  * Contract (same as [com.siddharth.kmp.feedback.SoundPlayer]): [play] must never throw — a
  * missing resource, an unavailable audio device, or a headless CI box all degrade to silence.
@@ -42,7 +42,7 @@ interface SoundPlayer {
      */
     val isAvailable: Boolean
 
-    suspend fun play(sound: KursiSound)
+    suspend fun play(sound: GaddiSound)
 
     fun release()
 }
@@ -61,7 +61,7 @@ expect fun SoundPlayer(): SoundPlayer
 
 /** Remembers a [SoundPlayer] for the composition's lifetime and releases it on dispose. */
 @Composable
-fun rememberKursiSoundPlayer(): SoundPlayer {
+fun rememberGaddiSoundPlayer(): SoundPlayer {
     val player = remember { SoundPlayer() }
     DisposableEffect(player) {
         onDispose { player.release() }

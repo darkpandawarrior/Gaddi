@@ -5,7 +5,7 @@ pluginManagement {
     // kmp-toolkit's own settings.gradle.kts does includeBuild("../kmp-build-logic") — a relative
     // path that only resolves if this repo also vendors kmp-build-logic as a sibling of
     // external/kmp-toolkit (see includeBuild("external/kmp-toolkit") below) and includes it here
-    // too. Gradle then collapses both references into the same included build. Mirrors PaymentsLab.
+    // too. Gradle then collapses both references into the same included build. Mirrors PaymentsLab-KMP.
     includeBuild("external/kmp-build-logic")
     repositories {
         google {
@@ -72,19 +72,19 @@ includeBuild("external/kmp-toolkit") {
         substitute(module("com.siddharth.kmp:feedback")).using(project(":feedback"))
         substitute(module("com.siddharth.kmp:bots-policy")).using(project(":bots-policy"))
         substitute(module("com.siddharth.kmp:network")).using(project(":network"))
-        // NOTE: toolkit's :ai project path collides in name with Kursi's OWN root :ai module
-        // (Kursi's bot-policy/ISMCTS module, see include(":ai") below) — but they live in separate
+        // NOTE: toolkit's :ai project path collides in name with Gaddi's OWN root :ai module
+        // (Gaddi's bot-policy/ISMCTS module, see include(":ai") below) — but they live in separate
         // Gradle builds (this includeBuild's project(":ai") resolves inside external/kmp-toolkit
         // only), so there is no path clash. Coordinate-only consume: routes the on-device-LLM arm
-        // of Kursi's own AiProvider through the toolkit's real OnDeviceLlm backends.
+        // of Gaddi's own AiProvider through the toolkit's real OnDeviceLlm backends.
         substitute(module("com.siddharth.kmp:ai")).using(project(":ai"))
-        // Consolidation #10: Kursi's cloud-LLM chat client (AiProvider + Anthropic/OpenAI/Gemini +
-        // chain builder) now lives in toolkit :llm-chat. Kursi's own :ai module consumes it; only
-        // OnDeviceAiProvider.* (consumes toolkit :ai) stayed behind as Kursi-specific (the other
-        // Kursi-specific AiProvider, IsmctsOnlyProvider, was dead code and was deleted).
+        // Consolidation #10: Gaddi's cloud-LLM chat client (AiProvider + Anthropic/OpenAI/Gemini +
+        // chain builder) now lives in toolkit :llm-chat. Gaddi's own :ai module consumes it; only
+        // OnDeviceAiProvider.* (consumes toolkit :ai) stayed behind as Gaddi-specific (the other
+        // Gaddi-specific AiProvider, IsmctsOnlyProvider, was dead code and was deleted).
         substitute(module("com.siddharth.kmp:llm-chat")).using(project(":llm-chat"))
         // AiResult<T>/AiFailure — :llm-chat's own dependency on this is `implementation`, so it
-        // doesn't reach a consumer's classpath transitively; any module (like Kursi's own :ai)
+        // doesn't reach a consumer's classpath transitively; any module (like Gaddi's own :ai)
         // whose AiProvider implementations expose these types on their public complete()/
         // completeStream() overrides needs this substitution too.
         substitute(module("com.siddharth.kmp:result")).using(project(":result"))
@@ -107,7 +107,7 @@ include(":shared-protocol")   // @Serializable mirrors of PlayerView/Intent; Cli
 include(":core:designsystem") // CMP theme engine, color tokens, reusable composables (CardFace, CoinPill, etc.)
 
 // ── CORE (T10: multiplatform Ktor WebSocket client — android/ios/jvm/wasmJs) ─────
-include(":core:network")      // KursiClient + OnlineGameSession: WS connect, encode/decode, reconnect.
+include(":core:network")      // GaddiClient + OnlineGameSession: WS connect, encode/decode, reconnect.
 include(":core:prefs")        // Multiplatform key-value preferences (AppPrefs) backed by multiplatform-settings.
 // core:feedback extracted to external/kmp-feedback (composite build above) — expect/actual
 // SoundPlayer + haptics (jvm tone synth, android AudioTrack/Vibrator, ios AVAudioPlayer, wasm Web Audio).
@@ -116,17 +116,17 @@ include(":core:prefs")        // Multiplatform key-value preferences (AppPrefs) 
 include(":feature:game")      // Offline game session, MVI GameViewModel, GameScreen composables.
 
 // ── APP ENTRYPOINTS (T5: shared Compose root + JVM desktop shell) ──────────────
-include(":cmp-shared")        // Shared KursiApp() root composable; wraps KursiTheme + GameViewModel + GameScreen.
-include(":cmp-desktop")       // JVM Compose Desktop application shell; calls KursiApp().
+include(":cmp-shared")        // Shared GaddiApp() root composable; wraps GaddiTheme + GameViewModel + GameScreen.
+include(":cmp-desktop")       // JVM Compose Desktop application shell; calls GaddiApp().
 
 // ── APP ENTRYPOINTS (T12: Android application shell) ─────────────────────────
-include(":cmp-android")       // Android application shell; hosts KursiApp() via ComponentActivity.setContent.
+include(":cmp-android")       // Android application shell; hosts GaddiApp() via ComponentActivity.setContent.
 
 // ── APP ENTRYPOINTS (T13: iOS framework umbrella) ────────────────────────────
 include(":cmp-ios")           // iOS umbrella framework; export()s :cmp-shared so an Xcode/SwiftUI app can host KursiKit.framework.
 
 // ── APP ENTRYPOINTS (T11: wasmJs browser client) ─────────────────────────────
-include(":cmp-web")           // wasmJs browser shell; calls ComposeViewport(document.body!!) { KursiApp() }.
+include(":cmp-web")           // wasmJs browser shell; calls ComposeViewport(document.body!!) { GaddiApp() }.
 
 // ── SERVER (T9: JVM Ktor authoritative game server) ───────────────────────────
 include(":server")            // Ktor/Netty WebSocket server; authoritative GameState; Channel-actor per match.

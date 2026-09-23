@@ -42,7 +42,7 @@ sealed interface GameEffect {
 }
 
 /**
- * MVI ViewModel for a Kursi offline game.
+ * MVI ViewModel for a Gaddi offline game.
  *
  * Uses a plain [CoroutineScope] (not androidx.lifecycle.ViewModel) for KMP-wide compatibility —
  * the StateFlow MVI contract is identical on all targets.  An app-layer wrapper can supply a

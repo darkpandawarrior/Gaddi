@@ -96,8 +96,8 @@ fun Modifier.inspectable(
     // Crisp spring response (spec §7 juice) rather than a flat tween — a press should feel
     // like it lands, not just fade in. Reduced motion collapses to an instant snap.
     val reducedMotion = LocalReducedMotion.current
-    val pressSpec: AnimationSpec<Float> = if (reducedMotion) tween(0) else KursiMotion.snap()
-    val pressShadowSpec: AnimationSpec<Dp> = if (reducedMotion) tween(0) else KursiMotion.snap()
+    val pressSpec: AnimationSpec<Float> = if (reducedMotion) tween(0) else GaddiMotion.snap()
+    val pressShadowSpec: AnimationSpec<Dp> = if (reducedMotion) tween(0) else GaddiMotion.snap()
     // Slightly deeper dip than before; the hold should feel like the surface gives way.
     val pressScale by animateFloatAsState(
         targetValue = if (pressed) 0.955f else 1f,
@@ -491,8 +491,8 @@ fun RoleCard(
     /** Long-press = inspect (open the Identity chit). Null → no long-press behaviour. */
     onLongClick: (() -> Unit)? = null,
 ) {
-    val visual = KursiColors.forRole(role)
-    val radius = KursiRadii.xl
+    val visual = GaddiColors.forRole(role)
+    val radius = GaddiRadii.xl
 
     val cardW: Dp
     val cardH: Dp
@@ -585,7 +585,7 @@ fun RoleCard(
                 Modifier
                     .padding(inset)
                     .fillMaxSize()
-                    .clip(Squircle(KursiRadii.lg))
+                    .clip(Squircle(GaddiRadii.lg))
                     .background(paperColor)
                     .drawBehind {
                         // Guilloché border pattern for this role
@@ -616,7 +616,7 @@ fun RoleCard(
                         ) {
                             RoleGlyph(
                                 role = role,
-                                tint = KursiNeutrals.Cream,
+                                tint = GaddiNeutrals.Cream,
                                 deboss = false,
                                 modifier = Modifier.size(11.dp),
                             )
@@ -624,13 +624,13 @@ fun RoleCard(
                         Spacer(Modifier.height(2.dp))
                         Text(
                             text = role.name.take(3),
-                            style = KursiType.caption.copy(fontSize = 8.sp),
+                            style = GaddiType.caption.copy(fontSize = 8.sp),
                             color = inkColor,
                         )
                         if (lost) {
                             Text(
                                 "LOST",
-                                style = KursiType.caption.copy(fontSize = 6.sp),
+                                style = GaddiType.caption.copy(fontSize = 6.sp),
                                 color = BrandTokens.Oxblood,
                             )
                         }
@@ -669,7 +669,7 @@ fun RoleCard(
                             ) {
                                 RoleGlyph(
                                     role = role,
-                                    tint = KursiNeutrals.Cream,
+                                    tint = GaddiNeutrals.Cream,
                                     deboss = false,
                                     modifier = Modifier.size(if (size == CardSize.Medium) 13.dp else 15.dp),
                                 )
@@ -692,7 +692,7 @@ fun RoleCard(
                                     }
                                 AutoSizeText(
                                     text = role.name,
-                                    style = KursiType.cardRole.copy(fontSize = titleBase).rozha(),
+                                    style = GaddiType.cardRole.copy(fontSize = titleBase).rozha(),
                                     color = inkColor,
                                     maxLines = 1,
                                     minSize = 6.sp,
@@ -704,7 +704,7 @@ fun RoleCard(
                                     // "Netaji Vac…"/"Babu File…".
                                     AutoSizeText(
                                         text = visual.characterName,
-                                        style = KursiType.caption.copy(fontSize = 9.sp, lineHeight = 11.sp),
+                                        style = GaddiType.caption.copy(fontSize = 9.sp, lineHeight = 11.sp),
                                         color = inkColor.copy(alpha = 0.55f),
                                         maxLines = 2,
                                         minSize = 7.sp,
@@ -792,7 +792,7 @@ fun RoleCard(
                                 Text(
                                     text = visual.claimLineShort,
                                     style =
-                                        KursiType.body.copy(
+                                        GaddiType.body.copy(
                                             fontSize = 9.sp,
                                             lineHeight = 11.sp,
                                             letterSpacing = 0.2.sp,
@@ -810,7 +810,7 @@ fun RoleCard(
                                     // catch text reads instead of "…loses influe…".
                                     text = visual.actionLine,
                                     style =
-                                        KursiType.body.copy(
+                                        GaddiType.body.copy(
                                             fontSize = 11.sp,
                                             lineHeight = 13.sp,
                                             letterSpacing = 0.2.sp,
@@ -829,7 +829,7 @@ fun RoleCard(
                                 Text(
                                     text = blockShort,
                                     style =
-                                        KursiType.body.copy(
+                                        GaddiType.body.copy(
                                             fontSize = 8.5.sp,
                                             lineHeight = 10.sp,
                                             letterSpacing = 0.2.sp,
@@ -844,7 +844,7 @@ fun RoleCard(
                                 AutoSizeText(
                                     text = visual.blockLine,
                                     style =
-                                        KursiType.body.copy(
+                                        GaddiType.body.copy(
                                             fontSize = 10.sp,
                                             lineHeight = 12.sp,
                                             letterSpacing = 0.2.sp,
@@ -859,8 +859,8 @@ fun RoleCard(
                             if (size == CardSize.Large) {
                                 Spacer(Modifier.height(2.dp))
                                 Text(
-                                    text = "No. ${role.ordinal + 1}/${KursiColors.roles.size}",
-                                    style = KursiType.numeric.copy(fontSize = 8.sp),
+                                    text = "No. ${role.ordinal + 1}/${GaddiColors.roles.size}",
+                                    style = GaddiType.numeric.copy(fontSize = 8.sp),
                                     color = inkColor.copy(alpha = 0.28f),
                                     modifier = Modifier.align(Alignment.End),
                                 )
@@ -886,18 +886,18 @@ fun RoleCard(
 private fun AlivePill(lost: Boolean) {
     val label = if (lost) "LOST" else "LIVE"
     val bg = if (lost) BrandTokens.Oxblood.copy(alpha = 0.85f) else BrandTokens.BrassDark.copy(alpha = 0.85f)
-    val textColor = if (lost) KursiNeutrals.Cream else BrandTokens.GoldAntique
+    val textColor = if (lost) GaddiNeutrals.Cream else BrandTokens.GoldAntique
     Box(
         modifier =
             Modifier
-                .clip(Squircle(KursiRadii.xs))
+                .clip(Squircle(GaddiRadii.xs))
                 .background(bg)
-                .border(0.5.dp, BrandTokens.BrassAged.copy(alpha = 0.6f), Squircle(KursiRadii.xs))
+                .border(0.5.dp, BrandTokens.BrassAged.copy(alpha = 0.6f), Squircle(GaddiRadii.xs))
                 .padding(horizontal = 5.dp, vertical = 2.dp),
     ) {
         Text(
             text = label,
-            style = KursiType.caption.copy(fontSize = 8.sp),
+            style = GaddiType.caption.copy(fontSize = 8.sp),
             color = textColor,
             maxLines = 1,
         )
@@ -1059,9 +1059,9 @@ fun OpponentPlate(
         }
     val ringWidth: androidx.compose.ui.unit.Dp =
         when (state) {
-            ChipState.Acting, ChipState.ValidTarget -> KursiDimens.stroke_ring_active
-            ChipState.Responding -> KursiDimens.stroke_ring_active
-            else -> KursiDimens.stroke_ring_idle
+            ChipState.Acting, ChipState.ValidTarget -> GaddiDimens.stroke_ring_active
+            ChipState.Responding -> GaddiDimens.stroke_ring_active
+            else -> GaddiDimens.stroke_ring_idle
         }
 
     // Responsive metrics: height + crest track the plate width so dense tables
@@ -1073,7 +1073,7 @@ fun OpponentPlate(
     // footer on the denser row.
     val plateHeight = (96.dp * widthFactor).coerceIn(92.dp, 120.dp)
     val crestSize = (24.dp * widthFactor).coerceIn(20.dp, 30.dp)
-    val nameStyle = if (widthFactor < 0.9f) KursiType.label_sm else KursiType.label_md
+    val nameStyle = if (widthFactor < 0.9f) GaddiType.label_sm else GaddiType.label_md
 
     // ── P2 active-actor spotlight: the acting seat lifts + scales + warm rim glow.
     val acting = state == ChipState.Acting
@@ -1104,7 +1104,7 @@ fun OpponentPlate(
         label = "plateLiftY",
     )
 
-    val plateShape = Squircle(KursiDimens.r_md)
+    val plateShape = Squircle(GaddiDimens.r_md)
 
     Box(
         modifier =
@@ -1122,7 +1122,7 @@ fun OpponentPlate(
                         Modifier.holoRimLight(
                             accent = (roleColor ?: brassColor),
                             phase = holoPhase,
-                            cornerRadius = KursiDimens.r_md,
+                            cornerRadius = GaddiDimens.r_md,
                             intensity = 0.55f + 0.45f * pulseAlpha,
                         )
                     } else {
@@ -1140,21 +1140,21 @@ fun OpponentPlate(
                         ),
                     ),
                 ).border(ringWidth, ringColor, plateShape)
-                .embossEdge(KursiDimens.r_md)
+                .embossEdge(GaddiDimens.r_md)
                 .inspectable(onClick = onClick, onLongClick = onLongClick, enabled = !eliminated, pressShape = plateShape),
     ) {
         Column(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .padding(horizontal = KursiDimens.space_sm, vertical = KursiDimens.space_xs)
+                    .padding(horizontal = GaddiDimens.space_sm, vertical = GaddiDimens.space_xs)
                     .alpha(plateAlpha * contentDim),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             // ── Row 1: crest + name + coins + influence pips ──────────
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs),
+                horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs),
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 // Crest medallion — scales with plate width
@@ -1165,23 +1165,23 @@ fun OpponentPlate(
                             .size(crestSize)
                             .clip(CircleShape)
                             .background(crestColor.copy(alpha = 0.85f))
-                            .border(KursiDimens.stroke_hairline, brassColor.copy(alpha = 0.6f), CircleShape),
+                            .border(GaddiDimens.stroke_hairline, brassColor.copy(alpha = 0.6f), CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
                     if (eliminated) {
-                        Text("✕", style = KursiType.label_micro, color = BrandTokens.StampRed)
+                        Text("✕", style = GaddiType.label_micro, color = BrandTokens.StampRed)
                     } else if (role != null) {
                         RoleGlyph(
                             role = role,
-                            tint = KursiNeutrals.Cream,
+                            tint = GaddiNeutrals.Cream,
                             deboss = false,
                             modifier = Modifier.size((crestSize.value * 0.62f).dp),
                         )
                     } else {
                         Text(
                             text = name.filter { it.isLetter() }.take(1).uppercase(),
-                            style = KursiType.label_micro,
-                            color = KursiNeutrals.Cream,
+                            style = GaddiType.label_micro,
+                            color = GaddiNeutrals.Cream,
                             textAlign = TextAlign.Center,
                         )
                     }
@@ -1192,7 +1192,7 @@ fun OpponentPlate(
                 AutoSizeText(
                     text = name,
                     style = nameStyle,
-                    color = KursiNeutrals.TextPrimary,
+                    color = GaddiNeutrals.TextPrimary,
                     maxLines = 1,
                     minSize = 9.sp,
                     modifier = Modifier.weight(1f),
@@ -1201,7 +1201,7 @@ fun OpponentPlate(
                 // Coins — numeral_sm, tabular brass
                 Text(
                     text = coins.toString(),
-                    style = KursiType.numeral_sm,
+                    style = GaddiType.numeral_sm,
                     color = BrandTokens.GoldAntique,
                 )
 
@@ -1246,7 +1246,7 @@ fun OpponentPlate(
             val slotFilled = standingText != null
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs),
+                horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs),
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 // Claim slot — ALWAYS present
@@ -1278,9 +1278,9 @@ fun OpponentPlate(
                     modifier =
                         Modifier
                             .weight(1f)
-                            .clip(Squircle(KursiDimens.r_sm))
+                            .clip(Squircle(GaddiDimens.r_sm))
                             .background(slotBg)
-                            .border(KursiDimens.stroke_hairline, slotBorder, Squircle(KursiDimens.r_sm))
+                            .border(GaddiDimens.stroke_hairline, slotBorder, Squircle(GaddiDimens.r_sm))
                             .padding(horizontal = 4.dp, vertical = 2.dp),
                 ) {
                     val suffix =
@@ -1294,9 +1294,9 @@ fun OpponentPlate(
                         text = "$claimText$suffix",
                         style =
                             if (slotFilled) {
-                                KursiType.label_micro.copy(fontStyle = FontStyle.Normal)
+                                GaddiType.label_micro.copy(fontStyle = FontStyle.Normal)
                             } else {
-                                KursiType.label_micro.copy(fontStyle = FontStyle.Italic)
+                                GaddiType.label_micro.copy(fontStyle = FontStyle.Italic)
                             },
                         color = claimColor,
                         maxLines = 1,
@@ -1308,8 +1308,8 @@ fun OpponentPlate(
                 val lastText = if (lastAction != null) "↳ $lastAction" else "↳ —"
                 Text(
                     text = lastText,
-                    style = KursiType.label_micro,
-                    color = if (lastAction != null) KursiNeutrals.TextMuted else brassDim.copy(alpha = 0.4f),
+                    style = GaddiType.label_micro,
+                    color = if (lastAction != null) GaddiNeutrals.TextMuted else brassDim.copy(alpha = 0.4f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -1318,7 +1318,7 @@ fun OpponentPlate(
             // ── Row 3: suspicion chip (left) + affordance hint (right) ─
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(KursiDimens.space_xs),
+                horizontalArrangement = Arrangement.spacedBy(GaddiDimens.space_xs),
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 if (!eliminated && suspicionPips != null && suspicionLabel != null) {
@@ -1331,7 +1331,7 @@ fun OpponentPlate(
                             state == ChipState.ValidTarget -> "▸ tap to target · hold for dossier"
                             else -> "▸ hold for dossier"
                         },
-                    style = KursiType.label_micro,
+                    style = GaddiType.label_micro,
                     color = brassDim.copy(alpha = 0.45f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -1361,16 +1361,16 @@ fun SuspicionChip(
     val clamped = pips.coerceIn(1, 5)
     val pipColor =
         when (clamped) {
-            1, 2 -> KursiSemantics.Success
+            1, 2 -> GaddiSemantics.Success
             3 -> BrandTokens.PendingAmber
-            else -> KursiSemantics.Danger
+            else -> GaddiSemantics.Danger
         }
     Row(
         modifier =
             Modifier
-                .clip(Squircle(KursiRadii.sm))
+                .clip(Squircle(GaddiRadii.sm))
                 .background(BrandTokens.TeakDark.copy(alpha = 0.90f))
-                .border(KursiDimens.stroke_hairline, BrandTokens.BrassAged.copy(alpha = 0.5f), Squircle(KursiRadii.sm))
+                .border(GaddiDimens.stroke_hairline, BrandTokens.BrassAged.copy(alpha = 0.5f), Squircle(GaddiRadii.sm))
                 .padding(horizontal = 4.dp, vertical = 1.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(2.dp),
@@ -1381,14 +1381,14 @@ fun SuspicionChip(
                     Modifier
                         .size(5.dp)
                         .clip(CircleShape)
-                        .background(if (idx < clamped) pipColor else KursiNeutrals.TextDisabled),
+                        .background(if (idx < clamped) pipColor else GaddiNeutrals.TextDisabled),
             )
         }
         Spacer(Modifier.width(2.dp))
         Text(
             text = label,
-            style = KursiType.label_micro,
-            color = KursiNeutrals.TextSecondary,
+            style = GaddiType.label_micro,
+            color = GaddiNeutrals.TextSecondary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
@@ -1421,18 +1421,18 @@ fun SeatAvatar(
         modifier =
             modifier
                 .size(size)
-                .clip(Squircle(KursiRadii.md))
+                .clip(Squircle(GaddiRadii.md))
                 .background(
                     brush =
                         Brush.radialGradient(
                             listOf(BrandTokens.GoldAntique, color, BrandTokens.BrassDark),
                         ),
-                ).border(1.dp, BrandTokens.BrassAged, Squircle(KursiRadii.md)),
+                ).border(1.dp, BrandTokens.BrassAged, Squircle(GaddiRadii.md)),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = initial,
-            style = KursiType.name,
+            style = GaddiType.name,
             color = BrandTokens.TeakDark,
             textAlign = TextAlign.Center,
         )
@@ -1460,7 +1460,7 @@ fun CoinPill(
     LaunchedEffect(count) {
         if (mounted && !reducedMotion) {
             bump.snapTo(1.22f)
-            bump.animateTo(1f, KursiMotion.snap())
+            bump.animateTo(1f, GaddiMotion.snap())
         }
         mounted = true
     }
@@ -1470,7 +1470,7 @@ fun CoinPill(
                 .graphicsLayer {
                     scaleX = bump.value
                     scaleY = bump.value
-                }.clip(Squircle(KursiRadii.sm))
+                }.clip(Squircle(GaddiRadii.sm))
                 .background(
                     brush =
                         Brush.horizontalGradient(
@@ -1485,7 +1485,7 @@ fun CoinPill(
                     Brush.horizontalGradient(
                         listOf(BrandTokens.GoldAntique.copy(alpha = alpha), BrandTokens.BrassDark.copy(alpha = alpha)),
                     ),
-                    Squircle(KursiRadii.sm),
+                    Squircle(GaddiRadii.sm),
                 ).padding(horizontal = 6.dp, vertical = 3.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -1506,14 +1506,14 @@ fun CoinPill(
         ) {
             Text(
                 text = "K",
-                style = KursiType.caption.copy(fontSize = 6.sp),
+                style = GaddiType.caption.copy(fontSize = 6.sp),
                 color = BrandTokens.TeakDark.copy(alpha = alpha),
                 textAlign = TextAlign.Center,
             )
         }
         Text(
             text = count.toString(),
-            style = KursiType.numeric.copy(fontSize = 12.sp),
+            style = GaddiType.numeric.copy(fontSize = 12.sp),
             color = BrandTokens.GoldAntique.copy(alpha = alpha),
         )
     }
@@ -1548,7 +1548,7 @@ fun InfluencePips(
             )
         }
         lost.forEach { role ->
-            val roleColor = KursiColors.forRole(role).color
+            val roleColor = GaddiColors.forRole(role).color
             Box(
                 modifier =
                     Modifier
@@ -1578,25 +1578,25 @@ fun ClaimChip(
     Box(
         modifier =
             modifier
-                .clip(Squircle(KursiRadii.sm))
+                .clip(Squircle(GaddiRadii.sm))
                 .background(color.copy(alpha = 0.20f))
                 .border(
                     0.8.dp,
                     Brush.horizontalGradient(
                         listOf(BrandTokens.BrassAged.copy(alpha = 0.7f), color.copy(alpha = 0.6f)),
                     ),
-                    Squircle(KursiRadii.sm),
+                    Squircle(GaddiRadii.sm),
                 ).padding(horizontal = 7.dp, vertical = 2.dp),
     ) {
         Text(
             text = label,
-            style = KursiType.label.copy(fontSize = 10.sp),
+            style = GaddiType.label.copy(fontSize = 10.sp),
             color = color,
         )
     }
 }
 
-// ─────────────────────────── KursiActionButton ───────────────────────────────
+// ─────────────────────────── GaddiActionButton ───────────────────────────────
 
 /**
  * Brass-bezeled action button — spec §9.
@@ -1605,7 +1605,7 @@ fun ClaimChip(
  * - [roleAccent] tints the enamel border when this action requires a role claim.
  */
 @Composable
-fun KursiActionButton(
+fun GaddiActionButton(
     label: String,
     modifier: Modifier = Modifier,
     sublabel: String? = null,
@@ -1615,7 +1615,7 @@ fun KursiActionButton(
     disabledReason: String? = null,
     onClick: () -> Unit = {},
 ) {
-    val radius = KursiRadii.xl
+    val radius = GaddiRadii.xl
     val bg =
         when {
             !enabled -> BrandTokens.TeakDark
@@ -1655,8 +1655,8 @@ fun KursiActionButton(
                 if (leadingIcon != null) leadingIcon()
                 Text(
                     text = label,
-                    style = KursiType.title,
-                    color = KursiNeutrals.TextPrimary.copy(alpha = contentAlpha),
+                    style = GaddiType.title,
+                    color = GaddiNeutrals.TextPrimary.copy(alpha = contentAlpha),
                     textAlign = TextAlign.Center,
                 )
             }
@@ -1664,8 +1664,8 @@ fun KursiActionButton(
                 Spacer(Modifier.height(2.dp))
                 Text(
                     text = sublabel,
-                    style = KursiType.caption,
-                    color = KursiNeutrals.TextSecondary.copy(alpha = contentAlpha),
+                    style = GaddiType.caption,
+                    color = GaddiNeutrals.TextSecondary.copy(alpha = contentAlpha),
                     textAlign = TextAlign.Center,
                 )
             }
@@ -1673,8 +1673,8 @@ fun KursiActionButton(
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = disabledReason,
-                    style = KursiType.caption,
-                    color = KursiSemantics.Danger.copy(alpha = 0.75f),
+                    style = GaddiType.caption,
+                    color = GaddiSemantics.Danger.copy(alpha = 0.75f),
                     textAlign = TextAlign.Center,
                 )
             }
@@ -1710,7 +1710,7 @@ fun StatusSpine(
             SpineTone.Danger -> BrandTokens.StampRed
             SpineTone.Gold -> BrandTokens.GoldAntique
         }
-    val shape = Squircle(KursiRadii.lg)
+    val shape = Squircle(GaddiRadii.lg)
 
     Column(
         modifier =
@@ -1721,12 +1721,12 @@ fun StatusSpine(
                 .background(
                     Brush.verticalGradient(
                         listOf(
-                            KursiFeltColors.Surface3.copy(alpha = 0.96f),
-                            KursiFeltColors.Surface2,
+                            GaddiFeltColors.Surface3.copy(alpha = 0.96f),
+                            GaddiFeltColors.Surface2,
                             BrandTokens.TeakDark,
                         ),
                     ),
-                ).embossEdge(KursiRadii.lg, highlight = accentColor.copy(alpha = 0.4f))
+                ).embossEdge(GaddiRadii.lg, highlight = accentColor.copy(alpha = 0.4f))
                 .padding(horizontal = 16.dp, vertical = 10.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -1734,7 +1734,7 @@ fun StatusSpine(
                 text = text,
                 // M4 §3: status-spine verdict is in-game HERO text — render in the real
                 // Rozha One display serif, not the placeholder system serif.
-                style = KursiType.title.rozha(),
+                style = GaddiType.title.rozha(),
                 color = accentColor,
                 modifier = Modifier.weight(1f),
                 maxLines = 2,
@@ -1744,7 +1744,7 @@ fun StatusSpine(
                 Spacer(Modifier.width(12.dp))
                 Text(
                     text = trailingTimer,
-                    style = KursiType.numeric,
+                    style = GaddiType.numeric,
                     color = accentColor,
                 )
             }
@@ -1786,27 +1786,27 @@ fun OutcomeTag(
 ) {
     val (label, color) =
         when (kind) {
-            OutcomeKind.Neutral -> "OK" to KursiNeutrals.TextMuted
-            OutcomeKind.Success -> "TRUE" to KursiSemantics.Success
-            OutcomeKind.ChallengeFail -> "PROVED" to KursiSemantics.Block
-            OutcomeKind.BluffCaught -> "BLUFF" to KursiSemantics.Danger
-            OutcomeKind.Block -> "BLOCKED" to KursiSemantics.Pending
-            OutcomeKind.Eliminated -> "OUT" to KursiSemantics.Danger
+            OutcomeKind.Neutral -> "OK" to GaddiNeutrals.TextMuted
+            OutcomeKind.Success -> "TRUE" to GaddiSemantics.Success
+            OutcomeKind.ChallengeFail -> "PROVED" to GaddiSemantics.Block
+            OutcomeKind.BluffCaught -> "BLUFF" to GaddiSemantics.Danger
+            OutcomeKind.Block -> "BLOCKED" to GaddiSemantics.Pending
+            OutcomeKind.Eliminated -> "OUT" to GaddiSemantics.Danger
         }
     Box(
         modifier =
             modifier
-                .clip(Squircle(KursiRadii.sm))
+                .clip(Squircle(GaddiRadii.sm))
                 .background(color.copy(alpha = 0.15f))
                 .border(
                     0.5.dp,
                     Brush.horizontalGradient(listOf(BrandTokens.BrassAged.copy(alpha = 0.5f), color.copy(alpha = 0.5f))),
-                    Squircle(KursiRadii.sm),
+                    Squircle(GaddiRadii.sm),
                 ).padding(horizontal = 5.dp, vertical = 2.dp),
     ) {
         Text(
             text = label,
-            style = KursiType.caption.copy(fontSize = 8.5.sp, letterSpacing = 0.3.sp),
+            style = GaddiType.caption.copy(fontSize = 8.5.sp, letterSpacing = 0.3.sp),
             color = color,
             maxLines = 1,
         )
@@ -1830,7 +1830,7 @@ fun CountdownBar(
             modifier
                 .fillMaxWidth()
                 .height(5.dp)
-                .clip(Squircle(KursiRadii.xs))
+                .clip(Squircle(GaddiRadii.xs))
                 .background(BrandTokens.TeakDark),
     ) {
         Box(
@@ -1838,7 +1838,7 @@ fun CountdownBar(
                 Modifier
                     .fillMaxWidth(fraction.coerceIn(0f, 1f))
                     .fillMaxHeight()
-                    .clip(Squircle(KursiRadii.xs))
+                    .clip(Squircle(GaddiRadii.xs))
                     .background(
                         brush =
                             Brush.horizontalGradient(
@@ -1870,7 +1870,7 @@ fun FeltTableBackground(
     Box(
         modifier =
             modifier
-                .clip(Squircle(KursiRadii.xxl))
+                .clip(Squircle(GaddiRadii.xxl))
                 .background(
                     brush =
                         Brush.radialGradient(
@@ -1914,7 +1914,7 @@ fun FeltTableBackground(
                                     BrandTokens.GoldAntique,
                                 ),
                             ),
-                            Squircle(KursiRadii.xxl),
+                            Squircle(GaddiRadii.xxl),
                         )
                     } else {
                         Modifier
@@ -1930,7 +1930,7 @@ fun FeltTableBackground(
 // CardFace was removed with RoleCard's dead `faceUp` parameter: it was the only caller and had
 // no callers of its own.
 
-/** Back-compat: [KursiActionButton] row under the old [ActionBar] name. */
+/** Back-compat: [GaddiActionButton] row under the old [ActionBar] name. */
 @Composable
 fun ActionBar(
     actions: List<String>,
@@ -1941,18 +1941,18 @@ fun ActionBar(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clip(Squircle(KursiRadii.lg))
+                .clip(Squircle(GaddiRadii.lg))
                 .background(BrandTokens.TeakMid)
                 .border(
                     1.dp,
                     Brush.horizontalGradient(listOf(BrandTokens.GoldAntique, BrandTokens.BrassDark)),
-                    Squircle(KursiRadii.lg),
+                    Squircle(GaddiRadii.lg),
                 ).padding(horizontal = 12.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         actions.forEachIndexed { index, label ->
-            KursiActionButton(
+            GaddiActionButton(
                 label = label,
                 enabled = true,
                 onClick = { onAction(index) },
@@ -2186,7 +2186,7 @@ fun DrawScope.drawScanlineSheen(
  *
  * @param radius corner radius of the card + frame.
  */
-fun Modifier.decoPopoverPaper(radius: Dp = KursiRadii.md): Modifier {
+fun Modifier.decoPopoverPaper(radius: Dp = GaddiRadii.md): Modifier {
     val shape = Squircle(radius)
     return this
         // 1. Teak contact shadow — the document rests on the table.
@@ -2307,7 +2307,7 @@ fun WaxSeal(
     ) {
         Text(
             text = mark,
-            style = KursiType.label_md.copy(fontSize = (size.value * 0.42f).sp),
+            style = GaddiType.label_md.copy(fontSize = (size.value * 0.42f).sp),
             color = BrandTokens.GoldAntique.copy(alpha = 0.92f),
             maxLines = 1,
         )
@@ -2486,7 +2486,7 @@ fun BrassMedallion(
                     Brush.radialGradient(
                         colors =
                             listOf(
-                                KursiNeutrals.Cream,
+                                GaddiNeutrals.Cream,
                                 BrandTokens.GoldAntique,
                                 BrandTokens.BrassAged,
                                 BrandTokens.BrassDark,
@@ -2593,7 +2593,7 @@ fun BrassMedallion(
             Text(
                 text = "GADDI",
                 style =
-                    KursiType.display
+                    GaddiType.display
                         .copy(
                             fontSize = (17 * scale).sp,
                             letterSpacing = (3 * scale).sp,
@@ -2618,7 +2618,7 @@ fun BrassMedallion(
             Text(
                 text = "TURN $turnNumber",
                 style =
-                    KursiType.label_micro.copy(
+                    GaddiType.label_micro.copy(
                         letterSpacing = (2 * scale).sp,
                         shadow = Shadow(BrandTokens.TeakInk.copy(alpha = 0.7f), Offset(0f, 1f), 1f),
                     ),
@@ -2647,13 +2647,13 @@ private fun CardStackToken(count: Int) {
                         Modifier
                             .size(width = 44.dp, height = 64.dp)
                             .offset { IntOffset(off * 3, off * -3) }
-                            .shadow(4.dp, Squircle(KursiRadii.sm), clip = false)
-                            .clip(Squircle(KursiRadii.sm))
+                            .shadow(4.dp, Squircle(GaddiRadii.sm), clip = false)
+                            .clip(Squircle(GaddiRadii.sm))
                             .background(
                                 Brush.verticalGradient(
                                     listOf(BrandTokens.BrassDark, Color(0xFF5E481B)),
                                 ),
-                            ).border(1.dp, BrandTokens.BrassDark, Squircle(KursiRadii.sm)),
+                            ).border(1.dp, BrandTokens.BrassDark, Squircle(GaddiRadii.sm)),
                 )
             }
             // top card — engraved chair seal
@@ -2661,26 +2661,26 @@ private fun CardStackToken(count: Int) {
                 modifier =
                     Modifier
                         .size(width = 44.dp, height = 64.dp)
-                        .shadow(6.dp, Squircle(KursiRadii.sm), clip = false)
-                        .clip(Squircle(KursiRadii.sm))
+                        .shadow(6.dp, Squircle(GaddiRadii.sm), clip = false)
+                        .clip(Squircle(GaddiRadii.sm))
                         .background(
                             Brush.verticalGradient(
                                 listOf(BrandTokens.GoldAntique, BrandTokens.BrassAged, BrandTokens.BrassDark),
                             ),
                         ).drawBehind { drawChairEmblem(BrandTokens.TeakDark) }
-                        .border(1.2.dp, BrandTokens.GoldAntique, Squircle(KursiRadii.sm)),
+                        .border(1.2.dp, BrandTokens.GoldAntique, Squircle(GaddiRadii.sm)),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = "K",
-                    style = KursiType.display.copy(fontSize = 22.sp),
+                    style = GaddiType.display.copy(fontSize = 22.sp),
                     color = BrandTokens.TeakDark.copy(alpha = 0.85f),
                 )
             }
         }
         Text(
             text = "DECK $count",
-            style = KursiType.label_micro.copy(letterSpacing = 1.sp),
+            style = GaddiType.label_micro.copy(letterSpacing = 1.sp),
             color = BrandTokens.GoldAntique.copy(alpha = 0.7f),
         )
     }
@@ -2740,14 +2740,14 @@ private fun CoinStackToken(coins: Int) {
             ) {
                 Text(
                     text = coins.toString(),
-                    style = KursiType.numeric.copy(fontSize = 18.sp),
+                    style = GaddiType.numeric.copy(fontSize = 18.sp),
                     color = BrandTokens.TeakDark,
                 )
             }
         }
         Text(
             text = "KHAZANA",
-            style = KursiType.label_micro.copy(letterSpacing = 1.sp),
+            style = GaddiType.label_micro.copy(letterSpacing = 1.sp),
             color = BrandTokens.GoldAntique.copy(alpha = 0.7f),
         )
     }

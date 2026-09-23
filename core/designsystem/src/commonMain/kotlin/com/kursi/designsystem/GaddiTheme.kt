@@ -22,7 +22,7 @@ import org.jetbrains.compose.resources.Font
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // §8 LICENSE RAJ DECO — "teak-and-brass council chamber" visual identity.
-// Tokens approved in kursi-plan/docs/15a_retro_identity.md §DIRECTION 2.
+// Tokens approved in gaddi-plan/docs/15a_retro_identity.md §DIRECTION 2.
 // Fonts: Rozha One (OFL), Marcellus (OFL), DM Mono (OFL) — bundled via
 // compose.components.resources under composeResources/font/. All three load
 // on jvm (desktop), Android, iOS (arm64 + simulator), and wasmJs targets.
@@ -107,7 +107,7 @@ object BrandTokens {
 // ─────────────────────────── Semantic palette ───────────────────────────
 
 /** Semantic outcome colors for the deco identity. */
-object KursiSemantics {
+object GaddiSemantics {
     val Success = Color(0xFF2D9E5A)
     val Danger = BrandTokens.StampRed
     val Block = Color(0xFF3A86FF)
@@ -115,11 +115,11 @@ object KursiSemantics {
 }
 
 // ─────────────────────────── Legacy surface aliases ───────────────────────────
-// Kept so :feature:game can still reference KursiFeltColors without a compile error.
+// Kept so :feature:game can still reference GaddiFeltColors without a compile error.
 // All values now map to deco equivalents.
 
 /** Surface palette — deco remapping. Legacy names kept for :feature:game compat. */
-object KursiFeltColors {
+object GaddiFeltColors {
     /** Was FeltTop (green). Now: teak dark — the council-chamber ground. */
     val FeltTop = BrandTokens.TeakDark
 
@@ -151,7 +151,7 @@ object KursiFeltColors {
 // ─────────────────────────── Text / neutral palette ───────────────────────────
 
 /** Neutral text and disabled colors — deco remapping. */
-object KursiNeutrals {
+object GaddiNeutrals {
     /** Primary text on teak: warm near-white. */
     val TextPrimary = Color(0xFFF2E8D0)
 
@@ -171,7 +171,7 @@ object KursiNeutrals {
 // ─────────────────────────── Role hues (Okabe-Ito CVD-safe) — UNCHANGED ────────
 
 /** Role hues — locked Okabe-Ito palette. MUST NOT CHANGE per CVD contract. */
-object KursiRoleHues {
+object GaddiRoleHues {
     val Neta = Color(0xFF0072B2)
     val Bhai = Color(0xFFD55E00)
     val Babu = Color(0xFF009E73)
@@ -189,7 +189,7 @@ object KursiRoleHues {
 // ─────────────────────────── Seat colors (10 slots) — UNCHANGED ───────────────
 
 /** 10 distinct seat identity colors — separate from role hues. Unchanged. */
-object KursiSeatColors {
+object GaddiSeatColors {
     val all: List<Color> =
         listOf(
             Color(0xFFE63946), // 0 — red
@@ -299,13 +299,13 @@ data class RoleVisual(
 )
 
 /** Stateless lookup — initialized once at app start. Never mutated. */
-object KursiColors {
+object GaddiColors {
     val roles: Map<Role, RoleVisual> =
         mapOf(
             Role.NETA to
                 RoleVisual(
                     role = Role.NETA,
-                    color = KursiRoleHues.Neta,
+                    color = GaddiRoleHues.Neta,
                     lightColor = Color(0xFF3399CC),
                     characterName = "Netaji Vachan",
                     title = "The Politician",
@@ -318,7 +318,7 @@ object KursiColors {
             Role.BHAI to
                 RoleVisual(
                     role = Role.BHAI,
-                    color = KursiRoleHues.Bhai,
+                    color = GaddiRoleHues.Bhai,
                     lightColor = Color(0xFFE87733),
                     characterName = "Bhai Teja",
                     title = "The Don",
@@ -331,7 +331,7 @@ object KursiColors {
             Role.BABU to
                 RoleVisual(
                     role = Role.BABU,
-                    color = KursiRoleHues.Babu,
+                    color = GaddiRoleHues.Babu,
                     lightColor = Color(0xFF00C48D),
                     characterName = "Babu Filewala",
                     title = "The Bureaucrat",
@@ -344,7 +344,7 @@ object KursiColors {
             Role.JUGAADU to
                 RoleVisual(
                     role = Role.JUGAADU,
-                    color = KursiRoleHues.Jugaadu,
+                    color = GaddiRoleHues.Jugaadu,
                     lightColor = Color(0xFFFFBF33),
                     characterName = "Chhotu",
                     title = "The Fixer",
@@ -357,7 +357,7 @@ object KursiColors {
             Role.VAKIL to
                 RoleVisual(
                     role = Role.VAKIL,
-                    color = KursiRoleHues.Vakil,
+                    color = GaddiRoleHues.Vakil,
                     lightColor = Color(0xFFDD99BF),
                     characterName = "Vakil Saab",
                     title = "The Lawyer",
@@ -370,7 +370,7 @@ object KursiColors {
             Role.PATRAKAAR to
                 RoleVisual(
                     role = Role.PATRAKAAR,
-                    color = KursiRoleHues.Patrakaar,
+                    color = GaddiRoleHues.Patrakaar,
                     lightColor = Color(0xFF8CCBF0),
                     characterName = "Patrakaar Devi",
                     title = "The Journalist",
@@ -382,16 +382,16 @@ object KursiColors {
                 ),
         )
 
-    fun forRole(role: Role): RoleVisual = roles[role] ?: error("No RoleVisual for $role — add to KursiColors.roles")
+    fun forRole(role: Role): RoleVisual = roles[role] ?: error("No RoleVisual for $role — add to GaddiColors.roles")
 }
 
 // ─────────────────────────── Seal palette ─────────────────────────────────────
 
 /**
  * Seal colors — per-role identity tints for crests, log dots, matrix cells, chit headers.
- * Distinct from [KursiSeatColors] (player slots).
+ * Distinct from [GaddiSeatColors] (player slots).
  */
-object KursiSealPalette {
+object GaddiSealPalette {
     /** NETA — khadi white with saffron edge (use as badge fill). */
     val Neta = Color(0xFFF5F0E8)
 
@@ -414,12 +414,12 @@ object KursiSealPalette {
 // ─────────────────────────── Typography tokens ────────────────────────────────
 
 /**
- * KursiFonts — holds the three real OFL font families loaded from bundled TTFs.
- * Built in a @Composable context via [rememberKursiFonts] so that
+ * GaddiFonts — holds the three real OFL font families loaded from bundled TTFs.
+ * Built in a @Composable context via [rememberGaddiFonts] so that
  * org.jetbrains.compose.resources.Font() resolves on all targets (jvm, Android,
  * iOS, wasmJs).
  */
-data class KursiFonts(
+data class GaddiFonts(
     val rozhaOne: FontFamily,
     val marcellus: FontFamily,
     val dmMono: FontFamily,
@@ -431,21 +431,21 @@ data class KursiFonts(
  * because Font() returns the same object for the same resource key.
  */
 @Composable
-private fun rememberKursiFonts(): KursiFonts =
-    KursiFonts(
+private fun rememberGaddiFonts(): GaddiFonts =
+    GaddiFonts(
         rozhaOne = FontFamily(Font(Res.font.rozha_one_regular, weight = FontWeight.Normal)),
         marcellus = FontFamily(Font(Res.font.marcellus_regular, weight = FontWeight.Normal)),
         dmMono = FontFamily(Font(Res.font.dm_mono_medium, weight = FontWeight.Medium)),
     )
 
 /**
- * KursiType — License Raj Deco type scale.
+ * GaddiType — License Raj Deco type scale.
  *
- * Each token resolves its [fontFamily] through [LocalKursiFonts] at read time (a
+ * Each token resolves its [fontFamily] through [LocalGaddiFonts] at read time (a
  * `@Composable get()`, not a stored constant), so every call site — 500+ across the
  * app — picks up the real bundled Rozha One / Marcellus / DM Mono the moment it reads
- * under [KursiTheme], with zero call-site changes. Outside a themed composition (bare
- * @Preview, non-KMP-resource contexts) [LocalKursiFonts] falls back to system
+ * under [GaddiTheme], with zero call-site changes. Outside a themed composition (bare
+ * @Preview, non-KMP-resource contexts) [LocalGaddiFonts] falls back to system
  * serif/mono, so previews keep rendering.
  *
  * Slot assignments:
@@ -453,12 +453,12 @@ private fun rememberKursiFonts(): KursiFonts =
  *   title / name / body / label* / caption / title_sm / label_micro / label_sm / label_md → Marcellus (body serif)
  *   numeric / numeral_sm → DM Mono (tabular mono)
  */
-object KursiType {
+object GaddiType {
     /** 28 / 700 — turn banner, Rozha One display. */
     val display: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.rozhaOne,
+                fontFamily = LocalGaddiFonts.current.rozhaOne,
                 fontSize = 28.sp,
                 fontWeight = FontWeight(700),
                 lineHeight = 34.sp,
@@ -469,7 +469,7 @@ object KursiType {
     val cardRole: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.rozhaOne,
+                fontFamily = LocalGaddiFonts.current.rozhaOne,
                 fontSize = 26.sp,
                 fontWeight = FontWeight(700),
                 lineHeight = 30.sp,
@@ -479,7 +479,7 @@ object KursiType {
     val title: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.marcellus,
+                fontFamily = LocalGaddiFonts.current.marcellus,
                 fontSize = 20.sp,
                 fontWeight = FontWeight(700),
                 lineHeight = 26.sp,
@@ -489,7 +489,7 @@ object KursiType {
     val name: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.marcellus,
+                fontFamily = LocalGaddiFonts.current.marcellus,
                 fontSize = 17.sp,
                 fontWeight = FontWeight(700),
                 lineHeight = 22.sp,
@@ -499,7 +499,7 @@ object KursiType {
     val body: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.marcellus,
+                fontFamily = LocalGaddiFonts.current.marcellus,
                 fontSize = 15.sp,
                 fontWeight = FontWeight(500),
                 lineHeight = 20.sp,
@@ -509,7 +509,7 @@ object KursiType {
     val label: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.marcellus,
+                fontFamily = LocalGaddiFonts.current.marcellus,
                 fontSize = 13.sp,
                 fontWeight = FontWeight(600),
                 lineHeight = 18.sp,
@@ -520,7 +520,7 @@ object KursiType {
     val caption: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.marcellus,
+                fontFamily = LocalGaddiFonts.current.marcellus,
                 fontSize = 11.sp,
                 fontWeight = FontWeight(600),
                 lineHeight = 14.sp,
@@ -531,7 +531,7 @@ object KursiType {
     val numeric: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.dmMono,
+                fontFamily = LocalGaddiFonts.current.dmMono,
                 fontSize = 14.sp,
                 fontWeight = FontWeight(600),
                 lineHeight = 18.sp,
@@ -544,7 +544,7 @@ object KursiType {
     val label_micro: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.marcellus,
+                fontFamily = LocalGaddiFonts.current.marcellus,
                 fontSize = 10.sp,
                 fontWeight = FontWeight(500),
                 lineHeight = 12.sp,
@@ -555,7 +555,7 @@ object KursiType {
     val label_sm: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.marcellus,
+                fontFamily = LocalGaddiFonts.current.marcellus,
                 fontSize = 11.sp,
                 fontWeight = FontWeight(600),
                 lineHeight = 14.sp,
@@ -566,7 +566,7 @@ object KursiType {
     val label_md: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.marcellus,
+                fontFamily = LocalGaddiFonts.current.marcellus,
                 fontSize = 13.sp,
                 fontWeight = FontWeight(700),
                 lineHeight = 16.sp,
@@ -577,7 +577,7 @@ object KursiType {
     val title_sm: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.marcellus,
+                fontFamily = LocalGaddiFonts.current.marcellus,
                 fontSize = 15.sp,
                 fontWeight = FontWeight(700),
                 lineHeight = 18.sp,
@@ -588,7 +588,7 @@ object KursiType {
     val title_md: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.rozhaOne,
+                fontFamily = LocalGaddiFonts.current.rozhaOne,
                 fontSize = 18.sp,
                 fontWeight = FontWeight(700),
                 lineHeight = 22.sp,
@@ -599,7 +599,7 @@ object KursiType {
     val numeral_sm: TextStyle
         @Composable get() =
             TextStyle(
-                fontFamily = LocalKursiFonts.current.dmMono,
+                fontFamily = LocalGaddiFonts.current.dmMono,
                 fontSize = 13.sp,
                 fontWeight = FontWeight(600),
                 lineHeight = 16.sp,
@@ -613,36 +613,36 @@ object KursiType {
  * that map to numeral/mono usage (labelSmall in M3 = our caption/numeric).
  */
 @Composable
-private fun rememberKursiTypography(fonts: KursiFonts): Typography {
+private fun rememberGaddiTypography(fonts: GaddiFonts): Typography {
     val rz = fonts.rozhaOne
     val mc = fonts.marcellus
     val dm = fonts.dmMono
     return Typography(
-        displayLarge = KursiType.display.copy(fontFamily = rz),
-        displayMedium = KursiType.display.copy(fontFamily = rz),
-        displaySmall = KursiType.display.copy(fontFamily = rz),
-        headlineLarge = KursiType.title.copy(fontFamily = mc),
-        headlineMedium = KursiType.title.copy(fontFamily = mc),
-        headlineSmall = KursiType.title.copy(fontFamily = mc),
-        titleLarge = KursiType.title.copy(fontFamily = mc),
-        titleMedium = KursiType.name.copy(fontFamily = mc),
-        titleSmall = KursiType.name.copy(fontFamily = mc),
-        bodyLarge = KursiType.body.copy(fontFamily = mc),
-        bodyMedium = KursiType.body.copy(fontFamily = mc),
-        bodySmall = KursiType.body.copy(fontFamily = mc),
-        labelLarge = KursiType.label.copy(fontFamily = mc),
-        labelMedium = KursiType.label.copy(fontFamily = mc),
-        labelSmall = KursiType.numeral_sm.copy(fontFamily = dm),
+        displayLarge = GaddiType.display.copy(fontFamily = rz),
+        displayMedium = GaddiType.display.copy(fontFamily = rz),
+        displaySmall = GaddiType.display.copy(fontFamily = rz),
+        headlineLarge = GaddiType.title.copy(fontFamily = mc),
+        headlineMedium = GaddiType.title.copy(fontFamily = mc),
+        headlineSmall = GaddiType.title.copy(fontFamily = mc),
+        titleLarge = GaddiType.title.copy(fontFamily = mc),
+        titleMedium = GaddiType.name.copy(fontFamily = mc),
+        titleSmall = GaddiType.name.copy(fontFamily = mc),
+        bodyLarge = GaddiType.body.copy(fontFamily = mc),
+        bodyMedium = GaddiType.body.copy(fontFamily = mc),
+        bodySmall = GaddiType.body.copy(fontFamily = mc),
+        labelLarge = GaddiType.label.copy(fontFamily = mc),
+        labelMedium = GaddiType.label.copy(fontFamily = mc),
+        labelSmall = GaddiType.numeral_sm.copy(fontFamily = dm),
     )
 }
 
-// ─────────────────────────── KursiDimens ─────────────────────────────────────
+// ─────────────────────────── GaddiDimens ─────────────────────────────────────
 
 /**
- * KursiDimens — 4dp grid spacing/radii/stroke density scale.
+ * GaddiDimens — 4dp grid spacing/radii/stroke density scale.
  * All new components use these; hard-coded px/dp constants are being phased out.
  */
-object KursiDimens {
+object GaddiDimens {
     // ── Spacing (4dp grid) ──────────────────────────────────────────────
     val space_xs: androidx.compose.ui.unit.Dp = 4.dp
     val space_sm: androidx.compose.ui.unit.Dp = 8.dp
@@ -672,10 +672,10 @@ object KursiDimens {
 
 // ─────────────────────────── CompositionLocals ───────────────────────────
 
-val LocalKursiColors = staticCompositionLocalOf { KursiColors }
+val LocalGaddiColors = staticCompositionLocalOf { GaddiColors }
 
 /**
- * The real bundled OFL font families, provided by [KursiTheme]. The [KursiType]
+ * The real bundled OFL font families, provided by [GaddiTheme]. The [GaddiType]
  * token styles ship with [FontFamily.Serif]/[FontFamily.Monospace] placeholders so
  * the object can initialize without a @Composable resource context; this Local lets
  * in-game composables pull the genuine Rozha One / Marcellus / DM Mono on the table
@@ -683,9 +683,9 @@ val LocalKursiColors = staticCompositionLocalOf { KursiColors }
  *
  * Default falls back to system serif/mono so non-themed previews still render.
  */
-val LocalKursiFonts =
+val LocalGaddiFonts =
     staticCompositionLocalOf {
-        KursiFonts(
+        GaddiFonts(
             rozhaOne = FontFamily.Serif,
             marcellus = FontFamily.Serif,
             dmMono = FontFamily.Monospace,
@@ -693,25 +693,25 @@ val LocalKursiFonts =
     }
 
 /**
- * Patches a [KursiType] token style with the real Rozha One display serif. Use on
+ * Patches a [GaddiType] token style with the real Rozha One display serif. Use on
  * in-game HERO text so the deco display face lands on the table, not just on app-flow
  * screens routed through MaterialTheme.typography. Read inside a composition under
- * [KursiTheme].
+ * [GaddiTheme].
  *
  * ```kotlin
- * Text("Aapki baari", style = KursiType.display.rozha())
+ * Text("Aapki baari", style = GaddiType.display.rozha())
  * ```
  */
 @Composable
-fun TextStyle.rozha(): TextStyle = this.copy(fontFamily = LocalKursiFonts.current.rozhaOne)
+fun TextStyle.rozha(): TextStyle = this.copy(fontFamily = LocalGaddiFonts.current.rozhaOne)
 
 /** Patches a token style with the real Marcellus body serif. */
 @Composable
-fun TextStyle.marcellus(): TextStyle = this.copy(fontFamily = LocalKursiFonts.current.marcellus)
+fun TextStyle.marcellus(): TextStyle = this.copy(fontFamily = LocalGaddiFonts.current.marcellus)
 
 /** Patches a token style with the real DM Mono numeral face. */
 @Composable
-fun TextStyle.dmMono(): TextStyle = this.copy(fontFamily = LocalKursiFonts.current.dmMono)
+fun TextStyle.dmMono(): TextStyle = this.copy(fontFamily = LocalGaddiFonts.current.dmMono)
 
 /**
  * Whether the player has reduced motion on (spec §10). Provided once at the [GameScreen]
@@ -723,51 +723,51 @@ val LocalReducedMotion = staticCompositionLocalOf { false }
 
 // ─────────────────────────── Material3 dark scheme (deco palette) ─────────────
 
-private val KursiDecoColorScheme =
+private val GaddiDecoColorScheme =
     darkColorScheme(
         primary = BrandTokens.BrassAged,
         onPrimary = BrandTokens.TeakDark,
         primaryContainer = BrandTokens.BrassDark,
         onPrimaryContainer = BrandTokens.PaperCream,
         secondary = BrandTokens.TeakMid,
-        onSecondary = KursiNeutrals.TextPrimary,
+        onSecondary = GaddiNeutrals.TextPrimary,
         background = BrandTokens.TeakInk,
-        onBackground = KursiNeutrals.TextPrimary,
+        onBackground = GaddiNeutrals.TextPrimary,
         surface = BrandTokens.TeakMid,
-        onSurface = KursiNeutrals.TextPrimary,
+        onSurface = GaddiNeutrals.TextPrimary,
         surfaceVariant = Color(0xFF4A3020),
-        onSurfaceVariant = KursiNeutrals.TextSecondary,
+        onSurfaceVariant = GaddiNeutrals.TextSecondary,
         error = BrandTokens.StampRed,
-        onError = KursiNeutrals.TextPrimary,
+        onError = GaddiNeutrals.TextPrimary,
         outline = BrandTokens.BrassAged,
     )
 
 // ─────────────────────────── Theme entry point ───────────────────────────
 
 /**
- * Root theme composable for all Kursi UI — License Raj Deco identity.
+ * Root theme composable for all Gaddi UI — License Raj Deco identity.
  *
  * Wraps [MaterialTheme] with the teak-brass-enamel dark scheme and deco typography.
  * Loads bundled OFL fonts (Rozha One, Marcellus, DM Mono) via
  * compose.components.resources and patches them into the Typography.
- * Provides [KursiColors] via [LocalKursiColors].
+ * Provides [GaddiColors] via [LocalGaddiColors].
  *
  * ```kotlin
- * KursiTheme {
+ * GaddiTheme {
  *     GameScreen(...)
  * }
  * ```
  */
 @Composable
-fun KursiTheme(content: @Composable () -> Unit) {
-    val fonts = rememberKursiFonts()
-    val typography = rememberKursiTypography(fonts)
+fun GaddiTheme(content: @Composable () -> Unit) {
+    val fonts = rememberGaddiFonts()
+    val typography = rememberGaddiTypography(fonts)
     MaterialTheme(
-        colorScheme = KursiDecoColorScheme,
+        colorScheme = GaddiDecoColorScheme,
         typography = typography,
     ) {
         CompositionLocalProvider(
-            LocalKursiFonts provides fonts,
+            LocalGaddiFonts provides fonts,
             content = content,
         )
     }

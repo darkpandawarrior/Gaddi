@@ -46,6 +46,6 @@ fun rememberSoundPlayer(): SoundPlayer {
  * Fires the haptic for [moment] through [player]. Caller is responsible for the sound-enabled
  * gate; this function assumes feedback is permitted. (SFX is fired separately — see file header.)
  */
-internal fun SoundPlayer.fire(moment: KursiMoment) {
+internal fun SoundPlayer.fire(moment: GaddiMoment) {
     haptic(moment.haptic.toPattern())
 }

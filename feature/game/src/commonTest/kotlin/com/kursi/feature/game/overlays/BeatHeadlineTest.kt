@@ -4,7 +4,7 @@ import com.kursi.feature.game.Difficulty
 import com.kursi.feature.game.GameAction
 import com.kursi.feature.game.GameUiState
 import com.kursi.feature.game.GameViewModel
-import com.kursi.feature.game.KursiVoice
+import com.kursi.feature.game.GaddiVoice
 import com.kursi.feature.game.Language
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -19,7 +19,7 @@ import kotlin.test.assertTrue
  * honestly — the moment a Munshi line has.
  */
 class BeatHeadlineTest {
-    private val voice = KursiVoice(Language.HINGLISH)
+    private val voice = GaddiVoice(Language.HINGLISH)
 
     private fun freshState(): GameUiState {
         val vm = GameViewModel()

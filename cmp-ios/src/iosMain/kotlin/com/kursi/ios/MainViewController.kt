@@ -1,13 +1,13 @@
 package com.kursi.ios
 
 import androidx.compose.ui.window.ComposeUIViewController
-import com.kursi.shared.KursiApp
+import com.kursi.shared.GaddiApp
 
 /**
  * Entry point exposed to Swift/Objective-C.
  *
  * The Xcode app calls `MainViewControllerKt.MainViewController()` to obtain a
- * [UIViewController] that hosts the full Compose UI tree ([KursiApp]).
+ * [UIViewController] that hosts the full Compose UI tree ([GaddiApp]).
  *
  * Usage in Swift:
  * ```swift
@@ -27,4 +27,4 @@ import com.kursi.shared.KursiApp
  * Renaming it would break the Xcode app, not just a style rule.
  */
 @Suppress("ktlint:standard:function-naming")
-fun MainViewController() = ComposeUIViewController { KursiApp() }
+fun MainViewController() = ComposeUIViewController { GaddiApp() }

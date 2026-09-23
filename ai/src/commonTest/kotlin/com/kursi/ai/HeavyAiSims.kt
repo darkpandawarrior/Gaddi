@@ -5,7 +5,7 @@ package com.kursi.ai
  * full Expert policy probes, 2v2 team-awareness sims).
  *
  * These tests each run hundreds of full self-play games, every one spinning up many ISMCTS trees.
- * That is fine on the JVM (where [KursiKmpPureConventionPlugin] gives the test fork a 4g heap and
+ * That is fine on the JVM (where [GaddiKmpPureConventionPlugin] gives the test fork a 4g heap and
  * the real strength regression actually runs) and on native, but it is hostile to the Kotlin/Wasm
  * **browser** test runner: each long synchronous computation starves Karma's 2000 ms ping, the
  * browser is declared disconnected ("reconnect failed before timeout of 2000ms (ping timeout)"),

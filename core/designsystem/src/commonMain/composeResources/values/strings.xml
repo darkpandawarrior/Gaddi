@@ -71,7 +71,7 @@
     <string name="career_register_badge">CAREER REGISTER</string>
     <string name="career_strip_summary">%1$sW · %2$sL · %3$s%%</string>
     <string name="career_title">ROZNAMCHA</string>
-    <string name="career_wins_stamp">%1$s KURSI HAASIL</string>
+    <string name="career_wins_stamp">%1$s GADDI HAASIL</string>
     <string name="cta_confirm_stamp">MUHAR LAGAO ✦</string>
     <string name="cta_enter">ENTER →</string>
     <string name="cta_join_short">AAO ›</string>
@@ -109,9 +109,9 @@
     <string name="game_declare">Declare</string>
     <string name="game_default_player_name">Khiladi</string>
     <string name="game_dhandha_tab_footnote">DEHAADI and KHELA need no lie. Everything else, you'd better hope nobody calls your bluff.</string>
-    <string name="game_gazette_footer_quote">In KURSI, the truth is whatever survives a challenge.</string>
+    <string name="game_gazette_footer_quote">In GADDI, the truth is whatever survives a challenge.</string>
     <string name="game_gazette_subtitle">Published by the Ministry of Whatever Works · Price: One Favour</string>
-    <string name="game_gazette_title">THE KURSI GAZETTE</string>
+    <string name="game_gazette_title">THE GADDI GAZETTE</string>
     <string name="game_hisaab_tab_footnote">When in doubt: everyone's lying. Including the chart.</string>
     <string name="game_hotseat_player_monogram">K%1$d</string>
     <string name="game_hotseat_player_name">Khiladi %1$d</string>
@@ -165,8 +165,8 @@
     <string name="game_you_label">Aap</string>
     <string name="game_you_monogram">AAP</string>
     <string name="game_your_hand_label">Your hand</string>
-    <string name="gauntlet_rung_sub">%1$s · %2$s kursiyaan</string>
-    <string name="home_hero_subtitle">Kursi kitne ki hai? — Challenge the Cabinet</string>
+    <string name="gauntlet_rung_sub">%1$s · %2$s gaddiyaan</string>
+    <string name="home_hero_subtitle">Gaddi kitne ki hai? — Challenge the Cabinet</string>
     <string name="home_hero_title">NAYA KHEL</string>
     <string name="home_more_modes_header">AUR MODES</string>
     <string name="home_progress_header">AAPKI TARAKKI</string>
@@ -206,7 +206,7 @@
     <string name="profile_eyebrow_first_run">PEHLI HAZRI</string>
     <string name="profile_name_label">AAPKA NAAM</string>
     <string name="profile_name_placeholder">Khiladi</string>
-    <string name="profile_seat_color_label">KURSI KA RANG</string>
+    <string name="profile_seat_color_label">GADDI KA RANG</string>
     <string name="profile_skip_link">BAAD MEIN KAREIN</string>
     <string name="profile_title_settings">APNA PROFILE</string>
     <string name="profile_welcome_title">Welcome to the Darbar</string>
@@ -242,9 +242,9 @@
     <string name="setup_vishesh_scarcity">TANGI / Total coin pool is capped — hoarding and denial dominate.</string>
     <string name="setup_vishesh_section_label">VISHESH MODES</string>
     <string name="setup_vishesh_section_sub">Experimental rules — vs-AI only. All off = classic.</string>
-    <string name="share_text_loss">%1$s ne Kursi jeet li! </string>
+    <string name="share_text_loss">%1$s ne Gaddi jeet li! </string>
     <string name="share_text_stats">(%1$s turns, %2$s bluffs held)</string>
-    <string name="share_text_win">Mujhe Kursi mil gayi! 🏆 </string>
+    <string name="share_text_win">Mujhe Gaddi mil gayi! 🏆 </string>
     <string name="story_arc_section_header">Kissa ka Dhara</string>
     <string name="story_arc_section_sub">Choose your arc</string>
     <string name="story_badge">KISSA · DARBAR</string>

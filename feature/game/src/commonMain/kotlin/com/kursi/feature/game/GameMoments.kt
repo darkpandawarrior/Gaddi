@@ -10,10 +10,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import com.kursi.designsystem.KursiRoleHues
-import com.kursi.designsystem.audio.rememberKursiSoundPlayer
+import com.kursi.designsystem.GaddiRoleHues
+import com.kursi.designsystem.audio.rememberGaddiSoundPlayer
 import com.kursi.designsystem.moment.ActionMomentOverlay
-import com.kursi.designsystem.moment.KursiMoment
+import com.kursi.designsystem.moment.GaddiMoment
 import com.kursi.designsystem.moment.LocalTableAnchorRegistry
 import com.kursi.designsystem.moment.MomentHost
 import com.kursi.designsystem.moment.SeatId
@@ -33,7 +33,7 @@ import kotlin.math.sin
 // GameMoments.kt — bridges the engine event stream to the designsystem "moment"
 // stamp-theatre framework. Pure presentation glue; does NOT touch :engine / :ai logic.
 //
-//  - mapEventToMoment(): engine GameEvent  →  KursiMoment (License Raj stamp theatre).
+//  - mapEventToMoment(): engine GameEvent  →  GaddiMoment (License Raj stamp theatre).
 //  - rememberSeatIdResolver(): engine PlayerId  →  SeatId (index in view.players).
 //  - GameMomentLayer(): a BoxScope overlay that owns a MomentHost, builds proportional
 //    TableAnchors from the host Box size, and fires moments as new events arrive.
@@ -74,19 +74,19 @@ internal fun rememberSeatIdResolver(state: GameUiState): SeatIdResolver {
 /** Role → Okabe-Ito hue from the single :core:designsystem source of truth. */
 internal fun roleHueOf(role: Role?): Color =
     when (role) {
-        Role.NETA -> KursiRoleHues.Neta
-        Role.BHAI -> KursiRoleHues.Bhai
-        Role.BABU -> KursiRoleHues.Babu
-        Role.JUGAADU -> KursiRoleHues.Jugaadu
-        Role.VAKIL -> KursiRoleHues.Vakil
-        Role.PATRAKAAR -> KursiRoleHues.Patrakaar
-        null -> KursiRoleHues.Neta // safe default; only used where a hue is structurally required
+        Role.NETA -> GaddiRoleHues.Neta
+        Role.BHAI -> GaddiRoleHues.Bhai
+        Role.BABU -> GaddiRoleHues.Babu
+        Role.JUGAADU -> GaddiRoleHues.Jugaadu
+        Role.VAKIL -> GaddiRoleHues.Vakil
+        Role.PATRAKAAR -> GaddiRoleHues.Patrakaar
+        null -> GaddiRoleHues.Neta // safe default; only used where a hue is structurally required
     }
 
 // ─────────────────────────── Event → Moment mapping ──────────────────────────
 
 /**
- * Maps a single engine [GameEvent] to the matching [KursiMoment], or null when the event
+ * Maps a single engine [GameEvent] to the matching [GaddiMoment], or null when the event
  * carries no on-screen theatre of its own (e.g. coin bookkeeping that a parent beat already
  * animates, or transient card-replacement plumbing).
  *
@@ -98,7 +98,7 @@ internal fun mapEventToMoment(
     resolve: SeatIdResolver,
     state: GameUiState,
     humanDisplayName: String = "Khiladi",
-): KursiMoment? {
+): GaddiMoment? {
     // Helper: display name for a PlayerId (bot persona name, or player's display name for the human seat).
     fun nameOf(id: PlayerId): String =
         if (id == state.view.viewer) {
@@ -111,29 +111,29 @@ internal fun mapEventToMoment(
         is GameEvent.ActionDeclared ->
             when (val a = event.action) {
                 Action.Income ->
-                    KursiMoment.Income(
+                    GaddiMoment.Income(
                         actorSeat = resolve.seatOf(event.actor),
                         actorName = nameOf(event.actor),
                     )
                 Action.ForeignAid ->
-                    KursiMoment.ForeignAid(
+                    GaddiMoment.ForeignAid(
                         actorSeat = resolve.seatOf(event.actor),
                         actorName = nameOf(event.actor),
                     )
                 Action.Tax ->
-                    KursiMoment.Tax(
+                    GaddiMoment.Tax(
                         actorSeat = resolve.seatOf(event.actor),
                         roleHue = roleHueOf(Role.NETA),
                         actorName = nameOf(event.actor),
                     )
                 Action.Exchange ->
-                    KursiMoment.Exchange(
+                    GaddiMoment.Exchange(
                         actorSeat = resolve.seatOf(event.actor),
                         roleHue = roleHueOf(Role.JUGAADU),
                         actorName = nameOf(event.actor),
                     )
                 is Action.Steal ->
-                    KursiMoment.Steal(
+                    GaddiMoment.Steal(
                         actorSeat = resolve.seatOf(event.actor),
                         victim = resolve.seatOf(a.target),
                         roleHue = roleHueOf(Role.BABU),
@@ -141,7 +141,7 @@ internal fun mapEventToMoment(
                         victimName = nameOf(a.target),
                     )
                 is Action.Assassinate ->
-                    KursiMoment.Assassinate(
+                    GaddiMoment.Assassinate(
                         actorSeat = resolve.seatOf(event.actor),
                         target = resolve.seatOf(a.target),
                         roleHue = roleHueOf(Role.BHAI),
@@ -149,14 +149,14 @@ internal fun mapEventToMoment(
                         targetName = nameOf(a.target),
                     )
                 is Action.Coup ->
-                    KursiMoment.Coup(
+                    GaddiMoment.Coup(
                         actorSeat = resolve.seatOf(event.actor),
                         target = resolve.seatOf(a.target),
                         actorName = nameOf(event.actor),
                         targetName = nameOf(a.target),
                     )
                 // Jaanch (Investigate) has no bespoke table-theatre overlay of its own — the private
-                // peek is a secrecy-bounded fact, narrated in the log/recap via KursiVoice rather than
+                // peek is a secrecy-bounded fact, narrated in the log/recap via GaddiVoice rather than
                 // shown as a public moment. Fold it into the neighbouring beat (no standalone moment).
                 is Action.Investigate -> null
                 // Variant actions — no distinct table-theatre overlay (folded into log narration).
@@ -164,7 +164,7 @@ internal fun mapEventToMoment(
             }
 
         is GameEvent.Blocked ->
-            KursiMoment.Block(
+            GaddiMoment.Block(
                 actorSeat = resolve.seatOf(event.blocker),
                 blockedSeat = resolve.seatOf(blockedActorOf(event.action) ?: event.blocker),
                 roleHue = roleHueOf(event.role),
@@ -173,7 +173,7 @@ internal fun mapEventToMoment(
             )
 
         is GameEvent.Challenged ->
-            KursiMoment.Challenge(
+            GaddiMoment.Challenge(
                 actorSeat = resolve.seatOf(event.challenger),
                 claimant = resolve.seatOf(event.target),
                 challengerName = nameOf(event.challenger),
@@ -181,7 +181,7 @@ internal fun mapEventToMoment(
             )
 
         is GameEvent.ChallengeRevealed ->
-            KursiMoment.Reveal(
+            GaddiMoment.Reveal(
                 actorSeat = resolve.seatOf(event.player),
                 claimant = resolve.seatOf(event.player),
                 claimedRole = event.role.name,
@@ -191,7 +191,7 @@ internal fun mapEventToMoment(
             )
 
         is GameEvent.InfluenceLost ->
-            KursiMoment.InfluenceLoss(
+            GaddiMoment.InfluenceLoss(
                 actorSeat = resolve.seatOf(event.player),
                 lostRole = event.role.name,
                 roleHue = roleHueOf(event.role),
@@ -199,13 +199,13 @@ internal fun mapEventToMoment(
             )
 
         is GameEvent.PlayerEliminated ->
-            KursiMoment.Elimination(
+            GaddiMoment.Elimination(
                 actorSeat = resolve.seatOf(event.player),
                 playerName = nameOf(event.player),
             )
 
         is GameEvent.TurnAdvanced ->
-            KursiMoment.TurnHandoff(
+            GaddiMoment.TurnHandoff(
                 actorSeat = event.toSeat,
                 nextSeat = event.toSeat,
                 nextName =
@@ -216,14 +216,14 @@ internal fun mapEventToMoment(
             )
 
         is GameEvent.GameEnded ->
-            KursiMoment.Win(
+            GaddiMoment.Win(
                 actorSeat = resolve.seatOf(event.winner),
                 winnerName = nameOf(event.winner),
             )
 
         // Events with no standalone moment — their effect is folded into a neighbouring beat.
         // Investigated / InvestigateRedraw are secrecy-bounded (the peeked role is never public),
-        // so they get no public overlay — only log/recap narration via KursiVoice.
+        // so they get no public overlay — only log/recap narration via GaddiVoice.
         is GameEvent.ActionResolved,
         is GameEvent.ActionNegated,
         is GameEvent.CoinsChanged,
@@ -315,13 +315,13 @@ internal fun BoxScope.GameMomentLayer(
     // fire at the REAL seat. Until a slot is measured, that slot uses the ellipse fallback.
     val registry = LocalTableAnchorRegistry.current
     val anchors = registry.measuredAnchors(resolver.seatCount, fallback) ?: fallback
-    // Platform haptic sink (SFX now goes through kursiSoundPlayer below), released on dispose.
+    // Platform haptic sink (SFX now goes through gaddiSoundPlayer below), released on dispose.
     // Only actually emits when soundEnabled is true (the overlay applies the gate per-moment).
     val soundPlayer = rememberSoundPlayer()
     // Fine-grained CC0 SFX player (docs/experience-assets.md §3) — fires on the SAME GameEvents
     // that drive the moment theatre below, gated by [soundEnabled] at the call site so the
     // screenshot/test harness (which passes soundEnabled = false) stays silent.
-    val kursiSoundPlayer = rememberKursiSoundPlayer()
+    val gaddiSoundPlayer = rememberGaddiSoundPlayer()
 
     // Track the last list of events we've already turned into moments. The window slides,
     // so we diff by finding the newly-appended suffix rather than trusting a raw count.
@@ -333,7 +333,7 @@ internal fun BoxScope.GameMomentLayer(
         seen = current
         fresh.forEach { event ->
             mapEventToMoment(event, resolver, state, humanDisplayName)?.let { host.play(it) }
-            if (soundEnabled) event.toKursiSound()?.let { kursiSoundPlayer.play(it) }
+            if (soundEnabled) event.toGaddiSound()?.let { gaddiSoundPlayer.play(it) }
         }
     }
 

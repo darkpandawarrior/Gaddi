@@ -104,7 +104,7 @@ private suspend fun DefaultWebSocketServerSession.handshakeJoin(
 
     val joinMsg: ClientMessage =
         try {
-            KursiJson.decodeFromString(firstText)
+            GaddiJson.decodeFromString(firstText)
         } catch (e: SerializationException) {
             close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "Invalid ClientMessage: ${e.message}"))
             return null
@@ -172,7 +172,7 @@ private suspend fun DefaultWebSocketServerSession.pumpClientMessages(
         if (frame !is Frame.Text) continue
         val msg: ClientMessage =
             try {
-                KursiJson.decodeFromString(frame.readText())
+                GaddiJson.decodeFromString(frame.readText())
             } catch (e: Exception) {
                 sendServerError(joined.roomCode, seq = -1, reason = "Invalid message: ${e.message}")
                 continue
@@ -212,5 +212,5 @@ private suspend fun DefaultWebSocketServerSession.sendServerError(
     reason: String,
 ) {
     val errMsg: ServerMessage = ServerMessage.Error(matchId = matchId, seq = seq, clientSeq = -1, reason = reason)
-    send(Frame.Text(KursiJson.encodeToString(errMsg)))
+    send(Frame.Text(GaddiJson.encodeToString(errMsg)))
 }

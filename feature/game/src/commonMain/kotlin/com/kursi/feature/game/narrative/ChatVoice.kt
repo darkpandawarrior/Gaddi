@@ -7,7 +7,7 @@ import com.kursi.feature.game.Language
  * The DARBAR's voice — persona-flavoured Hinglish (and English) chat lines for the narrative layer.
  *
  * Deterministic + offline + free: every line is a template selected from this corpus, mirroring the
- * existing [com.kursi.feature.game.KursiVoice] pattern. The [SocialDirector] picks a line for a beat,
+ * existing [com.kursi.feature.game.GaddiVoice] pattern. The [SocialDirector] picks a line for a beat,
  * an event, a conspiracy pile-on, or a flaw-blunder; an optional online [ChatEmbellisher] may restyle
  * the chosen line later without ever changing the decision behind it.
  *
@@ -36,7 +36,7 @@ class ChatVoice(
             "madam_sarpanch" -> if (hi) "Mere gaon mein khel? Niyam mere." else "A game in my village? My rules."
             "dalla_tiwari" -> if (hi) "Dono taraf se commission. Welcome." else "Commission from both sides. Welcome."
             "maaji_anna" -> if (hi) "Imaandaari se khelo. Main dekh raha hoon." else "Play honestly. I'm watching."
-            else -> if (hi) "Shuru karein? Kursi ek hi hai." else "Shall we begin? There's only one chair."
+            else -> if (hi) "Shuru karein? Gaddi ek hi hai." else "Shall we begin? There's only one chair."
         }
 
     // ── Conspiracy: a bot openly joins the gang-up on [targetName] ────────────────

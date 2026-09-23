@@ -1,7 +1,7 @@
 package com.kursi.feature.game
 
 import com.kursi.core.network.ConnectionState
-import com.kursi.core.network.OnlineKursiClient
+import com.kursi.core.network.OnlineGaddiClient
 import com.kursi.core.network.RoomApi
 import com.kursi.core.network.RoomResult
 import com.kursi.gameservices.RoomCode
@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-/** Kursi's DNS-SD / beacon service type — the `serviceType` :network's LAN discovery is parameterized on. */
-private const val KURSI_LAN_SERVICE_TYPE = "_kursi._tcp"
+/** Gaddi's DNS-SD / beacon service type — the `serviceType` :network's LAN discovery is parameterized on. */
+private const val GADDI_LAN_SERVICE_TYPE = "_kursi._tcp"
 
 /**
  * ONLINE-HUB CONTROLLER — the pre-match orchestration the [com.kursi.feature.game] module owns so the
@@ -30,7 +30,7 @@ private const val KURSI_LAN_SERVICE_TYPE = "_kursi._tcp"
  *
  *  - [RoomApi]        — the REST handshake (`POST /rooms/{n}` / `POST /quickmatch/{n}`) that mints a code.
  *  - [LanDiscoverer]  — the LAN browse flow (mDNS/UDP-beacon) yielding [LanHost]s to join directly.
- *  - [OnlineKursiClient] — the WebSocket connection + lobby/seat lifecycle once a code is in hand.
+ *  - [OnlineGaddiClient] — the WebSocket connection + lobby/seat lifecycle once a code is in hand.
  *
  * THE LOBBY: after a code is obtained (or a LAN host picked), [connect] opens the socket and projects
  * the connection lifecycle into [OnlineHubUiState.lobby]. While [ConnectionState.Connecting] /
@@ -42,15 +42,15 @@ private const val KURSI_LAN_SERVICE_TYPE = "_kursi._tcp"
  * exposed field is a hot [StateFlow] safe to `collectAsStateWithLifecycle()`. Call [close] to tear down.
  *
  * @param scope          coroutine scope owning every job here and the underlying client.
- * @param clientFactory  builds the [OnlineKursiClient] (defaults to one bound to [scope]).
+ * @param clientFactory  builds the [OnlineGaddiClient] (defaults to one bound to [scope]).
  * @param roomApiFactory builds a [RoomApi] for a (host, port) — overridable in tests.
  * @param lanDiscoverer  the LAN browser (defaults to the platform actual).
  */
 class OnlineHubController(
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
-    private val clientFactory: (CoroutineScope) -> OnlineKursiClient = { OnlineKursiClient(scope = it) },
+    private val clientFactory: (CoroutineScope) -> OnlineGaddiClient = { OnlineGaddiClient(scope = it) },
     private val roomApiFactory: (host: String, port: Int) -> RoomApi = { host, port -> RoomApi(host, port) },
-    private val lanDiscovererFactory: () -> LanDiscoverer = { LanDiscoverer(KURSI_LAN_SERVICE_TYPE) },
+    private val lanDiscovererFactory: () -> LanDiscoverer = { LanDiscoverer(GADDI_LAN_SERVICE_TYPE) },
 ) {
     private val _uiState = MutableStateFlow(OnlineHubUiState())
 
@@ -59,7 +59,7 @@ class OnlineHubController(
 
     // The live online client + bridge adapter, created when a connection opens. The adapter is what the
     // online table renders; it is exposed so the app's NavHost can hand it to the GameScreen.
-    private var client: OnlineKursiClient? = null
+    private var client: OnlineGaddiClient? = null
     private var _adapter: OnlineGameAdapter? = null
 
     /** The bridge adapter driving the in-game table once [connect] has opened a match. Null before then. */

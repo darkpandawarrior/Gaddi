@@ -220,8 +220,8 @@ internal fun OpponentChipItem(
 
     // Persona data
     val persona = state.opponentPersonas[opp.id]
-    val plateName = personaNameOrDefault(opp.id, state, LocalKursiVoice.current.selfName)
-    val plateColor = if (persona != null) Color(persona.seatColorArgb) else KursiSeatColors[opp.seatIndex]
+    val plateName = personaNameOrDefault(opp.id, state, LocalGaddiVoice.current.selfName)
+    val plateColor = if (persona != null) Color(persona.seatColorArgb) else GaddiSeatColors[opp.seatIndex]
 
     // ── Speech ribbon state ──────────────────────────────────────────
     var ribbonText by remember { mutableStateOf<String?>(null) }
@@ -255,7 +255,7 @@ internal fun OpponentChipItem(
                 }
             }
 
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     LaunchedEffect(lastEventForOpp) {
         if (lastEventForOpp != null && personaId != null) {
             val barkEvent =
@@ -278,7 +278,7 @@ internal fun OpponentChipItem(
     }
 
     // Role visual for crest (null if we don't know their role — they're face-down)
-    val roleVisual: RoleVisual? = opp.faceUpRoles.firstOrNull()?.let { KursiColors.forRole(it) }
+    val roleVisual: RoleVisual? = opp.faceUpRoles.firstOrNull()?.let { GaddiColors.forRole(it) }
 
     // P9: capture the plate's bounds in root coordinates so the dossier popover can
     // anchor to the tapped plate with a caret instead of floating dead-centre.
@@ -455,7 +455,7 @@ internal fun TeamBadgeChip(
         Text(
             text = label,
             style =
-                KursiType.caption.copy(
+                GaddiType.caption.copy(
                     fontSize = 7.sp,
                     letterSpacing = 0.5.sp,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
@@ -474,15 +474,15 @@ internal fun SpeechRibbon(
         modifier =
             modifier
                 .widthIn(max = 200.dp)
-                .clip(Squircle(KursiDimens.r_sm))
+                .clip(Squircle(GaddiDimens.r_sm))
                 .background(BrandTokens.BrassAged.copy(alpha = 0.95f))
-                .border(KursiDimens.stroke_hairline, BrandTokens.GoldAntique, Squircle(KursiDimens.r_sm))
-                .padding(horizontal = KursiDimens.space_sm, vertical = KursiDimens.space_xs),
+                .border(GaddiDimens.stroke_hairline, BrandTokens.GoldAntique, Squircle(GaddiDimens.r_sm))
+                .padding(horizontal = GaddiDimens.space_sm, vertical = GaddiDimens.space_xs),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "\"$text\"",
-            style = KursiType.label_micro.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
+            style = GaddiType.label_micro.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
             color = BrandTokens.TeakDark,
             textAlign = TextAlign.Center,
             maxLines = 2,

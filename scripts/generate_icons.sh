@@ -28,11 +28,11 @@ else
 fi
 
 # ── PNG rasters ───────────────────────────────────────────────────────────────
-echo "  512×512  kursi_512.png  (Linux desktop / PWA)"
-RENDER 512 "$ICONS_DIR/kursi_512.png"
+echo "  512×512  gaddi_512.png  (Linux desktop / PWA)"
+RENDER 512 "$ICONS_DIR/gaddi_512.png"
 
 echo "  512×512  icon-512.png   (web PWA)"
-cp "$ICONS_DIR/kursi_512.png" "$WEB_DIR/icon-512.png"
+cp "$ICONS_DIR/gaddi_512.png" "$WEB_DIR/icon-512.png"
 
 echo "  192×192  icon-192.png   (web PWA)"
 RENDER 192 "$WEB_DIR/icon-192.png"
@@ -49,9 +49,9 @@ if [[ "$(uname)" == "Darwin" ]]; then
     RENDER $SIZE         "$ICONSET/icon_${SIZE}x${SIZE}.png"
     RENDER $((SIZE * 2)) "$ICONSET/icon_${SIZE}x${SIZE}@2x.png"
   done
-  iconutil -c icns "$ICONSET" -o "$ICONS_DIR/kursi.icns"
+  iconutil -c icns "$ICONSET" -o "$ICONS_DIR/gaddi.icns"
   rm -rf "$ICONSET"
-  echo "  ✓ kursi.icns"
+  echo "  ✓ gaddi.icns"
 else
   echo "  ⚠ Skipping .icns — only generated on macOS (iconutil required)"
 fi
@@ -69,9 +69,9 @@ if command -v convert &>/dev/null; then
           "$TMPDIR_ICO"/icon_64.png \
           "$TMPDIR_ICO"/icon_128.png \
           "$TMPDIR_ICO"/icon_256.png \
-          "$ICONS_DIR/kursi.ico"
+          "$ICONS_DIR/gaddi.ico"
   rm -rf "$TMPDIR_ICO"
-  echo "  ✓ kursi.ico"
+  echo "  ✓ gaddi.ico"
 else
   echo "  ⚠ Skipping .ico — ImageMagick (convert) not found"
   echo "    Install with: brew install imagemagick"

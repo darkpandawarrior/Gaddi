@@ -28,8 +28,8 @@ import com.kursi.designsystem.*
 import com.kursi.feature.game.Difficulty
 import com.kursi.feature.game.GauntletLadder
 import com.kursi.feature.game.GauntletRung
-import com.kursi.shared.strings.KursiStrings
-import com.kursi.shared.strings.LocalKursiStrings
+import com.kursi.shared.strings.GaddiStrings
+import com.kursi.shared.strings.LocalGaddiStrings
 import kursi.core.designsystem.generated.resources.Res
 import kursi.core.designsystem.generated.resources.a11y_gauntlet_current_rung
 import kursi.core.designsystem.generated.resources.a11y_gauntlet_ladder_row
@@ -53,7 +53,7 @@ fun GauntletScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val scroll = rememberScrollState()
     val rungs = GauntletLadder.RUNGS
     val targetIndex = progress.targetRung.coerceIn(0, rungs.lastIndex)
@@ -67,7 +67,7 @@ fun GauntletScreen(
             backLabel = s.back,
             modifier = Modifier.padding(top = 16.dp, start = 4.dp, end = 4.dp, bottom = 4.dp),
             trailing = {
-                Text(s.gauntletBadge, style = KursiType.caption.copy(fontSize = 9.sp), color = KursiNeutrals.TextMuted)
+                Text(s.gauntletBadge, style = GaddiType.caption.copy(fontSize = 9.sp), color = GaddiNeutrals.TextMuted)
             },
         )
 
@@ -87,12 +87,12 @@ fun GauntletScreen(
                 // Tagline + progress — plain on the ground, no bordered panel.
                 Text(
                     text = s.gauntletTagline,
-                    style = KursiType.body.copy(fontSize = 13.sp, fontStyle = FontStyle.Italic),
-                    color = KursiNeutrals.TextSecondary,
+                    style = GaddiType.body.copy(fontSize = 13.sp, fontStyle = FontStyle.Italic),
+                    color = GaddiNeutrals.TextSecondary,
                 )
                 Text(
                     text = s.gauntletStripLabel(progress.clearedCount.coerceIn(0, rungs.size), rungs.size),
-                    style = KursiType.label.copy(fontSize = 11.sp, letterSpacing = 1.sp, fontWeight = FontWeight.Bold),
+                    style = GaddiType.label.copy(fontSize = 11.sp, letterSpacing = 1.sp, fontWeight = FontWeight.Bold),
                     color = BrandTokens.GoldAntique,
                     modifier = Modifier.padding(top = 6.dp, bottom = 8.dp),
                 )
@@ -142,14 +142,14 @@ private fun ConqueredSpotlight(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .shadow(8.dp, Squircle(KursiRadii.md), clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
+                .shadow(8.dp, Squircle(GaddiRadii.md), clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
                 .clip(RoundedCornerShape(14.dp))
                 .background(Brush.verticalGradient(listOf(BrandTokens.GoldAntique, BrandTokens.BrassAged)))
                 .padding(horizontal = 18.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Text(title, style = KursiType.display.rozha().copy(fontSize = 19.sp), color = BrandTokens.TeakDark)
-        Text(body, style = KursiType.body.copy(fontSize = 12.sp), color = BrandTokens.TeakDark.copy(alpha = 0.8f))
+        Text(title, style = GaddiType.display.rozha().copy(fontSize = 19.sp), color = BrandTokens.TeakDark)
+        Text(body, style = GaddiType.body.copy(fontSize = 12.sp), color = BrandTokens.TeakDark.copy(alpha = 0.8f))
     }
 }
 
@@ -158,7 +158,7 @@ private fun ConqueredSpotlight(
 @Composable
 private fun GauntletCurrentSpotlight(
     rung: GauntletRung,
-    strings: KursiStrings,
+    strings: GaddiStrings,
     onPlay: () -> Unit,
 ) {
     val nameplate = rungNameOf(rung.index, strings)
@@ -169,7 +169,7 @@ private fun GauntletCurrentSpotlight(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .shadow(8.dp, Squircle(KursiRadii.md), clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
+                .shadow(8.dp, Squircle(GaddiRadii.md), clip = false, ambientColor = Color.Black, spotColor = BrandTokens.TeakInk)
                 .clip(RoundedCornerShape(14.dp))
                 .background(
                     Brush.verticalGradient(
@@ -186,13 +186,13 @@ private fun GauntletCurrentSpotlight(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = nameplate,
-                    style = KursiType.display.rozha().copy(fontSize = 20.sp),
+                    style = GaddiType.display.rozha().copy(fontSize = 20.sp),
                     color = BrandTokens.GoldAntique,
                 )
                 Text(
                     text = stringResource(Res.string.gauntlet_rung_sub, difficultyName, rung.players),
-                    style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                    color = KursiNeutrals.TextSecondary,
+                    style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                    color = GaddiNeutrals.TextSecondary,
                 )
             }
             Box(
@@ -205,7 +205,7 @@ private fun GauntletCurrentSpotlight(
             ) {
                 Text(
                     text = strings.gauntletCurrentTag,
-                    style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.5.sp),
+                    style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.5.sp),
                     color = BrandTokens.GoldAntique,
                 )
             }
@@ -226,7 +226,7 @@ private fun GauntletCurrentSpotlight(
 private fun GauntletLadderRow(
     rung: GauntletRung,
     state: RungState,
-    strings: KursiStrings,
+    strings: GaddiStrings,
     onPlay: () -> Unit,
     showDivider: Boolean,
 ) {
@@ -260,15 +260,15 @@ private fun GauntletLadderRow(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = nameplate,
-                style = KursiType.name.copy(fontSize = 14.sp, letterSpacing = 0.5.sp),
-                color = if (cleared) KursiNeutrals.TextPrimary else KursiNeutrals.TextMuted,
+                style = GaddiType.name.copy(fontSize = 14.sp, letterSpacing = 0.5.sp),
+                color = if (cleared) GaddiNeutrals.TextPrimary else GaddiNeutrals.TextMuted,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
-                text = "$difficultyName · ${rung.players} kursiyaan",
-                style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                color = KursiNeutrals.TextMuted,
+                text = "$difficultyName · ${rung.players} gaddiyaan",
+                style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                color = GaddiNeutrals.TextMuted,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -276,7 +276,7 @@ private fun GauntletLadderRow(
         if (cleared) {
             Text(
                 text = "${strings.gauntletReplayCta} ▸",
-                style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.5.sp),
+                style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.5.sp),
                 color = BrandTokens.BrassAged.copy(alpha = 0.85f),
             )
         } else {
@@ -290,7 +290,7 @@ private fun GauntletLadderRow(
             ) {
                 Text(
                     text = tag,
-                    style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.5.sp),
+                    style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.5.sp),
                     color = BrandTokens.StampRed.copy(alpha = 0.75f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -302,7 +302,7 @@ private fun GauntletLadderRow(
 
 private fun rungNameOf(
     index: Int,
-    s: KursiStrings,
+    s: GaddiStrings,
 ): String =
     listOf(
         s.gauntletRung0Name,
@@ -313,7 +313,7 @@ private fun rungNameOf(
 
 private fun difficultyNameOf(
     d: Difficulty,
-    s: KursiStrings,
+    s: GaddiStrings,
 ): String =
     when (d) {
         Difficulty.Easy -> s.diffEasyName

@@ -20,7 +20,7 @@ import kotlin.test.assertTrue
  * Hard-parity or worse) is caught. At an n-player table a policy with no edge wins 1/n of the time, so
  * each floor is stated as "meaningfully above fair share".
  *
- * Budget is sized to stay within the configured 4g JVM test heap (see KursiKmpPureConventionPlugin):
+ * Budget is sized to stay within the configured 4g JVM test heap (see GaddiKmpPureConventionPlugin):
  * fewer iterations than the in-game budget, game counts kept modest, especially at 10p where each game
  * is far heavier.
  */

@@ -44,8 +44,8 @@ import com.kursi.ai.persona.BotPersona
 import com.kursi.ai.persona.PersonaRoster
 import com.kursi.core.prefs.AppPrefs
 import com.kursi.designsystem.*
-import com.kursi.shared.strings.KursiStrings
-import com.kursi.shared.strings.LocalKursiStrings
+import com.kursi.shared.strings.GaddiStrings
+import com.kursi.shared.strings.LocalGaddiStrings
 import kursi.core.designsystem.generated.resources.Res
 import kursi.core.designsystem.generated.resources.a11y_career_mini_strip
 import kursi.core.designsystem.generated.resources.a11y_hero_play_button
@@ -382,7 +382,7 @@ private fun ColumnScope.ExpandedHomeLayout(
     onSpectate: () -> Unit,
     initialSelectedKey: String? = null,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     var selectedKey by remember(initialSelectedKey) { mutableStateOf(initialSelectedKey) }
     val modes =
         remember(s) {
@@ -394,7 +394,7 @@ private fun ColumnScope.ExpandedHomeLayout(
                     label = s.homeCtaNewGame,
                     sublabel = s.homeCtaNewGameSub,
                     description =
-                        "Challenge the Cabinet in a single-player match. Outmanoeuvre AI opponents, seize the Kursi, and survive the " +
+                        "Challenge the Cabinet in a single-player match. Outmanoeuvre AI opponents, seize the Gaddi, and survive the " +
                             "vote of no " +
                             "confidence.",
                     details = listOf("Players" to "2 – 5", "Opponent" to "AI Cabinet", "Duration" to "~20 min"),
@@ -517,7 +517,7 @@ private fun ColumnScope.ExpandedHomeLayout(
                         .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.Top,
             ) {
-                KursiWordmark(
+                GaddiWordmark(
                     displaySize = 84,
                     wordmarkAlpha = wordmarkAlpha,
                     wordmarkSlide = wordmarkSlide,
@@ -602,7 +602,7 @@ private fun ColumnScope.ExpandedHomeLayout(
                         Text(
                             text = s.homeRosterHeader,
                             style =
-                                KursiType.caption.copy(
+                                GaddiType.caption.copy(
                                     fontSize = 11.sp,
                                     letterSpacing = 3.sp,
                                     fontWeight = FontWeight.Bold,
@@ -702,7 +702,7 @@ private fun ColumnScope.CompactHomeLayout(
     onGauntlet: () -> Unit,
     onSpectate: () -> Unit,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
 
     Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
         // Background watermark seal — decorative, does not occupy content space
@@ -729,7 +729,7 @@ private fun ColumnScope.CompactHomeLayout(
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             // ① Wordmark — compact header, brass gradient
-            KursiWordmark(
+            GaddiWordmark(
                 displaySize = 44,
                 wordmarkAlpha = wordmarkAlpha,
                 wordmarkSlide = wordmarkSlide,
@@ -854,7 +854,7 @@ private fun HeroPlayButton(
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = stringResource(Res.string.home_hero_subtitle),
-                    style = KursiType.body.copy(fontSize = 12.sp, fontStyle = FontStyle.Italic),
+                    style = GaddiType.body.copy(fontSize = 12.sp, fontStyle = FontStyle.Italic),
                     color = BrandTokens.BrassDark,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
@@ -882,7 +882,7 @@ private fun HeroPlayButton(
                 ) {
                     Text(
                         text = persona.monogram,
-                        style = KursiType.caption.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                        style = GaddiType.caption.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
                         color = BrandTokens.GoldAntique,
                         textAlign = TextAlign.Center,
                     )
@@ -898,7 +898,7 @@ private fun HeroPlayButton(
                 ) {
                     Text(
                         text = stringResource(Res.string.label_approved_stamp),
-                        style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp, fontWeight = FontWeight.Bold),
+                        style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp, fontWeight = FontWeight.Bold),
                         color = BrandTokens.PaperCream,
                     )
                 }
@@ -942,22 +942,22 @@ private fun ResumeStripProminent(
                 .padding(horizontal = 16.dp, vertical = 14.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text("⟳", style = KursiType.title.copy(fontSize = 22.sp), color = BrandTokens.GoldAntique)
+            Text("⟳", style = GaddiType.title.copy(fontSize = 22.sp), color = BrandTokens.GoldAntique)
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    LocalKursiStrings.current.homeResumeLabel,
-                    style = KursiType.title.copy(fontSize = 15.sp),
+                    LocalGaddiStrings.current.homeResumeLabel,
+                    style = GaddiType.title.copy(fontSize = 15.sp),
                     color = BrandTokens.GoldAntique,
                 )
                 Text(
                     label,
-                    style = KursiType.caption.copy(fontSize = 11.sp),
-                    color = KursiNeutrals.TextSecondary,
+                    style = GaddiType.caption.copy(fontSize = 11.sp),
+                    color = GaddiNeutrals.TextSecondary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-            Text("›", style = KursiType.title.copy(fontSize = 20.sp), color = BrandTokens.GoldAntique)
+            Text("›", style = GaddiType.title.copy(fontSize = 20.sp), color = BrandTokens.GoldAntique)
         }
     }
 }
@@ -974,7 +974,7 @@ private data class ModeRailItem(
 
 @Composable
 private fun ModeRail(
-    s: KursiStrings,
+    s: GaddiStrings,
     onStory: () -> Unit,
     onGauntlet: () -> Unit,
     onTutorial: () -> Unit,
@@ -1005,8 +1005,8 @@ private fun ModeRail(
     ) {
         Text(
             text = stringResource(Res.string.home_more_modes_header),
-            style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 2.sp),
-            color = KursiNeutrals.TextMuted,
+            style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 2.sp),
+            color = GaddiNeutrals.TextMuted,
             modifier = Modifier.padding(bottom = 8.dp),
         )
         LazyRow(
@@ -1058,14 +1058,14 @@ private fun ModeRailTile(mode: ModeRailItem) {
         ) {
             Text(
                 text = mode.icon,
-                style = KursiType.title.copy(fontSize = 24.sp),
+                style = GaddiType.title.copy(fontSize = 24.sp),
                 color = Color.White.copy(alpha = 0.85f),
             )
         }
         Text(
             text = mode.label,
-            style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.sp),
-            color = KursiNeutrals.TextPrimary,
+            style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.sp),
+            color = GaddiNeutrals.TextPrimary,
             textAlign = TextAlign.Center,
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
@@ -1103,8 +1103,8 @@ private fun CompactContinuityDashboard(
     ) {
         Text(
             text = stringResource(Res.string.home_progress_header),
-            style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 2.sp),
-            color = KursiNeutrals.TextMuted,
+            style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 2.sp),
+            color = GaddiNeutrals.TextMuted,
         )
         // Career stats row — always show if any games played
         if (ledger.games > 0) {
@@ -1138,7 +1138,7 @@ private fun CareerMiniStrip(
     ledger: com.kursi.core.prefs.StatsLedger,
     onOpen: () -> Unit,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val careerMiniDesc = stringResource(Res.string.a11y_career_mini_strip, ledger.games, ledger.wins)
     Box(
         modifier =
@@ -1171,7 +1171,7 @@ private fun CareerMiniStrip(
             }
             Text(
                 text = "›",
-                style = KursiType.title.copy(fontSize = 16.sp),
+                style = GaddiType.title.copy(fontSize = 16.sp),
                 color = BrandTokens.BrassAged,
             )
         }
@@ -1186,13 +1186,13 @@ private fun CareerStat(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = value,
-            style = KursiType.numeric.copy(fontSize = 16.sp),
+            style = GaddiType.numeric.copy(fontSize = 16.sp),
             color = BrandTokens.GoldAntique,
         )
         Text(
             text = label,
-            style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp),
-            color = KursiNeutrals.TextMuted,
+            style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp),
+            color = GaddiNeutrals.TextMuted,
         )
     }
 }
@@ -1233,30 +1233,30 @@ private fun PersonaTeaserChip(
         ) {
             Text(
                 persona.monogram,
-                style = KursiType.caption.copy(fontSize = 9.sp),
-                color = KursiNeutrals.Cream,
+                style = GaddiType.caption.copy(fontSize = 9.sp),
+                color = GaddiNeutrals.Cream,
                 textAlign = TextAlign.Center,
             )
         }
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = "${persona.name} · ${persona.title}",
-                style = KursiType.caption.copy(fontSize = 10.sp),
-                color = KursiNeutrals.TextSecondary,
+                style = GaddiType.caption.copy(fontSize = 10.sp),
+                color = GaddiNeutrals.TextSecondary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = "\"${onDutyCaption(persona.id)}\"",
-                style = KursiType.caption.copy(fontSize = 9.sp, fontStyle = FontStyle.Italic),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 9.sp, fontStyle = FontStyle.Italic),
+                color = GaddiNeutrals.TextMuted,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
         Text(
             text = stringResource(Res.string.label_on_duty),
-            style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp),
+            style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp),
             color = seatColor.copy(alpha = 0.7f),
         )
     }
@@ -1309,7 +1309,7 @@ private fun GauntletStrip(
     onOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val label = s.gauntletStripLabel(gauntlet.clearedCount.coerceIn(0, total), total)
     HairlineRow(
         onClick = onOpen,
@@ -1320,24 +1320,24 @@ private fun GauntletStrip(
             },
         verticalPadding = 11.dp,
     ) {
-        Text("▲", style = KursiType.title.copy(fontSize = 16.sp), color = BrandTokens.GoldAntique)
+        Text("▲", style = GaddiType.title.copy(fontSize = 16.sp), color = BrandTokens.GoldAntique)
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 s.homeCtaGauntlet,
-                style = KursiType.title.copy(fontSize = 14.sp),
-                color = KursiNeutrals.TextPrimary,
+                style = GaddiType.title.copy(fontSize = 14.sp),
+                color = GaddiNeutrals.TextPrimary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
                 label,
-                style = KursiType.caption.copy(fontSize = 10.sp),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 10.sp),
+                color = GaddiNeutrals.TextMuted,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        Text("›", style = KursiType.title.copy(fontSize = 16.sp), color = BrandTokens.GoldAntique)
+        Text("›", style = GaddiType.title.copy(fontSize = 16.sp), color = BrandTokens.GoldAntique)
     }
 }
 
@@ -1347,25 +1347,25 @@ private fun ResumeStrip(
     label: String,
     onResume: () -> Unit,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     val resumeInProgressDesc = stringResource(Res.string.a11y_resume_in_progress, label)
     HairlineRow(
         onClick = onResume,
         modifier = Modifier.semantics(mergeDescendants = true) { contentDescription = resumeInProgressDesc },
         verticalPadding = 11.dp,
     ) {
-        Text("⟳", style = KursiType.title.copy(fontSize = 18.sp), color = BrandTokens.GoldAntique)
+        Text("⟳", style = GaddiType.title.copy(fontSize = 18.sp), color = BrandTokens.GoldAntique)
         Column(modifier = Modifier.weight(1f)) {
-            Text(s.homeResumeLabel, style = KursiType.title.copy(fontSize = 14.sp), color = KursiNeutrals.TextPrimary)
+            Text(s.homeResumeLabel, style = GaddiType.title.copy(fontSize = 14.sp), color = GaddiNeutrals.TextPrimary)
             Text(
                 label,
-                style = KursiType.caption.copy(fontSize = 10.sp),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 10.sp),
+                color = GaddiNeutrals.TextMuted,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        Text("›", style = KursiType.title.copy(fontSize = 16.sp), color = BrandTokens.GoldAntique)
+        Text("›", style = GaddiType.title.copy(fontSize = 16.sp), color = BrandTokens.GoldAntique)
     }
 }
 
@@ -1441,7 +1441,7 @@ private fun TeleprinterTicker(
             Text(
                 text = text,
                 style =
-                    KursiType.caption.copy(
+                    GaddiType.caption.copy(
                         fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                         fontSize = 11.sp,
                     ),
@@ -1496,7 +1496,7 @@ private fun TickerTextBlock(text: String) {
     Text(
         text = text,
         style =
-            KursiType.caption.copy(
+            GaddiType.caption.copy(
                 fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                 fontSize = 11.sp,
             ),
@@ -1507,10 +1507,10 @@ private fun TickerTextBlock(text: String) {
     )
 }
 
-// ─────────────────────────── Kursi Wordmark ───────────────────────────────────
+// ─────────────────────────── Gaddi Wordmark ───────────────────────────────────
 
 @Composable
-private fun KursiWordmark(
+private fun GaddiWordmark(
     displaySize: Int,
     wordmarkAlpha: Float,
     wordmarkSlide: Float,
@@ -1568,7 +1568,7 @@ private fun KursiWordmark(
                 contentAlignment = Alignment.Center,
             ) {}
 
-            // KURSI wordmark in Rozha One with brass gradient
+            // GADDI wordmark in Rozha One with brass gradient
             Text(
                 text = stringResource(Res.string.brand_wordmark),
                 style =
@@ -1603,9 +1603,9 @@ private fun KursiWordmark(
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = LocalKursiStrings.current.homeTagline,
-            style = KursiType.body.copy(fontStyle = FontStyle.Italic, fontSize = (displaySize * 0.18f).sp),
-            color = KursiNeutrals.TextSecondary,
+            text = LocalGaddiStrings.current.homeTagline,
+            style = GaddiType.body.copy(fontStyle = FontStyle.Italic, fontSize = (displaySize * 0.18f).sp),
+            color = GaddiNeutrals.TextSecondary,
             modifier = Modifier.graphicsLayer { alpha = taglineAlpha },
         )
     }
@@ -1651,28 +1651,28 @@ fun BrassSeal(modifier: Modifier = Modifier) {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "KURSI",
-                style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 2.sp, fontWeight = FontWeight.Bold),
+                text = "GADDI",
+                style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 2.sp, fontWeight = FontWeight.Bold),
                 color = BrandTokens.GoldAntique,
             )
             Text(
                 text = "·",
-                style = KursiType.caption.copy(fontSize = 9.sp),
+                style = GaddiType.caption.copy(fontSize = 9.sp),
                 color = BrandTokens.BrassAged,
             )
             Text(
                 text = stringResource(Res.string.brass_seal_authority),
-                style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp),
+                style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp),
                 color = BrandTokens.BrassAged,
             )
             Text(
                 text = "·",
-                style = KursiType.caption.copy(fontSize = 9.sp),
+                style = GaddiType.caption.copy(fontSize = 9.sp),
                 color = BrandTokens.BrassAged,
             )
             Text(
                 text = stringResource(Res.string.brass_seal_ruin),
-                style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp),
+                style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp),
                 color = BrandTokens.BrassAged,
             )
         }
@@ -1729,23 +1729,23 @@ private fun PersonaOnDutyCard(
                 ) {
                     Text(
                         text = persona.monogram,
-                        style = KursiType.caption.copy(fontSize = if (enlarged) 11.sp else 9.sp),
-                        color = KursiNeutrals.Cream,
+                        style = GaddiType.caption.copy(fontSize = if (enlarged) 11.sp else 9.sp),
+                        color = GaddiNeutrals.Cream,
                         textAlign = TextAlign.Center,
                     )
                 }
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = persona.name,
-                    style = KursiType.name.copy(fontSize = if (enlarged) 14.sp else 11.sp),
-                    color = KursiNeutrals.TextPrimary,
+                    style = GaddiType.name.copy(fontSize = if (enlarged) 14.sp else 11.sp),
+                    color = GaddiNeutrals.TextPrimary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = persona.title,
-                    style = KursiType.caption.copy(fontSize = if (enlarged) 10.sp else 9.sp, fontStyle = FontStyle.Italic),
-                    color = KursiNeutrals.TextSecondary,
+                    style = GaddiType.caption.copy(fontSize = if (enlarged) 10.sp else 9.sp, fontStyle = FontStyle.Italic),
+                    color = GaddiNeutrals.TextSecondary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -1755,8 +1755,8 @@ private fun PersonaOnDutyCard(
         // On-duty caption
         Text(
             text = "\"${onDutyCaption(persona.id)}\"",
-            style = KursiType.body.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
-            color = KursiNeutrals.TextSecondary,
+            style = GaddiType.body.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
+            color = GaddiNeutrals.TextSecondary,
             textAlign = TextAlign.Center,
             maxLines = 2,
         )
@@ -1836,14 +1836,14 @@ private fun ModeGridTile(
                     .border(1.5.dp, if (isSelected) BrandTokens.GoldAntique else BrandTokens.BrassAged.copy(alpha = 0.6f), CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            Text(text = mode.icon, style = KursiType.title.copy(fontSize = 16.sp), color = Color.White.copy(alpha = 0.92f))
+            Text(text = mode.icon, style = GaddiType.title.copy(fontSize = 16.sp), color = Color.White.copy(alpha = 0.92f))
         }
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
                     text = mode.label,
-                    style = KursiType.name.copy(fontSize = 14.sp),
-                    color = if (isSelected) BrandTokens.GoldAntique else KursiNeutrals.TextPrimary,
+                    style = GaddiType.name.copy(fontSize = 14.sp),
+                    color = if (isSelected) BrandTokens.GoldAntique else GaddiNeutrals.TextPrimary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -1868,23 +1868,23 @@ private fun ModeGridTile(
                     ) {
                         Text(
                             text = badge,
-                            style = KursiType.caption.copy(fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.4.sp),
-                            color = if (mode.isHero) KursiNeutrals.Cream else BrandTokens.StampRed.copy(alpha = 0.8f),
+                            style = GaddiType.caption.copy(fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.4.sp),
+                            color = if (mode.isHero) GaddiNeutrals.Cream else BrandTokens.StampRed.copy(alpha = 0.8f),
                         )
                     }
                 }
             }
             Text(
                 text = mode.sublabel,
-                style = KursiType.caption.copy(fontSize = 10.sp),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 10.sp),
+                color = GaddiNeutrals.TextMuted,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
         Text(
             text = "›",
-            style = KursiType.title.copy(fontSize = 16.sp),
+            style = GaddiType.title.copy(fontSize = 16.sp),
             color = if (isSelected) BrandTokens.GoldAntique else BrandTokens.BrassAged.copy(alpha = 0.5f),
         )
     }
@@ -1924,7 +1924,7 @@ private fun ModePreviewPanel(
                     .border(2.dp, BrandTokens.GoldAntique.copy(alpha = if (mode.isDisabled) 0.3f else 0.8f), CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            Text(text = mode.icon, style = KursiType.title.copy(fontSize = 30.sp), color = Color.White.copy(alpha = 0.9f))
+            Text(text = mode.icon, style = GaddiType.title.copy(fontSize = 30.sp), color = Color.White.copy(alpha = 0.9f))
         }
         Spacer(Modifier.height(18.dp))
 
@@ -1938,22 +1938,22 @@ private fun ModePreviewPanel(
                 if (mode.isHero) {
                     Text(
                         "APPROVED",
-                        style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 2.sp, fontWeight = FontWeight.Bold),
+                        style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 2.sp, fontWeight = FontWeight.Bold),
                         color = BrandTokens.StampRed,
                     )
                     Spacer(Modifier.height(4.dp))
                 }
                 Text(
                     text = mode.label,
-                    style = KursiType.display.rozha().copy(fontSize = 22.sp),
-                    color = KursiNeutrals.TextPrimary,
+                    style = GaddiType.display.rozha().copy(fontSize = 22.sp),
+                    color = GaddiNeutrals.TextPrimary,
                     textAlign = TextAlign.Center,
                 )
                 Spacer(Modifier.height(3.dp))
                 Text(
                     text = mode.sublabel,
-                    style = KursiType.caption.copy(fontSize = 10.sp),
-                    color = KursiNeutrals.TextMuted,
+                    style = GaddiType.caption.copy(fontSize = 10.sp),
+                    color = GaddiNeutrals.TextMuted,
                     textAlign = TextAlign.Center,
                 )
 
@@ -1964,8 +1964,8 @@ private fun ModePreviewPanel(
                     Spacer(Modifier.height(12.dp))
                     Text(
                         text = mode.description,
-                        style = KursiType.body.copy(fontSize = 11.sp),
-                        color = KursiNeutrals.TextSecondary,
+                        style = GaddiType.body.copy(fontSize = 11.sp),
+                        color = GaddiNeutrals.TextSecondary,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -1984,13 +1984,13 @@ private fun ModePreviewPanel(
                             ) {
                                 Text(
                                     text = fieldLabel.uppercase(),
-                                    style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.2.sp),
+                                    style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.2.sp),
                                     color = BrandTokens.BrassAged.copy(alpha = 0.7f),
                                 )
                                 Text(
                                     text = value,
-                                    style = KursiType.caption.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
-                                    color = KursiNeutrals.TextPrimary,
+                                    style = GaddiType.caption.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+                                    color = GaddiNeutrals.TextPrimary,
                                 )
                             }
                         }
@@ -2037,7 +2037,7 @@ private fun CtaStack(
     ctaAlpha: Float = 1f,
     ctaSlide: Float = 0f,
 ) {
-    val s = LocalKursiStrings.current
+    val s = LocalGaddiStrings.current
     Column(
         modifier =
             (if (fullWidth) Modifier.fillMaxWidth() else Modifier.widthIn(max = 360.dp))
@@ -2208,21 +2208,21 @@ fun StampChit(
                         if (isHero) {
                             MaterialTheme.typography.displaySmall.copy(fontSize = 18.sp)
                         } else {
-                            KursiType.title.copy(fontSize = 15.sp)
+                            GaddiType.title.copy(fontSize = 15.sp)
                         },
                     color =
                         when {
-                            isDisabled -> KursiNeutrals.TextDisabled
+                            isDisabled -> GaddiNeutrals.TextDisabled
                             isHero -> BrandTokens.TeakDark
-                            else -> KursiNeutrals.TextPrimary
+                            else -> GaddiNeutrals.TextPrimary
                         },
                     fontWeight = if (isHero) FontWeight.Bold else FontWeight.Normal,
                 )
                 if (sublabel != null) {
                     Text(
                         text = sublabel,
-                        style = KursiType.caption.copy(fontSize = 11.sp),
-                        color = if (isHero) BrandTokens.BrassDark else KursiNeutrals.TextMuted,
+                        style = GaddiType.caption.copy(fontSize = 11.sp),
+                        color = if (isHero) BrandTokens.BrassDark else GaddiNeutrals.TextMuted,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -2242,8 +2242,8 @@ fun StampChit(
                 ) {
                     Text(
                         text = "APPROVED",
-                        style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp, fontWeight = FontWeight.Bold),
-                        color = KursiNeutrals.Cream,
+                        style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 1.sp, fontWeight = FontWeight.Bold),
+                        color = GaddiNeutrals.Cream,
                     )
                 }
             }
@@ -2259,7 +2259,7 @@ fun StampChit(
                 ) {
                     Text(
                         text = disabledStamp,
-                        style = KursiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.8.sp),
+                        style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.8.sp),
                         color = BrandTokens.StampRed.copy(alpha = 0.7f),
                     )
                 }
@@ -2290,16 +2290,16 @@ private fun HomeFooter() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            val sf = LocalKursiStrings.current
+            val sf = LocalGaddiStrings.current
             Text(
                 text = sf.homeFooterLeft,
-                style = KursiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                color = GaddiNeutrals.TextMuted,
             )
             Text(
                 text = sf.homeFooterRight,
-                style = KursiType.caption.copy(fontSize = 9.sp),
-                color = KursiNeutrals.TextDisabled,
+                style = GaddiType.caption.copy(fontSize = 9.sp),
+                color = GaddiNeutrals.TextDisabled,
             )
         }
     }

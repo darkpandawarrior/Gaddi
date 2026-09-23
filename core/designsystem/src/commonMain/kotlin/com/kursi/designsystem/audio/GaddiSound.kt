@@ -1,7 +1,7 @@
 package com.kursi.designsystem.audio
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// KursiSound.kt — the finalized 17-clip CC0 SFX manifest (docs/experience-assets.md §1 / the
+// GaddiSound.kt — the finalized 17-clip CC0 SFX manifest (docs/experience-assets.md §1 / the
 // "Finalized SFX manifest" table). Every clip is Kenney CC0 (public domain), bundled under
 // composeResources/files/audio/. [fileName] is the path SoundPlayer resolves via Res.readBytes.
 //
@@ -15,7 +15,7 @@ package com.kursi.designsystem.audio
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /** One resolvable SFX clip. See [SoundPlayer] for playback and docs/experience-assets.md for the beat map. */
-enum class KursiSound(
+enum class GaddiSound(
     val fileName: String,
 ) {
     CoinSingle("coin_single.wav"),

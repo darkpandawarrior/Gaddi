@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kursi.designsystem.BrandTokens
-import com.kursi.designsystem.KursiNeutrals
-import com.kursi.designsystem.KursiType
+import com.kursi.designsystem.GaddiNeutrals
+import com.kursi.designsystem.GaddiType
 import com.siddharth.kmp.common.easeInQuart
 import com.siddharth.kmp.common.easeOutCubic
 import com.siddharth.kmp.common.lerp
@@ -50,10 +50,10 @@ private val TableCentreFallback = Offset(500f, 500f)
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // MomentBeats.kt — 13 beat composables, each a composition of the 5 primitives.
-// Design: kursi-plan/docs/15c_action_moments.md §2 (the beat sheet).
+// Design: gaddi-plan/docs/15c_action_moments.md §2 (the beat sheet).
 //
 // Each beat receives:
-//   m       — the typed KursiMoment (for data: seats, roleHue, truthful, etc.)
+//   m       — the typed GaddiMoment (for data: seats, roleHue, truthful, etc.)
 //   progress — the moment's full 0→1 float (sub-ranges mapped internally).
 //   anchors  — TableAnchors with seat centers + treasury center in overlay coords.
 //
@@ -87,7 +87,7 @@ data class TableAnchors(
  */
 @Composable
 internal fun IncomeBeat(
-    m: KursiMoment.Income,
+    m: GaddiMoment.Income,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -106,7 +106,7 @@ internal fun IncomeBeat(
  */
 @Composable
 internal fun ForeignAidBeat(
-    m: KursiMoment.ForeignAid,
+    m: GaddiMoment.ForeignAid,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -139,7 +139,7 @@ internal fun ForeignAidBeat(
  */
 @Composable
 internal fun TaxBeat(
-    m: KursiMoment.Tax,
+    m: GaddiMoment.Tax,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -185,7 +185,7 @@ internal fun TaxBeat(
  */
 @Composable
 internal fun StealBeat(
-    m: KursiMoment.Steal,
+    m: GaddiMoment.Steal,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -224,7 +224,7 @@ internal fun StealBeat(
  */
 @Composable
 internal fun AssassinateBeat(
-    m: KursiMoment.Assassinate,
+    m: GaddiMoment.Assassinate,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -293,7 +293,7 @@ internal fun AssassinateBeat(
  */
 @Composable
 internal fun ExchangeBeat(
-    m: KursiMoment.Exchange,
+    m: GaddiMoment.Exchange,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -378,7 +378,7 @@ private fun CardBlankFace(tint: Color) {
  */
 @Composable
 internal fun CoupBeat(
-    m: KursiMoment.Coup,
+    m: GaddiMoment.Coup,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -478,7 +478,7 @@ internal fun CoupBeat(
  */
 @Composable
 internal fun BlockBeat(
-    m: KursiMoment.Block,
+    m: GaddiMoment.Block,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -537,7 +537,7 @@ internal fun BlockBeat(
  */
 @Composable
 internal fun ChallengeBeat(
-    m: KursiMoment.Challenge,
+    m: GaddiMoment.Challenge,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -600,7 +600,7 @@ internal fun ChallengeBeat(
  */
 @Composable
 internal fun RevealBeat(
-    m: KursiMoment.Reveal,
+    m: GaddiMoment.Reveal,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -696,7 +696,7 @@ internal fun RevealBeat(
  */
 @Composable
 internal fun InfluenceLossBeat(
-    m: KursiMoment.InfluenceLoss,
+    m: GaddiMoment.InfluenceLoss,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -770,7 +770,7 @@ internal fun InfluenceLossBeat(
  */
 @Composable
 internal fun EliminationBeat(
-    m: KursiMoment.Elimination,
+    m: GaddiMoment.Elimination,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -797,7 +797,7 @@ internal fun EliminationBeat(
         }
     }
 
-    // "KURSI GAYI" band + consolation toast (0.55→1.0)
+    // "GADDI GAYI" band + consolation toast (0.55→1.0)
     val toastAlpha = ((progress - 0.55f) / 0.45f).coerceIn(0f, 1f)
     if (toastAlpha > 0f) {
         Box(
@@ -815,12 +815,12 @@ internal fun EliminationBeat(
             Text(
                 text =
                     if (m.playerName.isNotEmpty()) {
-                        "${m.playerName} ki KURSI GAYI 🪑"
+                        "${m.playerName} ki GADDI GAYI 🪑"
                     } else {
-                        "KURSI GAYI\nthand rakh 🪑"
+                        "GADDI GAYI\nthand rakh 🪑"
                     },
-                style = KursiType.label_sm.copy(fontSize = 13.sp),
-                color = KursiNeutrals.TextSecondary,
+                style = GaddiType.label_sm.copy(fontSize = 13.sp),
+                color = GaddiNeutrals.TextSecondary,
                 textAlign = TextAlign.Center,
             )
         }
@@ -835,7 +835,7 @@ internal fun EliminationBeat(
  */
 @Composable
 internal fun TurnHandoffBeat(
-    m: KursiMoment.TurnHandoff,
+    m: GaddiMoment.TurnHandoff,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -905,12 +905,12 @@ internal fun TurnHandoffBeat(
 // ─────────────────────────── 14. Win ─────────────────────────────────────────
 
 /**
- * Win — the Kursi is claimed!
- * Confetti falls, KURSI wordmark stamps dead-centre.
+ * Win — the Gaddi is claimed!
+ * Confetti falls, GADDI wordmark stamps dead-centre.
  */
 @Composable
 internal fun WinBeat(
-    m: KursiMoment.Win,
+    m: GaddiMoment.Win,
     progress: Float,
     anchors: TableAnchors,
 ) {
@@ -960,12 +960,12 @@ internal fun WinBeat(
         }
     }
 
-    // KURSI wordmark stamp dead-center (0.15→1.0)
+    // GADDI wordmark stamp dead-center (0.15→1.0)
     val stampProgress = ((progress - 0.15f) / 0.85f).coerceIn(0f, 1f)
     if (stampProgress > 0f) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             RubberStamp(
-                glyphText = "KURSI",
+                glyphText = "GADDI",
                 tint = BrandTokens.GoldAntique,
                 progress = stampProgress,
                 impactCenter = victoryCenter,
@@ -974,7 +974,7 @@ internal fun WinBeat(
         }
     }
 
-    // "Kursi aapki!" press-in tagline (0.70→1.0)
+    // "Gaddi aapki!" press-in tagline (0.70→1.0)
     val taglineAlpha = ((progress - 0.70f) / 0.30f).coerceIn(0f, 1f)
     if (taglineAlpha > 0f) {
         Box(
@@ -986,8 +986,8 @@ internal fun WinBeat(
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                text = if (m.winnerName.isNotEmpty()) "${m.winnerName} ki Kursi!" else "Kursi aapki!",
-                style = KursiType.title.copy(fontSize = 22.sp),
+                text = if (m.winnerName.isNotEmpty()) "${m.winnerName} ki Gaddi!" else "Gaddi aapki!",
+                style = GaddiType.title.copy(fontSize = 22.sp),
                 color = BrandTokens.GoldAntique,
                 textAlign = TextAlign.Center,
             )

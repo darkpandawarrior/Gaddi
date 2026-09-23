@@ -25,7 +25,7 @@ import com.kursi.core.network.fetchStandings
 import com.kursi.core.prefs.AppPrefs
 import com.kursi.core.prefs.DecisionTally
 import com.kursi.designsystem.BrandTokens
-import com.kursi.designsystem.KursiTheme
+import com.kursi.designsystem.GaddiTheme
 import com.kursi.feature.game.DailyChallenge
 import com.kursi.feature.game.DensityLayer
 import com.kursi.feature.game.Difficulty
@@ -35,9 +35,9 @@ import com.kursi.feature.game.GameAction
 import com.kursi.feature.game.GameScreen
 import com.kursi.feature.game.GameViewModel
 import com.kursi.feature.game.GauntletLadder
-import com.kursi.feature.game.KursiVoice
+import com.kursi.feature.game.GaddiVoice
 import com.kursi.feature.game.Language
-import com.kursi.feature.game.LocalKursiVoice
+import com.kursi.feature.game.LocalGaddiVoice
 import com.kursi.feature.game.NiyamGazette
 import com.kursi.feature.game.OnlineHubController
 import com.kursi.feature.game.SwearingInPrimer
@@ -64,8 +64,8 @@ import com.kursi.shared.screen.SetupScreen
 import com.kursi.shared.screen.StoryScreen
 import com.kursi.shared.screen.TutorialOfferDialog
 import com.kursi.shared.screen.TutorialScreen
-import com.kursi.shared.strings.KursiStrings
-import com.kursi.shared.strings.LocalKursiStrings
+import com.kursi.shared.strings.GaddiStrings
+import com.kursi.shared.strings.LocalGaddiStrings
 import com.siddharth.kmp.designsystem.toPngBytes
 import com.siddharth.kmp.feedback.canShareImage
 import com.siddharth.kmp.feedback.shareImage
@@ -79,7 +79,7 @@ import kursi.core.designsystem.generated.resources.nav_resume_label
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Root Compose entry point for Kursi, shared across all platforms (android / ios / desktop / wasm).
+ * Root Compose entry point for Gaddi, shared across all platforms (android / ios / desktop / wasm).
  *
  * The whole app flow is a type-safe [NavHost] over [Route]:
  *
@@ -93,8 +93,8 @@ import org.jetbrains.compose.resources.stringResource
  * with a serialized [MatchSummary] snapshot (never the live VM).
  */
 @Composable
-fun KursiApp() {
-    KursiTheme {
+fun GaddiApp() {
+    GaddiTheme {
         val navController = rememberNavController()
         val prefs = remember { AppPrefs() }
         // Rotates the Home "on-duty" persona on each visit to the hub.
@@ -102,12 +102,12 @@ fun KursiApp() {
 
         val languageTag by prefs.languageFlow.collectAsState()
         val language = if (languageTag == "ENGLISH") Language.ENGLISH else Language.HINGLISH
-        val strings = if (language == Language.ENGLISH) KursiStrings.English else KursiStrings.Hinglish
-        val voice = remember(language) { KursiVoice(language) }
+        val strings = if (language == Language.ENGLISH) GaddiStrings.English else GaddiStrings.Hinglish
+        val voice = remember(language) { GaddiVoice(language) }
 
         CompositionLocalProvider(
-            LocalKursiStrings provides strings,
-            LocalKursiVoice provides voice,
+            LocalGaddiStrings provides strings,
+            LocalGaddiVoice provides voice,
         ) {
             Box(
                 modifier =
@@ -786,7 +786,7 @@ fun KursiApp() {
                                         // nothing is worse than one that shares a line of text.
                                         val png = certificate?.toPngBytes()
                                         if (png != null && canShareImage()) {
-                                            shareImage(png, "kursi-faisla-${sm.matchId}", caption)
+                                            shareImage(png, "gaddi-faisla-${sm.matchId}", caption)
                                         } else {
                                             shareText(caption)
                                         }
@@ -862,10 +862,10 @@ private fun buildShareText(
 ): String =
     buildString {
         if (humanWon) {
-            append("Mujhe Kursi mil gayi! 🏆 ")
+            append("Mujhe Gaddi mil gayi! 🏆 ")
         } else {
-            append("${winnerName ?: "Babu"} ne Kursi jeet li! ")
+            append("${winnerName ?: "Babu"} ne Gaddi jeet li! ")
         }
         append("($turns turns, $bluffsHeld bluffs held)")
-        append("\n#KursiGame")
+        append("\n#GaddiGame")
     }

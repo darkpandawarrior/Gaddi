@@ -1,6 +1,6 @@
 package com.kursi.server
 
-import com.kursi.protocol.wire.KursiJson
+import com.kursi.protocol.wire.GaddiJson
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -28,7 +28,7 @@ fun Application.module() {
     }
 
     install(ContentNegotiation) {
-        json(KursiJson)
+        json(GaddiJson)
     }
 
     install(StatusPages) {

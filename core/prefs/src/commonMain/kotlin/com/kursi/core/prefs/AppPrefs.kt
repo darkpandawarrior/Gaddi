@@ -256,7 +256,7 @@ class AppPrefs(
      * predates the funnel — and who therefore already reached Home at least once, resolving the old
      * offer dialog — is never routed into the funnel retroactively. Only a genuinely brand-new install
      * (both flags unset) sees it. The app layer sets this alongside [hasSeenTutorialOffer] when the
-     * tutorial finishes (see KursiApp.kt), whether reached via the funnel or replayed later from Home.
+     * tutorial finishes (see GaddiApp.kt), whether reached via the funnel or replayed later from Home.
      */
     var hasSeenFunnel: Boolean
         get() = settings.getBoolean(KEY_HAS_SEEN_FUNNEL, defaultValue = hasSeenTutorialOffer)

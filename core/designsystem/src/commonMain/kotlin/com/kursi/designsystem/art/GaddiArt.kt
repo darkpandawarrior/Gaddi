@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import com.kursi.designsystem.BrandTokens
-import com.kursi.designsystem.KursiColors
+import com.kursi.designsystem.GaddiColors
 import com.kursi.designsystem.RoleGlyph
 import com.kursi.designsystem.SeatAvatar
 import com.kursi.engine.Role
@@ -43,12 +43,12 @@ import org.jetbrains.compose.resources.painterResource
 //
 //  This file is the only thing that changes when real art lands: swap the
 //  placeholder file at composeResources/drawable/<name>.png for the approved
-//  image (same name), add its ArtSlot to KursiArtRegistry.readySlots, done.
+//  image (same name), add its ArtSlot to GaddiArtRegistry.readySlots, done.
 //  No call site elsewhere in the app needs to change — every consumer already
-//  routes through KursiRoleFace / KursiPersonaPortrait / KursiHeroMoment below,
+//  routes through GaddiRoleFace / GaddiPersonaPortrait / GaddiHeroMoment below,
 //  which fall back to the existing Canvas RoleGlyph / SeatAvatar / a minimal
 //  programmatic drawing whenever a slot isn't ready. Until Track 5 (art
-//  production, §9) lands approved pieces, KursiArtRegistry.readySlots is empty,
+//  production, §9) lands approved pieces, GaddiArtRegistry.readySlots is empty,
 //  so every call site renders exactly what it renders today.
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -76,11 +76,11 @@ enum class ArtResolution { Asset, Fallback }
 /**
  * Global kill-switch for the whole asset track — the "no-asset path" call out in §7.4
  * (web / size-budget). Every [resolveArt] call honors this before consulting
- * [KursiArtRegistry]. Defaults on; a platform entry point can flip it off before first
+ * [GaddiArtRegistry]. Defaults on; a platform entry point can flip it off before first
  * composition (e.g. web under a load-size budget) to force every call site onto its
  * Canvas/programmatic fallback regardless of what's registered.
  */
-object KursiArtPolicy {
+object GaddiArtPolicy {
     var assetsEnabled: Boolean = true
 }
 
@@ -92,28 +92,28 @@ object KursiArtPolicy {
  * renders its existing fallback, so the game looks exactly as it does today. See the file
  * header for what wiring a real piece in later requires.
  */
-object KursiArtRegistry {
+object GaddiArtRegistry {
     val readySlots: Set<ArtSlot> = emptySet()
 }
 
 /**
  * Pure resolution logic — no Compose/platform dependency, unit-testable standalone.
- * [readySlots] defaults to the real [KursiArtRegistry]; tests pass a hypothetical set to
+ * [readySlots] defaults to the real [GaddiArtRegistry]; tests pass a hypothetical set to
  * exercise the asset-present branch without mutating the (immutable, empty-until-art-lands)
  * production registry.
  */
 fun resolveArt(
     slot: ArtSlot,
-    readySlots: Set<ArtSlot> = KursiArtRegistry.readySlots,
+    readySlots: Set<ArtSlot> = GaddiArtRegistry.readySlots,
 ): ArtResolution =
-    if (KursiArtPolicy.assetsEnabled && slot in readySlots) {
+    if (GaddiArtPolicy.assetsEnabled && slot in readySlots) {
         ArtResolution.Asset
     } else {
         ArtResolution.Fallback
     }
 
 /** The 10 launch persona ids — must match [com.kursi.ai.PersonaPrompts] persona ids exactly. */
-object KursiPersonaIds {
+object GaddiPersonaIds {
     const val NETAJI_VACHAN = "netaji_vachan"
     const val BHAI_TEJA = "bhai_teja"
     const val BABU_FILEWALA = "babu_filewala"
@@ -152,17 +152,17 @@ private fun roleFaceDrawable(role: Role): DrawableResource =
 
 private fun personaPortraitDrawable(personaId: String): DrawableResource =
     when (personaId) {
-        KursiPersonaIds.NETAJI_VACHAN -> Res.drawable.portrait_netaji_vachan
-        KursiPersonaIds.BHAI_TEJA -> Res.drawable.portrait_bhai_teja
-        KursiPersonaIds.BABU_FILEWALA -> Res.drawable.portrait_babu_filewala
-        KursiPersonaIds.JUGAADU_CHHOTU -> Res.drawable.portrait_jugaadu_chhotu
-        KursiPersonaIds.VAKIL_LOOPHOLE -> Res.drawable.portrait_vakil_loophole
-        KursiPersonaIds.INSPECTOR_DAMAAD -> Res.drawable.portrait_inspector_damaad
-        KursiPersonaIds.SETH_KHOKHAWALA -> Res.drawable.portrait_seth_khokhawala
-        KursiPersonaIds.MADAM_SARPANCH -> Res.drawable.portrait_madam_sarpanch
-        KursiPersonaIds.DALLA_TIWARI -> Res.drawable.portrait_dalla_tiwari
-        KursiPersonaIds.MAAJI_ANNA -> Res.drawable.portrait_maaji_anna
-        else -> error("Unknown persona id \"$personaId\" is in KursiArtRegistry.readySlots but has no drawable mapping")
+        GaddiPersonaIds.NETAJI_VACHAN -> Res.drawable.portrait_netaji_vachan
+        GaddiPersonaIds.BHAI_TEJA -> Res.drawable.portrait_bhai_teja
+        GaddiPersonaIds.BABU_FILEWALA -> Res.drawable.portrait_babu_filewala
+        GaddiPersonaIds.JUGAADU_CHHOTU -> Res.drawable.portrait_jugaadu_chhotu
+        GaddiPersonaIds.VAKIL_LOOPHOLE -> Res.drawable.portrait_vakil_loophole
+        GaddiPersonaIds.INSPECTOR_DAMAAD -> Res.drawable.portrait_inspector_damaad
+        GaddiPersonaIds.SETH_KHOKHAWALA -> Res.drawable.portrait_seth_khokhawala
+        GaddiPersonaIds.MADAM_SARPANCH -> Res.drawable.portrait_madam_sarpanch
+        GaddiPersonaIds.DALLA_TIWARI -> Res.drawable.portrait_dalla_tiwari
+        GaddiPersonaIds.MAAJI_ANNA -> Res.drawable.portrait_maaji_anna
+        else -> error("Unknown persona id \"$personaId\" is in GaddiArtRegistry.readySlots but has no drawable mapping")
     }
 
 private fun momentDrawable(moment: HeroMoment): DrawableResource =
@@ -177,10 +177,10 @@ private fun momentDrawable(moment: HeroMoment): DrawableResource =
  * mark — today's look, unchanged, until real art lands.
  */
 @Composable
-fun KursiRoleFace(
+fun GaddiRoleFace(
     role: Role,
     modifier: Modifier = Modifier,
-    tint: Color = KursiColors.forRole(role).color,
+    tint: Color = GaddiColors.forRole(role).color,
 ) {
     when (resolveArt(ArtSlot.RoleFace(role))) {
         ArtResolution.Asset ->
@@ -194,7 +194,7 @@ fun KursiRoleFace(
  * when approved art is registered, else the existing brass [SeatAvatar] initial roundel.
  */
 @Composable
-fun KursiPersonaPortrait(
+fun GaddiPersonaPortrait(
     personaId: String,
     initial: String,
     color: Color,
@@ -212,14 +212,14 @@ fun KursiPersonaPortrait(
 }
 
 /**
- * Hero-moment art (§7.4 asset layer / §9 art policy): the KURSI crest or the tipped-chair
+ * Hero-moment art (§7.4 asset layer / §9 art policy): the GADDI crest or the tipped-chair
  * elimination moment. Falls back to a small self-contained Canvas placeholder — a gold ring
  * for CREST, a simple chair silhouette for TIPPED_CHAIR — deliberately independent of the
  * existing overlay-specific moment primitives (which need anchors/progress/seat state this
  * generic slot doesn't have).
  */
 @Composable
-fun KursiHeroMoment(
+fun GaddiHeroMoment(
     moment: HeroMoment,
     modifier: Modifier = Modifier,
     tint: Color = BrandTokens.GoldAntique,

@@ -29,7 +29,7 @@ internal fun HandoffGuard(
     nextSeatName: String,
     onReady: () -> Unit,
 ) {
-    val voice = LocalKursiVoice.current
+    val voice = LocalGaddiVoice.current
     Box(
         modifier =
             Modifier
@@ -56,7 +56,7 @@ internal fun HandoffGuard(
         ) {
             Text(
                 text = voice.handoffTitle,
-                style = KursiType.display.copy(fontSize = 22.sp, letterSpacing = 3.sp).rozha(),
+                style = GaddiType.display.copy(fontSize = 22.sp, letterSpacing = 3.sp).rozha(),
                 color = BrandTokens.GoldAntique,
                 textAlign = TextAlign.Center,
             )
@@ -70,15 +70,15 @@ internal fun HandoffGuard(
             ) {
                 Text(
                     text = voice.handoffPrompt(nextSeatName),
-                    style = KursiType.title.copy(fontSize = 18.sp),
-                    color = KursiNeutrals.TextPrimary,
+                    style = GaddiType.title.copy(fontSize = 18.sp),
+                    color = GaddiNeutrals.TextPrimary,
                     textAlign = TextAlign.Center,
                 )
             }
             Text(
                 text = voice.handoffSecrecy,
-                style = KursiType.caption.copy(fontSize = 12.sp),
-                color = KursiNeutrals.TextMuted,
+                style = GaddiType.caption.copy(fontSize = 12.sp),
+                color = GaddiNeutrals.TextMuted,
                 textAlign = TextAlign.Center,
             )
             Spacer(Modifier.height(4.dp))
@@ -93,7 +93,7 @@ internal fun HandoffGuard(
             ) {
                 Text(
                     text = voice.handoffReveal,
-                    style = KursiType.name.copy(fontSize = 15.sp, letterSpacing = 1.sp),
+                    style = GaddiType.name.copy(fontSize = 15.sp, letterSpacing = 1.sp),
                     color = BrandTokens.GoldAntique,
                     textAlign = TextAlign.Center,
                 )

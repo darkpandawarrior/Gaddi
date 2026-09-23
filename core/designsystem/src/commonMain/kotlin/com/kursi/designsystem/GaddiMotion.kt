@@ -8,7 +8,7 @@ import androidx.compose.animation.core.spring
  * Named motion vocabulary (spec §7). Tracks reference these tokens, never raw literals. Call sites
  * are responsible for collapsing to a static end-state under reducedMotion (see MomentStaticFrames).
  */
-object KursiMotion {
+object GaddiMotion {
     /** Crisp UI response (chip press, toggle). */
     fun <T> snap(): AnimationSpec<T> = spring(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessHigh)
 

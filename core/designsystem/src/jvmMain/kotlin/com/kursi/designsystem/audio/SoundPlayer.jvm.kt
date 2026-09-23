@@ -19,7 +19,7 @@ import javax.sound.sampled.LineEvent
 actual fun SoundPlayer(): SoundPlayer = DesktopSoundPlayer()
 
 private class DesktopSoundPlayer : SoundPlayer {
-    private val clipBytes = mutableMapOf<KursiSound, ByteArray>()
+    private val clipBytes = mutableMapOf<GaddiSound, ByteArray>()
 
     @Volatile
     private var released = false
@@ -28,10 +28,10 @@ private class DesktopSoundPlayer : SoundPlayer {
     override val isAvailable: Boolean =
         runCatching { AudioSystem.getMixerInfo().isNotEmpty() }.getOrDefault(false)
 
-    override suspend fun play(sound: KursiSound) {
+    override suspend fun play(sound: GaddiSound) {
         if (released) return
         runCatching {
-            val bytes = clipBytes.getOrPut(sound) { loadKursiSoundBytes(sound) ?: return@runCatching }
+            val bytes = clipBytes.getOrPut(sound) { loadGaddiSoundBytes(sound) ?: return@runCatching }
             AudioSystem.getAudioInputStream(ByteArrayInputStream(bytes)).use { stream ->
                 val clip = AudioSystem.getClip()
                 clip.open(stream)

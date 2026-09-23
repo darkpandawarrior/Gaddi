@@ -1,4 +1,4 @@
-# Fly.io app config for the Kursi Ktor server. `app` is a placeholder — set the real app name
+# Fly.io app config for the Gaddi Ktor server. `app` is a placeholder — set the real app name
 # (fly apps create) before the first deploy; server-deploy.yml no-ops until FLY_API_TOKEN is set.
 app = "kursi-server"
 primary_region = "bom"

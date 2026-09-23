@@ -14,7 +14,7 @@ import com.kursi.engine.applyIntent
 import com.kursi.engine.initialState
 import com.kursi.engine.redact
 import com.kursi.protocol.wire.ClientMessage
-import com.kursi.protocol.wire.KursiJson
+import com.kursi.protocol.wire.GaddiJson
 import com.kursi.protocol.wire.ServerMessage
 import com.kursi.protocol.wire.WireAction
 import com.kursi.protocol.wire.WireGameConfig
@@ -40,7 +40,7 @@ import kotlin.test.assertTrue
  * Each test follows the pattern:
  *   1. Build/obtain a domain value (engine type or wire type).
  *   2. Map to wire (or build directly).
- *   3. Serialize to JSON string via [KursiJson].
+ *   3. Serialize to JSON string via [GaddiJson].
  *   4. Deserialize back from JSON string.
  *   5. Assert structural equality.
  *
@@ -52,8 +52,8 @@ class ProtocolRoundTripTest {
     @Test
     fun wireRole_roundTrip_allValues() {
         for (role in WireRole.entries) {
-            val json = KursiJson.encodeToString(role)
-            val decoded = KursiJson.decodeFromString<WireRole>(json)
+            val json = GaddiJson.encodeToString(role)
+            val decoded = GaddiJson.decodeFromString<WireRole>(json)
             assertEquals(role, decoded, "WireRole.$role round-trip failed")
         }
     }
@@ -82,8 +82,8 @@ class ProtocolRoundTripTest {
                 WireAction.Exchange,
             )
         for (action in actions) {
-            val json = KursiJson.encodeToString<WireAction>(action)
-            val decoded = KursiJson.decodeFromString<WireAction>(json)
+            val json = GaddiJson.encodeToString<WireAction>(action)
+            val decoded = GaddiJson.decodeFromString<WireAction>(json)
             assertEquals(action, decoded, "WireAction $action round-trip failed")
         }
     }
@@ -122,8 +122,8 @@ class ProtocolRoundTripTest {
                 WireIntent.ChooseExchange(actor = 0, keep = listOf(2, 7)),
             )
         for (intent in intents) {
-            val json = KursiJson.encodeToString<WireIntent>(intent)
-            val decoded = KursiJson.decodeFromString<WireIntent>(json)
+            val json = GaddiJson.encodeToString<WireIntent>(intent)
+            val decoded = GaddiJson.decodeFromString<WireIntent>(json)
             assertEquals(intent, decoded, "WireIntent $intent round-trip failed")
         }
     }
@@ -177,8 +177,8 @@ class ProtocolRoundTripTest {
                 WirePhaseView.Over(winner = 0),
             )
         for (phase in phases) {
-            val json = KursiJson.encodeToString<WirePhaseView>(phase)
-            val decoded = KursiJson.decodeFromString<WirePhaseView>(json)
+            val json = GaddiJson.encodeToString<WirePhaseView>(phase)
+            val decoded = GaddiJson.decodeFromString<WirePhaseView>(json)
             assertEquals(phase, decoded, "WirePhaseView $phase round-trip failed")
         }
     }
@@ -193,8 +193,8 @@ class ProtocolRoundTripTest {
                 WireOwnCard(id = 7, role = WireRole.PATRAKAAR, faceUp = true),
             )
         for (c in cards) {
-            val json = KursiJson.encodeToString(c)
-            assertEquals(c, KursiJson.decodeFromString<WireOwnCard>(json))
+            val json = GaddiJson.encodeToString(c)
+            assertEquals(c, GaddiJson.decodeFromString<WireOwnCard>(json))
         }
     }
 
@@ -206,13 +206,13 @@ class ProtocolRoundTripTest {
                 actor = 0,
                 drawn = listOf(WireOwnCard(3, WireRole.BABU, false), WireOwnCard(4, WireRole.VAKIL, false)),
             )
-        val json = KursiJson.encodeToString<WirePhaseView>(withDrawn)
-        assertEquals(withDrawn, KursiJson.decodeFromString<WirePhaseView>(json))
+        val json = GaddiJson.encodeToString<WirePhaseView>(withDrawn)
+        assertEquals(withDrawn, GaddiJson.decodeFromString<WirePhaseView>(json))
 
         // Empty drawn (non-actor's view) — the default — must also round-trip.
         val empty = WirePhaseView.Exchange(actor = 1)
-        val json2 = KursiJson.encodeToString<WirePhaseView>(empty)
-        val decoded2 = KursiJson.decodeFromString<WirePhaseView>(json2)
+        val json2 = GaddiJson.encodeToString<WirePhaseView>(empty)
+        val decoded2 = GaddiJson.decodeFromString<WirePhaseView>(json2)
         assertEquals(empty, decoded2)
         assertTrue((decoded2 as WirePhaseView.Exchange).drawn.isEmpty())
     }
@@ -243,8 +243,8 @@ class ProtocolRoundTripTest {
                 WireGameEvent.GameEnded(0),
             )
         for (e in events) {
-            val json = KursiJson.encodeToString<WireGameEvent>(e)
-            assertEquals(e, KursiJson.decodeFromString<WireGameEvent>(json), "WireGameEvent $e round-trip failed")
+            val json = GaddiJson.encodeToString<WireGameEvent>(e)
+            assertEquals(e, GaddiJson.decodeFromString<WireGameEvent>(json), "WireGameEvent $e round-trip failed")
         }
     }
 
@@ -294,10 +294,10 @@ class ProtocolRoundTripTest {
             val view = redact(state, pid)
             val wire = view.toWire()
 
-            val json = KursiJson.encodeToString<WirePlayerView>(wire)
+            val json = GaddiJson.encodeToString<WirePlayerView>(wire)
             assertTrue(json.isNotEmpty(), "Serialized JSON must not be empty for seat $seat")
 
-            val decoded = KursiJson.decodeFromString<WirePlayerView>(json)
+            val decoded = GaddiJson.decodeFromString<WirePlayerView>(json)
             assertEquals(wire, decoded, "WirePlayerView round-trip failed for seat $seat")
 
             // Structural assertions on the decoded view.
@@ -337,10 +337,10 @@ class ProtocolRoundTripTest {
         assertTrue(p0InView1.faceUpRoles.isEmpty(), "opponent faceUpRoles should be empty at game start")
 
         // Verify the JSON for view1 does not contain player 0's secret roles.
-        val json1 = KursiJson.encodeToString<WirePlayerView>(view1)
+        val json1 = GaddiJson.encodeToString<WirePlayerView>(view1)
         // Player 0's myInfluence roles should not literally appear in player 1's serialized view
         // (this is a structural check, not a string-scan; the structural absence is enforced by the type system).
-        val decodedView1 = KursiJson.decodeFromString<WirePlayerView>(json1)
+        val decodedView1 = GaddiJson.decodeFromString<WirePlayerView>(json1)
         val p0InDecoded = decodedView1.players.first { it.id == 0 }
         assertTrue(p0InDecoded.faceUpRoles.isEmpty(), "face-up roles should be empty for opponent in decoded view")
     }
@@ -366,8 +366,8 @@ class ProtocolRoundTripTest {
                 ClientMessage.ContinueBeat(matchId = "match-1"),
             )
         for (msg in messages) {
-            val json = KursiJson.encodeToString<ClientMessage>(msg)
-            val decoded = KursiJson.decodeFromString<ClientMessage>(json)
+            val json = GaddiJson.encodeToString<ClientMessage>(msg)
+            val decoded = GaddiJson.decodeFromString<ClientMessage>(json)
             assertEquals(msg, decoded, "ClientMessage $msg round-trip failed")
         }
     }
@@ -388,8 +388,8 @@ class ProtocolRoundTripTest {
                 ServerMessage.Error(matchId = "match-1", seq = 2L, clientSeq = 1L, reason = "out of turn"),
             )
         for (msg in messages) {
-            val json = KursiJson.encodeToString<ServerMessage>(msg)
-            val decoded = KursiJson.decodeFromString<ServerMessage>(json)
+            val json = GaddiJson.encodeToString<ServerMessage>(msg)
+            val decoded = GaddiJson.decodeFromString<ServerMessage>(json)
             assertEquals(msg, decoded, "ServerMessage $msg round-trip failed")
         }
     }
@@ -422,8 +422,8 @@ class ProtocolRoundTripTest {
     fun wireGameConfig_roundTrip() {
         val config = GameConfig.forPlayers(4)
         val wire = config.toWire()
-        val json = KursiJson.encodeToString<WireGameConfig>(wire)
-        val decoded = KursiJson.decodeFromString<WireGameConfig>(json)
+        val json = GaddiJson.encodeToString<WireGameConfig>(wire)
+        val decoded = GaddiJson.decodeFromString<WireGameConfig>(json)
         assertEquals(wire, decoded, "WireGameConfig round-trip failed")
         assertEquals(config.seatCount, decoded.seatCount)
         assertEquals(config.coupCost, decoded.coupCost)
@@ -449,8 +449,8 @@ class ProtocolRoundTripTest {
             // Redact and round-trip for both players at every state.
             for (seat in 0..1) {
                 val view = redact(state, PlayerId(seat)).toWire()
-                val json = KursiJson.encodeToString<WirePlayerView>(view)
-                val decoded = KursiJson.decodeFromString<WirePlayerView>(json)
+                val json = GaddiJson.encodeToString<WirePlayerView>(view)
+                val decoded = GaddiJson.decodeFromString<WirePlayerView>(json)
                 assertEquals(view, decoded, "WirePlayerView round-trip failed at step $steps for seat $seat")
             }
 
@@ -469,8 +469,8 @@ class ProtocolRoundTripTest {
         if (state.phase is Phase.GameOver) {
             for (seat in 0..1) {
                 val finalView = redact(state, PlayerId(seat)).toWire()
-                val json = KursiJson.encodeToString<WirePlayerView>(finalView)
-                val decoded = KursiJson.decodeFromString<WirePlayerView>(json)
+                val json = GaddiJson.encodeToString<WirePlayerView>(finalView)
+                val decoded = GaddiJson.decodeFromString<WirePlayerView>(json)
                 assertEquals(finalView, decoded, "Final WirePlayerView round-trip failed for seat $seat")
                 assertTrue(decoded.phase is WirePhaseView.Over, "Final phase should be Over")
             }
