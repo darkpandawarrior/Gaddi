@@ -128,3 +128,17 @@ are read from `KursiTheme.kt`; treat `BRAND.md` hexes as stale.
   :cmp-android:compileNoGmsDebugKotlin`.
 - Art follows `docs/art/STYLE_LOCK.md`: every colour in a piece must trace to a token.
 - Run the `antislop` skill as the filter on any UI diff and report its Delivery Gate result.
+
+## Changelog
+
+| Date | Change | Why | Source |
+|---|---|---|---|
+| 2026-10-09 | Initial version, distilled from the code token files and existing design docs | Establish design direction for agents | DESIGN.md rollout |
+
+## Open questions
+
+- Known drift: docs/brand/BRAND.md hexes (Deep Teak, Document Cream, role colours) differ from KursiTheme.kt; BRAND.md treated as stale.
+
+## Evolving this file
+
+Agents: when you change UI and find this file wrong or silent, fix it in the same change and add a Changelog row. Code token files win over this file; when they disagree, correct the doc. A user correction of a visual choice with a stated reason becomes a rule here immediately. Lessons that apply beyond this repo go to the LEARNINGS log of the `design-md` skill in AgentHarness.
