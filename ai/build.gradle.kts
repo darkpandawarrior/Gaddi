@@ -69,6 +69,13 @@ kotlin {
                     exclude(group = "com.google.android.gms")
                 }
             }
+            // MlKitGenAiOnDeviceLlm lives in the opt-in :ai-mlkit; same F-Droid strip as :ai above.
+            implementation("com.siddharth.kmp:ai-mlkit:1.0.0") {
+                if (fdroidBuild) {
+                    exclude(group = "com.google.mlkit")
+                    exclude(group = "com.google.android.gms")
+                }
+            }
         }
         iosMain.dependencies {
             // Consolidation #7: OnDeviceAiProvider.ios routes through toolkit :ai's

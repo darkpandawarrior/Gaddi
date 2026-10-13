@@ -78,6 +78,8 @@ includeBuild("external/kmp-toolkit") {
         // only), so there is no path clash. Coordinate-only consume: routes the on-device-LLM arm
         // of Gaddi's own AiProvider through the toolkit's real OnDeviceLlm backends.
         substitute(module("com.siddharth.kmp:ai")).using(project(":ai"))
+        // Toolkit moved MlKitGenAiOnDeviceLlm out of :ai into the opt-in :ai-mlkit (76cb747).
+        substitute(module("com.siddharth.kmp:ai-mlkit")).using(project(":ai-mlkit"))
         // Consolidation #10: Gaddi's cloud-LLM chat client (AiProvider + Anthropic/OpenAI/Gemini +
         // chain builder) now lives in toolkit :llm-chat. Gaddi's own :ai module consumes it; only
         // OnDeviceAiProvider.* (consumes toolkit :ai) stayed behind as Gaddi-specific (the other
