@@ -35,10 +35,10 @@ jobs:
         id: has_ios
         run: echo "present=$([ -d iosApp ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
 
-      - name: Set up JDK 17
+      - name: Set up JDK 25
         if: steps.has_ios.outputs.present == 'true'
-        uses: actions/setup-java@v6.0.1
-        with: { java-version: '17', distribution: 'temurin' }
+        uses: actions/setup-java@v6
+        with: { java-version: '25', distribution: corretto }
 
       - name: Setup Gradle
         if: steps.has_ios.outputs.present == 'true'
