@@ -11,7 +11,7 @@ plugins {
     application
 }
 
-kotlin { jvmToolchain(21) } // must match :engine, which compiles to class file 65
+kotlin { jvmToolchain(25) } // must match :engine (class file 69)
 
 dependencies {
     implementation(project(":engine"))
