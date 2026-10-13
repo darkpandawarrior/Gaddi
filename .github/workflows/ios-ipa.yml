@@ -42,7 +42,7 @@ jobs:
 
       - name: Setup Gradle
         if: steps.has_ios.outputs.present == 'true'
-        uses: gradle/actions/setup-gradle@v6.3.0
+        uses: gradle/actions/setup-gradle@v6.4.0
 
       - name: Stamp iOS version from tag
         if: steps.has_ios.outputs.present == 'true'
