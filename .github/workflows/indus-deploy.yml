@@ -52,7 +52,7 @@ jobs:
 
       - name: Setup Gradle
         if: env.HAS_SECRET == 'true'
-        uses: gradle/actions/setup-gradle@v6.3.0
+        uses: gradle/actions/setup-gradle@v6.4.0
 
       - run: chmod +x ./gradlew
         if: env.HAS_SECRET == 'true'
