@@ -133,7 +133,7 @@ fun LobbyScreen(
                     ) {
                         Text(
                             text = stringResource(Res.string.lobby_tap_hint),
-                            style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                            style = GaddiType.caption.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
                             color = GaddiNeutrals.TextSecondary,
                         )
                     }
@@ -145,7 +145,7 @@ fun LobbyScreen(
                     if (teams) {
                         Text(
                             text = ls.lobbyTeamHeader,
-                            style = GaddiType.label.copy(fontSize = 10.sp, letterSpacing = 1.sp, fontWeight = FontWeight.Bold),
+                            style = GaddiType.label.copy(fontSize = 11.sp, letterSpacing = 1.sp, fontWeight = FontWeight.Bold),
                             color = BrandTokens.GoldAntique,
                             modifier = Modifier.padding(top = 4.dp),
                         )
@@ -327,7 +327,7 @@ private fun PersonaRegisterRow(
                 )
                 Text(
                     stringResource(Res.string.lobby_bark_attribution, name),
-                    style = GaddiType.caption.copy(fontSize = 10.sp),
+                    style = GaddiType.caption.copy(fontSize = 11.sp),
                     color = GaddiNeutrals.TextMuted,
                     modifier = Modifier.padding(top = 6.dp),
                 )
@@ -359,7 +359,7 @@ private fun PersonaRegisterRow(
                         ) {
                             Text(
                                 teamBadge,
-                                style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.5.sp, fontWeight = FontWeight.Bold),
+                                style = GaddiType.caption.copy(fontSize = 11.sp, letterSpacing = 0.5.sp, fontWeight = FontWeight.Bold),
                                 color = teamHue,
                             )
                         }
@@ -367,14 +367,14 @@ private fun PersonaRegisterRow(
                 }
                 Text(
                     "$title  ·  $archetype",
-                    style = GaddiType.body.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                    style = GaddiType.body.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
                     color = GaddiNeutrals.TextSecondary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     personalityLine,
-                    style = GaddiType.caption.copy(fontSize = 9.sp),
+                    style = GaddiType.caption.copy(fontSize = 11.sp),
                     color = GaddiNeutrals.TextMuted,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
@@ -383,7 +383,7 @@ private fun PersonaRegisterRow(
 
             Text(
                 text = stringResource(Res.string.lobby_voice_hint),
-                style = GaddiType.caption.copy(fontSize = 9.sp, letterSpacing = 0.5.sp),
+                style = GaddiType.caption.copy(fontSize = 11.sp, letterSpacing = 0.5.sp),
                 color = BrandTokens.BrassAged.copy(alpha = 0.85f),
             )
         }

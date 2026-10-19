@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -45,6 +46,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -1014,8 +1017,8 @@ fun OpponentPlate(
     val enamelBase = Color(0xFF14110D)
     val brassColor = BrandTokens.BrassAged
     val brassDim = BrandTokens.BrassDark
-    val alertRed = Color(0xFF8E2B22)
-    val verdigris = Color(0xFF3F6B5E)
+    val alertRed = BrandTokens.AlertRed
+    val verdigris = BrandTokens.Verdigris
 
     val eliminated = state == ChipState.Eliminated
     val plateAlpha = if (eliminated) 0.35f else 1f
@@ -1644,8 +1647,20 @@ fun GaddiActionButton(
                 .background(bg)
                 .border(1.5.dp, borderBrush, Squircle(radius))
                 .then(if (enabled) Modifier.brassSpecular() else Modifier)
-                .then(if (enabled) Modifier.clickable(onClick = onClick) else Modifier)
+                .then(
+                    if (enabled) {
+                        Modifier.clickable(
+                            role = androidx.compose.ui.semantics.Role.Button,
+                            onClick = onClick,
+                        )
+                    } else {
+                        Modifier.semantics {
+                            disabled()
+                        }
+                    },
+                ).heightIn(min = 48.dp)
                 .padding(horizontal = 16.dp, vertical = 10.dp),
+        contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Row(

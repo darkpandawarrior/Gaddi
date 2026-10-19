@@ -265,6 +265,28 @@ internal fun coachChitOf(
         beliefLine = beliefLine,
     )
 
+/** Copies of [role] visible to the human: eliminated face-up plus held in their own hand. */
+private fun accountedCopies(
+    state: GameUiState,
+    role: Role,
+): Int {
+    val allFaceUp = state.view.players.flatMap { it.faceUpRoles } + state.view.myFaceUp
+    return allFaceUp.count { it == role } + state.view.myInfluence.count { it == role }
+}
+
+/**
+ * Typed twin of [challengeBeliefLine]: true when a challenge is favourable (every copy accounted
+ * for, or only one unseen with some already visible). Callers must not parse the localized line.
+ */
+internal fun challengeIsFavourable(
+    state: GameUiState,
+    claimedRole: Role,
+): Boolean {
+    val accountedFor = accountedCopies(state, claimedRole)
+    val unseen = (state.view.config.copiesPerRole - accountedFor).coerceAtLeast(0)
+    return unseen == 0 || (unseen == 1 && accountedFor > 0)
+}
+
 /**
  * The belief-grounded "is this claim a bluff?" line the coach leads with when the human is deciding
  * whether to CHALLENGE — built purely from public card-accounting (copies of [claimedRole] minus
@@ -276,12 +298,8 @@ internal fun challengeBeliefLine(
     claimedRole: Role,
     claimLabel: String,
 ): String {
-    val cfg = state.view.config
-    val allFaceUp = state.view.players.flatMap { it.faceUpRoles } + state.view.myFaceUp
-    val eliminated = allFaceUp.count { it == claimedRole }
-    val mine = state.view.myInfluence.count { it == claimedRole }
-    val copies = cfg.copiesPerRole
-    val accountedFor = eliminated + mine
+    val copies = state.view.config.copiesPerRole
+    val accountedFor = accountedCopies(state, claimedRole)
     val unseen = (copies - accountedFor).coerceAtLeast(0)
     val roleName = roleLabel(claimedRole)
     return when {

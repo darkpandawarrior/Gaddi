@@ -1038,7 +1038,7 @@ fun OddsChip(
 // ═══════════════════════════════════════════════════════════════════════════════
 
 // Oxblood / amber accents reused across the coach surface.
-private val CoachOxblood = Color(0xFF8E2B22)
+private val CoachOxblood = BrandTokens.AlertRed
 private val CoachAmber = BrandTokens.PendingAmber
 
 /** The three coaching tints for a move's safety, derived from truthful/bluff. */
@@ -2092,12 +2092,14 @@ fun SwearingInPrimer(onDone: () -> Unit) {
                 Text(
                     text = stringResource(Res.string.game_primer_skip),
                     style = GaddiType.label_sm,
-                    color = BrandTokens.BrassDark.copy(alpha = 0.7f),
+                    color = BrandTokens.CreamInk.copy(alpha = 0.8f),
                     modifier =
-                        Modifier.clickable {
-                            PrimerPrefs.markSeen()
-                            onDone()
-                        },
+                        Modifier
+                            .defaultMinSize(minHeight = 48.dp)
+                            .clickable(role = androidx.compose.ui.semantics.Role.Button) {
+                                PrimerPrefs.markSeen()
+                                onDone()
+                            }.padding(horizontal = 12.dp, vertical = 14.dp),
                 )
 
                 // Next / Sworn In

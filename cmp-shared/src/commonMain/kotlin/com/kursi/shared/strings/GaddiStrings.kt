@@ -484,7 +484,7 @@ sealed class GaddiStrings {
 
     // ─────────────────────────────────────────────────────────────────────
     object Hinglish : GaddiStrings() {
-        override val back = "← Wapas"
+        override val back = "Wapas"
         override val homeRosterHeader = "AAJ KI HAAZRI"
         override val homeTagline = "sab kuch gaddi ka khel hai."
         override val homeCtaNewGame = "TAKE THE CHAIR"
@@ -646,7 +646,7 @@ sealed class GaddiStrings {
         override val tutorialStepLabel = "PEHLU"
         override val tutorialCoachTag = "SALAHKAAR"
         override val tutorialNext = "AAGE →"
-        override val tutorialBack = "← Peeche"
+        override val tutorialBack = "Peeche"
         override val tutorialSkip = "Training chhodo →"
         override val tutorialFinish = "HAZRI POORI ✦"
         override val tutorialDoIt = "GHOTALA STAMP KARO"
@@ -892,7 +892,7 @@ sealed class GaddiStrings {
     }
 
     object English : GaddiStrings() {
-        override val back = "← Back"
+        override val back = "Back"
         override val homeRosterHeader = "ON DUTY TODAY"
         override val homeTagline = "everything is a game of chairs."
         override val homeCtaNewGame = "TAKE THE CHAIR"
@@ -1054,7 +1054,7 @@ sealed class GaddiStrings {
         override val tutorialStepLabel = "BEAT"
         override val tutorialCoachTag = "ADVISOR"
         override val tutorialNext = "NEXT →"
-        override val tutorialBack = "← Back"
+        override val tutorialBack = "Back"
         override val tutorialSkip = "Skip training →"
         override val tutorialFinish = "DAY COMPLETE ✦"
         override val tutorialDoIt = "STAMP GHOTALA"

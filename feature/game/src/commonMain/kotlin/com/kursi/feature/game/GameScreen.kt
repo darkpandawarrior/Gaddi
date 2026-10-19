@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -272,7 +273,7 @@ fun GameScreen(
                         Modifier
                             .align(Alignment.TopEnd)
                             .padding(top = if (spectator) 40.dp else 8.dp, end = 10.dp)
-                            .size(44.dp)
+                            .size(48.dp)
                             .clip(androidx.compose.foundation.shape.CircleShape)
                             .background(
                                 if (showDarbar) {
@@ -295,6 +296,7 @@ fun GameScreen(
                                 showDarbar = !showDarbar
                                 if (showDarbar) onAction(GameAction.MarkChatRead)
                             }.semantics {
+                                role = androidx.compose.ui.semantics.Role.Button
                                 contentDescription = darbarChatDesc
                             },
                     contentAlignment = Alignment.Center,
