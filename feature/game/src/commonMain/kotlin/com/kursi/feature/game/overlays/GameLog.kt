@@ -1032,7 +1032,7 @@ internal fun GameLogEntry(
             LogRow(
                 icon = "🛡",
                 text = txt,
-                textColor = Color(0xFF3F6B5E),
+                textColor = BrandTokens.Verdigris,
                 outcome = OutcomeKind.Block,
                 onInspect = inspect(txt, "🛡", blockerName, roleLabel(event.role)),
             )

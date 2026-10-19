@@ -32,6 +32,12 @@ import org.jetbrains.compose.resources.Font
 
 /** License Raj Deco brand surface palette. */
 object BrandTokens {
+    /** Alert red: disrupt/challenge/danger accent on docks, seat tokens and coach chrome. */
+    val AlertRed = Color(0xFF8E2B22)
+
+    /** Verdigris: defend/block/truthful accent on docks, seat tokens and the game log. */
+    val Verdigris = Color(0xFF3F6B5E)
+
     // Ground — warm teak/oxblood
 
     /** Teak dark: deep warm council-chamber ground. */

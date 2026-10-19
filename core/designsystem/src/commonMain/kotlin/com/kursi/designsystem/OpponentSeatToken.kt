@@ -72,8 +72,8 @@ fun OpponentSeatToken(
 ) {
     val brassColor = BrandTokens.BrassAged
     val brassDim = BrandTokens.BrassDark
-    val alertRed = Color(0xFF8E2B22)
-    val verdigris = Color(0xFF3F6B5E)
+    val alertRed = BrandTokens.AlertRed
+    val verdigris = BrandTokens.Verdigris
     val eliminated = state == ChipState.Eliminated
     val acting = state == ChipState.Acting
 

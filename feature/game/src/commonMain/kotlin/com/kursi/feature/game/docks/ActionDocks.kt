@@ -102,8 +102,8 @@ internal fun PickActionDock(
     val hasCoupTarget = opponents.isNotEmpty()
 
     val brassColor = BrandTokens.BrassAged
-    val disruptColor = Color(0xFF8E2B22) // alert_red
-    val defendColor = Color(0xFF3F6B5E) // verdigris
+    val disruptColor = BrandTokens.AlertRed // alert_red
+    val defendColor = BrandTokens.Verdigris // verdigris
 
     if (mustCoup) {
         // ── Forced coup — single chip, no other options shown ──────────────
@@ -434,7 +434,7 @@ internal fun CompactActionChip(
     // The HintRail above the dock already surfaces contextual guidance.
     showConsequence: Boolean = true,
 ) {
-    val alertRed = Color(0xFF8E2B22)
+    val alertRed = BrandTokens.AlertRed
     val chipAlpha = if (enabled) 1f else 0.45f
 
     // Coach styling only applies on an enabled chip with a role-claim verdict.
@@ -472,7 +472,7 @@ internal fun CompactActionChip(
 
     // RETRO-FUTURIST §2 — the recommended move is the one LIVE call-to-action in the
     // dock, so it earns a restrained holographic gold rim glint (only when coach-on).
-    val recHolo by if (recommended) {
+    val recHolo by if (recommended && !LocalReducedMotion.current) {
         rememberInfiniteTransition(label = "recHolo").animateFloat(
             initialValue = 0f,
             targetValue = 1f,
@@ -731,7 +731,7 @@ internal fun ConfirmDock(
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             GaddiActionButton(
-                label = "Cancel",
+                label = stringResource(Res.string.game_cancel),
                 enabled = true,
                 modifier = Modifier.weight(1f),
                 onClick = { onLocalPhase(GamePhase.PickAction) },

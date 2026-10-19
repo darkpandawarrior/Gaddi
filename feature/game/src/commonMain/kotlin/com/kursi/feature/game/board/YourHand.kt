@@ -30,17 +30,23 @@ internal fun YourHandPanel(
     onShowChit: (ChitContent, androidx.compose.ui.geometry.Rect?) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier,
 ) {
-    val infiniteTransition = rememberInfiniteTransition(label = "cardTilt")
-    val tiltAngle by infiniteTransition.animateFloat(
-        initialValue = -3f,
-        targetValue = 3f,
-        animationSpec =
-            infiniteRepeatable(
-                animation = tween(2000),
-                repeatMode = RepeatMode.Reverse,
-            ),
-        label = "tiltAngle",
-    )
+    // Reduced motion: no endless tilt. The angle is a State read only inside graphicsLayer, so the
+    // per-frame change redraws the cards without recomposing the hand.
+    val tiltAngle: State<Float> =
+        if (LocalReducedMotion.current) {
+            remember { mutableStateOf(0f) }
+        } else {
+            rememberInfiniteTransition(label = "cardTilt").animateFloat(
+                initialValue = -3f,
+                targetValue = 3f,
+                animationSpec =
+                    infiniteRepeatable(
+                        animation = tween(2000),
+                        repeatMode = RepeatMode.Reverse,
+                    ),
+                label = "tiltAngle",
+            )
+        }
 
     val lossIntents =
         if (gamePhase is GamePhase.LoseInfluence) {
@@ -137,7 +143,7 @@ private fun HandCardsRow(
     onShowChit: (ChitContent, androidx.compose.ui.geometry.Rect?) -> Unit,
     claimedRole: Role?,
     lossIntents: List<Intent.ChooseInfluenceToLose>,
-    tiltAngle: Float,
+    tiltAngle: State<Float>,
     overlap: Boolean,
     fanDegrees: Float,
 ) {
@@ -186,7 +192,7 @@ private fun HandCardsRow(
                     .graphicsLayer {
                         cameraDistance = 12f * density
                         // Living breathing perspective tilt + the static fan rotation.
-                        rotationY = tiltAngle * 0.5f
+                        rotationY = tiltAngle.value * 0.5f
                         rotationZ = fanTarget
                         translationY = liftTarget * density
                     }

@@ -26,6 +26,7 @@ import com.kursi.core.prefs.AppPrefs
 import com.kursi.core.prefs.DecisionTally
 import com.kursi.designsystem.BrandTokens
 import com.kursi.designsystem.GaddiTheme
+import com.kursi.designsystem.LocalReducedMotion
 import com.kursi.feature.game.DailyChallenge
 import com.kursi.feature.game.DensityLayer
 import com.kursi.feature.game.Difficulty
@@ -104,10 +105,12 @@ fun GaddiApp() {
         val language = if (languageTag == "ENGLISH") Language.ENGLISH else Language.HINGLISH
         val strings = if (language == Language.ENGLISH) GaddiStrings.English else GaddiStrings.Hinglish
         val voice = remember(language) { GaddiVoice(language) }
+        val reducedMotionPref by prefs.reducedMotionFlow.collectAsState()
 
         CompositionLocalProvider(
             LocalGaddiStrings provides strings,
             LocalGaddiVoice provides voice,
+            LocalReducedMotion provides reducedMotionPref,
         ) {
             Box(
                 modifier =

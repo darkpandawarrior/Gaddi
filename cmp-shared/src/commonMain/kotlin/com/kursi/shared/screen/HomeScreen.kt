@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kursi.ai.persona.BotPersona
 import com.kursi.ai.persona.PersonaRoster
-import com.kursi.core.prefs.AppPrefs
 import com.kursi.designsystem.*
 import com.kursi.shared.strings.GaddiStrings
 import com.kursi.shared.strings.LocalGaddiStrings
@@ -160,8 +159,8 @@ fun HomeScreen(
             PersonaRoster.ALL[launchIndex % PersonaRoster.ALL.size]
         }
 
-    // Read reduced-motion once per composition — stable snapshot from storage.
-    val reducedMotion = remember { AppPrefs().reducedMotion }
+    // Reactive: provided at the app root from AppPrefs.reducedMotionFlow.
+    val reducedMotion = com.kursi.designsystem.LocalReducedMotion.current
 
     // ── Staggered entrance ────────────────────────────────────────────────────
     // visible flips true on first composition; animate* then tween to 1f / 0.dp.

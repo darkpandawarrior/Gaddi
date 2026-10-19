@@ -41,9 +41,9 @@ internal fun ReactionDock(
     onShowChit: (ChitContent, androidx.compose.ui.geometry.Rect?) -> Unit = { _, _ -> },
 ) {
     val voice = LocalGaddiVoice.current
-    val alertRed = Color(0xFF8E2B22)
+    val alertRed = BrandTokens.AlertRed
     val brassColor = BrandTokens.BrassAged
-    val verdigris = Color(0xFF3F6B5E)
+    val verdigris = BrandTokens.Verdigris
 
     // Map a reaction option to its coach advice (null until advisor finishes, coach is OFF, or FOCUS).
     val challengeAdvice = if (state.coachGuidanceVisible) adviceFor(state, Intent.Challenge(humanSeat)) else null
@@ -74,7 +74,7 @@ internal fun ReactionDock(
         // ── The READ, made visible: the coach's belief-grounded line about the claim on the table,
         // so the player sees WHY a challenge is favourable (or a gamble) before they even long-press.
         if (challengeBelief != null) {
-            val favourable = challengeBelief.contains("favourable") || challengeBelief.contains("real odds")
+            val favourable = scrutinisedRole?.let { challengeIsFavourable(state, it) } == true
             val readAccent = if (favourable) GaddiSemantics.Success else BrandTokens.GoldAntique
             Row(
                 modifier =
@@ -576,7 +576,7 @@ internal fun InvestigatePeekDock(
             if (redrawIntent != null) {
                 InvestigateChoice(
                     label = stringResource(Res.string.game_spike_it),
-                    accent = Color(0xFF8E2B22),
+                    accent = BrandTokens.AlertRed,
                     onClick = { onAction(GameAction.Submit(redrawIntent)) },
                     modifier = Modifier.weight(1f),
                 )

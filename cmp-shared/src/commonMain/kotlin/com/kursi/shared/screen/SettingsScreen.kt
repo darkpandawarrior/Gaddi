@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -150,7 +151,7 @@ fun SettingsScreen(
                                 )
                                 Text(
                                     text = stringResource(Res.string.settings_edit_profile_label),
-                                    style = GaddiType.label_micro.copy(letterSpacing = 0.8.sp, fontSize = 10.sp),
+                                    style = GaddiType.label_micro.copy(letterSpacing = 0.8.sp, fontSize = 11.sp),
                                     color = BrandTokens.BrassAged.copy(alpha = 0.7f),
                                 )
                             }
@@ -366,12 +367,12 @@ fun SettingsScreen(
                     )
                     Text(
                         s.settingsAboutDisclaimer,
-                        style = GaddiType.caption.copy(fontSize = 10.sp, fontStyle = FontStyle.Italic),
+                        style = GaddiType.caption.copy(fontSize = 11.sp, fontStyle = FontStyle.Italic),
                         color = GaddiNeutrals.TextMuted,
                     )
                     Text(
                         s.settingsAboutFooter,
-                        style = GaddiType.caption.copy(fontSize = 9.sp),
+                        style = GaddiType.caption.copy(fontSize = 11.sp),
                         color = GaddiNeutrals.TextDisabled,
                         modifier = Modifier.padding(top = 4.dp),
                     )
@@ -393,7 +394,10 @@ private fun SettingsToggleRow(
     onCheckedChange: (Boolean) -> Unit,
     showDivider: Boolean = true,
 ) {
-    HairlineRow(showDivider = showDivider) {
+    HairlineRow(
+        modifier = Modifier.toggleable(value = checked, role = Role.Switch, onValueChange = onCheckedChange),
+        showDivider = showDivider,
+    ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 label,
@@ -402,13 +406,14 @@ private fun SettingsToggleRow(
             )
             Text(
                 sublabel,
-                style = GaddiType.caption.copy(fontSize = 10.sp),
+                style = GaddiType.caption.copy(fontSize = 11.sp),
                 color = GaddiNeutrals.TextMuted,
             )
         }
         Switch(
             checked = checked,
-            onCheckedChange = onCheckedChange,
+            // The whole row is the toggle target (merged semantics); the Switch is display-only.
+            onCheckedChange = null,
             colors =
                 SwitchDefaults.colors(
                     checkedThumbColor = BrandTokens.GoldAntique,
@@ -438,7 +443,7 @@ private fun SettingsLinkRow(
             )
             Text(
                 sublabel,
-                style = GaddiType.caption.copy(fontSize = 10.sp),
+                style = GaddiType.caption.copy(fontSize = 11.sp),
                 color = GaddiNeutrals.TextMuted,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
