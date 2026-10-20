@@ -47,7 +47,9 @@ val fdroidBuild = providers.gradleProperty("fdroid").isPresent
 
 android {
     namespace = "com.kursi.android"
-    compileSdk = 37
+    compileSdk {
+        version = release(37) { minorApiLevel = 1 }
+    }
 
     defaultConfig {
         applicationId = "com.kursi.android"
