@@ -39,7 +39,9 @@ kotlin {
 
     android {
         namespace = "com.kursi.feature.game"
-        compileSdk = 37
+        compileSdk {
+            version = release(37) { minorApiLevel = 1 }
+        }
         minSdk = 26
         withHostTest {}
     }
