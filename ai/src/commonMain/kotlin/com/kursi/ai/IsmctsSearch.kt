@@ -19,7 +19,7 @@ import kotlin.time.TimeSource
  * completion callback below. Public so callers outside `:ai` that also need a synchronous, non-
  * cancellable read of a search (e.g. replay annotation building) can reuse the same driver instead
  * of a per-platform `runBlocking`.
- * // ponytail: a body that ever truly suspends will hit the `error(...)` below instead of hanging;
+ * // a body that ever truly suspends will hit the `error(...)` below instead of hanging;
  * // acceptable ceiling since every current caller's search body is deterministic CPU work, not I/O.
  */
 fun <T> runSearchBlocking(block: suspend () -> T): T {
@@ -107,7 +107,7 @@ class IsmctsSearch(
         rng: Rng,
     ): Intent {
         if (legal.size == 1) return legal.single()
-        // ponytail: bot decisions go through the non-suspend Policy interface (ExpertPolicy/
+        // bot decisions go through the non-suspend Policy interface (ExpertPolicy/
         // GrandmasterPolicy), so this stays synchronous — runSearchBlocking below reproduces the
         // old uncancellable behavior exactly. Only the human decision-coach path (evaluate) needs
         // mid-search cancellation; see runSearchSuspend.

@@ -19,7 +19,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
-// ponytail: maxMillis generous on purpose (not the production QUICK_BUDGET's 200ms) — a
+// maxMillis generous on purpose (not the production QUICK_BUDGET's 200ms) — a
 // wall-clock cap makes ISMCTS's outcome depend on how many iterations complete before the
 // deadline, which varies with real machine load; maxIterations alone (deterministic, count-based)
 // is what should actually terminate the search here, so the test's independently-computed

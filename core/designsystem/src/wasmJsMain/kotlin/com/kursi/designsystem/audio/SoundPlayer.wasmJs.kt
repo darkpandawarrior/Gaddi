@@ -22,7 +22,7 @@ actual fun SoundPlayer(): SoundPlayer = WasmSoundPlayer()
 private class WasmSoundPlayer : SoundPlayer {
     private val dataUrls = mutableMapOf<GaddiSound, String>()
 
-    // ponytail: every browser engine ships an Audio element and a PCM WAV decoder, so the only
+    // every browser engine ships an Audio element and a PCM WAV decoder, so the only
     // real gate here is the autoplay policy — and that cannot be queried synchronously, it only
     // shows up as a rejected play() promise. Constant true is the honest answer to what this
     // flag can actually know.

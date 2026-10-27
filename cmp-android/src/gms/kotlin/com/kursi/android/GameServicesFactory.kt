@@ -115,7 +115,7 @@ private class PlayGamesServices(
      * "not configured yet", and every call below returns false rather than posting to a board that
      * does not exist.
      *
-     * ponytail: getIdentifier is the right tool for a resource that is genuinely optional at
+     * getIdentifier is the right tool for a resource that is genuinely optional at
      * build time — swap for generated constants if the ids ever become part of the repo.
      */
     @Suppress("DiscouragedApi")

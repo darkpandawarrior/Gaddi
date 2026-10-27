@@ -65,5 +65,5 @@ extra["gaddiBuildCode"] = gaddiVersionCodeBase + gaddiCommitCountVal
 
 // Compose Desktop native packages (Dmg/Msi/Deb) reject the date-based MARKETING string — they need
 // strict MAJOR.MINOR.BUILD with MAJOR/MINOR <= 255, BUILD <= 65535, validated at configure time.
-// ponytail: MILESTONE.0.commitCount fits until MILESTONE>255 or commitCount>65535 (years away).
+// MILESTONE.0.commitCount fits until MILESTONE>255 or commitCount>65535 (years away).
 extra["gaddiDesktopPackageVersion"] = "$gaddiMilestoneVal.0.$gaddiCommitCountVal"

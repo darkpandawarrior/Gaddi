@@ -152,7 +152,7 @@ class MunshiNarratorTest {
         }
 
     /**
-     * MID-GENERATION CANCELLATION (spec §8.6, this lane's own theme): cancelling the collecting
+     * MID-GENERATION CANCELLATION (spec §8.6, this change's own theme): cancelling the collecting
      * coroutine — exactly what [com.kursi.feature.game.GameViewModel.requestNarration] does for a
      * beat that changed before the Munshi finished — must stop the underlying generation itself,
      * not just this call's wait for it. [FakeStreamingProvider.emitted] is the fake's own token

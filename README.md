@@ -171,8 +171,7 @@ previews and nothing should: the feature screens have real `GameState` behind th
 `renderScreens` already shoots them with real fixtures.
 
 Those previews use `androidx.compose.ui.tooling.preview.Preview` in `commonMain`. Since Compose
-Multiplatform 1.10 the AndroidX annotation **is** the multiplatform one —
-`org.jetbrains.compose.ui:ui-tooling-preview` publishes it into `commonMain` — and the
+Multiplatform 1.10 the AndroidX annotation **is** the multiplatform one, `org.jetbrains.compose.ui:ui-tooling-preview` publishes it into `commonMain`, and the
 `org.jetbrains.compose.ui.tooling.preview` annotation is the deprecated path. Almost every answer
 written before 2026 has this the wrong way round.
 
@@ -365,11 +364,11 @@ DARBAR's chat feed and the coach's odds are structured data. The **Munshi** (`ai
 
 **Provider matrix (spec §8.5), tried in order:**
 
-1. **On-device**: auto-detected, zero setup for the player (Gemini Nano on Android, Apple FoundationModels on iOS 26 — see the on-device honesty note below).
+1. **On-device**: auto-detected, zero setup for the player (Gemini Nano on Android, Apple FoundationModels on iOS 26, see the on-device honesty note below).
 2. **BYOK cloud**: any provider (Anthropic/OpenAI/Gemini) the player has explicitly opted into with their own key, entered in a Settings-screen key editor (consent toggle + per-provider key storage/tester); a null key simply never enters the chain (`buildProviderChain`), so it's inert by default, not a hidden network call.
 3. **Templated floor**: the copy already used everywhere else in the game (`GaddiVoice.recap`). The Munshi reports this tier back to its caller as an empty flow rather than synthetic text, so the templated line at the call site is always the truthful fallback, never a stand-in the narrator pretends to have written.
 
-**Streaming and cancellation (spec §8.6):** `narrate()` returns `Flow<String>`, each emission the accumulated line so far, riding `AiProvider.completeStream`. Cancelling the collector — a fresh beat starting — tears down the in-flight generation itself, not just the wait for it, locked in by `narrate_cancellingTheCollector_stopsTheGenerationItself` (proven against a fake provider; not yet exercised against a real on-device or cloud backend). It never blocks a beat, since the templated line has already rendered synchronously by the time the Munshi is collected; it never sees hidden cards (inputs are already redacted/public-only), never mutates `GameState`, never gates a legal action, and is never persisted into the replay record, display-only, always regenerable.
+**Streaming and cancellation (spec §8.6):** `narrate()` returns `Flow<String>`, each emission the accumulated line so far, riding `AiProvider.completeStream`. Cancelling the collector, a fresh beat starting, tears down the in-flight generation itself, not just the wait for it, locked in by `narrate_cancellingTheCollector_stopsTheGenerationItself` (proven against a fake provider; not yet exercised against a real on-device or cloud backend). It never blocks a beat, since the templated line has already rendered synchronously by the time the Munshi is collected; it never sees hidden cards (inputs are already redacted/public-only), never mutates `GameState`, never gates a legal action, and is never persisted into the replay record, display-only, always regenerable.
 
 **On-device honesty:** Android's chain (ML Kit GenAI Prompt → Gemini Nano on AICore devices, falling back to MediaPipe/Gemma) is real, wired code, but it's only ever been run against unit-test fakes so far, not on a physical AICore-capable device. The iOS bridge (Apple FoundationModels / MediaPipe) is still a stub pending a Swift bridge, always reporting itself unavailable, so iOS always narrates from the BYOK cloud tier or the templated floor today.
 
@@ -582,7 +581,7 @@ never a crash; callers gate every call on the player's own sound-enabled prefere
 
 ```
 Gaddi/
-├── engine/           # (GameState, Intent) → GameState — zero deps, RNG in state
+├── engine/           # (GameState, Intent) → GameState, zero deps, RNG in state
 ├── ai/               # ISMCTS + 10 personas + social model + cloud/on-device LLM layer
 ├── server/           # Ktor/Netty authoritative server
 ├── shared-protocol/  # Wire types (server ↔ client)
@@ -592,8 +591,8 @@ Gaddi/
 │   └── network/      # Ktor WS client + LAN discovery
 ├── feature/game/     # GameScreen, GameViewModel, GameSession, DARBAR narrative engine
 ├── cmp-shared/       # NavHost + all screens (shared Compose UI)
-├── cmp-android/      # Android shell — FCM, adaptive icons, in-app review/update
-├── cmp-ios/          # iOS KMP framework — APNs, StoreKit review, App Store update check
+├── cmp-android/      # Android shell, FCM, adaptive icons, in-app review/update
+├── cmp-ios/          # iOS KMP framework, APNs, StoreKit review, App Store update check
 ├── cmp-desktop/      # JVM desktop + headless render harness
 ├── cmp-web/          # Kotlin/Wasm browser + PWA manifest
 └── external/         # kmp-toolkit (mvi-core, feedback, common, bots-policy, network, ai,
@@ -610,7 +609,7 @@ Direct `project(":...")` dependencies as declared in each module's `build.gradle
 
 ```mermaid
 graph TD
-    subgraph domain["Domain core — pure Kotlin, zero UI deps"]
+    subgraph domain["Domain core, pure Kotlin, zero UI deps"]
         engine["engine<br/>(GameState, Intent) -&gt; GameState"]
         shared_protocol["shared-protocol<br/>wire types"]
         ai["ai<br/>ISMCTS + personas"]
@@ -787,7 +786,7 @@ Not automatable, no CI job:
 - [ ] Populate store-distribution secrets and run a real Play/F-Droid rollout
 - [ ] Keep `server-deploy.yml` (Fly.io) running continuously instead of on-demand
 - [ ] Online standings board parity with local ELO once the server sees sustained traffic
-- [ ] Wire `AiBotDecisionEngine` into a live "voiced" persona bot-difficulty tier (it's gated and tested per above, but no `PersonaAssigner`/`MatchActor` caller constructs it yet — its own PR #118 scoped that wiring out, since the self-play fuzzer's `Policy` contract is a synchronous `fun interface` and `decide()` is `suspend`)
+- [ ] Wire `AiBotDecisionEngine` into a live "voiced" persona bot-difficulty tier (it's gated and tested per above, but no `PersonaAssigner`/`MatchActor` caller constructs it yet, its own PR #118 scoped that wiring out, since the self-play fuzzer's `Policy` contract is a synchronous `fun interface` and `decide()` is `suspend`)
 - [ ] On-device on-hardware verification: Gemini Nano (Android/AICore) and the iOS FoundationModels/MediaPipe bridge are both proven only against unit-test fakes so far, never a physical device
 
 ---

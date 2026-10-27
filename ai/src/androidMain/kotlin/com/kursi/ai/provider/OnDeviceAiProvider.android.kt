@@ -17,7 +17,7 @@ import com.siddharth.kmp.result.AiResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-// ponytail: process-wide Application Context capture via a no-op ContentProvider — the standard
+// process-wide Application Context capture via a no-op ContentProvider — the standard
 // Android idiom (WorkManager/Firebase/Coil) for library code that needs a Context but must keep a
 // zero-arg constructor. `expect class OnDeviceAiProvider()` is shared with jvm/ios/wasmJs actuals, so
 // it can't grow a Context parameter just for Android. Registered once in AndroidManifest.xml below;

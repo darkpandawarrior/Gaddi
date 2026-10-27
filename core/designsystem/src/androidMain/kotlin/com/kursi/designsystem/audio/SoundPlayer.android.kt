@@ -60,7 +60,7 @@ private class AndroidSoundPlayer : SoundPlayer {
                 tmp.writeBytes(bytes)
                 id = pool.load(tmp.absolutePath, 1)
                 soundIds[sound] = id
-                // ponytail: fire-and-forget load — SoundPool decodes async (typically single-digit
+                // fire-and-forget load — SoundPool decodes async (typically single-digit
                 // ms for these clips), so the very first play of a never-before-heard sound
                 // can occasionally be silent. Upgrade to setOnLoadCompleteListener-gated playback
                 // if that edge case turns out to be audible on-device.

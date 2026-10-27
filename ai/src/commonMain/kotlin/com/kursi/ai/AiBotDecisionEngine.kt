@@ -19,7 +19,7 @@ private val QUICK_BUDGET = SearchBudget(maxMillis = 200L, maxIterations = 800, r
 class AiBotDecisionEngine(
     seed: Long,
     /**
-     * ponytail: exposed (not hardcoded) purely so a test can swap in a generously long
+     * exposed (not hardcoded) purely so a test can swap in a generously long
      * [SearchBudget.maxMillis] — under real CPU contention a 200ms wall-clock cap can end the
      * search on a different iteration count run to run, changing which move ISMCTS recommends,
      * which made [com.kursi.ai.AiBotDecisionEngineTest] flaky on a loaded machine. Production
