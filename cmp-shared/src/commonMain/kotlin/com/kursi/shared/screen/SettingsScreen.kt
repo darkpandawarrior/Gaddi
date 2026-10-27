@@ -83,8 +83,8 @@ fun SettingsScreen(
     val aiSettingsState =
         remember {
             AiSettingsState(
-                // ponytail: on-device model download management (a real per-platform ModelManager +
-                // manifest) is a separate feature this lane doesn't add — on-device narration already
+                // on-device model download management (a real per-platform ModelManager +
+                // manifest) is a separate feature this change doesn't add — on-device narration already
                 // works automatically without this screen (OnDeviceAiProvider, picked up with zero
                 // setup). This card stays BYOK-focused: NoModelManager/UnavailableOnDeviceLlm report
                 // "nothing downloadable / not available" everywhere honestly, rather than faking a
@@ -336,7 +336,7 @@ fun SettingsScreen(
                 }
 
                 // ── MUNSHI (AI narration BYOK) ──────────────────────────────────────
-                // ponytail: hardcoded English label, no LocalGaddiStrings entry — the toolkit
+                // hardcoded English label, no LocalGaddiStrings entry — the toolkit
                 // AiSettingsSection card below is itself all hardcoded English (no bilingual support
                 // yet), so a localized eyebrow here would be a language mismatch with its own body.
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {

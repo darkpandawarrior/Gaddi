@@ -890,7 +890,7 @@ private fun ActionDock(
 /**
  * The scripted table for the three post-claim mechanic beats (spec §6). One compact scene reused for
  * all three — [mechanic] picks which rival is highlighted, which chip pulses, and which banner line
- * shows — so a tap resolves the move in place (ponytail: a full 4-drawn-card exchange UI is out of
+ * shows — so a tap resolves the move in place (a full 4-drawn-card exchange UI is out of
  * scope; the banner line carries that concept, matching the existing challenge/reveal banner idiom).
  */
 @Composable

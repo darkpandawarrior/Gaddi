@@ -1276,7 +1276,7 @@ private fun withCoachAdvice(
     if (state.phase is Phase.GameOver || whoActsNext(state) != viewer) return ui
     val legal = legalIntents(state, viewer)
     if (legal.isEmpty()) return ui
-    // ponytail: advise() is suspend (MoveAdvisor is now cancellable mid-search for the live
+    // advise() is suspend (MoveAdvisor is now cancellable mid-search for the live
     // coach). This screenshot tool runs once, synchronously, at startup with no cancellation
     // moment — runBlocking here is zero behavior change from when advise() was a plain function.
     val advice = runBlocking { MoveAdvisor(seed = seed).advise(state, viewer, legal) }

@@ -7,7 +7,7 @@ import org.jetbrains.skia.ImageFilter
 import org.jetbrains.skia.RuntimeEffect
 import org.jetbrains.skia.RuntimeShaderBuilder
 
-// ponytail: identical to iosMain/wasmJsMain (~20 lines) — all three are Skia/RuntimeEffect
+// identical to iosMain/wasmJsMain (~20 lines) — all three are Skia/RuntimeEffect
 // backed and the multiplatform source-set hierarchy has no shared "skiko" intermediate for
 // jvm+ios+wasmJs, so this is duplicated per-target rather than built for one leaf source set.
 

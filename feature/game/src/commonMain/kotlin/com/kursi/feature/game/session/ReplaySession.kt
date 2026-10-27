@@ -183,7 +183,7 @@ class ReplaySession private constructor(
                     val seat = ui.activeSeat?.let { PlayerId(it) } ?: youSeat
                     val annotation =
                         if (seat == youSeat) {
-                            // ponytail: compute() is suspend (MoveAdvisor.advise is now cancellable
+                            // compute() is suspend (MoveAdvisor.advise is now cancellable
                             // mid-search for the live coach). Replay build has no "player moved on"
                             // moment to cancel on — it runs once per recorded decision to a fixed,
                             // uncapped-time REVIEW_ADVICE_BUDGET. runSearchBlocking (not

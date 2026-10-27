@@ -32,3 +32,15 @@ RALPH_PROGRESS.md
 # Code knowledge graph (graphify). Derived, rebuildable, and large; it also mirrors every
 # symbol name in the repo, so it is never committed. Rebuild: node ~/Tools/DevTools/AgentHarness/scripts/graph.mjs build
 graphify-out/
+
+# Agent tooling (local only)
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+CAPABILITIES.md
+.capabilities-notes.md
+.claude/
+.codex/
+.cursor/
+.ralph/
+docs/superpowers/

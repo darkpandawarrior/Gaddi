@@ -184,7 +184,7 @@ class GameCenterServices(
                     // Game Center keeps EVERY device's copy under the same name and hands back all
                     // of them; it does not merge. Newest-wins is the honest single-player rule here
                     // — the career ledger is monotonic, so the latest write is a superset.
-                    // ponytail: newest-wins; swap for a real merge if a non-monotonic slot appears.
+                    // newest-wins; swap for a real merge if a non-monotonic slot appears.
                     cont.resume(
                         games
                             .orEmpty()
