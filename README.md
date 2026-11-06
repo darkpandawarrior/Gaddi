@@ -78,7 +78,7 @@ game-services/   Game Center and room-code helpers
 cli/             headless terminal client
 ```
 
-That is 15 Gradle modules in `settings.gradle.kts`. Part of the toolkit comes from [kmp-toolkit](https://github.com/darkpandawarrior/kmp-toolkit) and the convention plugins from [kmp-build-logic](https://github.com/darkpandawarrior/kmp-build-logic), both pulled in through `includeBuild`. The code still uses the original name in packages (`com.kursi`); the product is Gaddi. Design rules are in [DESIGN.md](DESIGN.md), the visual identity in [docs/brand/BRAND.md](docs/brand/BRAND.md), and the printable rules in [docs/Gaddi_Game_Rules-v2.pdf](docs/Gaddi_Game_Rules-v2.pdf).
+That is 15 Gradle modules in `settings.gradle.kts`. Part of the toolkit comes from [kmp-toolkit](https://github.com/darkpandawarrior/kmp-toolkit) and the convention plugins from [kmp-build-logic](https://github.com/darkpandawarrior/kmp-build-logic), both pulled in through `includeBuild`. The code still uses the original name in packages (`com.kursi`); the product is Gaddi. Design rules are in [DESIGN.md](DESIGN.md), the visual identity in [docs/brand/BRAND.md](docs/brand/BRAND.md), and the printable rules in [docs/Gaddi_Game_Rules-v2.pdf](docs/Gaddi_Game_Rules-v2.pdf). <!-- claim-audit:allow -->
 
 ## What has not been run
 
