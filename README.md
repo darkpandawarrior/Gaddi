@@ -10,7 +10,7 @@ I built it to see how far one engine written as pure Kotlin could carry: the sam
 
 ![A mid-game table with a claim on the stack](docs/screenshots/4p_mid_claim.png)
 
-## Run it
+## Play it
 
 The build composes two sibling repos as git submodules under `external/` (`kmp-toolkit` and `kmp-build-logic`). A plain `git clone` leaves them empty and Gradle stops at the first `includeBuild`, so clone with them:
 
@@ -45,25 +45,25 @@ There is also a terminal client that runs the engine with no UI at all, useful f
 
 ## What is in the game
 
-**Roles.** Five roles in every game (Neta, Bhai, Babu, Jugaadu, Vakil), mapped onto Coup's Duke, Assassin, Captain, Ambassador and Contessa. A sixth, Patrakaar, who examines another player's card, joins at 9 or more players. `Role` in `engine/.../Model.kt` has all six.
+Every game has five roles (Neta, Bhai, Babu, Jugaadu, Vakil), mapped onto Coup's Duke, Assassin, Captain, Ambassador and Contessa. A sixth, Patrakaar, who examines another player's card, joins at 9 or more players. `Role` in `engine/.../Model.kt` has all six.
 
-**Bots.** Five difficulty levels, Easy to Grandmaster (`Difficulty` in `feature/game/.../GameAction.kt`). Expert and Grandmaster run ISMCTS, a search that samples the hidden cards each opponent might hold and plays out the game from each guess (`ai/.../IsmctsSearch.kt`, `Determinizer.kt`, `BeliefModel.kt`). Ten named personas (`PersonaRoster.kt`) each play a different style. Netaji Vachan bluffs most (rate 0.75), Inspector Damaad least (0.10) and is the most predictable, and Vakil Loophole has the highest challenge rate (0.70) and a long memory for grudges (vindictiveness 0.85).
+Bots come in five difficulty levels, Easy to Grandmaster (`Difficulty` in `feature/game/.../GameAction.kt`). Expert and Grandmaster run ISMCTS, a search that samples the hidden cards each opponent might hold and plays out the game from each guess (`ai/.../IsmctsSearch.kt`, `Determinizer.kt`, `BeliefModel.kt`). Ten named personas (`PersonaRoster.kt`) each play a different style. Netaji Vachan bluffs most (rate 0.75), Inspector Damaad least (0.10) and is the most predictable, and Vakil Loophole has the highest challenge rate (0.70) and a long memory for grudges (vindictiveness 0.85).
 
-**DARBAR.** The bots talk, gossip and form pacts at the table. Four story arcs (`DarbarArc`): Gathbandhan, Afwaah, Sting and Badla. The KISSA mode strings them into a campaign.
+DARBAR is the social layer. The bots talk, gossip and form pacts at the table, along four story arcs (`DarbarArc`): Gathbandhan, Afwaah, Sting and Badla. The KISSA mode strings them into a campaign.
 
-**Three densities.** The same game state can be shown at FOCUS (a headline, your hand, your legal moves), GUIDED (one suggestion at a time) or ANALYST (suspicion pips, odds, dossiers, event log, chat). `DensityLayer.kt` decides, and a player graduates upward from their own stats ledger.
+The same game state can be shown at three densities: FOCUS (a headline, your hand, your legal moves), GUIDED (one suggestion at a time) or ANALYST (suspicion pips, odds, dossiers, event log, chat). `DensityLayer.kt` decides, and a player graduates upward from their own stats ledger.
 
-**Coach and narrator.** The decision coach grades your claims and challenges against the search. The Munshi narrates the match in character; it picks an on-device model if one exists, then a cloud model with your own key (Anthropic, OpenAI or Gemini), then falls back to templated lines that always work (`ai/.../MunshiNarrator.kt`).
+The decision coach grades your claims and challenges against the search. The Munshi narrates the match in character; it picks an on-device model if one exists, then a cloud model with your own key (Anthropic, OpenAI or Gemini), then falls back to templated lines that always work (`ai/.../MunshiNarrator.kt`).
 
-**Modes.** Versus bots, GAUNTLET (a promotion ladder), team play, TAMASHA (watch bots play), pass and play on one device, a daily challenge, a career dossier with Elo, and a replay scrubber that rebuilds a match from its seed.
+Modes are versus bots, GAUNTLET (a promotion ladder), team play, TAMASHA (watch bots play), pass and play on one device, a daily challenge, a career dossier with Elo, and a replay scrubber that rebuilds a match from its seed.
 
-**Variants**, all off by default, set in `GameConfig`. Seven are flags: bail (pay 9 coins to flip a lost card back), sabotage (sacrifice a card for 3 coins), hawala (gift coins), emergency, khazana (race to a coin total), inflation (costs rise every few turns) and scarcity (capped coin supply). Two more are separate: anarchy, where the cost to seize the chair falls each round, and teams.
+Variants are all off by default and set in `GameConfig`. Seven are flags: bail (pay 9 coins to flip a lost card back), sabotage (sacrifice a card for 3 coins), hawala (gift coins), emergency, khazana (race to a coin total), inflation (costs rise every few turns) and scarcity (capped coin supply). Two more are separate: anarchy, where the cost to seize the chair falls each round, and teams.
 
-**Online.** Private rooms by 6-character code, quick match, and LAN discovery. The Ktor/Netty server holds the true state and sends each client only its redacted view. Deploying it to Fly.io is wired (`fly.toml`, `server-deploy.yml`) and does nothing until `FLY_API_TOKEN` is set, so no public server runs from this repo.
+Online play has private rooms by 6-character code, quick match and LAN discovery. The Ktor/Netty server holds the true state and sends each client only its redacted view. Deploying it to Fly.io is wired (`fly.toml`, `server-deploy.yml`) and does nothing until `FLY_API_TOKEN` is set, so no public server runs from this repo.
 
 More screens: [home](docs/gifs/home.gif), [a turn](docs/gifs/turn.gif), [DARBAR](docs/gifs/darbar.gif), [coach](docs/gifs/coach.gif), [online](docs/gifs/online.gif), [career](docs/gifs/career.gif), and 61 stills in [docs/screenshots](docs/screenshots).
 
-## How it is laid out
+## The code
 
 ```
 engine/          pure reducer, secrecy boundary (redact), seeded RNG. Depends on nothing.
@@ -80,9 +80,9 @@ cli/             headless terminal client
 
 That is 15 Gradle modules in `settings.gradle.kts`. Part of the toolkit comes from [kmp-toolkit](https://github.com/darkpandawarrior/kmp-toolkit) and the convention plugins from [kmp-build-logic](https://github.com/darkpandawarrior/kmp-build-logic), both pulled in through `includeBuild`. The code still uses the original name in packages (`com.kursi`); the product is Gaddi. Design rules are in [DESIGN.md](DESIGN.md), the visual identity in [docs/brand/BRAND.md](docs/brand/BRAND.md), and the printable rules in [docs/Gaddi_Game_Rules-v2.pdf](docs/Gaddi_Game_Rules-v2.pdf).
 
-## What is proven and what is not
+## What has not been run
 
-Counted today with `grep -rho '@Test' --include='*.kt'` outside `external/`: **412 `@Test` methods in 68 files**. Of those, engine has 69, ai 106, feature/game 114, core/designsystem 12 and server 17; the rest sit in other modules. The ktlint, detekt and `jvmTest` run lives in `quality.yml`.
+A grep for `@Test` outside `external/` finds **412 methods in 68 files**. Of those, engine has 69, ai 106, feature/game 114, core/designsystem 12 and server 17; the rest sit in other modules. The ktlint, detekt and `jvmTest` run lives in `quality.yml`.
 
 - The Munshi's on-device tier (Gemini Nano on Android, Apple Foundation Models on iOS) has only run against test fakes. No device with that hardware has run it.
 - Android release signing, store uploads (Play, F-Droid, Amazon, Huawei, Samsung, Indus, Aptoide) and the Fly.io deploy all have workflows that stay idle until their secrets exist.
@@ -93,4 +93,4 @@ Counted today with `grep -rho '@Test' --include='*.kt'` outside `external/`: **4
 
 Code is GPL-3.0-or-later (`LICENSE`), with an App Store exception so forks can reach iOS. Shipped assets (art, fonts, audio, character names, Hinglish voice lines) are CC BY-SA 4.0 (`ASSETS-LICENSE`). The unshipped story bible stays all rights reserved. All characters and events are fictional and the setting is satire.
 
-Related: [Doori](https://github.com/darkpandawarrior/Doori), [PaymentsLab-KMP](https://github.com/darkpandawarrior/PaymentsLab-KMP), and [the portfolio](https://cv-siddharth.vercel.app/).
+The other two apps on the same toolkit are [Doori](https://github.com/darkpandawarrior/Doori) and [PaymentsLab-KMP](https://github.com/darkpandawarrior/PaymentsLab-KMP).
